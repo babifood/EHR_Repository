@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>EHRLoginPage</title>
+<title>用户登录</title>
 </head>
+
 <body>
 
-<a href="${pageContext.request.contextPath}/login">跳转</a>
 </body>
 </html>
