@@ -1,5 +1,8 @@
 package com.babifood.service;
 
-public interface LoginService {
+import org.springframework.stereotype.Service;
 
+@Service
+public interface LoginService {
+	public Object loginServiceMethod(String user_name,String password);
 }

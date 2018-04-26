@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+#logo{
+	float: left;
+	width: 80%;
+	line-height: 55px;
+	font-size: 30px;
+	font-style: italic;
+	font-weight: 800;
+}
+#logo span{
+	padding-left: 80px;
+	color: blue;
+}
+#logoout{
+	float: right;
+	width: 20%;
+	line-height: 55px;
+	color: blue;
+}
+#logoout a{
+	text-decoration: none;
+}
+#logoout a:hover {
+	text-decoration: underline;
+}
