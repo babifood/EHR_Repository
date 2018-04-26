@@ -13,7 +13,7 @@
 
 <body>
 <div id="login">
-	<p>用户名啊啊啊啊：<input type="text" id="userName" class="textbox" data-options="required:true"/></p>
+	<p>用户名：<input type="text" id="userName" class="textbox" data-options="required:true"/></p>
 	<p>密&nbsp;&nbsp;&nbsp;码：<input type="password" id ="password" class="textbox" data-options="required:true"></p>
 </div>
 <div id="login-btn">
