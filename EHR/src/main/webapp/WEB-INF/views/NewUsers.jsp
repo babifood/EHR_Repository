@@ -24,14 +24,16 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="">查询</a>
 	        	</div>
 	        </div>
-	        <div id="role_dog" class="easyui-dialog" closed="true" buttons="#role_dlg_buttons" style="width: 400px;">
+	        <div id="role_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#role_dlg_buttons" style="width: 450px;">
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">角色信息</span></div>
 			        <div style="margin-bottom: 10px;">
-			        	角色名称：<input type="text" id="role_name" name="role_name" class="textbox" data-options="required:true"  style="width: 180px;"/>
+			        	角色名称：<input type="text" id="role_name" name="role_name" class="textbox" data-options="required:true" onblur="noBlur()" style="width: 180px;"/>
+			        		   <span id="role_name_apan" style="color: red"></span>	
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	角色描述：<input type="text" id="role_desc" name="role_desc" class="textbox" data-options="required:true"  style="width: 180px;"/>
+			        	角色描述：<input type="text" id="role_desc" name="role_desc" class="textbox" data-options="required:true" onblur="noBlur()" style="width: 180px;"/>
+			       			   <span id="role_desc_apan" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
 			        	是否启用：是<input type="radio" checked="checked" name="role_radio" value="1" />否<input type="radio" name="role_radio" value="0"/>

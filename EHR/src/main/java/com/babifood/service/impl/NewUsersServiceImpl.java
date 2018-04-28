@@ -22,5 +22,15 @@ public class NewUsersServiceImpl implements NewUsersService {
 		// TODO Auto-generated method stub
 		return newUsersDao.loadRoleAll();
 	}
+	@Override
+	public Integer saveRole(String role_name, String role_desc, String state) {
+		// TODO Auto-generated method stub
+		return newUsersDao.saveRole(role_name, role_desc, state);
+	}
+	@Override
+	public Integer editRole(String role_id, String role_name, String role_desc, String state) {
+		// TODO Auto-generated method stub
+		return newUsersDao.editRole(role_id, role_name, role_desc, state);
+	}
 
 }

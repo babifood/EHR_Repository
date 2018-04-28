@@ -45,5 +45,43 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		}
 		return list;
 	}
+	@Override
+	public Integer saveRole(String role_name,String role_desc,String state) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into ehr_roles (role_name,role_desc,state) ");
+		sql.append(" values(?,?,?)");
+		Object[] params=new Object[3];
+		params[0]=role_name;
+		params[1]=role_desc;
+		params[2]=state;
+		int rows =-1;
+		try {
+			rows = jdbctemplate.update(sql.toString(), params);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询错误："+e.getMessage());
+		}
+		return rows;
+	}
+	@Override
+	public Integer editRole(String role_id, String role_name, String role_desc, String state) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("update ehr_roles set ROLE_NAME=?,ROLE_DESC=?,STATE=? where ROLE_ID=?");
+		Object[] params=new Object[4];
+		params[0]=role_name;
+		params[1]=role_desc;
+		params[2]=state;
+		params[3]=role_id;
+		int rows =-1;
+		try {
+			rows = jdbctemplate.update(sql.toString(), params);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询错误："+e.getMessage());
+		}
+		return rows;
+	}
 
 }

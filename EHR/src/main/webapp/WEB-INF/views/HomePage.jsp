@@ -7,6 +7,10 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/default/easyui.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/icon.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/HomePage.css"/>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.easyui.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/HomePage.js"></script>
 <title>首页</title>
 </head>
 <body class="easyui-layout">
@@ -28,10 +32,5 @@
 	    	</div>
     	</div>
     </div>  
-	
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.easyui.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/locale/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/HomePage.js"></script>
 </body>
 </html>

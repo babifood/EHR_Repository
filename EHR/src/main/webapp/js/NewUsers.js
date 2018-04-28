@@ -1,7 +1,26 @@
+var objRows;
+//初始化
 $(function(){
+	//加载角色列表
+	loadRole();
+	//用户列表
+	loadUsers();
+	//加载树状菜单
+	loadMenuTree();
+	//加载菜单授权页面的角色列表
+	loadMenuGrid();
+	
+});
+/**
+ * -----------------------------------------添加角色function-------------------------------------------
+ * @returns
+ */
+//角色列表
+function loadRole(){
 	//角色列表
 	$("#role_tbo").datagrid({
 		url:prefix+"//loadRolesAll",
+		loadMsg:"数据加载中......",
 		fit:true,
 		fitColumns:true,
 		striped:true,
@@ -11,6 +30,7 @@ $(function(){
 		pageList:[10,20,30],
 		pageNumber:1,
 		toolbar:"#role_tbar",
+		singleSelect:true,
 		columns:[[
 			{
 				field:"role_id",
@@ -41,19 +61,116 @@ $(function(){
 			}
 		]],
 	});
-	//角色名称
-	$('#role_name').validatebox({
-		required : true,
-		missingMessage :'角色名称不能为空!',
-	});
-	//角色描述
-	$('#role_desc').validatebox({
-		required : true,
-		missingMessage :'角色描述不能为空!',
-	});
+}
+//添加角色
+function addRole(){
+	$("#role_dog").dialog("open").dialog("center").dialog("setTitle","添加角色");
+	$("#role_name").val("");
+	$("#role_desc").val("");
+	$(":radio[name='role_radio'][value='1']").prop("checked", "checked");
+	$('#role_name').focus();
 	
+}
+//修改角色
+function editRole(){
+	var row = $("#role_tbo").datagrid("getSelected");
+	objRows =row;
+	if(row){
+		$("#role_dog").dialog("open").dialog("center").dialog("setTitle","修改角色");
+		$("#role_name").val(row.role_name);
+		$("#role_desc").val(row.role_desc);
+		$(":radio[name='role_radio'][value='" + row.state + "']").prop("checked", "checked");
+		$('#role_name').focus();
+	}else{
+		$.messager.alert("消息提示！","请选择一条数据！","info");
+	}
+}
+//删除角色
+function removeRole(){
+	var row = $("#role_tbo").datagrid("getSelected");
+	if(row){
+		$.messager.confirm("提示","确定要删除此数据？",function(r){
+			
+		});
+	}else{
+		$.messager.alert("消息提示！","请选择一条数据！","info");
+	}
+}
+//文本框失去焦点事件
+function noBlur(){
+	if(!$("#role_name").val()==""){
+		$("#role_name_apan").html("");
+	}
+	if(!$("#role_desc").val()==""){
+		$("#role_desc_apan").html("");		
+	}
+}
+//保存角色
+function saveRole(){
+	var dog_title=$('#role_dog').panel('options').title;
+	var data;
+	var url;
+	var msg;
+	if(dog_title=="添加角色"){
+		data={
+			role_name:$('#role_name').val(),
+			role_desc:$('#role_desc').val(),
+			state:$("input[name='role_radio']:checked").val()	
+		};
+		url = prefix+'/saveRole';
+		msg = "角色保存成功!";
+	}else if(dog_title=="修改角色"){
+		data={
+				role_id:objRows.role_id,
+				role_name:$('#role_name').val(),
+				role_desc:$('#role_desc').val(),
+				state:$("input[name='role_radio']:checked").val()	
+			};
+		url = prefix+'/editRole';
+		msg = "角色修改成功!";
+	}
+	if($("#role_name").val()==""){
+		$("#role_name_apan").html("名称不能为空");
+		$('#role_name').focus();
+	}else if($("#role_desc").val()==""){
+		$("#role_desc_apan").html("描述不能为空");
+		$('#role_desc').focus();
+	}else{
+		$.ajax({
+			url:url,
+			type:'post',
+			data:data,
+			contentType:"application/x-www-form-urlencoded",
+			beforeSend:function(){
+				$.messager.progress({
+					text:'保存中......',
+				});
+			},
+			success:function(data){
+				$.messager.progress('close');
+				if(data.status=="success"){
+					$.messager.show({
+						title:'消息提醒',
+						msg:msg,
+						timeout:3000,
+						showType:'slide'
+					});
+					$('#role_dog').dialog('close');
+					loadRole();
+				}else{
+					$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+				}
+			}
+		});
+	}
 	
-	//用户列表
+}
+/**
+ * ---------------------------------------添加用户function---------------------------------------
+ * @returns
+ */
+//加载用户列表
+function loadUsers(){
 	$("#user_tbo").datagrid({
 		url:prefix+"/loadUsersAll",
 		fit:true,
@@ -113,6 +230,13 @@ $(function(){
 			}
 		]],
 	});
+}
+/**
+ * ------------------------------------------菜单授权function-------------------------------------------------
+ * @returns
+ */
+//加载菜单授权页面的树状菜单
+function loadMenuTree(){
 	//菜单树
 	$('#menu_ul').tree({
 		url:prefix+"/loadTerr",
@@ -127,6 +251,9 @@ $(function(){
 	      }
 		}
 	});
+}
+//加载菜单授权页面的角色列表
+function loadMenuGrid(){
 	//角色列表
 	$("#menu_tbo").datagrid({
 		url:prefix+"//loadRolesAll",
@@ -168,71 +295,4 @@ $(function(){
 			}
 		]],
 	});
-});
-//添加角色
-function addRole(){
-	$("#role_dog").dialog("open").dialog("center").dialog("setTitle","添加角色");
-	//页面加载时光标定位到输入框
-	if(!$('#role_name').validatebox('isValid')){
-		$('#role_name').focus();
-	}else if(!$('#role_desc').validatebox('isValid')){
-		$('#role_desc').focus();
-	}
-	
-}
-//修改角色
-function editRole(){
-	var row = $("#role_tbo").datagrid("getSelected");
-	if(row){
-		$("#role_dog").dialog("open").dialog("center").dialog("setTitle","修改角色");
-		
-	}else{
-		$.messager.alert("消息提示！","请选择一条数据！","info");
-	}
-}
-//删除角色
-function removeRole(){
-	var row = $("#role_tbo").datagrid("getSelected");
-	if(row){
-		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			
-		});
-	}else{
-		$.messager.alert("消息提示！","请选择一条数据！","info");
-	}
-}
-//保存角色
-function saveRole(){
-	if(!$('#role_name').validatebox('isValid')){
-		$('#role_name').focus();
-	}else if(!$('#role_desc').validatebox('isValid')){
-		$('#role_desc').focus();
-	}else{
-		$.ajax({
-			url:prefix+'/login',
-			type:'post',
-			data:{
-				user_name:$('#userName').val(),
-				password:$('#password').val(),
-			},
-			contentType:"application/x-www-form-urlencoded",
-			beforeSend:function(){
-				$.messager.progress({
-					text:'登陆中......',
-				});
-			},
-			success:function(data){
-				$.messager.progress('close');
-				if(data.status=="error"){
-					$.messager.alert("消息提示！","用户名密码错误！","warning",function(){
-						$('#password').select();
-					});
-				}else if(data.status=="success"){
-					window.location.href=prefix+"/redirect?pageName=HomePage";
-				}else{
-					$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
-				}
-			}
-		});
-	}
 }
