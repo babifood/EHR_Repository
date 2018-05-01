@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.babifood.entity.LoginEntity;
 import com.babifood.service.HomePageService;
 
 @Controller
@@ -28,8 +29,10 @@ public class HomePageControl {
 	 */
 	@ResponseBody
 	@RequestMapping("/loadTerr")
-	public List<Map<String,Object>> loadTreeMenu(String id){
-		return homePageService.LoadTerrMenu(id);
+	public List<Map<String,Object>> loadTreeMenu(String id,HttpServletRequest request){
+		HttpSession session =  request.getSession();
+		LoginEntity login = (LoginEntity) session.getAttribute("userinfo");
+		return homePageService.LoadTerrMenu(id,login.getRole_id());
 	}
 	/**
 	 * 安全退出时清空缓存

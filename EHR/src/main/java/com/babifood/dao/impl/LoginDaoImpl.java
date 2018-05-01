@@ -19,8 +19,8 @@ public class LoginDaoImpl implements LoginDao {
 	public LoginEntity findLogin(String user_name, String password) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select user_id,user_name,password,show_name,e_mail,phone,state ");
-		sql.append("from ehr_users where user_name=? and password=?");
+		sql.append("select u.user_id,u.user_name,u.password,u.show_name,u.e_mail,u.phone,u.state,r.role_id,r.role_name ");
+		sql.append("from ehr_users u left join ehr_user_role r on u.user_id=r.user_id where u.user_name=? and u.password=?");
         LoginEntity login =null;
         try{
         	login = jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(LoginEntity.class), user_name,password);

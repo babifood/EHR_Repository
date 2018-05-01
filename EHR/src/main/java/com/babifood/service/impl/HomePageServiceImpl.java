@@ -13,10 +13,11 @@ public class HomePageServiceImpl implements HomePageService {
 	@Autowired
 	HomePageDao homePageDao;
 	@Override
-	public List<Map<String, Object>> LoadTerrMenu(String id) {
+	public List<Map<String, Object>> LoadTerrMenu(String id,String role_id) {
 		// TODO Auto-generated method stub
 		String strId = id==null||id.equals("")?"0":id;
-		return homePageDao.LoadTreeMenu(strId);
+		
+		return homePageDao.LoadTreeMenu(strId,role_id);
 	}
 
 }

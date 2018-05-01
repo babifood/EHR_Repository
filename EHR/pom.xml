@@ -188,6 +188,35 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.31</version>
 		</dependency>
+		
+		<!-- shiro begin -->
+	    <dependency>
+	    	<artifactId>quartz</artifactId>
+	    	<groupId>org.opensymphony.quartz</groupId>
+	    	<version>1.6.1</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.apache.shiro</groupId>
+	    	<artifactId>shiro-core</artifactId>
+	    	<version>1.2.2</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.apache.shiro</groupId>
+	    	<artifactId>shiro-web</artifactId>
+	    	<version>1.2.2</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.apache.shiro</groupId>
+	    	<artifactId>shiro-quartz</artifactId>
+	    	<version>1.2.2</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.apache.shiro</groupId>
+	    	<artifactId>shiro-spring</artifactId>
+	    	<version>1.2.2</version>
+	    </dependency>
+	    <!-- shiro end -->
+
     </dependencies>
     
     <build>

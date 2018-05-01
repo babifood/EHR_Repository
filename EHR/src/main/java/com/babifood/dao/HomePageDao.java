@@ -6,5 +6,5 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface HomePageDao {
-	public List<Map<String,Object>> LoadTreeMenu(String id);
+	public List<Map<String,Object>> LoadTreeMenu(String id,String role_id);
 }
