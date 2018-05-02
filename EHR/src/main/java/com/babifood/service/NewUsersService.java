@@ -31,4 +31,6 @@ public interface NewUsersService {
 	public Integer saveMenuRole(RoleMenuEntity[] roleMenuEntity);
 	
 	public List<Map<String,Object>> getMenuIds(String role_id);
+	
+	public List<Map<String,Object>> loadCheckTreeMenu(String id);
 }
