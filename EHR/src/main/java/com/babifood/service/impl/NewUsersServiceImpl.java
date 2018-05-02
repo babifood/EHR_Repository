@@ -75,5 +75,11 @@ public class NewUsersServiceImpl implements NewUsersService {
 		// TODO Auto-generated method stub
 		return newUsersDao.getMenuIds(role_id);
 	}
+	@Override
+	public List<Map<String, Object>> loadCheckTreeMenu(String id) {
+		// TODO Auto-generated method stub
+		String strId = id==null||id.equals("")?"0":id;
+		return newUsersDao.loadCheckTreeMenu(strId);
+	}
 
 }

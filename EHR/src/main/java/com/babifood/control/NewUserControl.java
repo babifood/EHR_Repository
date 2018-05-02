@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -177,13 +178,23 @@ public class NewUserControl {
 		
 	}
 	/**
-	 * 加载角色下拉框数据
+	 * 获取角色授权的对应ids
 	 * @return 返回角色json
 	 */
 	@ResponseBody
-	@RequestMapping("/getMenuIds")
+	@RequestMapping("/getMenuIdsCheck")
 	public List<Map<String, Object>> getMenuIds(String role_id){
 		List<Map<String, Object>> list = newUsersService.getMenuIds(role_id);
 		return list;
+	}
+	/**
+	 * 获取导航菜单列表
+	 * @param id父及菜单id
+	 * @return 返回菜单对象集合
+	 */
+	@ResponseBody
+	@RequestMapping("/loadCheckTreeMenu")
+	public List<Map<String,Object>> loadCheckTreeMenu(String id){
+		return newUsersService.loadCheckTreeMenu(id);
 	}
 }

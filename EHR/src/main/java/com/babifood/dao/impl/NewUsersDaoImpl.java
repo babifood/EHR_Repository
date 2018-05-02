@@ -271,5 +271,20 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		}
 		return list;	
 	}
+	@Override
+	public List<Map<String, Object>> loadCheckTreeMenu(String id) {
+		// TODO Auto-generated method stub
+		StringBuffer sql=new StringBuffer();
+		sql.append("select m.id,m.text,m.state,m.iconCls,m.url,m.nid");
+		sql.append(" from ehr_menu m where m.nid = ?");
+		List<Map<String,Object>> list = null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(),id);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("TreeMenu查询错误"+e.getMessage());
+		}
+		return list;
+	}
 
 }

@@ -1,5 +1,6 @@
 var objRowsRole;
 var objRowsUser;
+var objMenuID;
 //初始化
 $(function(){
 	//加载角色列表
@@ -474,12 +475,11 @@ function saveUser(){
 function loadMenuTree(){
 	//菜单树
 	$('#menu_ul').tree({
-		url:prefix+"/loadTerr",
+		url:prefix+"/loadCheckTreeMenu",
 		lines:true,
 		checkbox:true,
-		onClick:function(node){
-			
-		},
+		toggle:true,
+		cascadeCheck:false,
 		onLoadSuccess:function(node,data){
 		  if (data) {
 			  $('#menu_ul').tree('expandAll');
@@ -527,16 +527,21 @@ function loadMenuGrid(){
 			}
 		]],
 		onClickRow:function(rowIndex, rowData){
-			$.post(prefix+"/getMenuIds",{role_id:rowData.role_id},function(data){
-				var roots=$("#menu_ul").tree('getRoots'); 
-				for(var j=0;j<roots.length;j++){
-					$("#menu_ul").tree('uncheck',roots[j].target);
+			//取消所有菜单选中
+			if(objMenuID){
+				for(var j=0;j<objMenuID.length;j++){
+					var node = $('#menu_ul').tree('find', objMenuID[j].menu_tbo_id); 
+					$("#menu_ul").tree('uncheck',node.target);
 				}
+			}
+			//选中对应角色授权菜单
+			$.post(prefix+"/getMenuIdsCheck",{role_id:rowData.role_id},function(data){
 				if(data){
 					for(var i=0;i<data.length;i++){
 						var node = $('#menu_ul').tree('find', data[i].menu_tbo_id); 
 			             $('#menu_ul').tree('check',node.target);
-					}		
+					}
+					objMenuID=data;
 				}			
 			  });
 		}
