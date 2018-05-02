@@ -19,9 +19,8 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRole()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		用户账号：<input type="text" class="textbox" id="user_name" name="user_name" style="width: 110px;"/>
-	        		用户名称：<input type="text" class="textbox" id="show_name" name="show_name" style="width: 110px;"/>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="">查询</a>
+	        		角色名称：<input type="text" class="textbox" id="search_role_name" name="search_role_name" style="width: 110px;"/>
+	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchRole()">查询</a>
 	        	</div>
 	        </div>
 	        <div id="role_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#role_dlg_buttons" style="width: 450px;">
@@ -29,19 +28,17 @@
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">角色信息</span></div>
 			        <div style="margin-bottom: 10px;">
 			        	角色名称：<input type="text" id="role_name" name="role_name" class="textbox" data-options="required:true" onblur="noBlur()" style="width: 180px;"/>
-			        		   <span id="role_name_apan" style="color: red"></span>	
+			        		   <span id="role_name_span" style="color: red"></span>	
 			        </div>
 			        <div style="margin-bottom: 10px;">
 			        	角色描述：<input type="text" id="role_desc" name="role_desc" class="textbox" data-options="required:true" onblur="noBlur()" style="width: 180px;"/>
-			       			   <span id="role_desc_apan" style="color: red"></span>
+			       			   <span id="role_desc_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	是否启用：是<input type="radio" checked="checked" name="role_radio" value="1" />否<input type="radio" name="role_radio" value="0"/>
+			        	是否启用：是<input type="radio" id="role_radio_yes" name="role_radio" value="1" />否<input type="radio" id="role_radio_no" name="role_radio" value="0"/>
 			        </div>
 		        </div>
 		     </div>	  		
-		        	
-	     
 	        <div id="role_dlg_buttons" style="text-align: center;">
 	        	<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveRole()" style="width: 90px;">保存</a>
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#role_dog').dialog('close')" style="width: 90px;">取消</a>
@@ -51,18 +48,52 @@
 	        <table id="user_tbo"></table>  
 	        <div id="user_tbar" style="padding: 5px;">
 	        	<div style="margin-bottom: 5px;">
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="">添加</a>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="">修改</a>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="">删除</a>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="">保存</a>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-redo" plain="true" onclick="">取消</a>
+	        		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addUser()">添加</a>
+	        		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改</a>
+	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeUser()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		用户账号：<input type="text" class="textbox" id="user_name" name="user_name" style="width: 110px;"/>
-	        		用户名称：<input type="text" class="textbox" id="show_name" name="show_name" style="width: 110px;"/>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="">查询</a>
+	        		用户账号：<input type="text" class="textbox" id="search_user_name" name="search_user_name" style="width: 110px;"/>
+	        		用户名称：<input type="text" class="textbox" id="search_show_name" name="search_show_name" style="width: 110px;"/>
+	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchUser()">查询</a>
 	        	</div>
-	        </div>    
+	        </div>  
+	        <div id="user_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#user_dlg_buttons" style="width: 450px;">
+		      	<div style="margin: 0;padding: 20px 50px;">
+			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">角色信息</span></div>
+			        <div style="margin-bottom: 10px;">
+			        	用户账号：<input type="text" id="user_name" name="user_name" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        		   <span id="user_name_span" style="color: red"></span>	
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	用户密码：<input type="password" id="password" name="password" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			       			   <span id="password_span" style="color: red"></span>
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	用户名称：<input type="text" id="show_name" name="show_name" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			       			   <span id="show_name_span" style="color: red"></span>
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	用户角色：<input id="user_role" name="user_role" style="width: 180px;"/>  
+			       			   <span id="user_role_span" style="color: red"></span>
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	用户手机：<input type="text" id="phone" name="phone" class="textbox" style="width: 180px;"/>
+			       			   <span id="phone_span" style="color: red"></span>
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	用户邮箱：<input type="text" id="e_mail" name="e_mail" class="textbox" style="width: 180px;"/>
+			       			   <span id="e_mail_span" style="color: red"></span>
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	是否启用：是<input type="radio" id="user_radio_yes" name="user_radio" value="1" />否<input type="radio" id="user_radio_no" name="user_radio" value="0"/>
+			        </div>
+		        </div>
+		     </div>	  		
+	        <div id="user_dlg_buttons" style="text-align: center;">
+	        	<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width: 90px;">保存</a>
+	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#user_dog').dialog('close')" style="width: 90px;">取消</a>
+	        </div>  
 	    </div>   
 	    <div title="菜单授权">   
 	    	<div style="width: 100%;height: 93%;">
@@ -78,7 +109,7 @@
 		        </div>  
 		     </div>
 		     <div style="width: 100%;text-align: center;">
-		     	<a href="#" class="easyui-linkbutton" iconCls="icon-save" style="width: 80px;">保存</a>  
+		     	<a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="saveMenuRole()" style="width: 80px;">保存</a>  
 		     </div>      
 	    </div>   
 	</div>  
