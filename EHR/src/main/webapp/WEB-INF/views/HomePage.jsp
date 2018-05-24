@@ -9,8 +9,8 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/HomePage.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/textbox.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/PersonGrid.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/jquery.orgchart.css">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/style.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/jquery.orgchart.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/style.css"/>
 <link href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/calendar/css/skin.css" rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" rel="stylesheet" type="text/css" />
