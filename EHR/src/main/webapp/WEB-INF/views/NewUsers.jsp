@@ -9,7 +9,7 @@
 <title>新增用户</title>
 </head>
 <body>
-	<div id="role_user_menu" class="easyui-tabs" data-options="fit:true">   
+	<div id="role_user_menu">   
 	    <div title="添加角色">   
 	        <table id="role_tbo"></table>  
 	        <div id="role_tbar" style="padding: 5px;">

@@ -3,17 +3,31 @@ var objRowsUser;
 var objMenuID;
 //初始化
 $(function(){
-	//加载角色列表
-	loadRole(null);
-	//用户列表
-	loadUsers(null,null);
-	//加载树状菜单
-	loadMenuTree();
-	//加载菜单授权页面的角色列表
-	loadMenuGrid();
-	//加载角色下拉框
-	loadCombobox();
+	//加载Tabs
+	loadTabs();
 });
+//加载Tabs
+function loadTabs(){
+	$("#role_user_menu").tabs({
+		fit:true,
+		onSelect:function(title,index){
+			if(title=="添加角色"){
+				//加载角色列表
+				loadRole(null);
+			}else if(title=="添加用户"){
+				//用户列表
+				loadUsers(null,null);
+				//加载角色下拉框
+				loadCombobox();
+			}else if(title=="菜单授权"){
+				//加载树状菜单
+				loadMenuTree();
+				//加载菜单授权页面的角色列表
+				loadMenuGrid();
+			}
+		}
+	})
+}
 /**
  * -----------------------------------------添加角色function-------------------------------------------
  * @returns
@@ -96,6 +110,7 @@ function editRole(){
 //删除角色
 function removeRole(){
 	var row = $("#role_tbo").datagrid("getSelected");
+	
 	if(row){
 		$.messager.confirm("提示","确定要删除此数据？",function(r){
 			$.ajax({
@@ -398,10 +413,6 @@ function noBlurUser(){
 		$("#show_name_span").html("");		
 	}
 }
-//赋值
-function steDataSource(){
-	
-}
 //保存角色
 function saveUser(){
 	var dog_title=$('#user_dog').panel('options').title;
@@ -547,20 +558,33 @@ function loadMenuGrid(){
 		}
 	});
 }
+//检查数据是否选中
+function ckedDataMenuRole(row,nodes){
+	if(row==null){
+		$.messager.alert("消息提示！","请选择一个角色！","info");
+		return false;
+	}
+	if(nodes.length<=0){
+		$.messager.alert("消息提示！","请勾选对应的菜单！","info");
+		return false;
+	}
+	return true;
+}
+//保存授权菜单
 function saveMenuRole(){
 	var nodes = $('#menu_ul').tree('getChecked');
 	var row = $("#menu_tbo").datagrid("getSelected");
-	var params = [];
-	var param =[];
-	for(var i=0;i<nodes.length;i++){
-		var param ={};
-		param.id=nodes[i].id;
-		param.text=nodes[i].text;
-		param.role_id=row.role_id;
-		param.role_name=row.role_name;
-		params.push(param);
-	}
-	if(row){
+	if(ckedDataMenuRole(row,nodes)){
+		var params = [];
+		var param =[];
+		for(var i=0;i<nodes.length;i++){
+			var param ={};
+			param.id=nodes[i].id;
+			param.text=nodes[i].text;
+			param.role_id=row.role_id;
+			param.role_name=row.role_name;
+			params.push(param);
+		}
 		$.ajax({
 			url:prefix+"/saveMenuRole",
 			type:'post',
@@ -588,7 +612,5 @@ function saveMenuRole(){
 				}
 			}
 		});
-	}else{
-		$.messager.alert("消息提示！","请选择一个角色！","info");
 	}
 }
