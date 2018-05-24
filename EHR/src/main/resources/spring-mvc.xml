@@ -35,7 +35,7 @@ default-lazy-init="true">
   <!--对静态资源文件的访问  -->
  <mvc:resources mapping="/css/**" location="/css/" /> 
  <mvc:resources mapping="/easyui-js/**" location="/easyui-js/" /> 
- <mvc:resources mapping="/image/**" location="/image/" /> 
+ <mvc:resources mapping="/images/**/**" location="/images/login"/> 
  <mvc:resources mapping="/js/**" location="/js/" /> 
 
  <!-- 配置springmvc的视图解析器 -->
