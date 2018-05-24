@@ -7,12 +7,12 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/default/easyui.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/icon.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/HomePage.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/jquery.orgchart.css">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/style.css">
-<link href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/calendar/css/skin.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/calendar/css/calendar.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/jquery.orgchart.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/skin.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css" />
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.easyui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/locale/easyui-lang-zh_CN.js"></script>

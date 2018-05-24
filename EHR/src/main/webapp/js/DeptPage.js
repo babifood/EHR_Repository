@@ -283,7 +283,9 @@ function savedept(){
 function saveOrUpdate(url,data) {
 	$.ajax({
 		url: prefix + url,
+		type:'post',
 		data:data,
+		contentType:"application/x-www-form-urlencoded",
 		success:function(result){
 			if(result.code == "1"){
 				$("#dept_dog").dialog("close");
