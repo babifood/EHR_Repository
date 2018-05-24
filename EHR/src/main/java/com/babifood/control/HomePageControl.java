@@ -20,7 +20,7 @@ import com.babifood.service.HomePageService;
 
 @Controller
 public class HomePageControl {
-	@Autowired
+	@Autowired 
 	HomePageService homePageService;
 	/**
 	 * 获取导航菜单列表
