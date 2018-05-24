@@ -1,12 +1,13 @@
 package com.babifood.utils;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public final class UtilDateTime {
-
+	
 	// 获取某年份和月份的开始时间
 	public static java.sql.Date getMonthStartSqlDate(int year, int month) {
 		Calendar calendar = Calendar.getInstance();
@@ -260,10 +261,16 @@ public final class UtilDateTime {
 		return retStamp;
 	}
 	
+	public static String getCurrentTime(){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = new Date();
+		return sdf.format(date);
+	}
+	
 
 	public static void main(String args[]) {
-		
-		System.out.println(getDayEndByMonth(java.sql.Date.valueOf("2015-01-01"),7));
+		System.out.println(getCurrentTime());
+//		System.out.println(getDayEndByMonth(java.sql.Date.valueOf("2015-01-01"),7));
 	}
 
 }

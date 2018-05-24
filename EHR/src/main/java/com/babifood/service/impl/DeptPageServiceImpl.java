@@ -17,7 +17,7 @@ import com.babifood.entity.DeptEntity;
 import com.babifood.service.DeptPageService;
 import com.babifood.utils.ExcelUtil;
 import com.babifood.utils.IdGen;
-import com.babifood.utils.StringUtil;
+import com.babifood.utils.UtilString;
 
 @Service
 public class DeptPageServiceImpl implements DeptPageService {
@@ -29,7 +29,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 
 	@Override
 	public Map<String, Object> findOrganization(String deptCode) {
-		deptCode = StringUtil.isEmpty(deptCode) ? "1000" : deptCode;
+		deptCode = UtilString.isEmpty(deptCode) ? "1000" : deptCode;
 		Map<String, Object> organize = deptPageDao.findOrganizeByDeptCode(deptCode);
 		if(MapUtils.isNotEmpty(organize)){
 			List<Map<String, Object>> organizeList = getOrganizeChildren(organize.get("deptCode")+"");
@@ -46,7 +46,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 	 * @return
 	 */
 	public List<Map<String, Object>> getOrganizeChildren(String pCode){
-		if(StringUtil.isEmpty(pCode)){
+		if(UtilString.isEmpty(pCode)){
 			return null;
 		}
 		List<Map<String, Object>> organizeList = deptPageDao.findOrganizeList(pCode);
@@ -107,7 +107,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 	@Override
 	public Map<String, Object> deleteDept(String deptCode) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(StringUtil.isEmpty(deptCode)){
+		if(UtilString.isEmpty(deptCode)){
 			resultMap.put("code", "0");
 			resultMap.put("msg", "部门编号不存在");
 			return resultMap;
@@ -130,7 +130,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 	@Override
 	public Map<String, Object> findDeptByDeptCode(String deptCode) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(StringUtil.isEmpty(deptCode)){
+		if(UtilString.isEmpty(deptCode)){
 			resultMap.put("code", "0");
 			resultMap.put("msg", "部门编号不存在");
 			return resultMap;
@@ -164,7 +164,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 	@Override
 	public Map<String, Object> queryCountByDeptCode(String deptCode) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(StringUtil.isEmpty(deptCode)){
+		if(UtilString.isEmpty(deptCode)){
 			resultMap.put("code", "0");
 			resultMap.put("msg", "部门编号不存在");
 			return resultMap;

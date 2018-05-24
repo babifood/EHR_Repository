@@ -13,7 +13,7 @@ import org.springframework.util.CollectionUtils;
 import com.babifood.dao.HolidayDao;
 import com.babifood.entity.HolidayEntity;
 import com.babifood.service.HolidayService;
-import com.babifood.utils.StringUtil;
+import com.babifood.utils.UtilString;
 
 @Service
 public class HolidayServiceImpl implements HolidayService {
@@ -24,7 +24,7 @@ public class HolidayServiceImpl implements HolidayService {
 	@Override
 	public Map<String, Object> addOrUpdateHoliday(HolidayEntity holidayEntity) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (StringUtil.isEmpty(holidayEntity.getStartDate()) || StringUtil.isEmpty(holidayEntity.getEndDate())) {
+		if (UtilString.isEmpty(holidayEntity.getStartDate()) || UtilString.isEmpty(holidayEntity.getEndDate())) {
 			resultMap.put("code", "0");
 			resultMap.put("msg", "节假日日期不能为空");
 			return resultMap;
@@ -43,7 +43,7 @@ public class HolidayServiceImpl implements HolidayService {
 		}
 
 		int count = 0;
-		if (StringUtil.isEmpty(holidayEntity.getId()+"")) {
+		if (UtilString.isEmpty(holidayEntity.getId()+"")) {
 			count = holidayDao.addHoliday(holidayEntity);
 		} else {
 			count = holidayDao.updateHoliday(holidayEntity);
@@ -61,7 +61,7 @@ public class HolidayServiceImpl implements HolidayService {
 	@Override
 	public Map<String, Object> findHolidayEntity(String date) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (StringUtil.isEmpty(date)) {
+		if (UtilString.isEmpty(date)) {
 			resultMap.put("code", "0");
 			resultMap.put("msg", "节假日新增或修改失败");
 			return resultMap;
