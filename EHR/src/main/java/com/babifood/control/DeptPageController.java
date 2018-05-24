@@ -18,7 +18,7 @@ import com.babifood.service.DeptPageService;
 import com.babifood.utils.UtilDateTime;
 
 @Controller
-@RequestMapping("dept") 
+@RequestMapping("dept")
 public class DeptPageController {
 
 	@Autowired
@@ -81,8 +81,6 @@ public class DeptPageController {
 	@ResponseBody
 	@RequestMapping("addDept")
 	public Map<String, Object> addDept(DeptEntity deptEntity) throws Exception {
-		deptEntity.setDeptName(new String(deptEntity.getDeptName().getBytes("ISO-8859-1"), "UTF-8"));
-		deptEntity.setRemark(new String(deptEntity.getRemark().getBytes("ISO-8859-1"), "UTF-8"));
 		return deptService.addDept(deptEntity);
 	}
 	
@@ -95,8 +93,6 @@ public class DeptPageController {
 	@ResponseBody
 	@RequestMapping("updateDept")
 	public Map<String, Object> updateDept(DeptEntity deptEntity) throws UnsupportedEncodingException {
-		deptEntity.setDeptName(new String(deptEntity.getDeptName().getBytes("ISO-8859-1"), "UTF-8"));
-		deptEntity.setRemark(new String(deptEntity.getRemark().getBytes("ISO-8859-1"), "UTF-8"));
 		return deptService.updateDept(deptEntity);
 	}
 	
@@ -116,7 +112,7 @@ public class DeptPageController {
 	public void exportExcel(HttpServletResponse response,String type) throws Exception {
 		response.setContentType("application/vnd.ms-excel");    
         response.setHeader("Content-disposition", "attachment;filename=" + 
-        		new String("部门信息".getBytes("UTF-8"),"ISO8859-1") + UtilDateTime.getCurrentTime() + ".xls");    
+        		"部门信息" + UtilDateTime.getCurrentTime() + ".xls");    
         OutputStream ouputStream = response.getOutputStream();    
         deptService.exportExcel(ouputStream,type);
 	}

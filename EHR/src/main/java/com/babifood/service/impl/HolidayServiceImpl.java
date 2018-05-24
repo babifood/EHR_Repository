@@ -43,7 +43,7 @@ public class HolidayServiceImpl implements HolidayService {
 		}
 
 		int count = 0;
-		if (UtilString.isEmpty(holidayEntity.getId()+"")) {
+		if (UtilString.isEmpty(""+holidayEntity.getId())) {
 			count = holidayDao.addHoliday(holidayEntity);
 		} else {
 			count = holidayDao.updateHoliday(holidayEntity);

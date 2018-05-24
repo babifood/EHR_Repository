@@ -58,11 +58,6 @@ function loadOrganizeTree(deptCode){
 			deptCode:deptCode,
 		},
 		contentType:"application/x-www-form-urlencoded",
-		beforeSend:function(){
-			$.messager.progress({
-				text:'加载中......'
-			});
-		},
 		success:function(data){
 			$.messager.progress('close');
 			if(data == null || data == ""){
@@ -288,7 +283,9 @@ function savedept(){
 function saveOrUpdate(url,data) {
 	$.ajax({
 		url: prefix + url,
+		type:'post',
 		data:data,
+		contentType:"application/x-www-form-urlencoded",
 		success:function(result){
 			if(result.code == "1"){
 				$("#dept_dog").dialog("close");

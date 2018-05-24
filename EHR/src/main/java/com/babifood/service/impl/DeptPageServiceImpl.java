@@ -30,6 +30,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 	@Override
 	public Map<String, Object> findOrganization(String deptCode) {
 		deptCode = UtilString.isEmpty(deptCode) ? "1000" : deptCode;
+		//当前部门
 		Map<String, Object> organize = deptPageDao.findOrganizeByDeptCode(deptCode);
 		if(MapUtils.isNotEmpty(organize)){
 			List<Map<String, Object>> organizeList = getOrganizeChildren(organize.get("deptCode")+"");
@@ -49,6 +50,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 		if(UtilString.isEmpty(pCode)){
 			return null;
 		}
+		//根据pcode查询直属下级机构
 		List<Map<String, Object>> organizeList = deptPageDao.findOrganizeList(pCode);
 		if(!CollectionUtils.isEmpty(organizeList)){
 			for (Map<String, Object> map : organizeList) {
