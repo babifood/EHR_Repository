@@ -58,11 +58,6 @@ function loadOrganizeTree(deptCode){
 			deptCode:deptCode,
 		},
 		contentType:"application/x-www-form-urlencoded",
-		beforeSend:function(){
-			$.messager.progress({
-				text:'加载中......'
-			});
-		},
 		success:function(data){
 			$.messager.progress('close');
 			if(data == null || data == ""){

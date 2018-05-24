@@ -163,6 +163,9 @@ final public class UtilString {
 		if (string == null) {
 			return true;
 		}
+		if ("null".equals(string)) {
+			return true;
+		}
 		if (string.length() == 0) {
 			return true;
 		}

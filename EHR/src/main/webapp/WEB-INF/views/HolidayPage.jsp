@@ -9,10 +9,6 @@
 <!-- 	<link rel="icon" type="image/x-icon" href="../img/logo.ico"> -->
 </head>
 <body>
-	<link href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/calendar/css/skin.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/calendar/css/calendar.css" rel="stylesheet" type="text/css" />
 	<%--     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css"/> --%>
 	<div id="holiday_menu" class="easyui-tabs" data-options="fit:true">
 		<div title="节假日管理" id="calendar"style="float: none; margin: 0px auto;">

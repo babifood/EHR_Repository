@@ -18,7 +18,7 @@ import com.babifood.service.DeptPageService;
 import com.babifood.utils.UtilDateTime;
 
 @Controller
-@RequestMapping("dept") 
+@RequestMapping("dept")
 public class DeptPageController {
 
 	@Autowired
