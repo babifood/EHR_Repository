@@ -665,7 +665,8 @@ function loadEducation(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -676,7 +677,8 @@ function loadEducation(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -685,9 +687,9 @@ function loadEducation(){
 				title:"机构名称",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -718,9 +720,9 @@ function loadEducation(){
 				title:"专业",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -729,9 +731,9 @@ function loadEducation(){
 				title:"学历",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -740,9 +742,9 @@ function loadEducation(){
 				title:"学位",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -765,9 +767,6 @@ function loadEducation(){
 function endEditing(){
 	if (editIndex == undefined){return true}
 	if ($('#education_grid').datagrid('validateRow', editIndex)){
-		var ed = $('#education_grid').datagrid('getEditor', {index:editIndex,field:'e_property'});
-		var e_property_name = $(ed.target).combobox('getText');
-		$('#education_grid').datagrid('getRows')[editIndex]['e_property_name'] = e_property_name;
 		$('#education_grid').datagrid('endEdit', editIndex);
 		editIndex = undefined;
 		return true;
@@ -788,7 +787,6 @@ function addEducation(){
 function removeEducation(){
 	var index = $("#education_grid").datagrid("getRowIndex",$('#education_grid').datagrid('getSelected'));
 	var node = $("#education_grid").datagrid("getChecked");
-	console.log("index:"+index+"node"+node);
 	if(index>=0){
 		$('#education_grid').datagrid('cancelEdit', index)
 		.datagrid('deleteRow', index).datagrid('clearSelections',node).datagrid('acceptChanges');
@@ -849,7 +847,8 @@ function loadCultivateFront(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -860,7 +859,8 @@ function loadCultivateFront(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -869,9 +869,9 @@ function loadCultivateFront(){
 				title:"教育机构",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -880,9 +880,9 @@ function loadCultivateFront(){
 				title:"培训内容",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -891,9 +891,9 @@ function loadCultivateFront(){
 				title:"获得证书",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -914,7 +914,9 @@ function loadCultivateFront(){
 }
 //结束编辑
 function endEditingCultivateFront(){
-	if (editIndex_cf == undefined){return true}
+	if (editIndex_cf == undefined){
+		return true
+	}
 	if ($('#cultivate_front_grid').datagrid('validateRow', editIndex_cf)){
 		$('#cultivate_front_grid').datagrid('endEdit', editIndex_cf);
 		editIndex_cf = undefined;
@@ -996,7 +998,8 @@ function loadCultivateLater(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1007,7 +1010,8 @@ function loadCultivateLater(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1016,9 +1020,9 @@ function loadCultivateLater(){
 				title:"培训机构",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1027,9 +1031,9 @@ function loadCultivateLater(){
 				title:"培训课程",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1038,9 +1042,9 @@ function loadCultivateLater(){
 				title:"培训地点",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1049,9 +1053,9 @@ function loadCultivateLater(){
 				title:"获得证书",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1060,9 +1064,9 @@ function loadCultivateLater(){
 				title:"培训类别",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1073,7 +1077,8 @@ function loadCultivateLater(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1084,7 +1089,8 @@ function loadCultivateLater(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1197,7 +1203,8 @@ function loadWorkFront(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1208,7 +1215,8 @@ function loadWorkFront(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1217,9 +1225,9 @@ function loadWorkFront(){
 				title:"单位名称",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1228,9 +1236,9 @@ function loadWorkFront(){
 				title:"所属行业",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1239,9 +1247,9 @@ function loadWorkFront(){
 				title:"任职岗位",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1250,9 +1258,9 @@ function loadWorkFront(){
 				title:"证明人",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1261,9 +1269,9 @@ function loadWorkFront(){
 				title:"证明人岗位",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1272,9 +1280,9 @@ function loadWorkFront(){
 				title:"证明人联系电话",
 				width:120,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1283,9 +1291,9 @@ function loadWorkFront(){
 				title:"离职原因",
 				width:200,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1387,7 +1395,8 @@ function loadWorkLater(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1398,7 +1407,8 @@ function loadWorkLater(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1407,9 +1417,9 @@ function loadWorkLater(){
 				title:"单位名称",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1418,9 +1428,9 @@ function loadWorkLater(){
 				title:"任职岗位",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1520,9 +1530,9 @@ function loadCertificate(){
 				title:"证书名称",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1531,9 +1541,9 @@ function loadCertificate(){
 				title:"发证机构",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1544,7 +1554,8 @@ function loadCertificate(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1555,7 +1566,8 @@ function loadCertificate(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},

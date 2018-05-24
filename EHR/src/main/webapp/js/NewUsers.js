@@ -113,33 +113,35 @@ function removeRole(){
 	
 	if(row){
 		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			$.ajax({
-				url:prefix+'/removeRole',
-				type:'post',
-				data:{
-					role_id:row.role_id
-				},
-				contentType:"application/x-www-form-urlencoded",
-				beforeSend:function(){
-					$.messager.progress({
-						text:'删除中......',
-					});
-				},
-				success:function(data){
-					$.messager.progress('close');
-					if(data.status=="success"){
-						$.messager.show({
-							title:'消息提醒',
-							msg:'角色删除成功！',
-							timeout:3000,
-							showType:'slide'
+			if(r){
+				$.ajax({
+					url:prefix+'/removeRole',
+					type:'post',
+					data:{
+						role_id:row.role_id
+					},
+					contentType:"application/x-www-form-urlencoded",
+					beforeSend:function(){
+						$.messager.progress({
+							text:'删除中......',
 						});
-						loadRole(null);
-					}else{
-						$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+					},
+					success:function(data){
+						$.messager.progress('close');
+						if(data.status=="success"){
+							$.messager.show({
+								title:'消息提醒',
+								msg:'角色删除成功！',
+								timeout:3000,
+								showType:'slide'
+							});
+							loadRole(null);
+						}else{
+							$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+						}
 					}
-				}
-			});
+				});
+			}
 		});
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -340,33 +342,35 @@ function removeUser(){
 	var row = $("#user_tbo").datagrid("getSelected");
 	if(row){
 		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			$.ajax({
-				url:prefix+'/removeUser',
-				type:'post',
-				data:{
-					user_id:row.user_id
-				},
-				contentType:"application/x-www-form-urlencoded",
-				beforeSend:function(){
-					$.messager.progress({
-						text:'删除中......',
-					});
-				},
-				success:function(data){
-					$.messager.progress('close');
-					if(data.status=="success"){
-						$.messager.show({
-							title:'消息提醒',
-							msg:'用户删除成功！',
-							timeout:3000,
-							showType:'slide'
+			if(r){
+				$.ajax({
+					url:prefix+'/removeUser',
+					type:'post',
+					data:{
+						user_id:row.user_id
+					},
+					contentType:"application/x-www-form-urlencoded",
+					beforeSend:function(){
+						$.messager.progress({
+							text:'删除中......',
 						});
-						loadUsers(null,null);
-					}else{
-						$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+					},
+					success:function(data){
+						$.messager.progress('close');
+						if(data.status=="success"){
+							$.messager.show({
+								title:'消息提醒',
+								msg:'用户删除成功！',
+								timeout:3000,
+								showType:'slide'
+							});
+							loadUsers(null,null);
+						}else{
+							$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+						}
 					}
-				}
-			});
+				});
+			}
 		});
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
