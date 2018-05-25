@@ -19,7 +19,31 @@ $(function(){
 	//加载人员档案列表
 	loadPersonGrid(null,null);
 	loadAccordion();
+	loadLevelComboBox();
+	loadPostComboBox();
 });
+//加载岗位combobox
+function loadPostComboBox(){
+	$('#p_post').combobox({    
+	    url:prefix+'/loadComboboxPositionData',    
+	    valueField:'id',    
+	    textField:'text',
+	    onSelect: function(rec){
+	    	$("#p_post_id").val(rec.id);
+	    }   
+	});
+}
+//加载职级ComboGrid
+function loadLevelComboBox(){
+	$('#p_level_name').combobox({    
+		url:prefix+'/loadComboboxJobLevelData',    
+	    valueField:'id',    
+	    textField:'text',
+	    onSelect: function(rec){
+	    	$("#p_level_id").val(rec.id);
+	    } 
+	}); 
+}
 //表单验证
 function checkForm(tRf){
 	var box =["p_number","p_name","p_title"]
@@ -208,9 +232,9 @@ function editFromSetValues(data){
 	$("#p_age").spinner('setValue',data.p_age);//年龄
 	$("#p_title").val(data.p_title);//职称
 	$("#p_post_id").val(data.p_post_id);//岗位编号
-	$("#p_post").val(data.p_post);//岗位名称
+	$("#p_post").combobox('setValue',data.p_post);//岗位名称
 	$("#p_level_id").val(data.p_level_id);//职级编号
-	$("#p_level_name").val(data.p_level_name);//职级名称
+	$("#p_level_name").combobox('setValue',data.p_level_name);//职级名称
 	$("#p_company_id").val(data.p_company_id);//公司编码
 	$("#p_company_name").val(data.p_company_name);//公司名称
 	$("#p_department_id").val(data.p_department_id);//所属部门编号
@@ -324,6 +348,11 @@ function removePersonInFo(){
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
+}
+//查询条件重置
+function resetPersonInFo(){
+	$("#search_p_number").val("");
+	$("#search_p_name").val("");
 }
 //查询人员信息
 function searchPersonInFo(){
@@ -481,9 +510,9 @@ function setData(){
 			p_age:$("#p_age").val(),//年龄
 			p_title:$("#p_title").val(),//职称
 			p_post_id:$("#p_post_id").val(),//岗位编号
-			p_post:$("#p_post").val(),//岗位名称
+			p_post:$('#p_post').combobox('getText'),//岗位名称
 			p_level_id:$("#p_level_id").val(),//职级编号
-			p_level_name:$("#p_level_name").val(),//职级名称
+			p_level_name:$("#p_level_name").combobox('getText'),//职级名称
 			p_company_id:$("#p_company_id").val(),//公司编码
 			p_company_name:$("#p_company_name").val(),//公司名称
 			p_department_id:$("#p_department_id").val(),//所属部门编号
@@ -571,6 +600,7 @@ function getCheckBoxValue(id){
 //保存角色
 function savePersonInFo(){
 	var data = setData();
+	console.log(data);
 	if(checkFormData()){
 		$.ajax({
 			url:prefix+'/savePersonInFo',
@@ -1667,9 +1697,9 @@ function loadFamily(){
 				title:"与员工关系",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1678,9 +1708,9 @@ function loadFamily(){
 				title:"姓名",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1691,7 +1721,8 @@ function loadFamily(){
 				editor:{
 					type:'datebox',
 					options:{
-						editable: false
+						editable: false,
+						required:true
 					},
 				},
 			},
@@ -1700,9 +1731,9 @@ function loadFamily(){
 				title:"工作单位",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},
@@ -1711,9 +1742,9 @@ function loadFamily(){
 				title:"职务",
 				width:100,
 				editor:{
-					type:'text',
+					type:'validatebox',
 					options:{
-						
+						required:true
 					},
 				},
 			},

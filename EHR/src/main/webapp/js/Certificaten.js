@@ -183,6 +183,10 @@ function loadCertificaten(c_p_number,c_p_name){
 		onDblClickRow:onDblClickRowCertificaten,
 	});
 }
+//查询条件重置
+function resetCertificaten(){
+	$("#search_p_number").val("");$("#search_p_name").val("");
+}
 //查询
 function searchCertificaten(){
 	loadCertificaten($("#search_p_number").val(),$("#search_p_name").val());
@@ -218,34 +222,38 @@ function removeCertificaten(){
 	var index = $("#certificaten_grid").datagrid("getRowIndex",rowData);
 	var node = $("#certificaten_grid").datagrid("getChecked");
 	if(index>=0){
-		$.ajax({
-			url:prefix+'/removeCertificaten',
-			type:'post',
-			data:{
-				c_id:rowData.c_id
-			},
-			contentType:"application/x-www-form-urlencoded",
-			beforeSend:function(){
-				$.messager.progress({
-					text:'删除中......',
+		$.messager.confirm("提示","确定要删除此数据？",function(r){
+			if(r){
+				$.ajax({
+					url:prefix+'/removeCertificaten',
+					type:'post',
+					data:{
+						c_id:rowData.c_id
+					},
+					contentType:"application/x-www-form-urlencoded",
+					beforeSend:function(){
+						$.messager.progress({
+							text:'删除中......',
+						});
+					},
+					success:function(data){
+						$.messager.progress('close');
+						if(data.status=="success"){
+							$.messager.show({
+								title:'消息提醒',
+								msg:'删除成功!',
+								timeout:3000,
+								showType:'slide'
+							});
+							$('#certificaten_grid').datagrid('cancelEdit', index)
+							.datagrid('deleteRow', index).datagrid('clearSelections',node);
+							$('#certificaten_grid').datagrid('acceptChanges');
+							editIndex = undefined;
+						}else{
+							$.messager.alert("消息提示！","删除失败!","warning");
+						}
+					}
 				});
-			},
-			success:function(data){
-				$.messager.progress('close');
-				if(data.status=="success"){
-					$.messager.show({
-						title:'消息提醒',
-						msg:'删除成功!',
-						timeout:3000,
-						showType:'slide'
-					});
-					$('#certificaten_grid').datagrid('cancelEdit', index)
-					.datagrid('deleteRow', index).datagrid('clearSelections',node);
-					$('#certificaten_grid').datagrid('acceptChanges');
-					editIndex = undefined;
-				}else{
-					$.messager.alert("消息提示！","删除失败!","warning");
-				}
 			}
 		});
 	}else{

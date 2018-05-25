@@ -27,14 +27,22 @@
 	        <div id="JobLevel_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#JobLevel_dlg_buttons" style="width: 450px;">
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">职级信息</span></div>
-			        <div style="margin-bottom: 10px;">
-			        	职务级别ID：<input type="text" id="JobLevel_id" name="JobLevel_id" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
-			        		   <span id="JobLevel_id_span" style="color: red"></span>	
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	职务级别名称：<input type="text" id="JobLevel_name" name="JobLevel_name" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
-			       			   <span id="JobLevel_name_span" style="color: red"></span>
-			        </div>
+			        <table>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>职务级别ID：</td>
+			        		<td>
+			        			<input type="text" id="JobLevel_id" name="JobLevel_id" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
+			        			<span id="JobLevel_id_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>职务级别名称：</td>
+			        		<td>
+			        			<input type="text" id="JobLevel_name" name="JobLevel_name" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
+			        			<span id="JobLevel_name_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        </table>
 		        </div>
 		     </div>		
 	        <div id="JobLevel_dlg_buttons" style="text-align: center;">
@@ -61,14 +69,22 @@
 	        <div id="position_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#position_dlg_buttons" style="width: 450px;">
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">职位信息</span></div>
-			        <div style="margin-bottom: 10px;">
-			        	职位名称：<input type="text" id="position_name" name="position_name" class="textbox"  onblur="noBlurPosition()"style="width: 180px;"/>
-			       			   <span id="position_name_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	所属职级名称：<input id="position_joblevel" name="position_joblevel" style="width: 180px;"/>  
-			       			   <span id="position_joblevel_span" style="color: red"></span>
-			        </div>
+					<table>
+						<tr style="margin-bottom: 10px;">
+							<td>职位名称：</td>
+							<td>
+								<input type="text" id="position_name" name="position_name" class="textbox"  onblur="noBlurPosition()"style="width: 180px;"/>
+			       			    <span id="position_name_span" style="color: red"></span>
+							</td>
+						</tr>
+						<tr style="margin-bottom: 10px;">
+							<td>所属职级名称：</td>
+							<td>
+								<input id="position_joblevel" name="position_joblevel" style="width: 180px;"/>  
+			       			   	<span id="position_joblevel_span" style="color: red"></span>
+							</td>
+						</tr>
+					</table>			        
 		        </div>
 		     </div>   		
 	        <div id="position_dlg_buttons" style="text-align: center;">
@@ -94,14 +110,22 @@
 	        <div id="post_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#post_dlg_buttons" style="width: 450px;">
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">岗位信息</span></div>			    
-			        <div style="margin-bottom: 10px;">
-			        	岗位名称：<input type="text" id="post_name" name="post_name" class="textbox"  onblur="noBlurPost()"style="width: 180px;"/>
-			       			   <span id="post_name_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	所属职位名称：<input id="post_position" name="post_position" style="width: 180px;"/>  
-			       			   <span id="post_position_span" style="color: red"></span>
-			        </div>
+			        <table>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>岗位名称：</td>
+			        		<td>
+			        			<input type="text" id="post_name" name="post_name" class="textbox"  onblur="noBlurPost()"style="width: 180px;"/>
+			       			   	<span id="post_name_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>所属职位名称：</td>
+			        		<td>
+			        			<input id="post_position" name="post_position" style="width: 180px;"/>  
+			       			   	<span id="post_position_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        </table>
 		        </div>
 		     </div>	  		
 	        <div id="post_dlg_buttons" style="text-align: center;">

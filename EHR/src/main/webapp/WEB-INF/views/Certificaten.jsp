@@ -19,6 +19,7 @@
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>
 	        	姓名：<input type="text" class="textbox" id="search_p_name" name="search_p_name" style="width: 110px;"/>
+	        	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetCertificaten()">重置</a>
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchCertificaten()">查询</a>
 	        </div>
 		</div>

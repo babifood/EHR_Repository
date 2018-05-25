@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/default/easyui.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/icon.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/HomePage.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/textbox.css"/>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.easyui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/locale/easyui-lang-zh_CN.js"></script>

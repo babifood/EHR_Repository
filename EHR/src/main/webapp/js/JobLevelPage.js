@@ -89,35 +89,37 @@ function removeJobLevel(){
 	var row = $("#JobLevel_tbo").datagrid("getSelected");
 	if(row){
 		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			$.ajax({
-				url:prefix+'/removeJobLevel',
-				type:'post',
-				data:{
-					joblevel_id:row.joblevel_id
-				},
-				contentType:"application/x-www-form-urlencoded",
-				beforeSend:function(){
-					$.messager.progress({
-						text:'删除中......',
-					});
-				},
-				success:function(data){
-					$.messager.progress('close');
-					if(data.status=="success"){
-						$.messager.show({
-							title:'消息提醒',
-							msg:'职级删除成功！',
-							timeout:3000,
-							showType:'slide'
+			if(r){
+				$.ajax({
+					url:prefix+'/removeJobLevel',
+					type:'post',
+					data:{
+						joblevel_id:row.joblevel_id
+					},
+					contentType:"application/x-www-form-urlencoded",
+					beforeSend:function(){
+						$.messager.progress({
+							text:'删除中......',
 						});
-						loadJobLevel(null,null);
-					}else if(data.status=="error"){
-						$.messager.alert("消息提示！","该职级下包含职位信息，不允许删除！","warning");
-					}else{
-						$.messager.alert("消息提示！","职级删除失败，请联系管理员！","warning");
+					},
+					success:function(data){
+						$.messager.progress('close');
+						if(data.status=="success"){
+							$.messager.show({
+								title:'消息提醒',
+								msg:'职级删除成功！',
+								timeout:3000,
+								showType:'slide'
+							});
+							loadJobLevel(null,null);
+						}else if(data.status=="error"){
+							$.messager.alert("消息提示！","该职级下包含职位信息，不允许删除！","warning");
+						}else{
+							$.messager.alert("消息提示！","职级删除失败，请联系管理员！","warning");
+						}
 					}
-				}
-			});
+				});
+			}
 		});
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -321,35 +323,37 @@ function removePosition(){
 	var row = $("#position_tbo").datagrid("getSelected");
 	if(row){
 		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			$.ajax({
-				url:prefix+'/removePosition',
-				type:'post',
-				data:{
-					Position_id:row.position_id
-				},
-				contentType:"application/x-www-form-urlencoded",
-				beforeSend:function(){
-					$.messager.progress({
-						text:'删除中......',
-					});
-				},
-				success:function(data){
-					$.messager.progress('close');
-					if(data.status=="success"){
-						$.messager.show({
-							title:'消息提醒',
-							msg:'职位删除成功！',
-							timeout:3000,
-							showType:'slide'
+			if(r){
+				$.ajax({
+					url:prefix+'/removePosition',
+					type:'post',
+					data:{
+						Position_id:row.position_id
+					},
+					contentType:"application/x-www-form-urlencoded",
+					beforeSend:function(){
+						$.messager.progress({
+							text:'删除中......',
 						});
-						loadPosition(null,null,null);
-					}else if(data.status=="error"){
-						$.messager.alert("消息提示！","该职位下包含岗位信息，不允许删除！","warning");
-					}else{
-						$.messager.alert("消息提示！","职位删除失败，请联系管理员！","warning");
+					},
+					success:function(data){
+						$.messager.progress('close');
+						if(data.status=="success"){
+							$.messager.show({
+								title:'消息提醒',
+								msg:'职位删除成功！',
+								timeout:3000,
+								showType:'slide'
+							});
+							loadPosition(null,null,null);
+						}else if(data.status=="error"){
+							$.messager.alert("消息提示！","该职位下包含岗位信息，不允许删除！","warning");
+						}else{
+							$.messager.alert("消息提示！","职位删除失败，请联系管理员！","warning");
+						}
 					}
-				}
-			});
+				});
+			}
 		});
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -531,33 +535,35 @@ function removePost(){
 	var row = $("#post_tbo").datagrid("getSelected");
 	if(row){
 		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			$.ajax({
-				url:prefix+'/removePost',
-				type:'post',
-				data:{
-					post_id:row.post_id
-				},
-				contentType:"application/x-www-form-urlencoded",
-				beforeSend:function(){
-					$.messager.progress({
-						text:'删除中......',
-					});
-				},
-				success:function(data){
-					$.messager.progress('close');
-					if(data.status=="success"){
-						$.messager.show({
-							title:'消息提醒',
-							msg:'岗位删除成功！',
-							timeout:3000,
-							showType:'slide'
+			if(r){
+				$.ajax({
+					url:prefix+'/removePost',
+					type:'post',
+					data:{
+						post_id:row.post_id
+					},
+					contentType:"application/x-www-form-urlencoded",
+					beforeSend:function(){
+						$.messager.progress({
+							text:'删除中......',
 						});
-						loadPost(null,null);
-					}else{
-						$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+					},
+					success:function(data){
+						$.messager.progress('close');
+						if(data.status=="success"){
+							$.messager.show({
+								title:'消息提醒',
+								msg:'岗位删除成功！',
+								timeout:3000,
+								showType:'slide'
+							});
+							loadPost(null,null);
+						}else{
+							$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+						}
 					}
-				}
-			});
+				});
+			}
 		});
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");

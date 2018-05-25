@@ -1,13 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--人事档案 -->
+    <!-- 引入样式 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/PersonGrid.css"/>
-<title>人事档案</title>
-</head>
-<body>
+	<!-- 嵌入easyui-tabs主体内容 -->
 	<div ip="person_panel" class="easyui-panel" data-options="fit:true,border:false,noheader:true">
 		<table id="person_grid"></table>
 		<div id="person_tbar">
@@ -19,6 +15,7 @@
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>
 	        	姓名：<input type="text" class="textbox" id="search_p_name" name="search_p_name" style="width: 110px;"/>
+	        	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPersonInFo()">重置</a>
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPersonInFo()">查询</a>
 	        </div>
 		</div>
@@ -74,14 +71,14 @@
 								<td>岗位名称:</td>
 								<td>
 									<input type="hidden" id="p_post_id" name="p_post_id"/>
-									<input type="text" id="p_post" name="p_post" class="textbox"/>
+									<input type="text" id="p_post" name="p_post" style="width:236px"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>职级名称:</td>
 								<td>
 									<input type="hidden" id="p_level_id" name="p_level_id"/>
-									<input type="text" id="p_level_name" name="p_level_name" class="textbox"/>
+									<input type="text" id="p_level_name" name="p_level_name" style="width:236px"/>
 								</td>
 								<td>公司名称:</td>
 								<td>
@@ -422,7 +419,4 @@
 			</div>
 		</div>
 	</div>
-	
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/PersonGrid.js"></script>
-</body>
-</html>
