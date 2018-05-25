@@ -1,15 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<title>节假日管理</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!-- <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/DeptPahe.js"></script> -->
-<!-- 	<link rel="icon" type="image/x-icon" href="../img/logo.ico"> -->
-</head>
-<body>
-	<%--     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css"/> --%>
+    pageEncoding="UTF-8"%>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/skin.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css" />
 	<div id="holiday_menu" class="easyui-tabs" data-options="fit:true">
 		<div title="节假日管理" id="calendar"style="float: none; margin: 0px auto;">
 			<div class="main" style="height: 98%;">
@@ -185,11 +179,5 @@
 			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#holiday_dog').dialog('close')" style="width: 90px;">取消</a>
 		</div>
 	</div>
-
-
 	<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/calendar/js/calendar.js"></script>
-</body>
-
-</html>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/calendar/js/calendar.js"></script>

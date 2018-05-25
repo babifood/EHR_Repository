@@ -7,12 +7,6 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/default/easyui.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui-js/themes/icon.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/HomePage.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/jquery.orgchart.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/style.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/skin.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css" />
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.easyui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/locale/easyui-lang-zh_CN.js"></script>
@@ -31,12 +25,12 @@
     	<ul id="menu"></ul>
     </div>   
     <div data-options="region:'center'" style="overflow: hidden;">
-    	<div id="tabs">
-    		<div title="起始页" style="padding: 0 10px;display: block;">
-		    	<div id="center_left" style="float: left;width: 50%;height: 100%;"></div>
-		    	<div id="center_right" style="float: right;width: 50%;height: 100%;"></div>
-	    	</div>
-    	</div>
+	    <div id="tabs">
+	    	<div title="起始页" style="padding: 0 10px;display: block;">
+			    <div id="center_left" style="float: left;width: 50%;height: 100%;"></div>
+			    <div id="center_right" style="float: right;width: 50%;height: 100%;"></div>
+		    </div>
+	    </div>
     </div>  
 </body>
 </html>
