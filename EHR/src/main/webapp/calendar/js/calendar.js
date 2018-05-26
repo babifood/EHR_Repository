@@ -1,6 +1,8 @@
 /*
 *
 */
+var holidayNode;
+console.log("222222");
 var lunarInfo = new Array(
 		0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
 		0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,
@@ -601,22 +603,36 @@ function drawCld(SY, SM) {
     }
     $("table.biao .calendar_day").click(function() {
     	$("table.biao td").removeClass("selday");
-    	var node = this;
-    	node.classList.add("selday");
-    	operatingBind(node);
+    	holidayNode = this;
+    	holidayNode.classList.add("selday");
 	})
 }
 
 function operatingBind(node){
-	$("#holiday-add").unbind('click').click(function(){
-		addHoliday(node);
-	});
-	$("#holiday-edit").unbind('click').click(function(){
-		editHoliday(node);
-	});
-	$("#holiday-remove").unbind('click').click(function(){
-		removeHoliday(node);
-	});
+	 $('#holiday_panel').panel({    
+	  	  width:500,    
+	  	  height:150,    
+	  	  title: '节假日',    
+	  	  tools: [{    
+	  	    iconCls:'icon-add',    
+	  	    handler:function(){addHoliday(holidayNode);}    
+	  	  },{    
+	  	    iconCls:'icon-edit',    
+	  	    handler:function(){editHoliday(holidayNode);}    
+	  	  },{    
+	  	    iconCls:'icon-remove',    
+	  	    handler:function(){removeHoliday(holidayNode);}    
+	  	  }]    
+	  	});
+//	$("#holiday-add").unbind('click').click(function(){
+//		addHoliday(node);
+//	});
+//	$("#holiday-edit").unbind('click').click(function(){
+//		editHoliday(node);
+//	});
+//	$("#holiday-remove").unbind('click').click(function(){
+//		removeHoliday(node);
+//	});
 }
 
 function addHoliday(td){
@@ -771,252 +787,6 @@ var sw = 0;
 var cnt = 0;
 var dStyle;
 
-
-// 将农历iLunarMonth月格式化成农历表示的字符串
-//function FormatLunarMonth(iLunarMonth) {
-//    var szText = new String("正二三四五六七八九十");
-//    var strMonth;
-//    if (iLunarMonth <= 10) {
-//        strMonth = szText.substr(iLunarMonth - 1, 1);
-//    }
-//    else if (iLunarMonth == 11) strMonth = "十一";
-//    else strMonth = "十二";
-//    return strMonth + "月";
-//}
-// 将农历iLunarDay日格式化成农历表示的字符串
-//function FormatLunarDay(iLunarDay) {
-//    var szText1 = new String("初十廿三");
-//    var szText2 = new String("一二三四五六七八九十");
-//    var strDay;
-//    if ((iLunarDay != 20) && (iLunarDay != 30)) {
-//        strDay = szText1.substr((iLunarDay - 1) / 10, 1) + szText2.substr((iLunarDay - 1) % 10, 1);
-//    }
-//    else if (iLunarDay != 20) {
-//        strDay = szText1.substr(iLunarDay / 10, 1) + "十";
-//    }
-//    else {
-//        strDay = "二十";
-//    }
-//    return strDay;
-//}
-//显示详细日期资料
-//function mOvr(thisObj, v) {
-//    var s,festival,jy;
-//
-//    sObj = $("#SD" + v);
-//    var d = sObj.html() - 1;
-//
-//    if (sObj.html() != '') {
-//        if (cld[d].sgz5 != 0) {
-//
-//            jy = cld[d].sgz5;
-//        } else {
-//            jy = jcr(cld[d].sgz3);
-//
-//        }
-//
-//        var arr = [];
-//        if (cld[d].solarTerms == '' && cld[d].solarFestival == '' && cld[d].lunarFestival == '')
-//
-//            arr.push('<div id="teshu"></div>');
-//        else
-//        arr.push('<div id="teshu"><FONT  COLOR="#ff0000"  STYLE="font-size:12px;">' + cld[d].solarTerms + ' ' + cld[d].solarFestival + ' ' + cld[d].lunarFestival + '</FONT></div>');
-//
-//        arr.push('<div style="width:65px; height:30px; color:#666666; float:left; font-size:60px; text-align:center;">' + cld[d].sDay + '</div>');
-//        arr.push('<font color="black" style="font-weight:bold;font-size:13px;">    ' + cld[d].sYear + '年' + cld[d].sMonth + '月' + cld[d].sDay + '日</font>');
-//        arr.push('<font style="font-size:12px;line-height:28px"><b>' + '星期' + cld[d].week + '</b></font><br>');
-//        arr.push('<font style="font-size:12px;color:#000000;" >农历' + (cld[d].isLeap ? '闰' : ' ') + FormatLunarMonth(cld[d].lMonth) + FormatLunarDay(cld[d].lDay) + '</font>');
-//        arr.push('<font style="font-size:12px">&nbsp;&nbsp;' + cld[d].cYear + '年 ' + cld[d].cMonth + '月 ' + cld[d].cDay + '日</font><br><br>');
-//        arr.push('<div style="width:95%; height:70px; margin-top:30px; padding-top:8px; border-top:1px solid #CCCCCC; margin-left:auto; margin-right:auto;">' + jy + '</div>');
-//
-//        //thisObj.style.backgroundColor = '#fbfbad';
-//        var d = $(thisObj);
-//        var pos = d.offset();
-//        var t = pos.top + d.height() + 5; // 弹出框的上边位置
-//        var l = pos.left + d.width() - 150;  // 弹出框的左边位置
-//
-//
-//        //<!--
-//
-//        var winWidth = 0;
-//
-//        var winHeight = 0;
-//
-//        function findDimensions() {
-//
-//            // 获取窗口宽度
-//
-//            if (window.innerWidth)
-//
-//                winWidth = window.innerWidth;
-//
-//            else if ((document.body) && (document.body.clientWidth))
-//
-//                winWidth = document.body.clientWidth;
-//
-//            // 获取窗口高度
-//
-//            if (window.innerHeight)
-//
-//                winHeight = window.innerHeight;
-//
-//            else if ((document.body) && (document.body.clientHeight))
-//
-//                winHeight = document.body.clientHeight;
-//
-//            // 通过深入 Document 内部对 body 进行检测，获取窗口大小
-//
-//            if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
-//
-//                winHeight = document.documentElement.clientHeight;
-//
-//                winWidth = document.documentElement.clientWidth;
-//
-//            }
-//
-//            // 结果输出至两个文本框
-//
-//
-//        }
-//
-//        findDimensions();
-//
-//        // 调用函数，获取数值
-//
-//        window.onresize = findDimensions;
-//
-//        //-->
-//
-//        if (winHeight - pos.top < 230) {
-//            t = pos.top + d.height() - 180;
-//            l = pos.left + d.width() + 5;
-//
-//        }
-//
-//        if (winWidth - pos.left < 350) {
-//
-//            t = pos.top + d.height() - 180;
-//            l = pos.left + d.width() - 360;
-//
-//            if (pos.top < 216) {
-//                t = pos.top + d.height() - 100;
-//                l = pos.left + d.width() - 360;
-//            }
-//        }
-//
-//
-//        $("#details").addClass("pop");
-//        $("#details").css({ "top": t, "left": l }).show();
-//        $("#details").html(arr.join(""));
-//
-//
-//        if (snow == 0) {
-//
-//            snow = 1;
-//
-//        }
-//
-//
-//    }
-//}
-////日期点击函数
-//function mOck(thisObj, v,i){
-//	var onoff = thisObj.attributes["on"].value; //判定当前是否已经选中了，0是表示之前没有被选 现在被选， 1是表示之前已经被选择了 现在取消
-//	var type = thisObj.getAttribute("class");  //判定类型 是否是特殊工作日和假日
-//	var dayContainer = thisObj.getElementsByTagName("font")[0]; //公历显示数据
-//	var nian = $('#nian').text();
-//	var yue = $('#yue').text();
-//	var dayJson = ""; //添加的数据
-//	var day = dayContainer.innerHTML;
-//	var ymd = nian+addZ(yue)+addZ(day);
-//	if (ymd.length!=8) {
-//		return false;
-//	}
-//	var dayContainer2 = thisObj.getElementsByTagName("font")[1];
-//	var name = dayContainer2.innerHTML;
-//	if (name.indexOf("font") > 0) { //获取农历的值
-//		var names = name.split(">");
-//		var namew = names[1].split("<");
-//		name = namew[0];
-//	}
-//	var ids = thisObj.attributes["id"].value
-//	
-//	//记录是否为周末        lx = 1  是工作日   0是周六 周末 和节假日  默认的
-//	//type =workday 特殊工作日    holiday 特殊假日
-//	var lx='1';//是工作日
-//	
-//	
-//	var dayColor = dayContainer.attributes["color"];
-//	var dayF = nian+'/'+addZ(yue)+'/'+addZ(day);
-//	if(dayColor&&dayColor.value=='red'&&getH(dayF)){
-//		 lx = '0';//周末
-//	}
-//	dayJson = '{ymd:'+nian+addZ(yue)+addZ(day)+',name:'+name+',isWorkDay:';
-//	
-//	//isworkday  0 为特殊假日  1 为特殊工作日
-//	//var sssss=document.getElementById(ymd).value;<img id='imgchlik' src='../img/false.png'/>加×号的
-//	if (type=="workday" || type=="seldaywork") {  //特殊工作日
-//		if (onoff == "0") {
-//			dayJson += '0}';//添加修改数据
-//			thisObj.attributes["on"].value='1';
-//			document.getElementById("setholiday").innerHTML += "<span class='date' id="+ymd+">"+ymd+"   "+"<img id='"+type+"|"+name+"' value='"+ymd+"' onClick='imgonclick("+ymd+","+ids+","+lx+",this)' src='images/false.png'/></span>";//将内容加入框中
-//			thisObj.setAttribute("class", "seldaywork");//设定为选中样式
-//			
-//			hDays.push(dayJson);//加入数组
-//		}else if (onoff == "1"){
-//			dayJson += '0}';//添加修改数据
-//			thisObj.attributes["on"].value='0';
-//			thisObj.setAttribute("class","workday");//还原样式
-//			$("#ymd").remove();
-//			delArry(hDays,dayJson); //删除数据内容
-//			if(document.getElementById(ymd)){
-//				$("#"+ymd).remove();
-//			}
-//			delArry(hDays,dayJson); //删除数据内容
-//		}
-//	} else if(type == "holiday" || type=="seldayholiday"){ //特殊假日
-//		if (onoff == "0") {
-//			dayJson += '1}';//添加修改数据
-//			thisObj.attributes["on"].value='1';
-//			document.getElementById("setworkday").innerHTML += "<span  class='date' id="+ymd+">"+ymd+"   "+"<img id='"+type+"|"+name+"' value='"+ymd+"' onClick='imgonclick("+ymd+","+ids+","+lx+",this)' src='images/false.png'/></span>";//将内容加入框中
-//			thisObj.setAttribute("class", "seldayholiday");//设定为选中样式
-//			hDays.push(dayJson);//加入数组
-//		}else if (onoff == "1"){
-//			dayJson += '1}';//添加修改数据
-//			thisObj.attributes["on"].value='0';
-//			thisObj.setAttribute("class", "holiday");//还原样式
-//			delArry(hDays,dayJson); //删除数据内容
-//			if(document.getElementById(ymd)){
-//				$("#"+ymd).remove();
-//			}
-//			delArry(hDays,dayJson); //删除数据内容
-//		}
-//	} else {
-//		if(lx =="1"){ //表示工作日 周一到周5 
-//			dayJson += '0}';//添加修改数据
-//		}else if (lx =="0") {
-//			dayJson += '1}';//添加修改数据
-//		}
-//		if (onoff == "0") {
-//			thisObj.attributes["on"].value='1';
-//			if(lx =="1"){ //表示工作日 周一到周5 
-//				document.getElementById("setholiday").innerHTML += "<span  class='date' id="+ymd+">"+ymd+"   "+"<img id='"+type+"|"+name+"' value='"+ymd+"' onClick='imgonclick("+ymd+","+ids+","+lx+",this)' src='images/false.png'/></span>";//将内容加入框中
-//			}else if (lx =="0") {
-//				document.getElementById("setworkday").innerHTML += "<span  class='date' id="+ymd+">"+ymd+"   "+"<img id='"+type+"|"+name+"' value='"+ymd+"' onClick='imgonclick("+ymd+","+ids+","+lx+",this)' src='images/false.png'/></span>";//将内容加入框中
-//			}
-//			hDays.push(dayJson);//加入数组
-//			thisObj.setAttribute("class", "selday");//设定为选中样式
-//		}else if (onoff == "1"){
-//			thisObj.attributes["on"].value='0';
-//			if(document.getElementById(ymd)){
-//				$("#"+ymd).remove();
-//			}
-//			//.innerHTML = "";//删除显示框中内容
-//			thisObj.setAttribute("class", "");//还原样式
-//			delArry(hDays,dayJson); //删除数据内容
-//		}
-//	}
-//}
 /**
  * 图片点击X事件
  */
@@ -1426,6 +1196,8 @@ $(function() {
     drawCld(tY, tM);
     operatingBind();//绑定按钮
     timeFormat();//时间插件
+    console.log("111111111111111");
+    operatingBind(holidayNode);
 });
 
 function timeFormat(){
