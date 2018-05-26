@@ -3,17 +3,13 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/jquery.orgchart.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/organize/examples/css/style.css"/>
 <div class="easyui-layout" data-options="fit:true">   
-    <div data-options="region:'west',title:'部门信息',split:true,tools:'#dept-tools'" style="width:200px;">
+    <div data-options="region:'west',title:'部门信息',split:true" style="width:200px;">
     	<ul id="dept_tree"></ul>
     </div>
-    <div id="dept-tools">
-		<a href="javascript:void(0)" class="easyui-menubutton" id="dept-edit"
-			data-options="menu:'#mm'"  style="width: 50px;height: 15px"></a>   
-		<div id="mm">   
+    <div id="dept-tools" class="easyui-menu" closed="true"> 
 			<div data-options="iconCls:'icon-add'" class="dept-add">新增</div>   
 			<div data-options="iconCls:'icon-edit'" class="dept-update">修改</div>   
 			<div data-options="iconCls:'icon-remove'" class="dept-del">删除</div>   
-		</div>			    				
 	</div>  
     <div data-options="region:'center',title:'组织架构图',tools:'#print-tool'" style="padding:5px;">
     	<div id ="chart-container" style="height: 100%"></div>

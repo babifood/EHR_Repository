@@ -12,19 +12,6 @@ $(function(){
 	$("#dept_export").click(function(){
 		window.location.href = prefix + "/dept/export";
 	})
-	//修改部门信息
-	$(".dept-update").click(function(){
-		updateDept();
-	})
-	
-	//修改部门信息
-	$(".dept-add").click(function(){
-		addDept();
-	})
-	
-	$(".dept-del").click(function(){
-		deleteDept();
-	});
 	
 });
 
@@ -34,6 +21,9 @@ $(function(){
  */
 //加载树状菜单
 function loadDepts(){
+	document.getElementById('dept_tree').oncontextmenu = function(e){
+		　　return false;
+		}
 	//加载部门架构树
 	$('#dept_tree').tree({    
 	    url:prefix+'/dept/loadTree',
@@ -41,6 +31,25 @@ function loadDepts(){
 	    lines:true,
 		onClick:function(node){
 			loadOrganizeTree(node.deptCode);
+		},
+		onContextMenu:function(e,node){
+			$('#dept-tools').menu('show', {    
+				  left: e.clientX,    
+				  top: e.clientY    
+				});
+			//修改部门信息
+			$(".dept-update").unbind("click").click(function(){
+				updateDept(node);
+			})
+			
+			//修改部门信息
+			$(".dept-add").unbind("click").click(function(){
+				addDept(node);
+			})
+			
+			$(".dept-del").unbind("click").click(function(){
+				deleteDept(node);
+			});
 		}
 	});
 	loadOrganizeTree("1000");
@@ -129,7 +138,7 @@ function printArea(){
  * ------------------------------------------增删改查function-------------------------------------------------
  * @returns
  */
-function addDept(){
+function addDept(node){
 	$("#dept_dog").dialog("open").dialog("center").dialog("setTitle","新增部门");
 	$("#dept_id").val("");
 	$("#dept_name").val("");
@@ -138,7 +147,7 @@ function addDept(){
 	$("#dept_remark").val("");
 	$("#pCode").val("");
 	$("#pCode").attr("dept_code","0");
-	var node = $('#dept_tree').tree('getSelected');
+//	var node = $('#dept_tree').tree('getSelected');
 	if(node){
 		console.log(node);
 		$("#pCode").attr("dept_code",node.deptCode);
@@ -147,9 +156,9 @@ function addDept(){
 	chooseDept();
 }
 
-
-function updateDept(){
-	var node = $('#dept_tree').tree('getSelected');
+//修改部门信息
+function updateDept(node){
+//	var node = $('#dept_tree').tree('getSelected');
 	if(!node){
 		$.messager.alert({
 			msg:'请选择部门',
@@ -185,15 +194,16 @@ function updateDept(){
 	}
 }
 
+//上级部门选择框
 function chooseDept(){
 	console.log(1111);
-	$("#pCode").unbind("click");
-	$("#pCode").click(function(){
-		selectPDept();
+	selectPDept();
+	$("#pCode").unbind("click").click(function(){
 		$("#dept-tree-dog").dialog("open").dialog("center").dialog("setTitle","请选择上级部门");
 	});
 }
 
+//选择上级部门
 function selectPDept(){
 	$("#dept-tree-dog").tree({    
 	    url:prefix+"/dept/loadTree",
@@ -206,8 +216,9 @@ function selectPDept(){
 	});
 }
 
-function deleteDept(){
-	var node = $('#dept_tree').tree('getSelected');
+//删除部门
+function deleteDept(node){
+//	var node = $('#dept_tree').tree('getSelected');
 	if(!node){
 		$.messager.alert({
 			msg:'请选择部门',
@@ -285,6 +296,7 @@ function savedept(){
 	
 }
 
+//新增或修改部门
 function saveOrUpdate(url,data) {
 	$.ajax({
 		url: prefix + url,
