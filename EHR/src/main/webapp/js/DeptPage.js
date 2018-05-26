@@ -80,7 +80,7 @@ function loadOrganizeTree(deptCode){
 			} else {
 				var node = data[0];
 				if(node.children){
-					//加载组织机构数
+					//加载组织机构树
 					loadTissueArchitectureTree(data[0])
 				}
 			}

@@ -7,10 +7,10 @@
     	<ul id="dept_tree"></ul>
     </div>
     <div id="dept-tools" class="easyui-menu" closed="true"> 
-			<div data-options="iconCls:'icon-add'" class="dept-add">新增</div>   
-			<div data-options="iconCls:'icon-edit'" class="dept-update">修改</div>   
-			<div data-options="iconCls:'icon-remove'" class="dept-del">删除</div>   
-	</div>  
+		<div data-options="iconCls:'icon-add'" class="dept-add">新增</div>   
+		<div data-options="iconCls:'icon-edit'" class="dept-update">修改</div>   
+		<div data-options="iconCls:'icon-remove'" class="dept-del">删除</div>   
+	</div>
     <div data-options="region:'center',title:'组织架构图',tools:'#print-tool'" style="padding:5px;">
     	<div id ="chart-container" style="height: 100%"></div>
     </div>  

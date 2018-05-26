@@ -6,19 +6,14 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css" />
 <div class="easyui-panel" data-options="fit:true" id="holiday_panel">
 	<div class="main" style="height: 98%">
-		<!-- 		<div style="padding-left: 60px;padding-top:10px;"> -->
-		<!-- 			<a id="holiday-add" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">add</a> -->
-		<!-- 			<a id="holiday-edit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">edit</a>  -->
-		<!-- 			<a id="holiday-remove" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">delete</a>  -->
-		<!-- 		</div> -->
 		<div id="myrl"
-			style="width: 980px; margin-left: auto; margin-right: auto; height: 840px; overflow: hidden;">
+			style="width: 100%"; margin-left: auto; margin-right: auto; height: 100%; overflow: hidden;">
 			<form name=CLD>
-				<TABLE class="biao" style="table-layout: fixed" width="970px">
+				<TABLE class="biao" style="table-layout: fixed" width="100%">
 					<TBODY id="calendar-table">
 						<TR>
 							<TD class="calTit" colSpan=7
-								style="height: 30px; padding-top: 3px; text-align: center;">
+								style="height: 35px; padding-top: 3px; text-align: center;">
 
 								<a href="#" title="上一年" id="nianjian" class="ymNaviBtn lsArrow"></a>
 								<a href="#" title="上一月" id="yuejian" class="ymNaviBtn lArrow"></a>
@@ -78,7 +73,7 @@
 							</TD>
 						</TR>
 						<TR class="calWeekTit"
-							style="font-size: 12px; height: 20px; text-align: center;">
+							style="font-size: 12px; height: 35px; text-align: center;">
 							<TD width="100" class="red">星期日</TD>
 							<TD width="100">星期一</TD>
 							<TD width="100">星期二</TD>
@@ -94,7 +89,7 @@
 									.getElementById("calendar-table");
 							for (var i = 0; i < 6; i++) {
 								var tr = document.createElement("tr");
-								tr.style = "table-layout:fixed;height:55px";
+								tr.style = "table-layout:fixed;height:60px";
 								tr.align = "center";
 								// 						tr.height="50";
 								// 										tr.id = "tt";
