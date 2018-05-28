@@ -30,7 +30,7 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		if(item_name!=null&&!item_name.equals("")){
 			sql.append(" and RAPI_NAME like '%"+item_name+"%'");
 		}
-		sql.append(" GROUP BY RAPI_CATEGORY_ID ASC");
+		sql.append(" ORDER BY RAPI_CATEGORY_ID ASC");
 		System.out.println(sql);
 		List<Map<String, Object>> list = null;
 		try {

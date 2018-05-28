@@ -36,33 +36,50 @@
 	        <div id="RewardPunishment_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#RewardPunishment_dlg_buttons" style="width: 450px;">
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">奖惩记录</span></div>
-			        <div style="margin-bottom: 10px;">
-			        	奖惩类别：<!-- <input type="text" id="rap_category" name="rap_category" class="textbox"  onblur="noBlurRewardPunishment()"style="width: 180px;"/> -->
-			       			   <select id="rap_category" class="easyui-combobox" editable="false" style="width:180px" required="required">
+			        <table>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩类别：</td>
+			        		<td>
+			        			<select id="rap_category" class="easyui-combobox" editable="false" style="width:180px" required="required">
 										<option value="0">奖</option>
 										<option value="1">惩</option>
-									</select>
-			       			   <span id="rap_category_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	奖惩项目：<input id="rap_item" name="rap_item" style="width: 180px;"/>  
-			       			   <span id="rap_item_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	奖惩日期：<input id="rap_date" name="rap_date" class="easyui-datebox" data-options="required:true" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
-			       			   <span id="rap_date_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	奖惩原因：<input type="text" id="rap_reason" name="rap_reason" class="textbox" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
-			       			   <span id="rap_reason_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	奖惩金额：<input type="text" id="rap_money" name="rap_money" class="textbox" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
-			       			   <span id="rap_money_span" style="color: red"></span>
-			        </div>
-			        <!-- 要弹窗出部门树，选择人员，可多人，记一条数据 -->
-			        <div style="margin-bottom: 10px;">
-			        	提  议  人：<input id="rap_proposer" name="rap_proposer" class="easyui-textbox" data-options="
+								</select>
+			       			   	<span id="rap_category_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩项目：</td>
+			        		<td>
+			        			<input id="rap_item" name="rap_item" style="width: 180px;"/>  
+			       			    <span id="rap_item_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩日期：</td>
+			        		<td>
+			        			<input id="rap_date" name="rap_date" class="easyui-datebox" data-options="required:true" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
+			       			    <span id="rap_date_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩原因：</td>
+			        		<td>
+			        			<input type="text" id="rap_reason" name="rap_reason" class="textbox" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
+			       			    <span id="rap_reason_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩金额：</td>
+			        		<td>
+			        			<input type="text" id="rap_money" name="rap_money" class="textbox" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
+			       			    <span id="rap_money_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<!-- 要弹窗出部门树，选择人员，可多人，记一条数据 -->
+			        		<td>提议人：</td>
+			        		<td>
+			        			<input id="rap_proposer" name="rap_proposer" class="easyui-textbox" data-options="
 			        			prompt:'Input something here!'
 			        			,iconWidth: 22
 			        			,icons:[
@@ -72,10 +89,13 @@
 			        				}
 			        			]"/>
 			        			<span id="rap_proposer_id_span" style="color: red"></span>
-			        </div>
-			        <!-- 要弹窗出部门树，选择人员，可多人，记多条数据 -->
-			        <div style="margin-bottom: 10px;">
-			        	奖惩人员：<input id="rap_p" name="rap_p" class="easyui-textbox" data-options="
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<!-- 要弹窗出部门树，选择人员，可多人，记多条数据 -->
+			        		<td>奖惩人员：</td>
+			        		<td>
+			        			<input id="rap_p" name="rap_p" class="easyui-textbox" data-options="
 			        			iconWidth: 22
 			        			,icons:[
 			        				{
@@ -85,11 +105,16 @@
 			        				}
 			        			]"/>
 			        			<span id="rap_p_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	其他说明：<input type="text" id="rap_desc" name="rap_desc" class="textbox" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
-			       			   <span id="rap_desc_span" style="color: red"></span>
-			        </div>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>其他说明：</td>
+			        		<td>
+			        			<input type="text" id="rap_desc" name="rap_desc" class="textbox" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
+			       			    <span id="rap_desc_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        </table>
 		        </div>
 		     </div>	 	         		
 	        <div id="RewardPunishment_dlg_buttons" style="text-align: center;">
@@ -137,18 +162,32 @@
 	        <div id="RAPItem_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#RAPItem_dlg_buttons" style="width: 450px;">
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">奖惩项目信息</span></div>
-			        <div style="margin-bottom: 10px;">
-			        	奖惩项目ID：<input type="text" id="item_id" name="item_id" class="textbox" data-options="required:true" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
-			        		   <span id="item_id_span" style="color: red"></span>	
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	奖  惩  类  别：<input type="text" id="category_id" name="category_id" class="textbox"  onblur="noBlurRAPItem()"style="width: 180px;"/>
-			       			   <span id="category_id_span" style="color: red"></span>
-			        </div>
-			        <div style="margin-bottom: 10px;">
-			        	项  目  名  称：<input type="text" id="item_name" name="item_name" class="textbox"  onblur="noBlurRAPItem()"style="width: 180px;"/>
-			       			   <span id="item_name_span" style="color: red"></span>
-			        </div>
+			        <table>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩项目ID：</td>
+			        		<td>
+			        			<input type="text" id="item_id" name="item_id" class="textbox" data-options="required:true" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
+			        		    <span id="item_id_span" style="color: red"></span>	
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>奖惩类别：：</td>
+			        		<td>
+			        			<select id="category_id" class="easyui-combobox" editable="false" style="width:180px" required="required"   onblur="noBlurRAPItem()">
+										<option value="0">奖</option>
+										<option value="1">惩</option>
+									</select>
+			       			    <span id="category_id_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>项目名称：</td>
+			        		<td>
+			        			<input type="text" id="item_name" name="item_name" class="textbox"  onblur="noBlurRAPItem()"style="width: 180px;"/>
+			       			    <span id="item_name_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        </table>
 		        </div>
 		     </div>   		
 	        <div id="RAPItem_dlg_buttons" style="text-align: center;">

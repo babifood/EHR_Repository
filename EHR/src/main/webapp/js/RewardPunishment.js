@@ -142,7 +142,7 @@ function removeRewardPunishment(){
 				url:prefix+'/removeRewardPunishment',
 				type:'post',
 				data:{
-					rap_category_id:row.rap_category_id
+					rap_category:row.rap_category
 				},
 				contentType:"application/x-www-form-urlencoded",
 				beforeSend:function(){
@@ -174,7 +174,7 @@ function removeRewardPunishment(){
 }
 //奖惩记录目查询
 function searchRewardPunishment(){
-	loadJobLevel($("#search_rap_category").val(),$("#search_rap_item").val())
+	loadRewardPunishment($("#search_rap_category").val(),$("#search_rap_item").val())
 }
 //重置奖惩记录查询条件
 function resetRewardPunishment(){
@@ -325,6 +325,13 @@ function loadRAPItem(category_id,item_name){
 				field:"category_id",
 				title:"奖惩项目类别",
 				width:200,
+				formatter:function(value){
+					if(value=="0"){
+						return "奖";
+					}else if(value=="1"){
+						return "惩";
+					}
+				},
 			},
 		]],
 	});
@@ -345,7 +352,8 @@ function editRAPItem(){
 		$("#RAPItem_dog").dialog("open").dialog("center").dialog("setTitle","修改奖惩项目");
 		$("#item_id").val(row.item_id);
 		$("#item_name").val(row.item_name);
-		$("#category_id").val(row.category_id);
+		//$("#category_id").val(row.category_id);
+		$("#category_id").combobox('setValue',row.category_id);//奖惩类别
 		$('#item_id').focus();
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -378,6 +386,7 @@ function removeRAPItem(){
 							showType:'slide'
 						});
 						loadRAPItem(null,null);
+						loadComboboxRAPItemData();
 					}else if(data.status=="error"){
 						$.messager.alert("消息提示！","该奖惩类别已有奖惩记录，不允许删除！","warning");
 					}else{
@@ -453,7 +462,7 @@ function saveRAPItem(){
 			},
 			success:function(data){
 				$.messager.progress('close');
-				alert("I am an alert box!!"+data.status);
+				//alert("I am an alert box!!"+data.status);
 				if(data.status=="success"){
 					$.messager.show({
 						title:'消息提醒',
@@ -463,6 +472,7 @@ function saveRAPItem(){
 					});
 					$('#RAPItem_dog').dialog('close');
 					loadRAPItem(null,null);
+					loadComboboxRAPItemData();
 				}else{
 					$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
 				}

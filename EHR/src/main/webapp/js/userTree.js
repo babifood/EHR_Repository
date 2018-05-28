@@ -141,4 +141,8 @@ function addPersonInSelectedBox(jsonString) {
 	var jsondata = JSON.parse(jsonString);
 	//这里要改，现在是loaddata，是直接把原数据覆盖的，要改成添加新行
 	$("#inSelectP").datagrid('loadData',jsondata);
+	//$('#inSelectP').datagrid('appendRow',jsondata.rows);
+	
+
+
 }

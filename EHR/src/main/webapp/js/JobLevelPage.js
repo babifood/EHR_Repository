@@ -112,6 +112,7 @@ function removeJobLevel(){
 								showType:'slide'
 							});
 							loadJobLevel(null,null);
+							loadComboboxJobLevelData();
 						}else if(data.status=="error"){
 							$.messager.alert("消息提示！","该职级下包含职位信息，不允许删除！","warning");
 						}else{
@@ -192,6 +193,7 @@ function saveJobLevel(){
 					});
 					$('#JobLevel_dog').dialog('close');
 					loadJobLevel(null,null);
+					loadComboboxJobLevelData();
 				}else{
 					$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
 				}
@@ -346,6 +348,7 @@ function removePosition(){
 								showType:'slide'
 							});
 							loadPosition(null,null,null);
+							loadComboboxPositionData();
 						}else if(data.status=="error"){
 							$.messager.alert("消息提示！","该职位下包含岗位信息，不允许删除！","warning");
 						}else{
@@ -437,6 +440,7 @@ function savePosition(){
 					});
 					$('#position_dog').dialog('close');
 					loadPosition(null,null,null);
+					loadComboboxPositionData();
 				}else{
 					$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
 				}
