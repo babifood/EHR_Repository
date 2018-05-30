@@ -13,7 +13,9 @@ public class RewardPunishmentEntity {
 	private String rap_reason;
 	private Integer rap_money;
 	private String rap_proposer_id;
+	private String rap_proposer;
 	private String rap_p_id;
+	private String rap_p;
 	private String rap_desc;
 	
 	public RewardPunishmentEntity() {
@@ -62,11 +64,23 @@ public class RewardPunishmentEntity {
 	public void setrap_proposer_id(String rap_proposer_id) {
 		this.rap_proposer_id = rap_proposer_id;
 	}
+	public String getrap_proposer() {
+		return rap_proposer;
+	}
+	public void setrap_proposer(String rap_proposer) {
+		this.rap_proposer = rap_proposer;
+	}
 	public String getrap_p_id() {
 		return rap_p_id;
 	}
 	public void setrap_p_id(String rap_p_id) {
 		this.rap_p_id = rap_p_id;
+	}
+	public String getrap_p() {
+		return rap_p;
+	}
+	public void setrap_p(String rap_p) {
+		this.rap_p = rap_p;
 	}
 	public String getrap_desc() {
 		return rap_desc;

@@ -110,7 +110,7 @@ public class RewardPunishmentControl{
 	@RequestMapping("/loadRewardPunishment")
 	public Map<String,Object> loadRewardPunishment(String rap_category, String rap_item){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = RewardPunishmentService.loadRewardPunishment(rap_category, rap_item);
+		List<Map<String, Object>> list = RewardPunishmentService.loadRewardPunishment(rap_category,rap_item);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;
@@ -124,11 +124,12 @@ public class RewardPunishmentControl{
 	@RequestMapping("/saveRewardPunishment")
 	public Map<String,Object> saveUser(RewardPunishmentEntity rewardpunishmentEntity){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = RewardPunishmentService.saveRewardPunishment(rewardpunishmentEntity);
-		if(rows>0){
-			map.put("status", "success");
-		}else{
-			map.put("status", "error");
+		int[] rows = RewardPunishmentService.saveRewardPunishment(rewardpunishmentEntity);
+		map.put("status", "success");
+		for(int i=0;i<rows.length;i++){
+			if(rows[i]<=0){
+				map.put("status", "error");
+			}
 		}
 		return map;
 	}
