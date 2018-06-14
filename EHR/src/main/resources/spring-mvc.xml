@@ -4,9 +4,11 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns:p="http://www.springframework.org/schema/p" 
 xmlns:context="http://www.springframework.org/schema/context"
 xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:task="http://www.springframework.org/schema/task"
 xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
 http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.0.xsd 
-http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd"
 default-lazy-init="true">
  
   <!-- 启动事务添加配置 -->
@@ -52,4 +54,6 @@ default-lazy-init="true">
   <!-- 当配置了<mvc:annotation-driven/>后，会自动加载org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping和
 org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，所以如果显示的配置则需去掉配置<mvc:annotation-driven/> -->
   <mvc:annotation-driven/>
+  <!-- 定时器开关--> 
+  <task:annotation-driven />
 </beans>
