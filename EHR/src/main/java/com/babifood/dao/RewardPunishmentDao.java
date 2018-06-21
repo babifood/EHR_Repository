@@ -23,9 +23,9 @@ public interface RewardPunishmentDao {
 	//奖惩记录
 	public List<Map<String,Object>> loadComboboxRAPItemData();
 			
-	public List<Map<String,Object>> loadRewardPunishment(String rap_category,String rap_item);
+	public List<Map<String,Object>> loadRewardPunishment(String rap_category, String rap_item);
 			
-	public Integer saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity);
+	public int[] saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity);
 			
 	public Integer editRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity);
 		

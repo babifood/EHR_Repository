@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.babifood.entity.LoginEntity;
+import com.babifood.entity.RoleAuthorityEntity;
 import com.babifood.entity.RoleMenuEntity;
+import com.babifood.entity.UserRoleEntity;
 
 @Service
 public interface NewUsersService {
@@ -14,9 +16,9 @@ public interface NewUsersService {
 	
 	public List<Map<String, Object>> loadRoleAll(String role_name);
 	
-	public Integer saveRole(String role_name,String role_desc,String state);
+	public Integer saveRole(String role_name,String role_desc,String state,String organization_code,String organization_name);
 	
-	public Integer editRole(String role_id,String role_name,String role_desc,String state);
+	public Integer editRole(String role_id,String role_name,String role_desc,String state,String organization_code,String organization_name);
 	
 	public Integer removeRole(String role_id);
 	
@@ -33,4 +35,10 @@ public interface NewUsersService {
 	public List<Map<String,Object>> getMenuIds(String role_id);
 	
 	public List<Map<String,Object>> loadCheckTreeMenu(String id);
+	
+	public List<UserRoleEntity> loadRoleWhereUser(String user_id);
+	
+	public List<RoleAuthorityEntity> loadRoleAuthority(String orle_id);
+
+	public List<Map<String, Object>> loadCombotreeDeptData(String id);
 }

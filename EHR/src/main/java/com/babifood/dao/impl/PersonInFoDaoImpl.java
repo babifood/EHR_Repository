@@ -436,5 +436,20 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
         }
 		return personBasrc;
 	}
+	@Override
+	public List<Map<String, Object>> loadComboboxCompanyData() {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		//type 1代表集团，2代表公司，3代表部门，4代表科室
+		sql.append("select dept_code,dept_name from ehr_dept where type = '2'");
+		List<Map<String, Object>> list = null;
+		try {
+			list=jdbctemplate.queryForList(sql.toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询错误："+e.getMessage());
+		}
+		return list;
+	}
 
 }

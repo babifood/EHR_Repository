@@ -7,13 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.babifood.dao.JobLevelDao;
-import com.babifood.entity.LoginEntity;
 import com.babifood.entity.PositionEntity;
 import com.babifood.entity.PostEntity;
-import com.babifood.entity.RoleMenuEntity;
 import com.babifood.service.JobLevelPageService;
-import com.babifood.utils.IdGen;
-import com.babifood.utils.MD5;
 @Service
 public class JobLevelServiceImpl implements JobLevelPageService {
 	@Autowired

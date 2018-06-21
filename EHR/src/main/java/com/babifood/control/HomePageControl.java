@@ -2,20 +2,21 @@ package com.babifood.control;
 
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.babifood.entity.LoginEntity;
+import com.babifood.entity.UserRoleEntity;
 import com.babifood.service.HomePageService;
 
 @Controller
@@ -30,20 +31,35 @@ public class HomePageControl {
 	@ResponseBody
 	@RequestMapping("/loadTerr")
 	public List<Map<String,Object>> loadTreeMenu(String id,HttpServletRequest request){
-		HttpSession session =  request.getSession();
-		LoginEntity login = (LoginEntity) session.getAttribute("userinfo");
-		return homePageService.LoadTerrMenu(id,login.getRole_id());
+		//从shiro的session中取activeUser
+		Subject subject = SecurityUtils.getSubject();
+		//取身份信息
+		LoginEntity activeUser = (LoginEntity) subject.getPrincipal();
+		StringBuffer strRole = new StringBuffer();
+		List<UserRoleEntity> roleList = activeUser.getRoleList();
+		for (int i = 0;i<roleList.size();i++) {
+			strRole.append("'");
+			strRole.append(roleList.get(i).getRole_id());
+			if(i==roleList.size()-1){
+				strRole.append("'");
+			}else{
+				strRole.append("',");
+			}
+		}
+		
+		return homePageService.LoadTerrMenu(id,strRole.toString());
 	}
-	/**
-	 * 安全退出时清空缓存
-	 */
-	@ResponseBody
-	@RequestMapping("/clearSession")
-	public Map<String,Object> clearSession(HttpServletRequest request){
-		Map<String,Object> map = new HashMap<String,Object>();
-		HttpSession session =  request.getSession();
-		session.removeAttribute("userinfo");
-		map.put("status", "success");
-		return map;
-	}
+	//系统首页
+	@RequestMapping("/HomePage")
+	public String first(Model model)throws Exception{
+		
+		//从shiro的session中取activeUser
+		Subject subject = SecurityUtils.getSubject();
+		//取身份信息
+		LoginEntity activeUser = (LoginEntity) subject.getPrincipal();
+		//通过model传到页面
+		model.addAttribute("activeUser", activeUser);
+		
+		return "/HomePage";
+	}	
 }

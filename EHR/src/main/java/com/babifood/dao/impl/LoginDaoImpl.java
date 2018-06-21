@@ -1,5 +1,8 @@
 package com.babifood.dao.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,4 +32,21 @@ public class LoginDaoImpl implements LoginDao {
         }
 		return login;
 	}
+
+	@Override
+	public List<Map<String, Object>> findLoginWhereUserName(String user_name) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("select user_id,user_name,password,show_name,e_mail,phone,state ");
+		sql.append("from ehr_users  where user_name='"+user_name+"'");
+		List<Map<String, Object>> list = null;
+		try {
+			list=jdbctemplate.queryForList(sql.toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询错误："+e.getMessage());
+		}
+		return list;
+	}
+	
 }

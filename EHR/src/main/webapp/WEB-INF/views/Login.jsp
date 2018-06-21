@@ -19,24 +19,26 @@
 		<div class="title-zh">企业人力资源系统</div>
 		<div class="title-en" style="">Electronic Human Resource System</div>
 		<div class="message" data-bind="html:message"></div>
-		<table border="0" style="width: 300px;">
-			<tr>
-				<td style="white-space: nowrap; padding-bottom: 5px; width: 55px;">用户名：</td>
-				<td colspan="2"><input type="text" id="userName" class="login" /></td>
-			</tr>
-			<tr>
-				<td class="lable" style="white-space: nowrap; letter-spacing: 0.5em; vertical-align: middle">密码：</td>
-				<td colspan="2"><input type="password" id="password" class="login" /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan="2"></td>
-			</tr>
-			<tr>
-				<td colspan="3" style="text-align: center"><input type="button"
-					value="登录" class="login_button" onclick="loginButton()" /> 
-			</tr>
-		</table>
+		<form id="loginform" name="loginform" action="${pageContext.request.contextPath}/login" method="post">
+			<table border="0" style="width: 300px;">
+				<tr>
+					<td style="white-space: nowrap; padding-bottom: 5px; width: 55px;">用户名：</td>
+					<td colspan="2"><input type="text" id="username" name="username" class="login" /></td>
+				</tr>
+				<tr>
+					<td class="lable" style="white-space: nowrap; letter-spacing: 0.5em; vertical-align: middle">密码：</td>
+					<td colspan="2"><input type="password" id="password" name="password" class="login" /></td>
+				</tr>
+				<tr>
+					<td><input type="hidden" id="msg" value="${status}"/></td>
+					<td colspan="2"></td>
+				</tr>
+				<tr>
+					<td colspan="3" style="text-align: center"><input type="button"
+						value="登录" class="login_button" onclick="loginButton()" /> 
+				</tr>
+			</table>
+		</form>
 	</div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.cookie.js"></script>

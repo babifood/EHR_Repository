@@ -22,13 +22,17 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRewardPunishment()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		奖惩类别：<input type="text" class="textbox" id="search_rap_category" name="search_rap_category" style="width: 100px;"/>
+	        		奖惩类别：<!-- <input type="text" class="textbox" id="search_rap_category" name="search_rap_category" style="width: 100px;"/> -->
+	        				<select id="search_rap_category" class="easyui-combobox" editable="false" style="width:100px" required="required">
+										<option value="0">奖</option>
+										<option value="1">惩</option>
+								</select>
 	        		奖惩项目：<input type="text" class="textbox" id="search_rap_item" name="search_rap_item" style="width: 100px;"/>
-	        		日期：<input class="easyui-datebox" id="search_rap_date_left" name="search_rap_date_left" style="width: 100px;"/>
+	        		<!-- 日期：<input class="easyui-datebox" id="search_rap_date_left" name="search_rap_date_left" style="width: 100px;"/>
 	        		到<input class="easyui-datebox" id="search_rap_date_right" name="search_rap_date_right" style="width: 100px;"/>
 	        		金额：<input type="text" class="textbox" id="search_rap_money" name="search_rap_money" style="width: 100px;"/>
-	        		提议人：<input type="text" class="textbox" id="search_rap_proposer_id" name="search_rap_proposer_id" style="width: 100px;"/>
-	        		奖惩人员：<input type="text" class="textbox" id="search_rap_p_id" name="search_rap_p_id" style="width: 100px;"/>
+	        		提议人：<input type="text" class="textbox" id="search_rap_proposer" name="search_rap_proposer" style="width: 100px;"/>
+	        		奖惩人员：<input type="text" class="textbox" id="search_rap_p" name="search_rap_p" style="width: 100px;"/> -->
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetRewardPunishment()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchRewardPunishment()">查询</a>
 	        	</div>
@@ -79,7 +83,7 @@
 			        		<!-- 要弹窗出部门树，选择人员，可多人，记一条数据 -->
 			        		<td>提议人：</td>
 			        		<td>
-			        			<input id="rap_proposer" name="rap_proposer" class="easyui-textbox" data-options="
+			        			<!-- <input id="rap_proposer" name="rap_proposer" class="easyui-textbox" data-options="
 			        			prompt:'Input something here!'
 			        			,iconWidth: 22
 			        			,icons:[
@@ -87,23 +91,18 @@
 			        					iconCls:'icon-search'
 			        					,handler:selectPerson
 			        				}
-			        			]"/>
-			        			<span id="rap_proposer_id_span" style="color: red"></span>
+			        			]"/> -->
+			        			<input type="hidden" id="rap_proposer_id" name="rap_proposer_id" class="textbox"/>
+			        			<input type="text" id="rap_proposer" name="rap_proposer" class="textbox" onfocus="selectPerson(this.id)" style="width: 180px;"/>
+			        			<span id="rap_proposer_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
 			        	<tr style="margin-bottom: 10px;">
 			        		<!-- 要弹窗出部门树，选择人员，可多人，记多条数据 -->
 			        		<td>奖惩人员：</td>
 			        		<td>
-			        			<input id="rap_p" name="rap_p" class="easyui-textbox" data-options="
-			        			iconWidth: 22
-			        			,icons:[
-			        				{
-			        					iconCls:'icon-search'
-			        					,handler:selectPerson
-			        					
-			        				}
-			        			]"/>
+			        			<input type="hidden" id="rap_p_id" name="rap_p_id" class="textbox"/>
+			        			<input type="text" id="rap_p" name="rap_p"  class="textbox" onfocus="selectPerson(this.id)" style="width: 180px;"/>
 			        			<span id="rap_p_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
@@ -121,22 +120,14 @@
 	        	<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveRewardPunishment()" style="width: 90px;">保存</a>
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#RewardPunishment_dog').dialog('close')" style="width: 90px;">取消</a>
 	        </div>	
-	        
-	        
-	        <!-- <div id="test_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#test_dlg_buttons" style="width: 600px; height:500px;">
-	        	<ul id="tt"></ul>
+	
+			<!-- 这里是选择人员窗口 -->
+			<div id="selectPerson_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#selectPerson_dlg_buttons" style="width: 600px; height:500px;">
+	        	<jsp:include page="personSelectionWindow.jsp" />
 	        </div>
-	        <div id="test_dlg_buttons">
-				<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" style="width: 90px;">保存</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#test_dog').dialog('close')" style="width: 90px;">取消</a>
-			</div> -->
-			
-			<div id="test_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#test_dlg_buttons" style="width: 600px; height:500px;">
-	        	<jsp:include page="userTree.jsp" />
-	        </div>
-	        <div id="test_dlg_buttons">
-				<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" style="width: 90px;">保存</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#test_dog').dialog('close')" style="width: 90px;">取消</a>
+	        <div id="selectPerson_dlg_buttons">
+				<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok"  onclick="saveSelectPerson()" style="width: 90px;">保存1</a>
+	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#selectPerson_dog').dialog('close')" style="width: 90px;">取消1</a>
 			</div>
 	    </div> 
 	    
@@ -153,7 +144,11 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRAPItem()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		奖惩类别：<input type="text" class="textbox" id="search_category_id" name="search_category_id" style="width: 110px;"/>
+	        		奖惩类别：<!-- <input type="text" class="textbox" id="search_category_id" name="search_category_id" style="width: 110px;"/> -->
+	        				<select id="search_category_id" class="easyui-combobox" editable="false" style="width:100px" required="required">
+										<option value="0">奖</option>
+										<option value="1">惩</option>
+								</select>
 	        		项目名称：<input type="text" class="textbox" id="search_item_name" name="search_item_name" style="width: 110px;"/>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetRAPItem()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchRAPItem()">查询</a>
@@ -202,6 +197,6 @@
 
 	</div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/RewardPunishment.js"></script>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/userTree.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/personSelectionWindow.js"></script>
 </body>
 </html>

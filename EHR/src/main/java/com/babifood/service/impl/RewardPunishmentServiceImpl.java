@@ -43,12 +43,12 @@ public class RewardPunishmentServiceImpl implements RewardPunishmentService {
 		return RewardPunishmentDao.loadComboboxRAPItemData();
 	}
 	@Override
-	public List<Map<String, Object>> loadRewardPunishment(String rap_category,String rap_item) {
+	public List<Map<String, Object>> loadRewardPunishment(String rap_category, String rap_item) {
 		// TODO Auto-generated method stub
 		return RewardPunishmentDao.loadRewardPunishment(rap_category,rap_item);
 	}
 	@Override
-	public Integer saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity) {
+	public int[] saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity) {
 		// TODO Auto-generated method stub
 		//rewardpunishmentEntity.setrap_id(IdGen.uuid());
 		return RewardPunishmentDao.saveRewardPunishment(rewardpunishmentEntity);

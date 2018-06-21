@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,7 +18,7 @@
 <body class="easyui-layout">
 	<div data-options="region:'north',split:false,noheader:true" style="height:60px;background-color:#ECF5FF;">
 		<div id="logo"><span>中饮EHR系统</span></div>
-		<div id="logoout">您好：${userinfo.show_name}/<a href="#" onclick="logoout()">安全退出</a></div>
+		<div id="logoout">您好：${activeUser.show_name}/<a href="#" onclick="logoout()">安全退出</a></div>
 	</div>   
     <div data-options="region:'south',split:false,noheader:true" style="height:30px;line-height: 30px;text-align: center;background-color:#ECF5FF;">
     	版权所有 &copy 2018 中饮食品科技股份有限公司

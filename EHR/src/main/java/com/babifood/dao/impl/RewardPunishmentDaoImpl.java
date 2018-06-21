@@ -1,5 +1,6 @@
 package com.babifood.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -124,13 +125,14 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		}
 		return list;
 	}
+	//奖惩记录
 	@Override
 	public List<Map<String, Object>> loadRewardPunishment(String rap_category, String rap_item) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select u.RAP_ID as rap_id,u.RAPI_CATEGORY_ID as rap_category,u.RAP_P_ID as rap_p,u.RAP_P_NAME as rap_p_name"
+		sql.append("select u.RAP_ID as rap_id,u.RAPI_CATEGORY_ID as rap_category,u.RAP_P_ID as rap_p_id,u.RAP_P_NAME as rap_p"
 				+ ",u.RAP_ITEM_ID as rap_item_id,u.RAP_DATE as rap_date,u.RAP_REASON as rap_reason"
-				+ ",u.RAP_MONEY as rap_money,u.RAP_PROPOSER_ID as rap_proposer,u.RAP_PROPOSER_NAME as rap_proposer_name"
+				+ ",u.RAP_MONEY as rap_money,u.RAP_PROPOSER_ID as rap_proposer_id,u.RAP_PROPOSER_NAME as rap_proposer"
 				+ ",u.RAP_DESC as rap_desc,r.RAPI_ID,r.RAPI_NAME as rap_item_name");
 		sql.append(" from ehr_rewardandpunishment u inner join ehr_rewardandpunishment_item r on u.RAP_ITEM_ID = r.RAPI_ID where 1=1");
 		if(rap_category!=null&&!rap_category.equals("")){
@@ -139,7 +141,7 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		if(rap_item!=null&&!rap_item.equals("")){
 			sql.append(" and r.RAPI_NAME like '%"+rap_item+"%'");
 		}
-		sql.append(" GROUP BY rap_id ASC");
+		sql.append(" ORDER BY rap_id ASC");
 		List<Map<String, Object>> list = null;
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
@@ -150,77 +152,139 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		return list;
 	}
 	@Override
-	public Integer saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity) {
+	public int[] saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity) {
 		// TODO Auto-generated method stub
-		StringBuffer sql = new StringBuffer();
 		String statu="0";
-		sql.append("insert into ehr_rewardandpunishment (RAPI_CATEGORY_ID,RAP_P_ID,RAP_ITEM_ID,RAP_DATE,RAP_REASON,RAP_MONEY,RAP_PROPOSER_ID,RAP_DESC,RAP_STATE) ");
-		sql.append(" values(?,?,?,?,?,?,?,?,?)");
-		Object[] params=new Object[9];
-		params[0]=rewardpunishmentEntity.getrap_category();
-		params[1]=rewardpunishmentEntity.getrap_p_id();
-		params[2]=rewardpunishmentEntity.getrap_item();
-		params[3]=rewardpunishmentEntity.getrap_date();
-		params[4]=rewardpunishmentEntity.getrap_reason();
-		params[5]=rewardpunishmentEntity.getrap_money();
-		params[6]=rewardpunishmentEntity.getrap_proposer_id();
-		params[7]=rewardpunishmentEntity.getrap_desc();
-		params[8]=statu;/*
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println(rewardpunishmentEntity.getrap_id());
-		System.out.println(rewardpunishmentEntity.getrap_category());
-		System.out.println(rewardpunishmentEntity.getrap_p_id());
-		System.out.println(rewardpunishmentEntity.getrap_item());
-		System.out.println(rewardpunishmentEntity.getrap_date());
-		System.out.println(rewardpunishmentEntity.getrap_reason());
-		System.out.println(rewardpunishmentEntity.getrap_money());
-		System.out.println(rewardpunishmentEntity.getrap_proposer_id());
-		System.out.println(rewardpunishmentEntity.getrap_desc());
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");*/
-		int rows =-1;
+		int[] rows = null;
+		/*int rows =-1;
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into ehr_rewardandpunishment (RAPI_CATEGORY_ID,RAP_P_ID,RAP_ITEM_ID,RAP_DATE,RAP_REASON,RAP_MONEY,RAP_PROPOSER_ID,RAP_DESC,RAP_STATE,RAP_P_NAME,RAP_PROPOSER_NAME) ");
+		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?)");*/
+		String sql = "insert into ehr_rewardandpunishment (RAPI_CATEGORY_ID,RAP_P_ID,RAP_ITEM_ID,RAP_DATE"
+				+ ",RAP_REASON,RAP_MONEY,RAP_PROPOSER_ID,RAP_DESC,RAP_STATE,RAP_P_NAME,RAP_PROPOSER_NAME)"
+				+ " values(?,?,?,?,?,?,?,?,?,?,?)";
+		String pid=rewardpunishmentEntity.getrap_p_id();
+		String[] aspid = pid.split(",");
+		String pnam=rewardpunishmentEntity.getrap_p();
+		String[] aspnam = pnam.split(",");
+		
+		List<Object[]> params = new ArrayList<>();
+		for(int i=0;i<aspid.length;i++){	
+			params.add(new Object[]{
+						rewardpunishmentEntity.getrap_category(),
+						aspid[i],//奖惩人员ID
+						rewardpunishmentEntity.getrap_item(),
+						rewardpunishmentEntity.getrap_date(),
+						rewardpunishmentEntity.getrap_reason(),
+						rewardpunishmentEntity.getrap_money(),
+						rewardpunishmentEntity.getrap_proposer_id(),//提议ID
+						rewardpunishmentEntity.getrap_desc(),
+						statu,
+						aspnam[i],//奖惩人员姓名
+						rewardpunishmentEntity.getrap_proposer()//提议人姓名
+						});
+		}
+		
 		try {
-			rows = jdbctemplate.update(sql.toString(), params);
+			rows = jdbctemplate.batchUpdate(sql, params);
 		} catch (Exception e) {
 			// TODO: handle exception
 			log.error("查询错误："+e.getMessage());
 		}
+		
+		
+		/*Object[] params=new Object[11];
+		for(int i=0;i<aspid.length;i++){			
+			params[0]=rewardpunishmentEntity.getrap_category();
+			params[1]=aspid[i];//奖惩人员ID
+			params[2]=rewardpunishmentEntity.getrap_item();
+			params[3]=rewardpunishmentEntity.getrap_date();
+			params[4]=rewardpunishmentEntity.getrap_reason();
+			params[5]=rewardpunishmentEntity.getrap_money();
+			params[6]=rewardpunishmentEntity.getrap_proposer_id();//提议ID
+			params[7]=rewardpunishmentEntity.getrap_desc();
+			params[8]=statu;
+			params[9]=aspnam[i];//奖惩人员姓名
+			params[10]=rewardpunishmentEntity.getrap_proposer();//提议人姓名
+			try {
+				rows = jdbctemplate.update(sql.toString(), params);
+			} catch (Exception e) {
+				// TODO: handle exception
+				log.error("查询错误："+e.getMessage());
+			}
+		}*/
+		/*System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");*/
 		return rows;
 	}
 	@Override
 	public Integer editRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("update ehr_rewardandpunishment set RAPI_CATEGORY_ID=?,RAP_P_ID=?,RAP_ITEM_ID=?,RAP_DATE=?,RAP_REASON=?,RAP_MONEY=?,RAP_PROPOSER_ID=?,RAP_DESC=? where RAP_ID=?");
-		Object[] params=new Object[9];
-		params[0]=rewardpunishmentEntity.getrap_id();
-		params[1]=rewardpunishmentEntity.getrap_category();
-		params[2]=rewardpunishmentEntity.getrap_p_id();
+		sql.append("update ehr_rewardandpunishment set RAPI_CATEGORY_ID=?,RAP_P_ID=?"
+				+ ",RAP_P_NAME=?,RAP_ITEM_ID=?,RAP_DATE=?,RAP_REASON=?,RAP_MONEY=?"
+				+ ",RAP_PROPOSER_ID=?,RAP_PROPOSER_NAME=?,RAP_DESC=? where RAP_ID=?");
+		Object[] params=new Object[11];
+		params[0]=rewardpunishmentEntity.getrap_category();
+		params[1]=rewardpunishmentEntity.getrap_p_id();
+		params[2]=rewardpunishmentEntity.getrap_p();
 		params[3]=rewardpunishmentEntity.getrap_item();
 		params[4]=rewardpunishmentEntity.getrap_date();
 		params[5]=rewardpunishmentEntity.getrap_reason();
 		params[6]=rewardpunishmentEntity.getrap_money();
 		params[7]=rewardpunishmentEntity.getrap_proposer_id();
-		params[8]=rewardpunishmentEntity.getrap_desc();
+		params[8]=rewardpunishmentEntity.getrap_proposer();
+		params[9]=rewardpunishmentEntity.getrap_desc();
+		params[10]=rewardpunishmentEntity.getrap_id();
 		int rows =-1;
+		int rapState;
 		try {
-			rows = jdbctemplate.update(sql.toString(), params);
+			StringBuffer sql_selectRAPstate = new StringBuffer();
+			sql_selectRAPstate.append("SELECT RAP_STATE from ehr_rewardandpunishment WHERE rap_id="+rewardpunishmentEntity.getrap_id());
+			rapState=jdbctemplate.queryForInt(sql_selectRAPstate.toString());
+			//state:0奖惩记录已经归档，不允许修改1成功-1失败
+			if(rapState==1){
+				rows=0;
+			}else{
+				try {
+					rows = jdbctemplate.update(sql.toString(), params);
+				} catch (Exception e) {
+					// TODO: handle exception
+					log.error("修改错误："+e.getMessage());
+				}
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			// TODO Auto-generated catch block
 			log.error("查询错误："+e.getMessage());
 		}
+		
+		
 		return rows;
 	}
 	@Override
 	public Integer removeRewardPunishment(String rap_id) {
 		// TODO Auto-generated method stub
 		int state = 1;
+		int rapState;
 		try {
-			StringBuffer sql = new StringBuffer();
-			sql.append("delete from ehr_rewardandpunishment where rap_id=?");
-			jdbctemplate.update(sql.toString(),rap_id);
+			StringBuffer sql_selectRAPstate = new StringBuffer();
+			sql_selectRAPstate.append("SELECT RAP_STATE from ehr_rewardandpunishment WHERE rap_id="+rap_id);
+			rapState=jdbctemplate.queryForInt(sql_selectRAPstate.toString());
+			//state:0奖惩记录已经归档，不允许删除1成功-1失败
+			if(rapState==1){
+		        state = 0;
+			}else{
+				try {
+					StringBuffer sql_joblevel = new StringBuffer();
+					sql_joblevel.append("delete from ehr_rewardandpunishment where rap_id=?");
+					jdbctemplate.update(sql_joblevel.toString(),rap_id);
+				} catch (Exception e) {
+					// TODO: handle exception
+					state = -1;
+					log.error("删除错误："+e.getMessage());
+				}
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
-			state = -1;
+			// TODO Auto-generated catch block
 			log.error("查询错误："+e.getMessage());
 		}
 		return state;

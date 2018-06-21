@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>   
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,9 +15,15 @@
 	        <table id="role_tbo"></table>  
 	        <div id="role_tbar" style="padding: 5px;">
 	        	<div style="margin-bottom: 5px;">
+	        		<shiro:hasPermission name="role:add">
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addRole()">添加</a>
+	        		</shiro:hasPermission>
+	        		<shiro:hasPermission name="role:edit">
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRole()">修改</a>
+	        		</shiro:hasPermission>
+	        		<shiro:hasPermission name="role:remove">
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRole()">删除</a>
+	        		</shiro:hasPermission>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
 	        		角色名称：<input type="text" class="textbox" id="search_role_name" name="search_role_name" style="width: 110px;"/>
@@ -27,12 +34,16 @@
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">角色信息</span></div>
 			        <div style="margin-bottom: 10px;">
-			        	角色名称：<input type="text" id="role_name" name="role_name" class="textbox" data-options="required:true" onblur="noBlur()" style="width: 180px;"/>
+			        	角色名称：<input type="text" id="role_name" name="role_name" class="textbox"  onblur="noBlur()" style="width: 180px;"/>
 			        		   <span id="role_name_span" style="color: red"></span>	
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	角色描述：<input type="text" id="role_desc" name="role_desc" class="textbox" data-options="required:true" onblur="noBlur()" style="width: 180px;"/>
+			        	角色描述：<input type="text" id="role_desc" name="role_desc" class="textbox"  onblur="noBlur()" style="width: 180px;"/>
 			       			   <span id="role_desc_span" style="color: red"></span>
+			        </div>
+			        <div style="margin-bottom: 10px;">
+			        	所属机构：<input type="text" id="role_organization" name="role_organization" style="width: 180px;"/>
+			       			   <span id="role_organization_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
 			        	是否启用：是<input type="radio" id="role_radio_yes" name="role_radio" value="1" />否<input type="radio" id="role_radio_no" name="role_radio" value="0"/>

@@ -75,5 +75,10 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		// TODO Auto-generated method stub
 		return personInFoDao.getPersonFoPid(p_id);
 	}
+	@Override
+	public List<Map<String, Object>> loadComboboxCompanyData() {
+		// TODO Auto-generated method stub
+		return personInFoDao.loadComboboxCompanyData();
+	}
 
 }

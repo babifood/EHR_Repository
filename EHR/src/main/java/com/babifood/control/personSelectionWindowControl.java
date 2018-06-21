@@ -9,20 +9,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.babifood.service.UserTreeService;
+import com.babifood.service.personSelectionWindowService;
 
 @Controller
-public class userTreeControl {
+public class personSelectionWindowControl {
 	@Autowired
-	UserTreeService userTreeService;
+	personSelectionWindowService personSelectionWindowService;
 	/**
 	 * 获取部门导航菜单列表
 	 * @return 返回部门导航菜单对象集合
 	 */
 	@ResponseBody
-	@RequestMapping("/userTreeDept")
-	public List<Map<String,Object>> loaduserTreeDept(){
-		return userTreeService.loaduserTreeDept();
+	@RequestMapping("/personSelectionWindowDept")
+	public List<Map<String,Object>> loadpersonSelectionWindowDept(){
+		return personSelectionWindowService.loadpersonSelectionWindowDept();
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class userTreeControl {
 	@RequestMapping("/unSelectPersonByDeptID")
 	public Map<String,Object> loadunSelectPersonByDeptID(String dept_id){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = userTreeService.loadunSelectPersonByDeptID(dept_id);
+		List<Map<String, Object>> list = personSelectionWindowService.loadunSelectPersonByDeptID(dept_id);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;
@@ -49,21 +49,7 @@ public class userTreeControl {
 	@RequestMapping("/unSelectPersonByPersonName")
 	public Map<String,Object> loadunSelectPersonByPersonName(String p_name){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = userTreeService.loadunSelectPersonByPersonName(p_name);
-		map.put("total", list.size());
-		map.put("rows", list);
-		return map;
-	}
-	/**
-	 * 查询已选中人员by奖惩列表中的记录ID----这个要改的，要改成根据查询按钮的那个input直接显示里面的值
-	 * @param rap_id 记录ID
-	 * @return 返回人员json
-	 */
-	@ResponseBody
-	@RequestMapping("/inSelectPersonByRapId")
-	public Map<String,Object> loadinSelectPersonByRapId(Integer rap_id){
-		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = userTreeService.loadinSelectPersonByRapId(rap_id);
+		List<Map<String, Object>> list = personSelectionWindowService.loadunSelectPersonByPersonName(p_name);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;

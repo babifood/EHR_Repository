@@ -83,13 +83,13 @@ function loadRewardPunishment(rap_category,rap_item){
 				width:200,
 			},
 			{
-				field:"rap_proposer_name",
-				title:"提议人",
+				field:"rap_p",
+				title:"奖惩人员",
 				width:200,
 			},
 			{
-				field:"rap_p_name",
-				title:"奖惩人员",
+				field:"rap_proposer",
+				title:"提议人",
 				width:200,
 			},
 			{
@@ -108,7 +108,9 @@ function addRewardPunishment(){
 	$('#rap_date').datebox('setValue','');
 	$("#rap_reason").val("");
 	$("#rap_money").val("");
+	$("#rap_proposer_id").val("");
 	$("#rap_proposer").val("");
+	$("#rap_p_id").val("");
 	$("#rap_p").val("");
 	$("#rap_desc").val("");
 	$('#rap_category').focus();
@@ -125,10 +127,12 @@ function editRewardPunishment(){
 		$('#rap_date').datebox('setValue',row.rap_date);
 		$("#rap_reason").val(row.rap_reason);
 		$("#rap_money").val(row.rap_money);
-		$("#rap_proposer").val(row.rap_proposer);
-		$("#rap_p").val(row.rap_p);
+		$("#rap_proposer_id").val(row.rap_proposer_id);//提议人ID
+		$("#rap_proposer").val(row.rap_proposer);//提议人，显示人名
+		$("#rap_p_id").val(row.rap_p_id);//奖惩人ID		
+		$("#rap_p").val(row.rap_p);//奖惩人，显示人名
 		$("#rap_desc").val(row.rap_desc);
-		$('#position_id').focus();
+		$('#rap_category').focus();
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
@@ -142,7 +146,7 @@ function removeRewardPunishment(){
 				url:prefix+'/removeRewardPunishment',
 				type:'post',
 				data:{
-					rap_category:row.rap_category
+					rap_id:row.rap_id
 				},
 				contentType:"application/x-www-form-urlencoded",
 				beforeSend:function(){
@@ -174,12 +178,25 @@ function removeRewardPunishment(){
 }
 //奖惩记录目查询
 function searchRewardPunishment(){
-	loadRewardPunishment($("#search_rap_category").val(),$("#search_rap_item").val())
+	/*var queryPa = {};
+	queryPa.search_rap_category=$("#search_rap_category").combobox('getValue','');
+	queryPa.search_rap_item=$("#search_rap_item").val();
+	queryPa.search_rap_date_left=$('#search_rap_date_left').datebox('getValue');
+	queryPa.search_rap_date_right=$('#search_rap_date_right').datebox('getValue');
+	queryPa.search_rap_money=$("#search_rap_money").val();
+	queryPa.search_rap_proposer=$("#search_rap_proposer").val();
+	queryPa.search_rap_p=$("#search_rap_p").val();*/
+	loadRewardPunishment($("#search_rap_category").combobox('getValue',''),$("#search_rap_item").val());
 }
 //重置奖惩记录查询条件
 function resetRewardPunishment(){
-	$("#search_rap_category").val("");
-	$("#search_rap_item").val("");
+	$("#search_rap_category").combobox('setValue','');//类别
+	$("#search_rap_item").val('');//项目
+	$('#search_rap_date_left').datebox('setValue','');//时间
+	$('#search_rap_date_right').datebox('setValue','');//时间
+	$("#search_rap_money").val('');//金额
+	$("#search_rap_proposer").val('');//提议人
+	$("#search_rap_p").val('');//奖惩人员
 }
 //奖惩记录文本框失去焦点事件
 function noBlurRewardPunishment(){
@@ -210,27 +227,32 @@ function saveRewardPunishment(){
 	var msg;
 	if(dog_title=="添加奖惩记录"){
 		data={			
-				rap_category:$('#rap_category').val(),
+				rap_category:$("#rap_category").combobox('getValue',''),
 				rap_item:$("#rap_item").combobox('getValue',''),
 				rap_date:$('#rap_date').datebox('getValue'),
 				rap_reason:$('#rap_reason').val(),
 				rap_money:$('#rap_money').val(),
-				rap_proposer:$('#rap_proposer').val(),
-				rap_p:$('#rap_p').val(),
+				rap_proposer_id:$('#rap_proposer_id').val(),//提议人ID
+				rap_proposer:$('#rap_proposer').val(),//提议人姓名
+				rap_p_id:$('#rap_p_id').val(),//奖惩人员ID
+				rap_p:$('#rap_p').val(),//奖惩人员姓名
 				rap_desc:$('#rap_desc').val(),
 		};
 		url = prefix+'/saveRewardPunishment';
 		msg = "添加奖惩记录成功!";
 	}else if(dog_title=="修改奖惩记录"){
 		data={
-				rap_category:objRowsRewardPunishment.rap_category,
-				rap_item_name:$("#rap_item").combobox('getValue',''),
+				rap_id:objRowsRewardPunishment.rap_id,
+				rap_category:$("#rap_category").combobox('getValue',''),
+				rap_item:$("#rap_item").combobox('getValue',''),
 				rap_date:$('#rap_date').datebox('getValue'),
-				rap_reason:$("#rap_reason").val(""),
-				rap_money:$("#rap_money").val(""),
-				rap_proposer:$("#rap_proposer").val(""),
-				rap_p:$("#rap_p").val(""),
-				rap_desc:$("#rap_desc").val(""),
+				rap_reason:$("#rap_reason").val(),
+				rap_money:$("#rap_money").val(),
+				rap_proposer_id:$('#rap_proposer_id').val(),//提议人ID
+				rap_proposer:$('#rap_proposer').val(),//提议人姓名
+				rap_p_id:$('#rap_p_id').val(),//奖惩人员ID
+				rap_p:$('#rap_p').val(),//奖惩人员姓名
+				rap_desc:$("#rap_desc").val(),
 			};
 		url = prefix+'/editRewardPunishment';
 		msg = "修改奖惩记录成功!";
@@ -275,6 +297,10 @@ function loadComboboxRAPItemData(){
 			$("#rap_item_span").html("");
 		}
 	});
+}
+//调personSelectionWindow
+function saveSelectPerson(){
+	saveSelectPerson1();
 }
 /**
  * -----------------------------------------奖惩项目列表function-------------------------------------------
@@ -352,7 +378,6 @@ function editRAPItem(){
 		$("#RAPItem_dog").dialog("open").dialog("center").dialog("setTitle","修改奖惩项目");
 		$("#item_id").val(row.item_id);
 		$("#item_name").val(row.item_name);
-		//$("#category_id").val(row.category_id);
 		$("#category_id").combobox('setValue',row.category_id);//奖惩类别
 		$('#item_id').focus();
 	}else{
@@ -405,7 +430,7 @@ function searchRAPItem(){
 }
 //重置奖惩类别查询条件
 function resetRAPItem(){
-	$("#search_category_id").val("");
+	$("#search_category_id").combobox('setValue','');
 	$("#search_item_name").val("");
 }
 //奖惩类别文本框失去焦点事件
@@ -429,7 +454,7 @@ function saveRAPItem(){
 	if(dog_title=="添加奖惩项目"){
 		data={
 				item_id:$('#item_id').val(),
-				category_id:$('#category_id').val(),
+				category_id:$("#category_id").combobox('getValue',''),
 				item_name:$('#item_name').val(),
 		};
 		url = prefix+'/saveRAPItem';
@@ -437,13 +462,13 @@ function saveRAPItem(){
 	}else if(dog_title=="修改奖惩项目"){
 		data={
 				item_id:objRowsRAPItem.item_id,
-				category_id:$('#category_id').val(),
+				category_id:$("#category_id").combobox('getValue',''),
 				item_name:$('#item_name').val(),
 			};
 		url = prefix+'/editRAPItem';
 		msg = "奖惩项目修改成功!";
 	}
-	if($("#category_id").val()==""){
+	if($("#category_id").combobox('getValue','')==""){
 		$("#category_id_span").html("奖惩类别不能为空");
 		$('#category_id').focus();
 	}else if($("#item_name").val()==""){

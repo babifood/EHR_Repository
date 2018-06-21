@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.babifood.dao.UserTreeDao;
+import com.babifood.dao.personSelectionWindowDao;
 @Repository
-public class UserTreeDaoImpl implements UserTreeDao {
+public class personSelectionWindowDaoImpl implements personSelectionWindowDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	Logger log = LoggerFactory.getLogger(LoginDaoImpl.class);
 	//部门树
 	@Override
-	public List<Map<String,Object>> loaduserTreeDept() {
+	public List<Map<String,Object>> loadpersonSelectionWindowDept() {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
 		sql.append("select dept_code as id,pCode as parentId,dept_name as name from ehr_dept");
@@ -26,7 +26,7 @@ public class UserTreeDaoImpl implements UserTreeDao {
 			list = jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
 			// TODO: handle exception
-			log.error("loaduserTreeDept查询错误"+e.getMessage());
+			log.error("loadpersonSelectionWindowDept查询错误"+e.getMessage());
 		}
 		return list;
 	}
@@ -56,24 +56,6 @@ public class UserTreeDaoImpl implements UserTreeDao {
 		sql.append("select p_id, p_name from ehr_person_basic_info");
 		if(p_name!=null&&!p_name.equals("")){
 			sql.append(" where p_name like '%"+p_name+"%'");
-		}
-		List<Map<String,Object>> list = null;
-		try {
-			list = jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("loadunSelectPersonByPersonName查询错误"+e.getMessage());
-		}
-		return list;
-	}
-	//已选中人员by奖惩列表中的记录ID----这个要改的，要改成根据查询按钮的那个input直接显示里面的值
-	@Override
-	public List<Map<String, Object>> loadinSelectPersonByRapId(Integer rap_id) {
-		// TODO Auto-generated method stub
-		StringBuffer sql=new StringBuffer();
-		sql.append("select RAP_PROPOSER_NAME as p_name from ehr_rewardandpunishment");
-		if(rap_id!=null&&!rap_id.equals("")){
-			sql.append(" where RAP_ID ="+rap_id);
 		}
 		List<Map<String,Object>> list = null;
 		try {

@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.RoleMenuEntity;
 import com.babifood.service.NewUsersService;
+import com.babifood.shiro.CustomRealm;
 
 @Controller
 public class NewUserControl {
 	@Autowired
 	NewUsersService newUsersService;
+	@Autowired
+	CustomRealm customRealm;
 	/**
 	 * 查询所有用户
 	 * @return 返回用户json
@@ -35,13 +38,23 @@ public class NewUserControl {
 		return map;
 	}
 	/**
+	 * 加载部门信息Combotree
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/loadCombotreeDeptData")
+	public List<Map<String,Object>> loadCombotreeDeptData(String id){
+		return newUsersService.loadCombotreeDeptData(id);
+	}
+	/**
 	 * 保存用户
 	 * @param userEntity 用户对象
 	 * @return map
 	 */
 	@ResponseBody
 	@RequestMapping("/saveUser")
-	public Map<String,Object> saveUser(LoginEntity userEntity){
+	public Map<String,Object> saveUser(@RequestBody LoginEntity userEntity){
 		Map<String,Object> map =new HashMap<String,Object>();
 		int rows = newUsersService.saveUser(userEntity);
 		if(rows>0){
@@ -58,7 +71,7 @@ public class NewUserControl {
 	 */
 	@ResponseBody
 	@RequestMapping("/editUser")
-	public Map<String,Object> editUser(LoginEntity userEntity){
+	public Map<String,Object> editUser(@RequestBody LoginEntity userEntity){
 		Map<String,Object> map =new HashMap<String,Object>();
 		int rows = newUsersService.editUser(userEntity);
 		if(rows>0){
@@ -117,9 +130,9 @@ public class NewUserControl {
 	 */
 	@ResponseBody
 	@RequestMapping("/saveRole")
-	public Map<String,Object> saveRole(String role_name,String role_desc,String state){
+	public Map<String,Object> saveRole(String role_name,String role_desc,String state,String organization_code,String organization_name){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = newUsersService.saveRole(role_name, role_desc, state);
+		int rows = newUsersService.saveRole(role_name, role_desc, state,organization_code,organization_name);
 		if(rows>0){
 			map.put("status", "success");
 		}else{
@@ -137,9 +150,9 @@ public class NewUserControl {
 	 */
 	@ResponseBody
 	@RequestMapping("/editRole")
-	public Map<String,Object> editRole(String role_id,String role_name,String role_desc,String state){
+	public Map<String,Object> editRole(String role_id,String role_name,String role_desc,String state,String organization_code,String organization_name){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = newUsersService.editRole(role_id, role_name, role_desc, state);
+		int rows = newUsersService.editRole(role_id, role_name, role_desc, state,organization_code,organization_name);
 		if(rows>0){
 			map.put("status", "success");
 		}else{
@@ -171,6 +184,8 @@ public class NewUserControl {
 		int rows = newUsersService.saveMenuRole(roleMenuEntity);
 		if(rows>0){
 			map.put("status", "success");
+			//授权成功后清理缓存，让授权信息即可生效
+			customRealm.clearCached();
 		}else{
 			map.put("status", "error");
 		}
