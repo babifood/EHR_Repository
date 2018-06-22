@@ -74,7 +74,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 	@Override
 	public int addSpecialArrangement(SpecialArrangementEntity arrangement) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("INSERT INTO `ehr`.`ehr_special_arrangement` ");
+		sql.append("INSERT INTO `ehr_special_arrangement` ");
 		sql.append("(`DATE`, `arrangement_id`, `is_attend`,`start_time`, `end_time`, `remark`, `isDelete`)");
 		sql.append(" VALUES (?,?,?,?,?,?,0)");
 		int count = 0;

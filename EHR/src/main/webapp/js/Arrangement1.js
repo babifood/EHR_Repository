@@ -341,7 +341,7 @@ function settingArrangement(targetId,type,clientX,clientY){
 			$("#arrangement_select_list").combobox('setValue', arrangementId);
 		}
 	});
-	$('#arrangement_select').window('open').window('resize',{width:'300px',height:'65px',top:clientY+18 ,left:clientX});
+	$('#arrangement_select').window('open').window('resize',{width:'330px',height:'68px',top:clientY+18 ,left:clientX});
 	$("#arrangement_target_id").val(targetId);
 	$("#arrangement_target_type").val(type);
 }
