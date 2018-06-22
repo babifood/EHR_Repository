@@ -30,5 +30,13 @@
    
   <!-- 事务扫描开始(开启@Tranctional) -->
   <tx:annotation-driven transaction-manager="txManager" />
+  
+  <bean id="appContext" class="com.babifood.utils.AppContext"></bean>
+ 
+  <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="20" />
+		<property name="queueCapacity" value="25" />
+	</bean>
  
 </beans>

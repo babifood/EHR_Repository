@@ -29,4 +29,12 @@ public interface PersonInFoService {
 	public List<Map<String, Object>> loadFamily(String f_p_id);
 
 	public Object getPersonFoPid(String p_id);
+
+	public List<Map<String, Object>> loadComboboxCompanyData();
+	
+	public Integer getPersonCount();
+
+	public List<Map<String, Object>> findPagePersonInfo(int index, int threadCount);
+
+	public Object getPersonByPnumber(String pNumber);
 }

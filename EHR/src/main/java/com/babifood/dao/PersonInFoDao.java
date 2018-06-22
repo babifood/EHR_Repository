@@ -29,4 +29,14 @@ public interface PersonInFoDao {
 	public List<Map<String, Object>> loadFamily(String f_p_id);
 
 	public Object getPersonFoPid(String p_id);
+
+	public List<Map<String, Object>> loadComboboxCompanyData();
+	
+	public List<Map<String, Object>> findPersonListByIds(String[] ids);
+
+	public Integer getPersonCount();
+
+	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize);
+
+	public Object getPersonByPnumber(String pNumber);
 }

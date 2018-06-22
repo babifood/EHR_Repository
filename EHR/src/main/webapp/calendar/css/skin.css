@@ -68,6 +68,15 @@ background-size:117px 54px;
 .holiday {
 background-color: #ffff00;
 background-size:117px 54px;}
+
+.worksday {
+background-color: #00ff1f;
+background-size:117px 54px;}
+
+.offday {
+background-color: #ffab3f;
+background-size:117px 54px;}
+
 .white {
 background: #FFFFFF;}
 .cal_next{

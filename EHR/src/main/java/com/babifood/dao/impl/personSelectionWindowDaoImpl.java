@@ -35,7 +35,7 @@ public class personSelectionWindowDaoImpl implements personSelectionWindowDao {
 	public List<Map<String, Object>> loadunSelectPersonByDeptID(String dept_id) {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
-		sql.append("select p_id, p_name from ehr_person_basic_info");
+		sql.append("select p_id,p_number, p_name from ehr_person_basic_info");
 		if(dept_id!=null&&!dept_id.equals("")){
 			sql.append(" where p_section_office_id="+dept_id);
 		}

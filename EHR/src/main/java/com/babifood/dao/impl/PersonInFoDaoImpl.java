@@ -436,5 +436,104 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
         }
 		return personBasrc;
 	}
+	@Override
+	public List<Map<String, Object>> loadComboboxCompanyData() {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		//type 1代表集团，2代表公司，3代表部门，4代表科室
+		sql.append("select dept_code,dept_name from ehr_dept where type = '2'");
+		List<Map<String, Object>> list = null;
+		try {
+			list=jdbctemplate.queryForList(sql.toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询错误："+e.getMessage());
+		}
+		return list;
+	}
+	
+	@Override
+	public List<Map<String, Object>> findPersonListByIds(String[] ids) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select p_id as id,p_number as pNumber,p_name as pName ");
+		sql.append(" from ehr_person_basic_info ");
+		sql.append(" where p_id in (");
+		for(int i = 0;i < ids.length ; i++){
+			if(i == ids.length - 1){
+				sql.append("?");
+			} else {
+				sql.append("?,");
+			}
+		}
+		sql.append(")");
+		List<Map<String, Object>> personList = null;
+		try {
+			personList = jdbctemplate.queryForList(sql.toString(), ids);
+		} catch (Exception e) {
+			log.error("根据员工ids查询员工信息失败：",e.getMessage());
+		}
+		return personList;
+	}
+	
+	@Override
+	public Integer getPersonCount() {
+		String sql = "select count(*) from ehr_person_basic_info ";
+		Integer count = 0;
+		try{
+			count = jdbctemplate.queryForInt(sql);
+		} catch (Exception e) {
+			log.error("查询员工数量失败：",e.getMessage());
+			throw e;
+		}
+		return count;
+	}
+	@Override
+	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select a.p_id as pId,a.p_number as pNumber,a.p_name as pName,b.dept_name as companyName,");
+		sql.append("b.dept_code as companyCode,c.dept_name deptName,c.dept_code as deptCode,d.dept_name organizationName,");
+		sql.append("d.dept_code as organizationCode,e.dept_name as officeName,e.dept_code as officeCode,f.POST_NAME as postName");
+		sql.append(" from ehr_person_basic_info a ");
+		sql.append(" LEFT JOIN ehr_dept b on a.p_company_id = b.dept_code ");
+		sql.append(" LEFT JOIN ehr_dept c on a.p_department_id = c.dept_code ");
+		sql.append(" LEFT JOIN ehr_dept d on a.P_organization_id = d.dept_code");
+		sql.append(" LEFT JOIN ehr_dept e on a.P_section_office_id = e.dept_code");
+		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID");
+//		sql.append(" ");
+//		sql.append("");
+		sql.append(" LIMIT ?,?");
+		List<Map<String, Object>> pagePerson = null;
+		try {
+			pagePerson = jdbctemplate.queryForList(sql.toString(), startIndex,pageSize);
+		} catch (Exception e) {
+			log.error("查询员工数量失败：",e.getMessage());
+			throw e;
+		}
+		return pagePerson;
+	}
+	@Override
+	public Object getPersonByPnumber(String pNumber) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select ");
+		sql.append("p_id,p_number,p_name,p_sex,p_age,p_title,p_post_id,p_post,p_level_id,p_level_name,p_company_id,p_company_name,p_department_id,p_department,p_state,p_property,");
+		sql.append("p_organization_id,p_organization,p_section_office_id,p_section_office,");
+		sql.append("p_post_property,p_in_date,p_turn_date,p_out_date,p_out_describe,p_checking_in,");
+		sql.append("p_contract_begin_date,p_contract_end_date,p_shebao_begin_month,p_shebao_end_month,");
+		sql.append("p_gjj_begin_month,p_gjj_end_month,p_nationality,p_nation,p_huko_state,");
+		sql.append("p_marriage,p_politics,p_phone,p_bank_nub,p_bank_name,");
+		sql.append("p_huji_add,p_changzhu_add,p_urgency_name,p_urgency_relation,p_urgency_phone,");
+		sql.append("p_kinsfolk_y_n,p_kinsfolk_relation,p_kinsfolk_name,p_kinsfolk_id_nub,p_kinsfolk_xueli,p_company_age,");
+		sql.append("p_c_yingpin_table,p_c_interview_tab,p_c_id_copies,p_c_xueli,p_c_xuewei,");
+		sql.append("p_c_bank_nub,p_c_tijian_tab,p_c_health,p_c_img,p_c_welcome,p_c_staff,p_c_admin,p_c_shebao,");
+		sql.append("p_c_shangbao,p_c_secrecy,p_c_prohibida,p_c_contract,p_c_post,p_c_corruption,p_c_probation,p_create_date");
+		sql.append(" from ehr_person_basic_info where p_number=?");
+		PersonBasrcEntity personBasrc =null;
+        try{
+        	personBasrc = jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), pNumber);
+        }catch(Exception e) {
+            log.error("查询错误："+e.getMessage());
+        }
+		return personBasrc;
+	}
 
 }

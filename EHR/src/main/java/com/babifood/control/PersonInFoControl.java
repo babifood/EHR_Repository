@@ -130,4 +130,18 @@ public class PersonInFoControl {
 		}
 		return map;
 	}
+	/**
+	 * 加载公司信息下拉选择数据
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/loadComboboxCompanyData")
+	public List<Map<String, Object>> loadComboboxCompanyData(){
+		return personInFoService.loadComboboxCompanyData();
+	}
+	@ResponseBody
+	@RequestMapping("/getPersonByPnumber")
+	public PersonBasrcEntity getPersonByPnumber(String pNumber) {
+		return (PersonBasrcEntity) personInFoService.getPersonByPnumber(pNumber);
+	}
 }
