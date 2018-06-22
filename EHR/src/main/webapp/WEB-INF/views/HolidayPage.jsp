@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/skin.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" />
+<%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" /> --%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/holiday.css" />
 <div class="easyui-panel" data-options="fit:true,tools:'#hoilday_tools'" id="holiday_panel" title="节假日">
 	<div id="hoilday_tools">
@@ -149,5 +149,4 @@ for (var i = 0; i < 6; i++) {
 	table.appendChild(tr);
 }
 </SCRIPT>
-<script type="text/javascript" charset="utf-8" src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/calendar/js/calendar.js"></script>
