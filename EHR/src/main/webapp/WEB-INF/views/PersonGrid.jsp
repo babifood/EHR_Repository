@@ -83,26 +83,26 @@
 								<td>公司名称:</td>
 								<td>
 									<input type="hidden" id="p_company_id" name="p_company_id"/>
-									<input type="text" id="p_company_name" name="p_company_name" class="textbox"/>
+									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:236px" required="required"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>单位机构:</td>
 								<td>
 									<input type="hidden" id="p_organization_id" name="p_organization_id"/>
-									<input type="text" id="p_organization" name="p_organization" class="textbox"/>
+									<input type="text" id="p_organization" name="p_organization" editable="false" style="width:236px" required="required"/>
 								</td>
 								<td>所属部门:</td>
 								<td>
 									<input type="hidden" id="p_department_id" name="p_department_id"/>
-									<input type="text" id="p_department" name="p_department" class="textbox"/>
+									<input type="text" id="p_department" name="p_department" editable="false" style="width:236px" required="required"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>科室:</td>
 								<td>
 									<input type="hidden" id="p_section_office_id" name="p_section_office_id"/>
-									<input type="text" id="p_section_office" name="p_section_office" class="textbox"/>
+									<input type="text" id="p_section_office" name="p_section_office" style="width:236px"/>
 								</td>
 								<td>员工状态:</td>
 								<td>

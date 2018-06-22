@@ -23,10 +23,11 @@ public class HomePageDaoImpl implements HomePageDao {
 		sql.append(" from ehr_menu m inner join ehr_role_menu r");
 		sql.append(" on m.id = r.menu_tbo_id");
 		sql.append(" where m.nid = ?");
-		sql.append(" and r.role_id =?");
+		sql.append(" and r.role_id in("+role_id+")");
+		sql.append(" group by r.menu_tbo_id");
 		List<Map<String,Object>> list = null;
 		try {
-			list = jdbctemplate.queryForList(sql.toString(),id,role_id);
+			list = jdbctemplate.queryForList(sql.toString(),id);
 		} catch (Exception e) {
 			// TODO: handle exception
 			log.error("TreeMenu查询错误"+e.getMessage());

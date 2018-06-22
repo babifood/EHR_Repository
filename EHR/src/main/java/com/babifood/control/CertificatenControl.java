@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.babifood.entity.Certificaten;
 import com.babifood.service.CertificatenService;
+import com.babifood.utils.CustomerContextHolder;
 //证件管理
 @Controller
 public class CertificatenControl {
 	@Autowired
 	CertificatenService certificatenService;
+	@Autowired
+	JdbcTemplate jdbctemplate;
 	@ResponseBody
 	@RequestMapping("/loadCertificaten")
 	public Map<String,Object> loadCertificatenAll(String c_p_number,String c_p_name){

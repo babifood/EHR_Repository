@@ -14,6 +14,7 @@ function loadTabs(){
 			if(title=="添加角色"){
 				//加载角色列表
 				loadRole(null);
+				loadCombotree();
 			}else if(title=="添加用户"){
 				//用户列表
 				loadUsers(null,null);
@@ -67,6 +68,11 @@ function loadRole(data){
 				width:200,
 			},
 			{
+				field:"organization_name",
+				title:"所属机构",
+				width:100,
+			},
+			{
 				field:"state",
 				title:"状态",
 				width:100,
@@ -81,11 +87,23 @@ function loadRole(data){
 		]],
 	});
 }
+//加载下拉树
+function loadCombotree(){
+	$('#role_organization').combotree({    
+	    url: prefix+"/loadCombotreeDeptData",
+	    editable:false,
+		onHidePanel:function(none){
+			$("#role_organization_span").html("");
+		},
+	});  
+}
 //添加角色
 function addRole(){
 	$("#role_dog").dialog("open").dialog("center").dialog("setTitle","添加角色");
 	$("#role_name").val("");
 	$("#role_desc").val("");
+	$("#role_organization").combotree("setValue",""),
+	$("#role_organization").combotree("setText","")
 	$("#role_radio_yes").prop("checked", "checked");
 	$('#role_name').focus();
 }
@@ -97,6 +115,8 @@ function editRole(){
 		$("#role_dog").dialog("open").dialog("center").dialog("setTitle","修改角色");
 		$("#role_name").val(row.role_name);
 		$("#role_desc").val(row.role_desc);
+		$("#role_organization").combotree("setValue",row.organization_code),
+		$("#role_organization").combotree("setText",row.organization_name)
 		if(row.state=='0'){
 			$("#role_radio_no").prop("checked", "checked");
 		}else if(row.state=='1'){
@@ -170,7 +190,9 @@ function saveRole(){
 		data={
 			role_name:$('#role_name').val(),
 			role_desc:$('#role_desc').val(),
-			state:$("input[name='role_radio']:checked").val()	
+			state:$("input[name='role_radio']:checked").val(),
+			organization_code:$("#role_organization").combotree("getValue"),
+			organization_name:$("#role_organization").combotree("getText")
 		};
 		url = prefix+'/saveRole';
 		msg = "角色保存成功!";
@@ -179,8 +201,10 @@ function saveRole(){
 				role_id:objRowsRole.role_id,
 				role_name:$('#role_name').val(),
 				role_desc:$('#role_desc').val(),
-				state:$("input[name='role_radio']:checked").val()	
-			};
+				state:$("input[name='role_radio']:checked").val(),
+				organization_code:$("#role_organization").combotree("getValue"),
+				organization_name:$("#role_organization").combotree("getText")
+			};	
 		url = prefix+'/editRole';
 		msg = "角色修改成功!";
 	}
@@ -190,6 +214,9 @@ function saveRole(){
 	}else if($("#role_desc").val()==""){
 		$("#role_desc_span").html("描述不能为空");
 		$('#role_desc').focus();
+	}else if($("#role_organization").combotree("getValue")==""){
+		$("#role_organization_span").html("机构不能为空");
+		$('#role_organization').focus();
 	}else{
 		$.ajax({
 			url:url,
@@ -253,17 +280,17 @@ function loadUsers(account,username){
 			{
 				field:"user_name",
 				title:"用户账号",
-				width:100,
+				width:80,
 			},
 			{
 				field:"show_name",
 				title:"用户名称",
-				width:100,
+				width:80,
 			},
 			{
 				field:"role_name",
 				title:"用户角色",
-				width:100,
+				width:200,
 			},
 			{
 				field:"e_mail",
@@ -278,7 +305,7 @@ function loadUsers(account,username){
 			{
 				field:"state",
 				title:"状态",
-				width:100,
+				width:80,
 				formatter:function(value){
 					if(value=="0"){
 						return "禁用";
@@ -292,15 +319,38 @@ function loadUsers(account,username){
 }
 //加载角色下拉框
 function loadCombobox(){
-	$("#user_role").combobox({
-		valueField:'id',
-		textField:'text',
-		url:prefix+"/loadComboboxData",
-		editable:false,
-		onHidePanel:function(none){
-			$("#user_role_span").html("");
-		}
-	});
+//	$("#user_role").combobox({
+//		valueField:'id',
+//		textField:'text',
+//		url:prefix+"/loadComboboxData",
+//		editable:false,
+//		onHidePanel:function(none){
+//			$("#user_role_span").html("");
+//		},
+//		separator:'/',
+//		multiple:true
+//	});
+	$('#user_role').combogrid({    
+	    panelWidth:230,    
+	    idField:'role_id',    
+	    textField:'role_name',    
+	    url:prefix+"/loadComboboxData",    
+	    columns:[[    
+	        {
+	        	field:'role_name',
+	        	title:'角色名称',
+	        	width:100
+	        },    
+	        {
+	        	field:'organization_name',
+	        	title:'机构名称',
+	        	width:100
+	        }   
+	    ]],
+	    separator:'/',
+	    multiple:true
+	});  
+
 }
 //添加用户
 function addUser(){
@@ -308,7 +358,8 @@ function addUser(){
 	$("#user_name").val("");
 	$("#password").val("");
 	$("#show_name").val("");
-	$("#user_role").combobox('setValue','');
+	$("#user_role").combogrid('clear');
+	$("#user_role").combogrid('setValue','');
 	$("#phone").val("");
 	$("#e_mail").val("");
 	$("#user_radio_yes").prop("checked", "checked");
@@ -323,8 +374,9 @@ function editUser(){
 		$("#user_name").val(row.user_name);
 		$("#password").val('000000');
 		$("#show_name").val(row.show_name);
-		$("#user_role").combobox('setValue',row.role_id);
-		$("#user_role").combobox('setText',row.role_name);
+		$("#user_role").combogrid('clear');
+		$("#user_role").combogrid('setValues',row.role_id);
+		$("#user_role").combogrid('setText',row.role_name);
 		$("#phone").val(row.phone);
 		$("#e_mail").val(row.e_mail);
 		if(row.state=='0'){
@@ -397,11 +449,14 @@ function checkData(){
 		$('#show_name').focus();
 		return false;
 	}
-	if($("#user_role").combobox('getValue')==""){
+	if($("#user_role").combogrid('getValues')==""){
 		$("#user_role_span").html("角色不能为空");
 		$('#user_role').focus();
 		return false;
 	}
+//	alert($("#user_role").val());
+//	alert($("#user_role").combobox('getText'));
+//	console.log($("#user_role").combobox('getValues'));
 	return true;
 	
 }
@@ -417,8 +472,27 @@ function noBlurUser(){
 		$("#show_name_span").html("");		
 	}
 }
+//获取Combobox的值
+function getComboboxValues(){
+	var boxValArr = [];
+	var boxVal = $('#user_role').combogrid('getValues');
+	var boxtext = $('#user_role').combogrid('getText');
+	var valarr = boxVal.join(',').split(',');
+	var textarr = boxtext.split('/');
+	for(var i = 0;i<valarr.length;i++){
+		if(valarr[i]==""){
+			continue;
+		}else{
+			boxValArr.push(
+				{role_id:valarr[i],role_name:textarr[i]}
+			);
+		}
+	}
+	console.log(boxValArr);
+	return boxValArr;
+}
 //保存角色
-function saveUser(){
+function saveUser(){	
 	var dog_title=$('#user_dog').panel('options').title;
 	var data;
 	var url;
@@ -429,8 +503,7 @@ function saveUser(){
 				user_name:$("#user_name").val(),
 				password:$("#password").val(),
 				show_name:$("#show_name").val(),
-				role_id:$("#user_role").combobox('getValue'),
-				role_name:$("#user_role").combobox('getText'),
+				roleList:getComboboxValues(),
 				phone:$("#phone").val(),
 				e_mail:$("#e_mail").val(),
 				state:$("input[name='user_radio']:checked").val()
@@ -441,10 +514,9 @@ function saveUser(){
 		data={
 				user_id:objRowsUser.user_id,
 				user_name:$("#user_name").val(),
-				password:$("#password").val()=="000000"?objRowsUser.password:$("#password").val(),
+				password:$("#password").val()=="000000"?objRowsUser.password+"/"+objRowsUser.password:objRowsUser.password+"/"+$("#password").val(),
 				show_name:$("#show_name").val(),
-				role_id:$("#user_role").combobox('getValue'),
-				role_name:$("#user_role").combobox('getText'),
+				roleList:getComboboxValues(),
 				phone:$("#phone").val(),
 				e_mail:$("#e_mail").val(),
 				state:$("input[name='user_radio']:checked").val()
@@ -456,8 +528,8 @@ function saveUser(){
 		$.ajax({
 			url:url,
 			type:'post',
-			data:data,
-			contentType:"application/x-www-form-urlencoded",
+			data:JSON.stringify(data),
+			contentType:"application/json",
 			beforeSend:function(){
 				$.messager.progress({
 					text:'保存中......',
@@ -529,6 +601,11 @@ function loadMenuGrid(){
 				width:200,
 			},
 			{
+				field:"organization_name",
+				title:"机构名称",
+				width:100,
+			},
+			{
 				field:"state",
 				title:"状态",
 				width:100,
@@ -585,6 +662,8 @@ function saveMenuRole(){
 			var param ={};
 			param.id=nodes[i].id;
 			param.text=nodes[i].text;
+			param.authority_code=nodes[i].authority_code;
+			param.flag=nodes[i].flag;
 			param.role_id=row.role_id;
 			param.role_name=row.role_name;
 			params.push(param);

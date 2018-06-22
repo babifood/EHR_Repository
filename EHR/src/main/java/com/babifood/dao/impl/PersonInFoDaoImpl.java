@@ -451,66 +451,6 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		}
 		return list;
 	}
-	
-	@Override
-	public List<Map<String, Object>> findPersonListByIds(String[] ids) {
-		StringBuffer sql = new StringBuffer();
-		sql.append("select p_id as id,p_number as pNumber,p_name as pName ");
-		sql.append(" from ehr_person_basic_info ");
-		sql.append(" where p_id in (");
-		for(int i = 0;i < ids.length ; i++){
-			if(i == ids.length - 1){
-				sql.append("?");
-			} else {
-				sql.append("?,");
-			}
-		}
-		sql.append(")");
-		List<Map<String, Object>> personList = null;
-		try {
-			personList = jdbctemplate.queryForList(sql.toString(), ids);
-		} catch (Exception e) {
-			log.error("根据员工ids查询员工信息失败：",e.getMessage());
-		}
-		return personList;
-	}
-	
-	@Override
-	public Integer getPersonCount() {
-		String sql = "select count(*) from ehr_person_basic_info ";
-		Integer count = 0;
-		try{
-			count = jdbctemplate.queryForInt(sql);
-		} catch (Exception e) {
-			log.error("查询员工数量失败：",e.getMessage());
-			throw e;
-		}
-		return count;
-	}
-	@Override
-	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize) {
-		StringBuffer sql = new StringBuffer();
-		sql.append("select a.p_id as pId,a.p_number as pNumber,a.p_name as pName,b.dept_name as companyName,");
-		sql.append("b.dept_code as companyCode,c.dept_name deptName,c.dept_code as deptCode,d.dept_name organizationName,");
-		sql.append("d.dept_code as organizationCode,e.dept_name as officeName,e.dept_code as officeCode,f.POST_NAME as postName");
-		sql.append(" from ehr_person_basic_info a ");
-		sql.append(" LEFT JOIN ehr_dept b on a.p_company_id = b.dept_code ");
-		sql.append(" LEFT JOIN ehr_dept c on a.p_department_id = c.dept_code ");
-		sql.append(" LEFT JOIN ehr_dept d on a.P_organization_id = d.dept_code");
-		sql.append(" LEFT JOIN ehr_dept e on a.P_section_office_id = e.dept_code");
-		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID");
-//		sql.append(" ");
-//		sql.append("");
-		sql.append(" LIMIT ?,?");
-		List<Map<String, Object>> pagePerson = null;
-		try {
-			pagePerson = jdbctemplate.queryForList(sql.toString(), startIndex,pageSize);
-		} catch (Exception e) {
-			log.error("查询员工数量失败：",e.getMessage());
-			throw e;
-		}
-		return pagePerson;
-	}
 	@Override
 	public Object getPersonByPnumber(String pNumber) {
 		StringBuffer sql = new StringBuffer();

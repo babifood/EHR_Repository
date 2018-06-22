@@ -21,6 +21,11 @@ $(function(){
 	loadAccordion();
 	loadLevelComboBox();
 	loadPostComboBox();
+	loadCompanyComboBox();
+	loadOrganizationCombotree();
+	loadDepartmentCombotree();
+	loadSectionCombotree();
+	inDateChange();
 });
 //加载岗位combobox
 function loadPostComboBox(){
@@ -32,6 +37,58 @@ function loadPostComboBox(){
 	    	$("#p_post_id").val(rec.id);
 	    }   
 	});
+}
+//加载公司combobox
+function loadCompanyComboBox(){
+	$('#p_company_name').combobox({    
+	    url:prefix+'/loadComboboxCompanyData',    
+	    valueField:'dept_code',    
+	    textField:'dept_name',
+	    onSelect: function(rec){
+	    	$("#p_company_id").val(rec.dept_code);
+	    }   
+	});
+}
+//加载单位机构下拉树
+function loadOrganizationCombotree(){
+	var url=prefix+"/loadCombotreeDeptData";
+	$('#p_organization').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+	    	$("#p_organization_id").val(rec.id);
+	    }  
+	});  
+}
+//加载部门下拉树
+function loadDepartmentCombotree(){
+	var url=prefix+"/loadCombotreeDeptData";
+	$('#p_department').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+	    	$("#p_department_id").val(rec.id);
+	    }  
+	});  
+}
+//加载科室下拉树
+function loadSectionCombotree(){
+	var url=prefix+"/loadCombotreeDeptData";
+	$('#p_section_office').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+//	    	alert(rec);
+//	    	console.log(rec);
+	    	$("#p_section_office_id").val(rec.id);
+	    }  
+	});  
 }
 //加载职级ComboGrid
 function loadLevelComboBox(){
@@ -55,7 +112,7 @@ function checkForm(tRf){
 function checkFormData(){
 	var check = true;
 	var box =["p_number","p_name","p_title"]
-	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age"]
+	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age","p_company_name","p_organization","p_department"]
 	for(var i=0;i<box.length;i++){
 		if(!$('#'+box[i]).validatebox('isValid')){
 			check = false;
@@ -186,6 +243,7 @@ function addPersonInFo(){
 		$('#family_grid').datagrid('loadData', { total: 0, rows: [] });
 	}
 	checkForm(true);
+	
 }
 //修改人员信息
 function editPersonInFo(){
@@ -236,14 +294,14 @@ function editFromSetValues(data){
 	$("#p_level_id").val(data.p_level_id);//职级编号
 	$("#p_level_name").combobox('setValue',data.p_level_name);//职级名称
 	$("#p_company_id").val(data.p_company_id);//公司编码
-	$("#p_company_name").val(data.p_company_name);//公司名称
+	$("#p_company_name").combobox('setValue',data.p_company_name);//公司名称
 	$("#p_department_id").val(data.p_department_id);//所属部门编号
-	$("#p_department").val(data.p_department);//所属部门
+	$("#p_department").combotree("setText",data.p_department);//所属部门
 	
 	$("#p_organization_id").val(data.p_organization_id);//单位机构编号
-	$("#p_organization").val(data.p_organization);//单位机构
+	$("#p_organization").combotree("setText",data.p_organization);//单位机构
 	$("#p_section_office_id").val(data.p_section_office_id);//科室编号
-	$("#p_section_office").val(data.p_section_office);//科室
+	$("#p_section_office").combotree("setText",data.p_section_office);//科室
 	
 	$("#p_state").combobox('setValue',data.p_state);//员工状态
 	$("#p_property").combobox('setValue',data.p_property);//员工性质
@@ -277,7 +335,7 @@ function editFromSetValues(data){
 	$("#p_kinsfolk_name").val(data.p_kinsfolk_name);//亲属姓名
 	$("#p_kinsfolk_id_nub").val(data.p_kinsfolk_id_nub);//亲属身份证号码
 	$("#p_kinsfolk_xueli").val(data.p_kinsfolk_xueli);//亲属最高学历
-	$("#p_company_age").spinner('setValue',data.p_company_age);//司龄
+	//$("#p_company_age").spinner('setValue',data.p_company_age);//司龄
 	
 	setFromCheckbox("p_c_yingpin_table",data.p_c_yingpin_table);//应聘申请表
 	setFromCheckbox("p_c_interview_tab",data.p_c_interview_tab);//面谈记录表
@@ -348,6 +406,23 @@ function removePersonInFo(){
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
+}
+//入职日期内容改变时计算司龄（司龄是的单位是按月计算）
+function inDateChange(){
+	$("#p_in_date").datebox({
+		onChange:function(newValue, oldValue){
+			var date = $("#p_in_date").val();
+			if(date==""){
+				return;
+			}else{
+				var startDate = new Date();
+				var endDate = new Date(Date.parse(date));
+			    var intervalMonth = (startDate.getFullYear()*12+startDate.getMonth()) - (endDate.getFullYear()*12+endDate.getMonth());
+			    $("#p_company_age").spinner('setValue',intervalMonth<0?0:intervalMonth);//司龄
+			    
+			}
+		}
+	})
 }
 //查询条件重置
 function resetPersonInFo(){
@@ -514,14 +589,14 @@ function setData(){
 			p_level_id:$("#p_level_id").val(),//职级编号
 			p_level_name:$("#p_level_name").combobox('getText'),//职级名称
 			p_company_id:$("#p_company_id").val(),//公司编码
-			p_company_name:$("#p_company_name").val(),//公司名称
+			p_company_name:$("#p_company_name").combobox("getText"),//公司名称
 			p_department_id:$("#p_department_id").val(),//所属部门编号
-			p_department:$("#p_department").val(),//所属部门
+			p_department:$("#p_department").combotree("getText"),//所属部门
 			
 			p_organization_id:$("#p_organization_id").val(),//单位机构编码
-			p_organization:$("#p_organization").val(),//单位机构
+			p_organization:$("#p_organization").combotree("getText"),//单位机构
 			p_section_office_id:$("#p_section_office_id").val(),//科室
-			p_section_office:$("#p_section_office").val(),//科室
+			p_section_office:$("#p_section_office").combotree("getText"),//科室
 			
 			p_state:$("#p_state").val(),//员工状态
 			p_property:$("#p_property").val(),//员工性质
@@ -555,7 +630,7 @@ function setData(){
 			p_kinsfolk_name:$("#p_kinsfolk_name").val(),//亲属姓名
 			p_kinsfolk_id_nub:$("#p_kinsfolk_id_nub").val(),//亲属身份证号码
 			p_kinsfolk_xueli:$("#p_kinsfolk_xueli").val(),//亲属最高学历
-			p_company_age:$("#p_company_age").val()==""?1:$("#p_company_age").val(),//司龄
+			p_company_age:$("#p_company_age").val(),//司龄
 			
 			p_c_yingpin_table:getCheckBoxValue("p_c_yingpin_table"),//应聘申请表
 			p_c_interview_tab:getCheckBoxValue("p_c_interview_tab"),//面谈记录表

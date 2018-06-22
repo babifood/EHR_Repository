@@ -39,4 +39,5 @@ public interface PersonInFoDao {
 	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize);
 
 	public Object getPersonByPnumber(String pNumber);
+
 }

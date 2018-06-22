@@ -395,7 +395,17 @@ public final class UtilDateTime {
 		return 0.00;
 	}
 	
-	
+	//获取系统当前日期的前一天
+	public static Date getSystemFrontDate(){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
+        Date date=new Date();  
+        Calendar calendar = Calendar.getInstance();  
+        calendar.setTime(date);  
+        calendar.add(Calendar.DAY_OF_MONTH, -1);  
+        date = calendar.getTime();  
+        return date;
+	}
+
 	public static void main(String args[]) {
 		System.out.println(getHours("09:00", "18:25"));
 //		System.out.println(getDayEndByMonth(java.sql.Date.valueOf("2015-01-01"),7));
