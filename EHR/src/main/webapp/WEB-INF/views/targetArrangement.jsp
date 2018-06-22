@@ -3,7 +3,7 @@
 <div class="main" style="height: 98%;">
 		<div style="padding-left: 60px;background-color: #99BBE8;height: 30px;text-align: inherit;">
 			<div style="padding: 7px;width: 40%;">
-				<span style="font-size: 16px;" id="target_arrangement_name"></span><span style="font-size: 16px;" id="target_arrangement_time"></span><span style="font-size: 16px;margin-left: 20px" id="target_arrangement_type"></span>
+				<span style="font-size: 16px;" id="target_arrangement_name"></span><span style="font-size: 16px;margin-left: 10px" id="target_arrangement_time"></span><span style="font-size: 16px;margin-left: 20px" id="target_arrangement_type"></span>
 			</div>
 		</div>
 		<div id="myrl"
@@ -24,7 +24,7 @@
 										onclick="targetDateSelection.show()"> <span id="target_nian"
 										class="topDateFont"></span><span class="topDateFont">年</span><span
 										id="target_yue" class="topDateFont"></span><span class="topDateFont">月</span>
-										<span class="dateSelectionBtn cal_next"
+										<span class="dateSelectionBtn cal_next" style="font-size: 12px;"
 										onclick="targetDateSelection.show()">▼</span></span> &nbsp;&nbsp;<font
 										id=target_GZ class="topDateFont"></font>
 								</div> <!--新加导航功能-->

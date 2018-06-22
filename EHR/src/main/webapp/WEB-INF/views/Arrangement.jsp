@@ -8,7 +8,7 @@
 </style>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendarAll.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/skin.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" />
+<%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/fontSize12.css" /> --%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/calendar/css/calendar.css" />
 <div id="arrangement_tabs" class="easyui-tabs" data-options="fit:true">
    	<div title="排班列表"  style="display:none;">

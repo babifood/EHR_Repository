@@ -5,7 +5,7 @@
 		style="padding-left: 50px; background-color: #99BBE8; height: 36px; text-align: inherit;">
 		<div style="padding: 7px; width: 40%; float: left">
 			<span style="font-size: 16px;" id="arrangement_name">排班名称</span>：<span
-				style="font-size: 16px;" id="arrangement_time">09:00 ~ 18:00</span>
+				style="font-size: 16px;margin-left: 10px" id="arrangement_time">09:00 ~ 18:00</span>
 		</div>
 		<div id="arrangement_calender_tools"
 			style="padding: 5px; width: 40%; float: right; text-align: right;">
@@ -33,7 +33,7 @@
 								onclick="dateSelection.show()"> <span id="nian"
 								class="topDateFont"></span><span class="topDateFont">年</span><span
 								id="yue" class="topDateFont"></span><span class="topDateFont">月</span>
-								<span class="dateSelectionBtn cal_next"
+								<span class="dateSelectionBtn cal_next" style="font-size: 12px;"
 								onclick="dateSelection.show()">▼</span></span> &nbsp;&nbsp;<font id=GZ
 								class="topDateFont"></font>
 						</div> <!--新加导航功能-->
