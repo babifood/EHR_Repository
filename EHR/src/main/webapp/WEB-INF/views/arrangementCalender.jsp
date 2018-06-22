@@ -9,14 +9,9 @@
 		</div>
 		<div id="arrangement_calender_tools"
 			style="padding: 5px; width: 40%; float: right; text-align: right;">
-			<a href="javascript:void(0)" class="easyui-linkbutton"
-				iconCls="icon-add" plain="true" onclick="addSpecialArrangement()">添加</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton"
-				iconCls="icon-remove" plain="true"
-				onclick="removeSpecialArrangement()">删除</a> <a
-				href="javascript:void(0)" class="easyui-linkbutton"
-				iconCls="icon-edit" plain="true"
-				onclick="updateSpecialArrangement()">修改</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addSpecialArrangement()">添加</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeSpecialArrangement()">删除</a> 
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateSpecialArrangement()">修改</a>
 		</div>
 	</div>
 	<div id="myrl" style="width: 100%" ; margin-left: auto; margin-right:
@@ -100,65 +95,6 @@
 		</TABLE>
 		<!-- 			</form> -->
 	</div>
-</div>
-<div class="easyui-dialog" closed="true" id="arrangement_edit"
-	data-options="modal: true" buttons="#arrangement_edit_buttons">
-	<div style="margin: 0; padding: 20px 50px; width: 350px;">
-		<form action="#" id="arrangement_form">
-			<table id="add_arrangement_table" dept-first="true">
-				<thead>
-					<tr>
-						<div style="margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid #ccc;">
-							<span style="color: blue;" id="arrangement_type">添加排班</span>
-						</div>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>日期：</td>
-						<td><input type="hidden" id="arrangement_id" /> <input
-							type="text" name="date" id="attendance_datebox"
-							class="easyui-validatebox textbox easyui-datebox"
-							required="required" data-options="required:true"></td>
-						<td><span style="color: red" id="attendance_date_message"></span></td>
-					</tr>
-					<tr>
-						<td>是否考勤：</td>
-						<td><input type="text" name="isAttend" value="1"
-							id="attendance_isAttend" class="easyui-validatebox textbox"></td>
-						<td></td>
-					</tr>
-					<tr class="attendance_time">
-						<td>开始时间：</td>
-						<td><input type="text"
-							data-options="min:'07:00',showSeconds:false"
-							id="attendance_startTime" class="textbox easyui-timespinner"></td>
-						<td></td>
-					</tr>
-					<tr class="attendance_time">
-						<td>结束时间：</td>
-						<td><input type="text"
-							data-options="min:'07:00',showSeconds:false"
-							id="attendance_endTime" class="textbox easyui-timespinner"></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td>备注：</td>
-						<td><input id="attendance_remark" type="text" name="remark"
-							class="easyui-validatebox textbox"></td>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
-</div>
-<div id="arrangement_edit_buttons" style="text-align: center;">
-	<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok"
-		onclick="saveSepcialArrangement()" style="width: 90px;">保存</a> <a
-		href="#" class="easyui-linkbutton" iconCls="icon-cancel"
-		onclick="javascript:$('#arrangement_edit').dialog('close')"
-		style="width: 90px;">取消</a>
 </div>
 <SCRIPT language="JavaScript">
 	var gNum;
