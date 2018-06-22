@@ -52,7 +52,7 @@ function loadDepts(){
 			});
 		}
 	});
-	loadOrganizeTree("1000");
+	loadOrganizeTree("0000");
 }
 
 
@@ -95,7 +95,8 @@ function loadTissueArchitectureTree(datasource){
 		$('#chart-container').html("");
 		$('#chart-container').orgchart({
 	      'data' : datasource,
-	      'nodeContent': 'title',
+	      'nodeContent': 'deptCode',
+	      'nodeTitle': 'deptName',
 	      'draggable': true,
 	      'dropCriteria': function($draggedNode, $dragZone, $dropZone) {
 	        if($draggedNode.find('.content').text().indexOf('manager') > -1 && $dropZone.find('.content').text().indexOf('engineer') > -1) {
@@ -124,7 +125,6 @@ function loadTissueArchitectureTree(datasource){
 function printArea(){
 	$("#printArea").click(function(){  
 		var $html = $("#chart-container").html();
-		console.log($html);
 		if($html){
 			$("#chart-container").printArea();
 		} else {
@@ -147,9 +147,7 @@ function addDept(node){
 	$("#dept_remark").val("");
 	$("#pCode").val("");
 	$("#pCode").attr("dept_code","0");
-//	var node = $('#dept_tree').tree('getSelected');
 	if(node){
-		console.log(node);
 		$("#pCode").attr("dept_code",node.deptCode);
 		$("#pCode").val(node.deptName);
 	}
@@ -158,7 +156,6 @@ function addDept(node){
 
 //修改部门信息
 function updateDept(node){
-//	var node = $('#dept_tree').tree('getSelected');
 	if(!node){
 		$.messager.alert({
 			msg:'请选择部门',
@@ -196,7 +193,6 @@ function updateDept(node){
 
 //上级部门选择框
 function chooseDept(){
-	console.log(1111);
 	selectPDept();
 	$("#pCode").unbind("click").click(function(){
 		$("#dept-tree-dog").dialog("open").dialog("center").dialog("setTitle","请选择上级部门");

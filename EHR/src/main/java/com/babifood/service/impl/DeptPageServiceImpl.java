@@ -29,7 +29,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 
 	@Override
 	public Map<String, Object> findOrganization(String deptCode) {
-		deptCode = UtilString.isEmpty(deptCode) ? "1000" : deptCode;
+		deptCode = UtilString.isEmpty(deptCode) ? "0000" : deptCode;
 		//当前部门
 		Map<String, Object> organize = deptPageDao.findOrganizeByDeptCode(deptCode);
 		if(MapUtils.isNotEmpty(organize)){
