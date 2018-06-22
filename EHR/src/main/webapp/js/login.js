@@ -1,4 +1,4 @@
-﻿var prefix = window.location.host;
+﻿﻿var prefix = window.location.host;
 prefix = "http://" + prefix +"/EHR";
 $(function(){
 	//用户名验证
