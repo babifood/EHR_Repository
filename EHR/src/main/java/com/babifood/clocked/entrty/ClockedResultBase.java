@@ -1,4 +1,4 @@
-package com.babifood.entity;
+package com.babifood.clocked.entrty;
 
 import org.springframework.stereotype.Component;
 
