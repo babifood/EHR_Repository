@@ -24,6 +24,9 @@ public class BaseArrangementServiceImpl implements BaseArrangementService {
 
 	@Autowired
 	private BaseArrangementDao baseArrangementDao;
+	
+	@Autowired
+	private PersonInFoDao personInFoDao;
 
 	@Override
 	public List<Map<String, Object>> findBaseArrangements() {
@@ -195,10 +198,9 @@ public class BaseArrangementServiceImpl implements BaseArrangementService {
 	}
 	
 	public Map<String, Object> getArrangementId(String deptCode, String pNumber) {
-		PersonInFoDao personInfoDao =  AppContext.getBean("personInFoDaoImpl");
 		List<String> targetIds = new ArrayList<String>();
 		if (!UtilString.isEmpty(pNumber)) {
-			PersonBasrcEntity person = (PersonBasrcEntity) personInfoDao.getPersonByPnumber(pNumber);
+			PersonBasrcEntity person = (PersonBasrcEntity) personInFoDao.getPersonByPnumber(pNumber);
 			if(person != null){
 				if (!UtilString.isEmpty(person.getP_company_id())) {
 					targetIds.add(person.getP_company_id());
