@@ -19,6 +19,7 @@ default-lazy-init="true">
     <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/> 
      -->
   </context:component-scan> 
+
   <!-- 开启aop，对类代理 -->
 	<aop:config proxy-target-class="true"></aop:config>
 	<!-- 开启shiro注解支持 -->
@@ -69,6 +70,6 @@ class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 	org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，所以如果显示的配置则需去掉配置
   <mvc:annotation-driven/> -->
   <mvc:annotation-driven/>
-  <!-- 定时器开关--> 
+<!-- 定时器开关--> 
   <task:annotation-driven/>
 </beans>

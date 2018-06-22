@@ -38,10 +38,10 @@
 			            备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：<textarea name="remark" rows="3" class="textbox" cols="25" id ="dept_remark"/>
 			</div>
 		 </div> 		
-		 <div id="dept_dlg_buttons" style="text-align: center;">
-		    <a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savedept()" style="width: 90px;">保存</a>
-		    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dept_dog').dialog('close')" style="width: 90px;">取消</a>
-		 </div>  
+		<div id="dept_dlg_buttons" style="text-align: center;">
+		   <a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savedept()" style="width: 90px;">保存</a>
+		   <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dept_dog').dialog('close')" style="width: 90px;">取消</a>
+		</div>  
 	</div>
 	<div id="dept-tree-dog" class="easyui-dialog" closed="true" style="width: 350px;" title="My Dialog">
 	</div>     	

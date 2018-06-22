@@ -4,16 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.babifood.entity.LoginEntity;
 import com.babifood.entity.PersonBasrcEntity;
 import com.babifood.service.PersonInFoService;
 @Controller
@@ -139,4 +135,11 @@ public class PersonInFoControl {
 	public List<Map<String, Object>> loadComboboxCompanyData(){
 		return personInFoService.loadComboboxCompanyData();
 	}
+
+	@ResponseBody
+	@RequestMapping("/getPersonByPnumber")
+	public PersonBasrcEntity getPersonByPnumber(String pNumber) {
+		return (PersonBasrcEntity) personInFoService.getPersonByPnumber(pNumber);
+	}
+
 }

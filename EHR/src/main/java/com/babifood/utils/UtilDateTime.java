@@ -1,6 +1,7 @@
 package com.babifood.utils;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -261,11 +262,139 @@ public final class UtilDateTime {
 		return retStamp;
 	}
 	
+	//获取当前时间
 	public static String getCurrentTime(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
 		return sdf.format(date);
 	}
+	
+	/**
+	 * 获取当前时间
+	 * @param date
+	 * @param pattern
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date getDate(String date,String pattern) throws ParseException{
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.parse(date);
+	}
+	
+	/**
+	 * 比较当前时间是否在该月之后
+	 * @param time
+	 * @param pattern
+	 * @return
+	 */
+	public static boolean isLaterThanCurrentMonth(String time,String pattern) {
+		try {
+			Calendar calendar = Calendar.getInstance();
+			int currentYear = calendar.get(Calendar.YEAR);
+			int currentMonth = calendar.get(Calendar.MONTH);
+			Date date = getDate(time, pattern);
+			calendar.setTime(date);
+			int year = calendar.get(Calendar.YEAR);
+			int month = calendar.get(Calendar.MONTH);
+			if(currentYear > year){
+				return false;
+			} else if ((currentYear == year) && currentMonth >= month) {
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * 获取当前月的天数
+	 * @return
+	 */
+	public static int getDaysOfCurrentMonth() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.getActualMaximum(Calendar.DATE);
+	}
+	
+	/**
+	 * 获取当前月份
+	 * @return
+	 */
+	public static String getCurrentMonth() {
+		Calendar calendar = Calendar.getInstance();
+		String month = (calendar.get(Calendar.MONTH) + 1) + "";
+		return month.length() == 1 ? "0" + month : month + "";
+	}
+	
+	/**
+	 * 获取当前年份
+	 * @return
+	 */
+	public static String getCurrentYear() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.YEAR)+"";
+	}
+	
+	/**
+	 * 根据时间获取星期
+	 * @param time
+	 * @return
+	 */
+	public static String getWeekDay(String time) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String week = "";
+		try {
+			Date date = simpleDateFormat.parse(time);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+			switch (weekDay) {
+			case 1:
+				week = "星期日";
+				break;
+			case 2:
+				week = "星期一";
+				break;
+			case 3:
+				week = "星期二";
+				break;
+			case 4:
+				week = "星期三";
+				break;
+			case 5:
+				week = "星期四";
+				break;
+			case 6:
+				week = "星期五";
+				break;
+			case 7:
+				week = "星期六";
+				break;
+			default:
+				break;
+			}
+		} catch (ParseException e) {
+		}
+		return week;
+	}
+	
+	/**
+	 * 根据标准/打卡时间获得标准/打卡上班小时数
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public static Double getHours(String startDate,String endDate) {
+		double nh = 1000 * 60 * 60;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+		try {
+			long seconds = simpleDateFormat.parse(endDate).getTime() - simpleDateFormat.parse(startDate).getTime();
+			return Math.round(seconds*100/nh)/100.0 - 1;
+		} catch (ParseException e) {
+		}
+		return 0.00;
+	}
+	
 	//获取系统当前日期的前一天
 	public static Date getSystemFrontDate(){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
@@ -278,7 +407,7 @@ public final class UtilDateTime {
 	}
 
 	public static void main(String args[]) {
-		System.out.println(getCurrentTime());
+		System.out.println(getHours("09:00", "18:25"));
 //		System.out.println(getDayEndByMonth(java.sql.Date.valueOf("2015-01-01"),7));
 	}
 
