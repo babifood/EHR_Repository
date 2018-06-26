@@ -25,7 +25,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 	public List<Map<String, Object>> findOrganizeList(String pCode) {
 		StringBuffer sql = new StringBuffer();
 		sql.append(
-				"select a.ID as id, a.dept_code as deptCode ,a.dept_name as name,a.dept_name as deptName ,a.dept_name as text , a.pCode as pCode ,type,a.remark as remark");
+				"select a.ID as id, a.dept_code as deptCode ,a.dept_name as name,a.dept_name as deptName ,a.dept_name as text , a.pCode as pCode ,type,a.remark as remark,state");
 		sql.append(" FROM ehr_dept a ");
 		sql.append(" where a.pCode = ?");
 		List<Map<String, Object>> list = null;
@@ -41,7 +41,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 	public Map<String, Object> findOrganizeByDeptCode(String deptCode) {
 		StringBuffer sql = new StringBuffer();
 		sql.append(
-				"select a.ID as id, a.dept_code as deptCode ,a.dept_name as name ,a.dept_name as deptName ,a.dept_name as text, a.pCode pCode ,type,a.remark as remark");
+				"select a.ID as id, a.dept_code as deptCode ,a.dept_name as name ,a.dept_name as deptName ,a.dept_name as text, a.pCode pCode ,type,a.remark as remark,state");
 		sql.append(" FROM ehr_dept a ");
 		sql.append(" where a.dept_code = ?");
 		Map<String, Object> organize = null;
