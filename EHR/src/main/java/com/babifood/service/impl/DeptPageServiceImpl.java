@@ -57,6 +57,8 @@ public class DeptPageServiceImpl implements DeptPageService {
 				List<Map<String, Object>> organizes = getOrganizeChildren(map.get("deptCode")+"");
 				if(!CollectionUtils.isEmpty(organizes)){
 					map.put("children", organizes);
+				} else {
+					map.put("state", "");
 				}
 			}
 		}
