@@ -220,7 +220,7 @@ public final class UtilDateTime {
 	 * @param end
 	 * @return
 	 */
-	public static int[] getTimeInterval(Timestamp begin, Timestamp end) {
+	public static int[] getTimeInterval(Date begin, Date end) {
 		long nd = 1000 * 24 * 60 * 60;
 		long nh = 1000 * 60 * 60;
 		long nm = 1000 * 60;

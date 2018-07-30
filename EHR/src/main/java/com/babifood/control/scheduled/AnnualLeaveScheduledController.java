@@ -18,7 +18,7 @@ public class AnnualLeaveScheduledController {
 	@Autowired
 	private AnnualLeaveService AnnualLeaveService;
 
-	@Scheduled(cron = "0 30 00 * * ?")
+	//@Scheduled(cron = "0 30 00 * * ?")
 	public void getAnuualLeave(){
      	//取执行计算的当天
          Date date = new Date();

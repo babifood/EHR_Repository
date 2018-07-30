@@ -1,9 +1,11 @@
 package com.babifood.clocked.entrty;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClockedResultBase {
+public class ClockedResults {
 		// 年度
 		private Integer year;
 		// 月份
@@ -11,25 +13,37 @@ public class ClockedResultBase {
 		// 工号
 		private String workNum;
 		// 姓名
-		private String memberID;
+		private String userName;
+		// 公司代码
+		private String companyCode;
 		// 公司
 		private String company;
+		// 单位机构代码
+		private String organCode;
 		// 单位机构
 		private String organ;
+		// 部门代码
+		private String deptCode;
 		// 部门
 		private String dept;
-		// 科室
+		// 科室代码
+		private String officeCode;
+		// 科室代码
 		private String office;
+		// 班组代码
+		private String groupCode;
 		// 班组
-		private String group;
+		private String groupName;
+		// 岗位代码
+		private String postCode;
 		// 岗位
 		private String post;
 		// 考勤方式
-		private String daKaType;
+		private String checkingType;
 		// 排班类别
 		private String paiBanType;
 		// 日期
-		private java.sql.Date clockDate;
+		private Date checkingDate;
 		// 星期
 		private String week;
 		// 标准上班时间
@@ -37,11 +51,11 @@ public class ClockedResultBase {
 		// 标准下班时间
 		private String endTime;	
 		// 标准工作时长
-		private Double standWorkTimeLength;
+		private Double standWorkLength;
 		// 打卡起始时间
-		private java.sql.Timestamp clockBeginTime;
+		private Date checkingBeginTime;
 		// 打卡结束时间
-		private java.sql.Timestamp clockEndTime;
+		private Date checkingEndTime;
 		// 打卡原始时长
 		private Double originalCheckingLength;
 		// 实际工作时长
@@ -87,11 +101,9 @@ public class ClockedResultBase {
 		
 		
 		// 业务开始时间
-		private java.sql.Timestamp eventBeginTime;
+		private Date eventBeginTime;
 		// 业务结束时间
-		private java.sql.Timestamp eventEndTime;
-		// 打卡地点
-		private String daKaLocation;
+		private Date eventEndTime;
 		// 考勤标志
 		private Integer clockFlag;
 		public Integer getYear() {
@@ -112,11 +124,17 @@ public class ClockedResultBase {
 		public void setWorkNum(String workNum) {
 			this.workNum = workNum;
 		}
-		public String getMemberID() {
-			return memberID;
+		public String getUserName() {
+			return userName;
 		}
-		public void setMemberID(String memberID) {
-			this.memberID = memberID;
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+		public String getCompanyCode() {
+			return companyCode;
+		}
+		public void setCompanyCode(String companyCode) {
+			this.companyCode = companyCode;
 		}
 		public String getCompany() {
 			return company;
@@ -124,11 +142,23 @@ public class ClockedResultBase {
 		public void setCompany(String company) {
 			this.company = company;
 		}
+		public String getOrganCode() {
+			return organCode;
+		}
+		public void setOrganCode(String organCode) {
+			this.organCode = organCode;
+		}
 		public String getOrgan() {
 			return organ;
 		}
 		public void setOrgan(String organ) {
 			this.organ = organ;
+		}
+		public String getDeptCode() {
+			return deptCode;
+		}
+		public void setDeptCode(String deptCode) {
+			this.deptCode = deptCode;
 		}
 		public String getDept() {
 			return dept;
@@ -136,17 +166,35 @@ public class ClockedResultBase {
 		public void setDept(String dept) {
 			this.dept = dept;
 		}
+		public String getOfficeCode() {
+			return officeCode;
+		}
+		public void setOfficeCode(String officeCode) {
+			this.officeCode = officeCode;
+		}
 		public String getOffice() {
 			return office;
 		}
 		public void setOffice(String office) {
 			this.office = office;
 		}
-		public String getGroup() {
-			return group;
+		public String getGroupCode() {
+			return groupCode;
 		}
-		public void setGroup(String group) {
-			this.group = group;
+		public void setGroupCode(String groupCode) {
+			this.groupCode = groupCode;
+		}
+		public String getGroupName() {
+			return groupName;
+		}
+		public void setGroupName(String groupName) {
+			this.groupName = groupName;
+		}
+		public String getPostCode() {
+			return postCode;
+		}
+		public void setPostCode(String postCode) {
+			this.postCode = postCode;
 		}
 		public String getPost() {
 			return post;
@@ -154,11 +202,11 @@ public class ClockedResultBase {
 		public void setPost(String post) {
 			this.post = post;
 		}
-		public String getDaKaType() {
-			return daKaType;
+		public String getCheckingType() {
+			return checkingType;
 		}
-		public void setDaKaType(String daKaType) {
-			this.daKaType = daKaType;
+		public void setCheckingType(String checkingType) {
+			this.checkingType = checkingType;
 		}
 		public String getPaiBanType() {
 			return paiBanType;
@@ -166,11 +214,11 @@ public class ClockedResultBase {
 		public void setPaiBanType(String paiBanType) {
 			this.paiBanType = paiBanType;
 		}
-		public java.sql.Date getClockDate() {
-			return clockDate;
+		public Date getCheckingDate() {
+			return checkingDate;
 		}
-		public void setClockDate(java.sql.Date clockDate) {
-			this.clockDate = clockDate;
+		public void setCheckingDate(Date checkingDate) {
+			this.checkingDate = checkingDate;
 		}
 		public String getWeek() {
 			return week;
@@ -190,23 +238,23 @@ public class ClockedResultBase {
 		public void setEndTime(String endTime) {
 			this.endTime = endTime;
 		}
-		public Double getStandWorkTimeLength() {
-			return standWorkTimeLength;
+		public Double getStandWorkLength() {
+			return standWorkLength;
 		}
-		public void setStandWorkTimeLength(Double standWorkTimeLength) {
-			this.standWorkTimeLength = standWorkTimeLength;
+		public void setStandWorkLength(Double standWorkLength) {
+			this.standWorkLength = standWorkLength;
 		}
-		public java.sql.Timestamp getClockBeginTime() {
-			return clockBeginTime;
+		public Date getCheckingBeginTime() {
+			return checkingBeginTime;
 		}
-		public void setClockBeginTime(java.sql.Timestamp clockBeginTime) {
-			this.clockBeginTime = clockBeginTime;
+		public void setCheckingBeginTime(Date checkingBeginTime) {
+			this.checkingBeginTime = checkingBeginTime;
 		}
-		public java.sql.Timestamp getClockEndTime() {
-			return clockEndTime;
+		public Date getCheckingEndTime() {
+			return checkingEndTime;
 		}
-		public void setClockEndTime(java.sql.Timestamp clockEndTime) {
-			this.clockEndTime = clockEndTime;
+		public void setCheckingEndTime(java.sql.Timestamp checkingEndTime) {
+			this.checkingEndTime = checkingEndTime;
 		}
 		public Double getOriginalCheckingLength() {
 			return originalCheckingLength;
@@ -334,23 +382,17 @@ public class ClockedResultBase {
 		public void setCanBu(Integer canBu) {
 			this.canBu = canBu;
 		}
-		public java.sql.Timestamp getEventBeginTime() {
+		public Date getEventBeginTime() {
 			return eventBeginTime;
 		}
-		public void setEventBeginTime(java.sql.Timestamp eventBeginTime) {
+		public void setEventBeginTime(Date eventBeginTime) {
 			this.eventBeginTime = eventBeginTime;
 		}
-		public java.sql.Timestamp getEventEndTime() {
+		public Date getEventEndTime() {
 			return eventEndTime;
 		}
 		public void setEventEndTime(java.sql.Timestamp eventEndTime) {
 			this.eventEndTime = eventEndTime;
-		}
-		public String getDaKaLocation() {
-			return daKaLocation;
-		}
-		public void setDaKaLocation(String daKaLocation) {
-			this.daKaLocation = daKaLocation;
 		}
 		public Integer getClockFlag() {
 			return clockFlag;

@@ -20,7 +20,7 @@ public class ScheduledController {
 	/**
 	 * 初始化考勤
 	 */
-	@Scheduled(cron = "1 0/2 * * * ?")
+	//@Scheduled(cron = "1 0/2 * * * ?")
 	public void initializeArrangement() {
 		arrangementService.initializeArrangement();
 	}
@@ -28,7 +28,7 @@ public class ScheduledController {
 	/**
 	 * 薪资计算
 	 */
-	@Scheduled(cron = "1 0 0/2 * * ?")
+	//@Scheduled(cron = "1 0 0/2 * * ?")
 	public void salaryCalculation(){
 		salaryService.salaryCalculation();
 	}
