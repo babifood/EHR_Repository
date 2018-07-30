@@ -223,7 +223,7 @@ public class ClockedYesNoRule {
 			int inYear = Integer.parseInt(person.getInDate().substring(0,4));
 			int inMonth = Integer.parseInt(person.getInDate().substring(6,7));
 			if(year==inYear&&month==inMonth){
-				if(tmpResult.getCheckingDate().getTime()<=inDate.getTime()){
+				if(tmpResult.getCheckingDate().getTime()<inDate.getTime()){
 					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
 					tmpResult.setInOutJob(Clock_Flag_IN_OUT_JOB);
 				}

@@ -216,6 +216,35 @@ function loadPersonGrid(search_p_number,search_p_name){
 				},
 			}
 		]],
+		loadFilter:function(data){
+			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
+	            data = {
+	                total: data.length,
+	                rows: data
+	            }
+	        }
+	        var dg = $(this);
+	        var opts = dg.datagrid('options');
+	        var pager = dg.datagrid('getPager');
+	        pager.pagination({
+	            onSelectPage:function(pageNum, pageSize){
+	                opts.pageNumber = pageNum;
+	                opts.pageSize = pageSize;
+	                pager.pagination('refresh',{
+	                    pageNumber:pageNum,
+	                    pageSize:pageSize
+	                });
+	                dg.datagrid('loadData',data);
+	            }
+	        });
+	        if (!data.originalRows){
+	            data.originalRows = (data.rows);
+	        }
+	        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+	        var end = start + parseInt(opts.pageSize);
+	        data.rows = (data.originalRows.slice(start, end));
+	        return data;
+		}
 	});
 }
 
@@ -283,6 +312,7 @@ function editPersonInFo(){
 }
 //编辑时给页面内容赋值
 function editFromSetValues(data){
+	console.log(data);
 	$("#p_id").val(data.p_id);//人员ID
 	$("#p_number").val(data.p_number);//编号
 	$("#p_name").val(data.p_name);//名称
@@ -296,12 +326,12 @@ function editFromSetValues(data){
 	$("#p_company_id").val(data.p_company_id);//公司编码
 	$("#p_company_name").combobox('setValue',data.p_company_name);//公司名称
 	$("#p_department_id").val(data.p_department_id);//所属部门编号
-	$("#p_department").combotree("setText",data.p_department);//所属部门
+	$("#p_department").combotree("setValue",data.p_department);//所属部门
 	
 	$("#p_organization_id").val(data.p_organization_id);//单位机构编号
-	$("#p_organization").combotree("setText",data.p_organization);//单位机构
+	$("#p_organization").combotree("setValue",data.p_organization);//单位机构
 	$("#p_section_office_id").val(data.p_section_office_id);//科室编号
-	$("#p_section_office").combotree("setText",data.p_section_office);//科室
+	$("#p_section_office").combotree("setValue",data.p_section_office);//科室
 	
 	$("#p_state").combobox('setValue',data.p_state);//员工状态
 	$("#p_property").combobox('setValue',data.p_property);//员工性质
@@ -319,7 +349,7 @@ function editFromSetValues(data){
 	$("#p_gjj_end_month").datebox('setValue',data.p_gjj_end_month);//公积金购买终止月
     $("#p_nationality").val(data.p_nationality);//国籍
 	$("#p_nation").val(data.p_nation);//民族
-	$("#p_huko_state").val(data.p_huko_state);//户口性质
+	//$("#p_huko_state").val(data.p_huko_state);//户口性质
 	$("#p_marriage").combobox('setValue',data.p_marriage);//婚否
 	$("#p_politics").combobox('setValue',data.p_politics);//政治面貌
 	$("#p_phone").val(data.p_phone);//联系电话
@@ -614,7 +644,7 @@ function setData(){
 			p_gjj_end_month:$("#p_gjj_end_month").val(),//公积金购买终止月
 		    p_nationality:$("#p_nationality").val(),//国籍
 			p_nation:$("#p_nation").val(),//民族
-			p_huko_state:$("#p_huko_state").val(),//户口性质
+			//p_huko_state:$("#p_huko_state").val(),//户口性质
 			p_marriage:$("#p_marriage").val(),//婚否
 			p_politics:$("#p_politics").val(),//政治面貌
 			p_phone:$("#p_phone").val(),//联系电话

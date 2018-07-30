@@ -11,8 +11,9 @@
 		<table id="clocked_grid"></table>
 		<div id="clocked_tbar">
 			<div style="padding: 0 0 0 7px;color: #333;">
-				年份：<input type="text" class="textbox" id="year" name="year" style="width: 110px;"/>
-	        	月份：<input type="text" class="textbox" id="month" name="month" style="width: 110px;"/>
+				年份：<input type="text" class="easyui-numberspinner" id="year" name="year" style="width: 110px;"/>
+	        	月份：<input type="text" class="easyui-numberspinner" id="month" name="month" style="width: 110px;"
+	        			data-options="min:1,max:12"/>
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="initData()">数据初始化</a>
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="executeData()">数据归集</a>
 	        </div>

@@ -76,7 +76,7 @@ public class ClockedControl {
 	}
 	@ResponseBody
 	@RequestMapping("/initClockedData")
-	public Map<String,Object> initClockedData(int year,int month) throws Exception{
+	public Map<String,Object> initClockedData(Integer year,Integer month) throws Exception{
 		Map<String,Object> map =new HashMap<String,Object>();
 		int[] rows=null;
 		try {
@@ -95,7 +95,7 @@ public class ClockedControl {
 	}
 	@ResponseBody
 	@RequestMapping("/executeClockedData")
-	public Map<String,Object> executeClockedData(int year,int month) throws CustomException{
+	public Map<String,Object> executeClockedData(Integer year,Integer month) throws CustomException{
 		Calendar tempCal = Calendar.getInstance();
 		int sysYear = year==0?tempCal.get(Calendar.YEAR):year;
 		int sysMonth = month==0?tempCal.get(Calendar.MONTH)+1:month;		
@@ -104,7 +104,7 @@ public class ClockedControl {
 		Map<String,Object> map =new HashMap<String,Object>();
 		int[] rows=null;
 		try {
-			rows = collectionClockedDataService.execute(year,month);
+			rows = collectionClockedDataService.execute(sysYear,sysMonth);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

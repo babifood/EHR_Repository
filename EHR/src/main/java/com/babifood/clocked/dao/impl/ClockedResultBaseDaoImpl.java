@@ -139,7 +139,8 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("where WorkNum=? and checkingDate=?");
 		final String strSql = sql.toString();
 		List<Object[]> paramsList = new ArrayList<>();
-		for(int i=0;i<saveDataList.size();i++){
+		int size = saveDataList==null?0:saveDataList.size();
+		for(int i=0;i<size;i++){
 			paramsList.add(new Object[]{
 					saveDataList.get(i).getCheckingBeginTime(),saveDataList.get(i).getCheckingEndTime(),
 					saveDataList.get(i).getOriginalCheckingLength(),saveDataList.get(i).getActualWorkLength(),

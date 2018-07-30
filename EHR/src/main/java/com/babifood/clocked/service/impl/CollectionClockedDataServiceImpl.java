@@ -1,9 +1,6 @@
 package com.babifood.clocked.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +95,7 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		// TODO Auto-generated method stub
 		//1根据打卡记录计算相关数据
 		ClockedResultBases tmpClockedResult = null;
-		int size = clockedResultList.size();
+		int size = clockedResultList==null?0:clockedResultList.size();
 		String daKaType = null;
 		for (int i = 0; i < size; i++) {
 			tmpClockedResult = clockedResultList.get(i);
@@ -117,7 +114,7 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		// TODO Auto-generated method stub
 		//1根据考勤业务计算相关数据
 		ClockedResultBases tmpClockedResult = null;
-		int size = clockedResultList.size();
+		int size = clockedResultList==null?0:clockedResultList.size();
 		OfficeCalcRule officeCalcRule = null;
 		MobileCalcRule mobileCalcRule = null;
 		String daKaType = null;
