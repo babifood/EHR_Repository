@@ -19,7 +19,6 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	//当前年假记录
 	@Override
 	public List<Map<String, Object>> loadNowAnnualLeave(String npname) {
-		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT PNAME as pname,PNUMBER as pnumber,PINDAY as pinday,NOWYEAR as nowyear"
 				+ ",NANNUALLEAVE as nannualleave,NANNUALLEAVEDEADLINE as nannualleavedeadline"
@@ -34,7 +33,6 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			// TODO: handle exception
 			log.error("查询错误："+e.getMessage());
 		}
 		return list;
@@ -42,7 +40,6 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	//历史年假记录
 	@Override
 	public List<Map<String, Object>> loadHistoryAnnualLeave(String lpname) {
-		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT PNAME as pname,PNUMBER as pnumber,PINDAY as pinday,NOWYEAR as nowyear"
 				+ ",NANNUALLEAVE as nannualleave,NANNUALLEAVEDEADLINE as nannualleavedeadline"
@@ -57,14 +54,12 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			// TODO: handle exception
 			log.error("查询错误："+e.getMessage());
 		}
 		return list;
 	}
 	//取员工入职日期等信息
 	public List<Map<String, Object>> GetHireDate() {
-		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT p_number,p_name,p_in_date ,b.COMPANYDAYFLAG as p_companydayflag,b.PINDAY as pinday");
 		sql.append(" from ehr_person_basic_info a");
@@ -75,13 +70,11 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			// TODO: handle exception
 			log.error("查询错误："+e.getMessage());
 		}
 		return list;
 	}
 	public int[] SaveAnnualLeave(List<Map<String, Object>> list,int nowYear) {
-		// TODO Auto-generated method stub
 		String [] sqlAll =new String [3];
 		//把当前记录表里需要更新的人员的记录，插入历史记录表
 		StringBuffer sql0 = new StringBuffer();
@@ -105,7 +98,7 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 					+ ",'"+map.get("p_name").toString()+"'"
 					+ ",'"+map.get("p_number").toString()+"'"
 					+ ",DATE_FORMAT('"+map.get("p_in_date").toString()+"','%Y-%m-%d')"
-					+ ","+Integer.parseInt(map.get("p_companydayflag").toString())+""
+					+ ","+(int) map.get("p_companydayflag")+""
 					+ ","+nowYear+""
 					+ ","+(int) map.get("nannualleave")+""
 					+ ",DATE_FORMAT('"+nowYear+"-07-01','%Y-%m-%d')"
@@ -130,7 +123,6 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 			//同时执行三个SQL
 			rows = jdbctemplate.batchUpdate(sqlAll);
 		} catch (Exception e) {
-			// TODO: handle exception
 			log.error("查询错误："+e.getMessage());
 		}
 		return rows;
