@@ -263,14 +263,14 @@ public final class UtilDateTime {
 	}
 	
 	//获取当前时间
-	public static String getCurrentTime(){
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+	public static String getCurrentTime(String pattern){
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		Date date = new Date();
 		return sdf.format(date);
 	}
 	
 	/**
-	 * 获取当前时间
+	 * 日期转换
 	 * @param date
 	 * @param pattern
 	 * @return
@@ -308,11 +308,13 @@ public final class UtilDateTime {
 	}
 	
 	/**
-	 * 获取当前月的天数
+	 * 获取当指定年、月的当月天数
 	 * @return
 	 */
-	public static int getDaysOfCurrentMonth() {
+	public static int getDaysOfCurrentMonth(int year,int month) {
 		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month - 1);
 		return calendar.getActualMaximum(Calendar.DATE);
 	}
 	
@@ -336,6 +338,27 @@ public final class UtilDateTime {
 	}
 	
 	/**
+	 * 获取上个月的年份
+	 * @return
+	 */
+	public static String getYearOfPreMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, -1);
+		return calendar.get(Calendar.YEAR)+"";
+	}
+	
+	/**
+	 * 获取当前月份
+	 * @return
+	 */
+	public static String getPreMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, -1);
+		String month = (calendar.get(Calendar.MONTH) + 1) + "";
+		return month.length() == 1 ? "0" + month : month + "";
+	}
+	
+	/**
 	 * 根据时间获取星期
 	 * @param time
 	 * @return
@@ -345,37 +368,31 @@ public final class UtilDateTime {
 		String week = "";
 		try {
 			Date date = simpleDateFormat.parse(time);
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
-			int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-			switch (weekDay) {
-			case 1:
-				week = "星期日";
-				break;
-			case 2:
-				week = "星期一";
-				break;
-			case 3:
-				week = "星期二";
-				break;
-			case 4:
-				week = "星期三";
-				break;
-			case 5:
-				week = "星期四";
-				break;
-			case 6:
-				week = "星期五";
-				break;
-			case 7:
-				week = "星期六";
-				break;
-			default:
-				break;
-			}
+			week = getWeekOfDate(date);
 		} catch (ParseException e) {
 		}
 		return week;
+	}
+	
+	/**
+	 * 是否工作日
+	 * @param time
+	 * @param pattern
+	 * @return
+	 */
+	public static Boolean isWorkDay(String time,String pattern) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		boolean isWorkDay = false;
+		try {
+			Date date = simpleDateFormat.parse(time);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			if(1 < calendar.get(Calendar.DAY_OF_WEEK) && calendar.get(Calendar.DAY_OF_WEEK) < 7){
+				isWorkDay = true;
+			}
+		} catch (Exception e) {
+		}
+		return isWorkDay;
 	}
 	
 	/**
@@ -389,7 +406,7 @@ public final class UtilDateTime {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 		try {
 			long seconds = simpleDateFormat.parse(endDate).getTime() - simpleDateFormat.parse(startDate).getTime();
-			return Math.round(seconds*100/nh)/100.0 - 1;
+			return Math.round(seconds*100.0/nh)/100.0 - 1;
 		} catch (ParseException e) {
 		}
 		return 0.00;
@@ -407,7 +424,14 @@ public final class UtilDateTime {
 	}
 
 	public static void main(String args[]) {
-		System.out.println(getHours("09:00", "18:25"));
+//		System.out.println(isWorkDay("2018-06-25", "yyyy-MM-dd"));
+//		System.out.println(getWeekDay("2018-06-25"));
+		System.out.println(getCurrentMonth());
+		System.out.println(getCurrentYear());
+		System.out.println(getPreMonth());
+		System.out.println(getYearOfPreMonth());
+//		System.out.println(getDaysOfCurrentMonth(2018, Integer.valueOf("02")));
+//		System.out.println(getHours("09:00", "16:20"));
 //		System.out.println(getDayEndByMonth(java.sql.Date.valueOf("2015-01-01"),7));
 	}
 
