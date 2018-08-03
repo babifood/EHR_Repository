@@ -32,6 +32,7 @@ public class ClockedControl {
 	@ResponseBody
 	@RequestMapping("/loadClockedResult")
 	public Map<String,Object> loadClockedResult(Integer year,Integer month,String workNum,String periodEndDate) throws Exception{
+		
 		Calendar tempCal = Calendar.getInstance();
 		int sysYear = year==0?tempCal.get(Calendar.YEAR):year;
 		int sysMonth = month==0?tempCal.get(Calendar.MONTH)+1:month;		
