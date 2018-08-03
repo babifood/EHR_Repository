@@ -72,4 +72,10 @@ class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
   <mvc:annotation-driven/>
 <!-- 定时器开关--> 
   <task:annotation-driven/>
+  
+	<!-- 加载 multipartResolver -->  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <property name="maxUploadSize" value="32505856" />  
+	    <property name="maxInMemorySize" value="4096" />  
+	</bean>
 </beans>

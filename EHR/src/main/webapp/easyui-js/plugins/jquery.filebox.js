@@ -95,6 +95,6 @@ $.fn.filebox.parseOptions=function(_14){
 var t=$(_14);
 return $.extend({},$.fn.textbox.parseOptions(_14),$.parser.parseOptions(_14,["accept","capture","separator"]),{multiple:(t.attr("multiple")?true:undefined)});
 };
-$.fn.filebox.defaults=$.extend({},$.fn.textbox.defaults,{buttonIcon:null,buttonText:"Choose File",buttonAlign:"right",inputEvents:{},accept:"",capture:"",separator:",",multiple:false});
+$.fn.filebox.defaults=$.extend({},$.fn.textbox.defaults,{buttonIcon:null,buttonText:"添加文件",buttonAlign:"right",inputEvents:{},accept:"",capture:"",separator:",",multiple:false});
 })(jQuery);
 
