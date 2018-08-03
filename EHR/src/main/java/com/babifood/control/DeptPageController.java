@@ -113,9 +113,12 @@ public class DeptPageController {
 	@ResponseBody
 	@RequestMapping("export")
 	public void exportExcel(HttpServletResponse response,String type) throws Exception {
+		String filename = new String("组织机构信息列表".getBytes("UTF-8"),"ISO8859-1");
+		if("1".equals(type)){
+			filename += UtilDateTime.getCurrentTime("yyyyMMddHHmmss");
+		}
 		response.setContentType("application/vnd.ms-excel");    
-        response.setHeader("Content-disposition", "attachment;filename=" + 
-        		new String("部门信息".getBytes("ISO-8859-1")) + UtilDateTime.getCurrentTime() + ".xls");    
+        response.setHeader("Content-disposition", "attachment;filename=" + filename + ".xls"); 
         OutputStream ouputStream = response.getOutputStream();    
         deptService.exportExcel(ouputStream,type);
 	}

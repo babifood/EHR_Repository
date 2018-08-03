@@ -70,12 +70,12 @@ public class HolidayDaoImpl implements HolidayDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> findHolidayListByDate(String date) {
+	public List<Map<String, Object>> findHolidayListByDate(String startDay, String endDay) {
 		StringBuffer sql = new StringBuffer();
 		sql.append(
 				"select id as id ,holiday_name as holidayName ,start_date as startDate,end_date as endDate,remark as remark from ehr_holiday");
-		sql.append(" where start_date like ? or end_date like ?");
-		return jdbctemplate.queryForList(sql.toString(), date + "%", date + "%");
+		sql.append(" where start_date <= ? and end_date >= ?");
+		return jdbctemplate.queryForList(sql.toString(), endDay, startDay);
 	}
 
 }

@@ -156,13 +156,14 @@ public class DeptPageServiceImpl implements DeptPageService {
 		row1Name.put("pName", "上级部门名称");
 		row1Name.put("pCode", "上级部门编号");
 		row1Name.put("remark", "备注");
+		String[] sort = new String[]{"deptName", "deptCode", "pName", "pCode", "remark"};
 		List<Map<String, Object>> dataSource = null;
 		if("0".equals(type)){//模板
 			dataSource = new ArrayList<Map<String, Object>>();
 		} else {//数据
 			dataSource = deptPageDao.findAll();
 		}
-		ExcelUtil.exportExcel("部门信息列表", row1Name, dataSource, ouputStream);
+		ExcelUtil.exportExcel("部门信息列表", row1Name, dataSource, ouputStream, sort);
 	}
 
 	@Override
