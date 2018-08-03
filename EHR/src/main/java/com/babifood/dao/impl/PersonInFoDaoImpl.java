@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.babifood.dao.PersonInFoDao;
 import com.babifood.entity.PersonBasrcEntity;
+import com.babifood.utils.CustomerContextHolder;
 @Repository
 public class PersonInFoDaoImpl implements PersonInFoDao {
 	@Autowired
@@ -26,7 +27,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql.append("select ");
 		sql.append("p_id,p_number,p_name,p_sex,p_age,p_title,p_post_id,p_post,p_level_id,p_level_name,");
 		sql.append("p_company_id,p_company_name,p_department_id,p_department,p_state,p_property,");
-		sql.append("p_organization_id,p_organization,p_section_office_id,p_section_office,");
+		sql.append("p_organization_id,p_organization,p_section_office_id,p_section_office,p_group_id,p_group,");
 		sql.append("p_post_property,p_in_date,p_turn_date,p_out_date,p_out_describe,p_checking_in,");
 		sql.append("p_contract_begin_date,p_contract_end_date,p_shebao_begin_month,p_shebao_end_month,");
 		sql.append("p_gjj_begin_month,p_gjj_end_month,p_nationality,p_nation,p_huko_state,");
@@ -97,9 +98,9 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql_insert_basrc.append("p_c_yingpin_table,p_c_interview_tab,p_c_id_copies,p_c_xueli,p_c_xuewei,");
 		sql_insert_basrc.append("p_c_bank_nub,p_c_tijian_tab,p_c_health,p_c_img,p_c_welcome,p_c_staff,p_c_admin,p_c_shebao,");
 		sql_insert_basrc.append("p_c_shangbao,p_c_secrecy,p_c_prohibida,p_c_contract,p_c_post,p_c_corruption,p_c_probation,p_create_date,");
-		sql_insert_basrc.append("p_organization_id,p_organization,p_section_office_id,p_section_office)");
-		sql_insert_basrc.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		Object[] sql_insert_basrc_params=new Object[72];
+		sql_insert_basrc.append("p_organization_id,p_organization,p_section_office_id,p_section_office,p_group_id,p_group)");
+		sql_insert_basrc.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		Object[] sql_insert_basrc_params=new Object[74];
 		sql_insert_basrc_params[0]=personInFo.getP_id();sql_insert_basrc_params[1]=personInFo.getP_number();
 		sql_insert_basrc_params[2]=personInFo.getP_name();sql_insert_basrc_params[3]=personInFo.getP_sex();
 		sql_insert_basrc_params[4]=personInFo.getP_age();sql_insert_basrc_params[5]=personInFo.getP_title();
@@ -136,6 +137,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql_insert_basrc_params[66]=personInFo.getP_c_probation();sql_insert_basrc_params[67]=personInFo.getP_create_date();
 		sql_insert_basrc_params[68]=personInFo.getP_organization_id();sql_insert_basrc_params[69]=personInFo.getP_organization();
 		sql_insert_basrc_params[70]=personInFo.getP_section_office_id();sql_insert_basrc_params[71]=personInFo.getP_section_office();
+		sql_insert_basrc_params[72]=personInFo.getP_group_id();sql_insert_basrc_params[73]=personInFo.getP_group();
 		//教育背景
 		List<Object[]> education_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getEducation().size();i++){
@@ -416,7 +418,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append("p_id,p_number,p_name,p_sex,p_age,p_title,p_post_id,p_post,p_level_id,p_level_name,p_company_id,p_company_name,p_department_id,p_department,p_state,p_property,");
-		sql.append("p_organization_id,p_organization,p_section_office_id,p_section_office,");
+		sql.append("p_organization_id,p_organization,p_section_office_id,p_section_office,p_group_id,p_group,");
 		sql.append("p_post_property,p_in_date,p_turn_date,p_out_date,p_out_describe,p_checking_in,");
 		sql.append("p_contract_begin_date,p_contract_end_date,p_shebao_begin_month,p_shebao_end_month,");
 		sql.append("p_gjj_begin_month,p_gjj_end_month,p_nationality,p_nation,p_huko_state,");
@@ -531,6 +533,43 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
             log.error("查询错误："+e.getMessage());
         }
 		return personBasrc;
+	}
+	@Override
+	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum, String userName) {
+		// TODO Auto-generated method stub
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
+		StringBuffer sql = new StringBuffer();
+		sql.append("select ");
+		sql.append("name,code from org_member where code is not null");
+		if(workNum!=null&&!workNum.equals("")){
+			sql.append(" and code like '%"+workNum+"%'");
+		}
+		if(userName!=null&&!userName.equals("")){
+			sql.append(" and name like '%"+userName+"%'");
+		}
+		List<Map<String, Object>> map= null;
+		try {
+			map = jdbctemplate.queryForList(sql.toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询错误："+e.getMessage());
+		}finally{
+			CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
+		}
+		return map;
+	}
+	@Override
+	public List<Map<String, Object>> loadEHRWorkNumInFo() {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("select p_number from ehr_person_basic_info");
+		List<Map<String, Object>> personList = null;
+		try {
+			personList = jdbctemplate.queryForList(sql.toString());
+		} catch (Exception e) {
+			log.error("查询员工工号信息失败：",e.getMessage());
+		}
+		return personList;
 	}
 
 }

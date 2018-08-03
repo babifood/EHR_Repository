@@ -8,15 +8,15 @@
 		<table id="person_grid"></table>
 		<div id="person_tbar">
 			<div style="margin-bottom: 5px;">
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addPersonInFo()">添加</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editPersonInFo()">修改</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removePersonInFo()">删除</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addPersonInFo()">添加</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editPersonInFo()">修改</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removePersonInFo()">删除</a>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>
 	        	姓名：<input type="text" class="textbox" id="search_p_name" name="search_p_name" style="width: 110px;"/>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPersonInFo()">重置</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPersonInFo()">查询</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPersonInFo()">重置</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPersonInFo()">查询</a>
 	        </div>
 		</div>
 	</div>
@@ -24,7 +24,7 @@
         data-options="iconCls:'icon-save',modal:true,fit:true,collapsible:false,minimizable:false,maximizable:false">   
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'center',split:true" style="width:60%">
-				<form id="person_form" action="#">
+				<form id="person_form" action="javascript:void(0)">
 					<table id="person_tab" style="width: 100%;">
 						<colgroup>
 							<col width="20%">
@@ -44,12 +44,17 @@
 									<input type="hidden" id="p_id" name="p_id"/>
 									<input type="text" id="p_number" name="p_number" class="textbox"/>
 								</td>
+								<td>工号创建:</td>
+								<td style="text-align: left;">
+	        						<a id="oaSync" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" href="javascript:void(0)" onclick="oaSyncWorkNum()" style="width:110px">OA同步工号</a>
+									<a id="ehrAot" class="easyui-linkbutton" data-options="iconCls:'icon-add'" href="javascript:void(0)" onclick="ehrAotuWorkNum()" style="width:110px">EHR自动发号</a>
+								</td>
+							</tr>
+							<tr class="text_tr">
 								<td>姓名:</td>
 								<td>
 									<input type="text" id="p_name" name="p_name" class="textbox"/>
 								</td>
-							</tr>
-							<tr class="text_tr">
 								<td>性别:</td>
 								<td>
 									<select id="p_sex" class="easyui-combobox" editable="false" style="width:236px" required="required">
@@ -57,52 +62,59 @@
 										<option value="1">女</option>
 									</select>
 								</td>
+							</tr>
+							<tr class="text_tr">
 								<td>年龄:</td>
 								<td>
 									<input type="text" id="p_age" name="p_age" class="easyui-numberspinner" style="width:236px"
 									data-options="min:18,max:100" required="required"/>
 								</td>
-							</tr>
-							<tr class="text_tr">
 								<td>职称:</td>
 								<td>
 									<input type="text" id="p_title" name="p_title" class="textbox"/>
 								</td>
+							</tr>
+							<tr class="text_tr">
 								<td>岗位名称:</td>
 								<td>
 									<input type="hidden" id="p_post_id" name="p_post_id"/>
 									<input type="text" id="p_post" name="p_post" style="width:236px"/>
 								</td>
-							</tr>
-							<tr class="text_tr">
 								<td>职级名称:</td>
 								<td>
 									<input type="hidden" id="p_level_id" name="p_level_id"/>
 									<input type="text" id="p_level_name" name="p_level_name" style="width:236px"/>
 								</td>
+							</tr>
+							<tr class="text_tr">
 								<td>公司名称:</td>
 								<td>
 									<input type="hidden" id="p_company_id" name="p_company_id"/>
 									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:236px" required="required"/>
 								</td>
-							</tr>
-							<tr class="text_tr">
 								<td>单位机构:</td>
 								<td>
 									<input type="hidden" id="p_organization_id" name="p_organization_id"/>
 									<input type="text" id="p_organization" name="p_organization" editable="false" style="width:236px" required="required"/>
 								</td>
+							</tr>
+							<tr class="text_tr">
 								<td>所属部门:</td>
 								<td>
 									<input type="hidden" id="p_department_id" name="p_department_id"/>
 									<input type="text" id="p_department" name="p_department" editable="false" style="width:236px" required="required"/>
 								</td>
-							</tr>
-							<tr class="text_tr">
 								<td>科室:</td>
 								<td>
 									<input type="hidden" id="p_section_office_id" name="p_section_office_id"/>
 									<input type="text" id="p_section_office" name="p_section_office" style="width:236px"/>
+								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>班组:</td>
+								<td>
+									<input type="hidden" id="p_group_id" name="p_group_id"/>
+									<input type="text" id="p_group" name="p_group" style="width:236px"/>
 								</td>
 								<td>员工状态:</td>
 								<td>
@@ -417,6 +429,17 @@
 				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="savePersonInFo()" style="width:80px">保存</a>
 				<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="javascript:$('#person_win').window('close')" style="width:80px">取消</a>
 			</div>
+		</div>
+	</div>
+	<div id="dlg">
+		<table id="dlg_grid"></table>
+		<div id="dlg_tbar">
+	        <div style="padding: 0 0 0 7px;color: #333;">
+	        	工号：<input type="text" class="textbox" id="dlg_workNum" name="dlg_workNum" style="width: 100px;"/>
+	        	姓名：<input type="text" class="textbox" id="dlg_userName" name="dlg_userName" style="width: 100px;"/>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="reloadOaWorkNum()">重置</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="loadOaWorkNumInFo()">查询</a>
+	        </div>
 		</div>
 	</div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/PersonGrid.js"></script>

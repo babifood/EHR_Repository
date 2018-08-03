@@ -37,4 +37,8 @@ public interface PersonInFoService {
 	public List<Map<String, Object>> findPagePersonInfo(int index, int threadCount);
 
 	public Object getPersonByPnumber(String pNumber);
+	
+	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum,String userName);
+	
+	public Object getRandomYxWorkNum();
 }

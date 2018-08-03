@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,5 +94,26 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 	public Object getPersonByPnumber(String pNumber) {
 		return personInFoDao.getPersonByPnumber(pNumber);
 	}
-
+	@Override
+	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum, String userName) {
+		// TODO Auto-generated method stub
+		return personInFoDao.loadOaWorkNumInFo(workNum, userName);
+	}
+	@Override
+	public Object getRandomYxWorkNum() {
+		// TODO Auto-generated method stub
+	   	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
+	   	String newWorkNum = "YX"+random;
+	   	List<Map<String, Object>> list = personInFoDao.loadEHRWorkNumInFo();
+	   	int size = list==null?0:list.size();
+	   	for(int i=0;i<size;i++){
+	   		if(newWorkNum.equals(list.get(i).get("p_number").toString())){
+	   			i=0;
+	   			random=random+1;
+	   			newWorkNum = "YX"+random;
+	   		}
+	   	}
+		return newWorkNum;
+	}
+	
 }

@@ -21,12 +21,118 @@ $(function(){
 	loadAccordion();
 	loadLevelComboBox();
 	loadPostComboBox();
-	loadCompanyComboBox();
-	loadOrganizationCombotree();
-	loadDepartmentCombotree();
-	loadSectionCombotree();
+	
+	//计算公司司龄（按月计算）
 	inDateChange();
 });
+//OA同步员工编号
+function oaSyncWorkNum(){
+	$('#dlg').dialog({
+        title: 'OA工号信息',
+        iconCls:"icon-save",
+        width: 480,
+        height: 300,
+        modal: true,
+        buttons: [ {
+            text: '关闭',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $('#dlg').dialog('close');
+            }
+        }]
+    });
+	loadOaWorkNumInFo();
+}
+//重置OA加载OA员工工号信息列表查询条件
+function reloadOaWorkNum(){
+	$("#dlg_workNum").val("");
+	$("#dlg_userName").val("");
+}
+//加载OA员工工号信息列表
+function loadOaWorkNumInFo(){
+	var workNum = $('#dlg_workNum').val();
+	var userName = $('#dlg_userName').val();
+	var url;
+	if(workNum!=null&&userName!=null){
+		url=prefix+"/loadOaSyncWorkNum?workNum="+workNum+"&userName="+userName;
+	}else if(workNum!=null&&userName==null){
+		url=prefix+"/loadOaSyncWorkNum?workNum="+workNum+"&userName=";
+	}else if(workNum==null&&userName!=null){
+		url=prefix+"/loadOaSyncWorkNum?workNum=&userName="+userName;
+	}else{
+		url=prefix+"/loadOaSyncWorkNum?workNum=&userName=";
+	}
+	$("#dlg_grid").datagrid({
+		url:url,
+		fit:true,
+		fitColumns:true,
+		striped:true,
+		border:false,
+		pagination:true,
+		pageSize:10,
+		pageList:[10,20,30],
+		pageNumber:1,
+		toolbar:"#dlg_tbar",
+		singleSelect:true,
+		rownumbers:true,
+		columns:[[
+			{
+				field:"CODE",
+				title:"工号",
+				width:100,
+			},
+			{
+				field:"NAME",
+				title:"姓名",
+				width:100,
+			}
+		]],
+		loadFilter:function(data){
+			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
+	            data = {
+	                total: data.length,
+	                rows: data
+	            }
+	        }
+	        var dg = $(this);
+	        var opts = dg.datagrid('options');
+	        var pager = dg.datagrid('getPager');
+	        pager.pagination({
+	            onSelectPage:function(pageNum, pageSize){
+	                opts.pageNumber = pageNum;
+	                opts.pageSize = pageSize;
+	                pager.pagination('refresh',{
+	                    pageNumber:pageNum,
+	                    pageSize:pageSize
+	                });
+	                dg.datagrid('loadData',data);
+	            }
+	        });
+	        if (!data.originalRows){
+	            data.originalRows = (data.rows);
+	        }
+	        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+	        var end = start + parseInt(opts.pageSize);
+	        data.rows = (data.originalRows.slice(start, end));
+	        return data;
+		},
+		onDblClickRow:function(rowIndex,rowData){
+			console.log(rowData);
+			$("#p_number").val(rowData.CODE);//编号
+			$("#p_name").val(rowData.NAME);//名称
+			$('#dlg').dialog('close');
+			checkForm(true);
+		}
+	});
+}
+//EHR自动发号
+function ehrAotuWorkNum(){
+	$.get(prefix+"/getEhrWorkNum",function(data,status){
+		$("#p_number").val(data);//编号
+		$("#p_name").val("");//名称
+		checkForm(true);
+	});
+}
 //加载岗位combobox
 function loadPostComboBox(){
 	$('#p_post').combobox({    
@@ -46,12 +152,16 @@ function loadCompanyComboBox(){
 	    textField:'dept_name',
 	    onSelect: function(rec){
 	    	$("#p_company_id").val(rec.dept_code);
-	    }   
+	    },
+	    onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	loadOrganizationCombotree(newValue)
+	    }
 	});
 }
 //加载单位机构下拉树
-function loadOrganizationCombotree(){
-	var url=prefix+"/loadCombotreeDeptData";
+function loadOrganizationCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
 	$('#p_organization').combotree({    
 	    url: url,
 	    valueField:'id',    
@@ -59,12 +169,16 @@ function loadOrganizationCombotree(){
 	    editable:false,
 	    onSelect: function(rec){
 	    	$("#p_organization_id").val(rec.id);
-	    }  
+	    },
+	    onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	loadDepartmentCombotree(newValue)
+	    }
 	});  
 }
 //加载部门下拉树
-function loadDepartmentCombotree(){
-	var url=prefix+"/loadCombotreeDeptData";
+function loadDepartmentCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
 	$('#p_department').combotree({    
 	    url: url,
 	    valueField:'id',    
@@ -72,12 +186,16 @@ function loadDepartmentCombotree(){
 	    editable:false,
 	    onSelect: function(rec){
 	    	$("#p_department_id").val(rec.id);
-	    }  
+	    },
+	    onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	loadSectionCombotree(newValue)
+	    }
 	});  
 }
 //加载科室下拉树
-function loadSectionCombotree(){
-	var url=prefix+"/loadCombotreeDeptData";
+function loadSectionCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
 	$('#p_section_office').combotree({    
 	    url: url,
 	    valueField:'id',    
@@ -87,6 +205,24 @@ function loadSectionCombotree(){
 //	    	alert(rec);
 //	    	console.log(rec);
 	    	$("#p_section_office_id").val(rec.id);
+	    },onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	loadGroupCombotree(newValue)
+	    }  
+	});  
+}
+//加载班组下拉树
+function loadGroupCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
+	$('#p_group').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+//	    	alert(rec);
+//	    	console.log(rec);
+	    	$("#p_group_id").val(rec.id);
 	    }  
 	});  
 }
@@ -250,6 +386,16 @@ function loadPersonGrid(search_p_number,search_p_name){
 
 //添加人员信息
 function addPersonInFo(){
+	//初始加载公司
+	loadCompanyComboBox();
+	//初始加载机构
+	loadOrganizationCombotree(null);
+	//初始加载部门
+	loadDepartmentCombotree(null);
+	//初始加载科室
+	loadSectionCombotree(null);
+	//初始加载班组
+	loadGroupCombotree(null);
 	$("#person_win").window("open").window("setTitle","添加人员");
 	$("#person_form").form('clear');
 	var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
@@ -271,8 +417,9 @@ function addPersonInFo(){
 		//家庭背景
 		$('#family_grid').datagrid('loadData', { total: 0, rows: [] });
 	}
+	$("#oaSync").linkbutton('enable');
+	$("#ehrAot").linkbutton('enable');
 	checkForm(true);
-	
 }
 //修改人员信息
 function editPersonInFo(){
@@ -283,6 +430,16 @@ function editPersonInFo(){
 		p_id=row.p_id;
 		$.post(prefix+"/getPersonFoPid",{p_id:row.p_id},function(data){
 			if(data){
+				//初始加载公司
+				loadCompanyComboBox();
+				//初始加载机构
+				loadOrganizationCombotree(data.p_company_id);
+				//初始加载部门
+				loadDepartmentCombotree(data.p_organization_id);
+				//初始加载科室
+				loadSectionCombotree(data.p_department_id);
+				//初始加载班组
+				loadGroupCombotree(data.p_section_office_id);
 				$("#person_win").window("open").window("setTitle","修改人员");
 				editFromSetValues(data);
 				var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
@@ -306,6 +463,10 @@ function editPersonInFo(){
 				}
 			}			
 		  });
+		$("#p_number").attr("disabled","disabled");
+		$("#p_name").attr("disabled","disabled");
+		$("#oaSync").linkbutton('disable');
+		$("#ehrAot").linkbutton('disable');
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
@@ -325,13 +486,18 @@ function editFromSetValues(data){
 	$("#p_level_name").combobox('setValue',data.p_level_name);//职级名称
 	$("#p_company_id").val(data.p_company_id);//公司编码
 	$("#p_company_name").combobox('setValue',data.p_company_name);//公司名称
-	$("#p_department_id").val(data.p_department_id);//所属部门编号
-	$("#p_department").combotree("setValue",data.p_department);//所属部门
 	
 	$("#p_organization_id").val(data.p_organization_id);//单位机构编号
 	$("#p_organization").combotree("setValue",data.p_organization);//单位机构
+	
+	$("#p_department_id").val(data.p_department_id);//所属部门编号
+	$("#p_department").combotree("setValue",data.p_department);//所属部门
+	
 	$("#p_section_office_id").val(data.p_section_office_id);//科室编号
 	$("#p_section_office").combotree("setValue",data.p_section_office);//科室
+	
+	$("#p_group_id").val(data.p_group_id);//科室编号
+	$("#p_group").combotree("setValue",data.p_group);//科室
 	
 	$("#p_state").combobox('setValue',data.p_state);//员工状态
 	$("#p_property").combobox('setValue',data.p_property);//员工性质
@@ -627,6 +793,9 @@ function setData(){
 			p_organization:$("#p_organization").combotree("getText"),//单位机构
 			p_section_office_id:$("#p_section_office_id").val(),//科室
 			p_section_office:$("#p_section_office").combotree("getText"),//科室
+			
+			p_group_id:$("#p_group_id").val(),//班组
+			p_group:$("#p_group").combotree("getText"),//班组
 			
 			p_state:$("#p_state").val(),//员工状态
 			p_property:$("#p_property").val(),//员工性质

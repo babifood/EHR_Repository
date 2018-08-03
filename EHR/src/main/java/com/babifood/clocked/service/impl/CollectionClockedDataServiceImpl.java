@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -163,8 +164,20 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		return rows;
 	}
 	public static void main(String[] args) {
-		String s="2018-02-22";
-		System.out.println(s.substring(0, 4));
-		System.out.println(s.substring(5, 7));
+//    	Long simple=System.currentTimeMillis();
+//    	//三位随机数
+//    	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
+//      System.out.println(simple.toString());  
+//      System.out.println("YX"+random);
+		int a=100001;
+		int[] i=  {100001,100002,100003,100004,100005,100006};
+		for(int j=0;j<i.length;j++){
+			if(a==i[j]){
+				j=0;
+				a=a+1;
+			}
+		}
+		System.out.println(a);
+		
 	}
 }
