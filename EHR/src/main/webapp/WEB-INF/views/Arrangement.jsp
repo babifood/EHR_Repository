@@ -115,4 +115,4 @@
 	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveSepcialArrangement()" style="width: 90px;">保存</a> 
 	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#arrangement_edit').dialog('close')" style="width: 90px;">取消</a>
 </div>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/Arrangement1.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/Arrangement.js"></script>

@@ -196,4 +196,19 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		return specialArrangementList;
 	}
 
+	@Override
+	public List<Map<String, Object>> findSpecialArrangementOfMonth(String startDay, String endDay) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select a.ID as id,a.DATE as date,a.arrangement_id as arrangementId,a.is_attend as isAttend,a.start_time as startTime,a.end_time as endTime,a.remark ");
+		sql.append("from ehr_special_arrangement a where (a.DATE between ? and ?) and isDelete = '0'");
+		List<Map<String, Object>> specialArrangementList = null;
+		try {
+			specialArrangementList = jdbcTemplate.queryForList(sql.toString(), startDay , endDay);
+		} catch (Exception e) {
+			log.error("查询当月排班列表失败", e.getMessage());
+			throw e;
+		}
+		return specialArrangementList;
+	}
+
 }

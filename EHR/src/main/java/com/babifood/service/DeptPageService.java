@@ -8,20 +8,20 @@ import com.babifood.entity.DeptEntity;
 
 public interface DeptPageService {
 
-	Map<String,Object> findOrganization(String id);
+	public Map<String,Object> findOrganization(String id);
 
-	Map<String, Object> addDept(DeptEntity deptEntity);
+	public Map<String, Object> addDept(DeptEntity deptEntity);
 
-	Map<String, Object> updateDept(DeptEntity deptEntity);
+	public Map<String, Object> updateDept(DeptEntity deptEntity);
 
-	Map<String, Object> deleteDept(String id);
+	public Map<String, Object> deleteDept(String id);
 
-	Map<String, Object> findDeptByDeptCode(String id);
+	public Map<String, Object> findDeptByDeptCode(String id);
 
-	List<Map<String, Object>> findAll();
+	public List<Map<String, Object>> findAll();
 
-	void exportExcel(OutputStream ouputStream,String type) throws Exception;
+	public void exportExcel(OutputStream ouputStream,String type) throws Exception;
 
-	Map<String, Object> queryCountByDeptCode(String deptCode);
-	
+	public Map<String, Object> queryCountByDeptCode(String deptCode);
+
 }

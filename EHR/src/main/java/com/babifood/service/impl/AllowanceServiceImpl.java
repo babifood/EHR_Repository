@@ -46,9 +46,9 @@ public class AllowanceServiceImpl implements AllowanceService {
 		List<Map<String, Object>> values = null;
 		try {
 			values = ExcelUtil.importExcel(file, row1Name);
-			if ("1".equals(type)) {
+			if ("1".equals(type)) {//覆盖导入
 				getEmployAllowanceParamCover(values);
-			} else {
+			} else {//忽略导入
 				getEmployAllowanceParamIgnore(values);
 			}
 			result.put("code", "1");
