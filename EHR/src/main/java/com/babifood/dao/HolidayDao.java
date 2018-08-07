@@ -17,6 +17,6 @@ public interface HolidayDao {
 
 	public int deleteHolidayById(Integer id);
 
-	public List<Map<String, Object>> findHolidayListByDate(String date);
+	public List<Map<String, Object>> findHolidayListByDate(String startDay, String endDay);
 	
 }

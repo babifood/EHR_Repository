@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import com.babifood.dao.HolidayDao;
 import com.babifood.entity.HolidayEntity;
 import com.babifood.service.HolidayService;
+import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 
 @Service
@@ -128,12 +129,15 @@ public class HolidayServiceImpl implements HolidayService {
 	@Override
 	public Map<String, Object> findHolidayListByDate(String year,String month) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		Calendar calendar = Calendar.getInstance();
-		int days = calendar.getActualMaximum(Calendar.DATE);
-		String date = year + "-" + (month.length() == 1? "0"+month : month);
+		if(month.length() == 1){
+			month = "0"+month;
+		}
+		int days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));
+		String startDay = year + "-" + month + "-01";
+		String endDay = year + "-" + month + "-" + days;
 		List<Map<String,Object>> holidayList = null;
 		try {
-			holidayList = holidayDao.findHolidayListByDate(date);
+			holidayList = holidayDao.findHolidayListByDate(startDay,endDay);
 			if(!CollectionUtils.isEmpty(holidayList)){
 				for(Map<String, Object> map : holidayList){
 					String end = (map.get("endDate")+"").split("-")[2];

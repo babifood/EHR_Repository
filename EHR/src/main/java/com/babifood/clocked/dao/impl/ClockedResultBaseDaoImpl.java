@@ -19,9 +19,10 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
-	public int[] saveClockedResultBase(List<ClockedResultBases> saveDataList) throws Exception{
+	public int[] saveClockedResultBase(List<ClockedResultBases> saveDataList,int year,int month) throws Exception{
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		// TODO Auto-generated method stub
+		StringBuffer sql_delete = new StringBuffer("delete from ehr_checking_result where year=? and month=?");//人员档案信息
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into  ehr_checking_result (year,month,worknum,username, ");
 		sql.append("companycode,company,organcode,organ,deptcode, ");
@@ -66,7 +67,11 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 					saveDataList.get(i).getEventEndTime(),saveDataList.get(i).getClockFlag(),
 					saveDataList.get(i).getInOutJob()
 					});
-		}	
+		}
+		Object[] params=new Object[2];
+		params[0]=year;
+		params[1]=month;
+		jdbctemplate.update(sql_delete.toString(),params);
 		return jdbctemplate.batchUpdate(strSql,paramsList);
 	}
 	@Override

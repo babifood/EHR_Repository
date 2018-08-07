@@ -46,9 +46,9 @@ public class RewardPunishmentControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/saveRAPItem")
-	public Map<String,Object> saveRAPItem(String item_id,String item_name,String category_id){
+	public Map<String,Object> saveRAPItem(String item_name,String category_id,String category_name){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = RewardPunishmentService.saveRAPItem(item_id, item_name,category_id);
+		int rows = RewardPunishmentService.saveRAPItem(item_name,category_id,category_name);
 		if(rows>0){
 			map.put("status", "success");
 		}else{
@@ -65,11 +65,14 @@ public class RewardPunishmentControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/editRAPItem")
-	public Map<String,Object> eidtRAPItem(String item_id,String item_name,String category_id){
+	public Map<String,Object> eidtRAPItem(String item_id,String item_name,String category_id,String category_name){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = RewardPunishmentService.eidtRAPItem(item_id, item_name,category_id);
+		//rows:0存在已经使用该奖惩项目的奖惩记录(不允许修改奖惩类别)；大于1成功；-1失败
+		int rows = RewardPunishmentService.eidtRAPItem(item_id, item_name,category_id,category_name);
 		if(rows>0){
 			map.put("status", "success");
+		}else if(rows==0){
+			map.put("status", "update-error");
 		}else{
 			map.put("status", "error");
 		}
@@ -84,9 +87,12 @@ public class RewardPunishmentControl{
 	@RequestMapping("/removeRAPItem")
 	public Map<String,Object> removeRAPItem(String item_id){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = RewardPunishmentService.removeRAPItem(item_id);
-		if(rows>0){
+		//state:0存在已经使用该奖惩项目的奖惩记录1成功-1失败
+		int state = RewardPunishmentService.removeRAPItem(item_id);
+		if(state>0){
 			map.put("status", "success");
+		}else if(state==0){
+			map.put("status", "remove-error");
 		}else{
 			map.put("status", "error");
 		}
@@ -98,8 +104,8 @@ public class RewardPunishmentControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/loadComboboxRAPItemData")
-	public List<Map<String, Object>> loadComboboxRAPItemData(){
-		List<Map<String, Object>> list = RewardPunishmentService.loadComboboxRAPItemData();
+	public List<Map<String, Object>> loadComboboxRAPItemData(String category_id){
+		List<Map<String, Object>> list = RewardPunishmentService.loadComboboxRAPItemData(category_id);
 		return list;
 	}
 	/**
@@ -122,7 +128,7 @@ public class RewardPunishmentControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/saveRewardPunishment")
-	public Map<String,Object> saveUser(RewardPunishmentEntity rewardpunishmentEntity){
+	public Map<String,Object> saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity){
 		Map<String,Object> map =new HashMap<String,Object>();
 		int[] rows = RewardPunishmentService.saveRewardPunishment(rewardpunishmentEntity);
 		map.put("status", "success");

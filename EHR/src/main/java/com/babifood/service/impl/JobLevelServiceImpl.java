@@ -19,14 +19,14 @@ public class JobLevelServiceImpl implements JobLevelPageService {
 		return JobLevelDao.loadJobLevelAll(JobLevel_id,JobLeverl_name,position_name);
 	}
 	@Override
-	public Integer saveJobLevel(Integer joblevel_id,String joblevel_name) {
+	public Integer saveJobLevel(String joblevel_name,String joblevel_desc) {
 		// TODO Auto-generated method stub
-		return JobLevelDao.saveJobLevel(joblevel_id,joblevel_name);
+		return JobLevelDao.saveJobLevel(joblevel_name,joblevel_desc);
 	}
 	@Override
-	public Integer editJobLevel(Integer joblevel_id,String joblevel_name) {
+	public Integer editJobLevel(Integer joblevel_id,String joblevel_name,String joblevel_desc) {
 		// TODO Auto-generated method stub
-		return JobLevelDao.eidtJobLevel(joblevel_id, joblevel_name);
+		return JobLevelDao.eidtJobLevel(joblevel_id, joblevel_name,joblevel_desc);
 	}
 	@Override
 	public Integer removeJobLevel(Integer joblevel_id) {

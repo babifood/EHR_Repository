@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class RewardPunishmentEntity {
 	private String rap_id;
 	private String rap_category;
-	private Integer rap_item;
+	private String rap_item;
 	private Date rap_date;
 	private String rap_reason;
 	private Integer rap_money;
@@ -34,10 +34,10 @@ public class RewardPunishmentEntity {
 	public void setrap_category(String rap_category) {
 		this.rap_category = rap_category;
 	}
-	public Integer getrap_item() {
+	public String getrap_item() {
 		return rap_item;
 	}
-	public void setrap_item(Integer rap_item) {
+	public void setrap_item(String rap_item) {
 		this.rap_item = rap_item;
 	}
 	public Date getrap_date() {

@@ -23,7 +23,7 @@ public class JobLevelDapImpl implements JobLevelDao {
 	public List<Map<String, Object>> loadJobLevelAll(Integer JobLevel_id,String JobLeverl_name,String position_name) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT u.JOBLEVEL_ID AS joblevel_id,u.JOBLEVEL_NAME AS joblevel_name,r.POSITION_NAME AS position_name ");
+		sql.append("SELECT u.JOBLEVEL_ID AS joblevel_id,u.JOBLEVEL_NAME AS joblevel_name,u.JOBLEVEL_DESC AS joblevel_desc,r.POSITION_NAME AS position_name ");
 		sql.append(" from ehr_joblevel u");
 		sql.append(" left JOIN (SELECT JOBLEVEL_ID,GROUP_CONCAT(POSITION_NAME) AS POSITION_NAME FROM ehr_position GROUP BY JOBLEVEL_ID) r");
 		sql.append(" ON u.JOBLEVEL_ID=r.JOBLEVEL_ID where 1=1");
@@ -44,14 +44,14 @@ public class JobLevelDapImpl implements JobLevelDao {
 		return list;
 	}
 	@Override
-	public Integer saveJobLevel(Integer joblevel_id,String joblevel_name) {
+	public Integer saveJobLevel(String joblevel_name,String joblevel_desc) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("insert into ehr_joblevel (JOBLEVEL_ID,JOBLEVEL_NAME) ");
+		sql.append("insert into ehr_joblevel (JOBLEVEL_NAME,JOBLEVEL_DESC) ");
 		sql.append(" values(?,?)");
 		Object[] params=new Object[2];
-		params[0]=joblevel_id;
-		params[1]=joblevel_name;
+		params[0]=joblevel_name;
+		params[1]=joblevel_desc;
 		int rows =-1;
 		try {
 			rows = jdbctemplate.update(sql.toString(), params);
@@ -62,13 +62,14 @@ public class JobLevelDapImpl implements JobLevelDao {
 		return rows;
 	}
 	@Override
-	public Integer eidtJobLevel(Integer joblevel_id,String joblevel_name) {
+	public Integer eidtJobLevel(Integer joblevel_id,String joblevel_name,String joblevel_desc) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("update ehr_joblevel set JOBLEVEL_NAME=? where JOBLEVEL_ID=?");
-		Object[] params=new Object[2];
+		sql.append("update ehr_joblevel set JOBLEVEL_NAME=?,JOBLEVEL_DESC=? where JOBLEVEL_ID=?");
+		Object[] params=new Object[3];
 		params[0]=joblevel_name;
-		params[1]=joblevel_id;
+		params[1]=joblevel_desc;
+		params[2]=joblevel_id;
 		int rows =-1;
 		try {
 			rows = jdbctemplate.update(sql.toString(), params);
@@ -112,7 +113,7 @@ public class JobLevelDapImpl implements JobLevelDao {
 	public List<Map<String, Object>> loadComboboxJobLevelData() {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select JOBLEVEL_ID as id,JOBLEVEL_NAME as text");
+		sql.append("select JOBLEVEL_ID as id,JOBLEVEL_DESC as text");
 		sql.append(" from ehr_joblevel");
 		List<Map<String, Object>> list = null;
 		try {
@@ -128,7 +129,7 @@ public class JobLevelDapImpl implements JobLevelDao {
 	public List<Map<String, Object>> loadPositionAll(Integer Position_id,String Position_name,Integer JobLevel_id,String JobLevel_name,String post_name) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select u.POSITION_ID as position_id,u.POSITION_NAME as position_name,u.JOBLEVEL_ID as joblevel_id,r.JOBLEVEL_ID,r.JOBLEVEL_NAME as joblevel_name,z.post_name");
+		sql.append("select u.POSITION_ID as position_id,u.POSITION_NAME as position_name,u.JOBLEVEL_ID as joblevel_id,r.JOBLEVEL_ID,r.JOBLEVEL_NAME as joblevel_name,r.JOBLEVEL_DESC as joblevel_desc,z.post_name");
 		sql.append(" from ehr_position u inner join ehr_joblevel r on u.JOBLEVEL_ID = r.JOBLEVEL_ID");
 		sql.append(" left JOIN (SELECT POSITION_ID,GROUP_CONCAT(POST_NAME) AS post_name FROM ehr_post GROUP BY POSITION_ID) z ON u.POSITION_ID=z.POSITION_ID where 1=1");
 		if(Position_name!=null&&!Position_name.equals("")){

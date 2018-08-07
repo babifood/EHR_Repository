@@ -73,7 +73,7 @@ public class ClockedServiceImpl implements ClockedService {
 		}
 		
 		//保存数据
-		return clockedResult.saveClockedResultBase(dataList);
+		return clockedResult.saveClockedResultBase(dataList,sysYear,sysMonth);
 		
 	}
 
