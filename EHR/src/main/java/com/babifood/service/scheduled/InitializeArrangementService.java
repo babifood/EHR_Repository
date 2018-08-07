@@ -40,8 +40,11 @@ public class InitializeArrangementService {
 
 	public void initializeArrangement() {
 		Integer count = personInfoService.getPersonCount();
+		String year = UtilDateTime.getCurrentYear();// 当前年
+		String month = UtilDateTime.getCurrentMonth();// 当前月
+		int days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));// 该月天数
 		// 该月所有排班信息
-		Map<String, Map<String, Object>> arrangements = getAllArrangementsByMonth();
+		Map<String, Map<String, Object>> arrangements = getAllArrangementsByMonth(year, month, days);
 		final int threadCount = 500;// 每个线程初始化的员工数量
 		int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
 		for (int i = 0; i < num; i++) {
@@ -49,7 +52,7 @@ public class InitializeArrangementService {
 			Thread thread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					initEmployeeArrangement(index, threadCount, arrangements);
+					initEmployeeArrangement(index, threadCount, year, month, days, arrangements);
 				}
 			});
 			threadPoolTaskExecutor.execute(thread);
@@ -64,12 +67,9 @@ public class InitializeArrangementService {
 	 * @param arrangements
 	 */
 	@SuppressWarnings("unchecked")
-	protected void initEmployeeArrangement(int index, int threadCount,
+	protected void initEmployeeArrangement(int index, int threadCount, String year, String month, int days,
 			Map<String, Map<String, Object>> arrangements) {
 		List<Map<String, Object>> employeeList = personInfoService.findPagePersonInfo(index, threadCount);// 查询员工列表
-		String year = UtilDateTime.getCurrentYear();// 当前年
-		String month = UtilDateTime.getCurrentMonth();// 当前月
-		int days = UtilDateTime.getDaysOfCurrentMonth();
 		if (employeeList != null && employeeList.size() > 0) {
 			for (Map<String, Object> map : employeeList) {
 				String arrangementId = getArrangementId(map);// 获取员工对应排班id
@@ -91,8 +91,9 @@ public class InitializeArrangementService {
 							attendance.setDate(date);
 							// 当前日期的排班
 							Map<String, Object> specialArrengement = null;
-							List<Map<String, Object>> specials = (List<Map<String, Object>>) specialArrengements.get("special");
-							if(specials != null && specials.size() >0){
+							List<Map<String, Object>> specials = (List<Map<String, Object>>) specialArrengements
+									.get("special");
+							if (specials != null && specials.size() > 0) {
 								for (Map<String, Object> special : specials) {
 									if (date.equals(special.get("date"))) {
 										specialArrengement = special;
@@ -104,39 +105,44 @@ public class InitializeArrangementService {
 							attendance.setWeekDay(weekDay);
 							// 标准上下班时间设置
 							if (specialArrengement != null) {// 存在特殊排班
-								if ("0".equals(specialArrengement.get("isAttend"))) {// 不考勤
+								if ("0".equals(specialArrengement.get("isAttend") + "")) {// 不考勤
 									attendance.setNormalStartTime(normalStartTime);
 									attendance.setNormalEndTime(normalEndTime);
+									attendance.setCompletion("0");
 								} else {// 考勤
 									attendance.setNormalStartTime(specialArrengement.get("startTime") + "");
 									attendance.setNormalEndTime(specialArrengement.get("endTime") + "");
+									attendance.setCompletion("1");
 								}
+								attendance.setIsAttend(specialArrengement.get("isAttend") + "");
 							} else {// 不存在特殊排班
 								if ("星期日".equals(weekDay) || "星期六".equals(weekDay)) {
 									attendance.setNormalStartTime("09:00");
 									attendance.setNormalEndTime("16:00");
+									attendance.setIsAttend("0");
+									attendance.setCompletion("0");
 								} else {
 									attendance.setNormalStartTime(normalStartTime);
 									attendance.setNormalEndTime(normalEndTime);
+									attendance.setIsAttend("1");
+									attendance.setCompletion("1");
 								}
 							}
 							attendance.setAbsenceHours("0.00");
 							attendance.setArrangementType(specialArrengements.get("arrangementType") + "");
 							attendance.setCompanionParentalVacation("0.00");
 							attendance.setCompanyCode(map.get("companyCode") + "");
-							attendance.setCompletion("1");
 							// attendance.setCreateTime(createTime);
 							attendance.setDeptCode(map.get("deptCode") + "");
 							attendance.setFuneralVacation("0.00");
-							 attendance.setGroupCode("");//TODO
+							attendance.setGroupCode("");// TODO
 							attendance.setLate("0");
 							attendance.setLeave("0");
 							attendance.setMarriageVacation("0.00");
 							attendance.setMealSupplement("0");
 							attendance.setMonth(month + "");
-							attendance.setNormalTime(
-									Math.round(Math.floor(UtilDateTime.getHours(normalStartTime, normalEndTime)))
-											+ ".00");
+							attendance.setNormalTime(UtilDateTime.getHours(attendance.getNormalStartTime(),
+									attendance.getNormalEndTime()) + "");
 							attendance.setOfficeCode(map.get("officeCode") + "");
 							attendance.setOriginalTime("0.00");
 							attendance.setOrganizationCode(map.get("organizationCode") + "");
@@ -157,7 +163,7 @@ public class InitializeArrangementService {
 							// attendance.setUpdateTime(updateTime);
 							attendance.setVacationHours("0.00");
 							attendance.setWorkTime("0.00");
-							attendance.setYear(year + "");
+							attendance.setYear(year);
 							attendance.setYearVacation("0.00");
 							attendanceList.add(attendance);
 						}
@@ -167,9 +173,9 @@ public class InitializeArrangementService {
 				}
 				// 插入员工初始排班数据
 				if (attendanceList.size() > 0) {
-					String pNumber = map.get("pNumber")+"";
+					String pNumber = map.get("pNumber") + "";
 					boolean isAttend = initAttendanceService.isInitAttendance(pNumber, year, month);
-					if(!isAttend){
+					if (!isAttend) {
 						initAttendanceService.addInitAttendance(attendanceList);
 					}
 				}
@@ -207,22 +213,20 @@ public class InitializeArrangementService {
 	 * 
 	 * @return
 	 */
-	public Map<String, Map<String, Object>> getAllArrangementsByMonth() {
+	public Map<String, Map<String, Object>> getAllArrangementsByMonth(String year, String month, int days) {
 		Map<String, Map<String, Object>> arrangements = new HashMap<String, Map<String, Object>>();
-		String year = UtilDateTime.getCurrentYear();
-		String month = UtilDateTime.getCurrentMonth();
-		int days = UtilDateTime.getDaysOfCurrentMonth();
 		String startTime = year + "-" + month + "-01";
 		String endTime = year + "-" + month + "-" + days;
 		List<Map<String, Object>> arrangmentList = baseArrangementService.findBaseArrangements();
-		List<Map<String, Object>> spcialArrangmentList = baseArrangementService.findCurrentMonthAllSpecialArrangement(startTime,endTime);
+		List<Map<String, Object>> spcialArrangmentList = baseArrangementService
+				.findCurrentMonthAllSpecialArrangement(startTime, endTime);
 		if (arrangmentList != null && arrangmentList.size() > 0) {
 			for (Map<String, Object> map : arrangmentList) {
 				String arrangementId = map.get("id") + "";
-				if(spcialArrangmentList != null && spcialArrangmentList.size() > 0){
+				if (spcialArrangmentList != null && spcialArrangmentList.size() > 0) {
 					List<Map<String, Object>> specialArrangment = new ArrayList<Map<String, Object>>();
-					for(Map<String, Object> specialMap:spcialArrangmentList){
-						if(arrangementId.equals(specialMap.get("arrangementId")+"")){
+					for (Map<String, Object> specialMap : spcialArrangmentList) {
+						if (arrangementId.equals(specialMap.get("arrangementId") + "")) {
 							specialArrangment.add(specialMap);
 						}
 					}
