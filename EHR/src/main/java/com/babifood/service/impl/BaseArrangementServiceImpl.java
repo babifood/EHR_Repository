@@ -262,4 +262,15 @@ public class BaseArrangementServiceImpl implements BaseArrangementService {
 		return baseArrangementDao.findCurrentMonthAllSpecialArrangement(start ,endTime);
 	}
 
+	@Override
+	public List<Map<String, Object>> findSpecialArrangementOfMonth(String year, String month) {
+		if(month.length() == 1){
+			month = "0"+month;
+		}
+		int days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));
+		String startDay = year + "-" + month + "-01";
+		String endDay = year + "-" + month + days;
+		return baseArrangementDao.findSpecialArrangementOfMonth(startDay, endDay);
+	}
+
 }
