@@ -22,17 +22,11 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRewardPunishment()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		奖惩类别：<!-- <input type="text" class="textbox" id="search_rap_category" name="search_rap_category" style="width: 100px;"/> -->
-	        				<select id="search_rap_category" class="easyui-combobox" editable="false" style="width:100px" required="required">
+	        		奖惩类别：<select id="search_rap_category" class="easyui-combobox" editable="false" style="width:100px" required="required">
 										<option value="0">奖</option>
 										<option value="1">惩</option>
 								</select>
 	        		奖惩项目：<input type="text" class="textbox" id="search_rap_item" name="search_rap_item" style="width: 100px;"/>
-	        		<!-- 日期：<input class="easyui-datebox" id="search_rap_date_left" name="search_rap_date_left" style="width: 100px;"/>
-	        		到<input class="easyui-datebox" id="search_rap_date_right" name="search_rap_date_right" style="width: 100px;"/>
-	        		金额：<input type="text" class="textbox" id="search_rap_money" name="search_rap_money" style="width: 100px;"/>
-	        		提议人：<input type="text" class="textbox" id="search_rap_proposer" name="search_rap_proposer" style="width: 100px;"/>
-	        		奖惩人员：<input type="text" class="textbox" id="search_rap_p" name="search_rap_p" style="width: 100px;"/> -->
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetRewardPunishment()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchRewardPunishment()">查询</a>
 	        	</div>
@@ -44,17 +38,27 @@
 			        	<tr style="margin-bottom: 10px;">
 			        		<td>奖惩类别：</td>
 			        		<td>
-			        			<select id="rap_category" class="easyui-combobox" editable="false" style="width:180px" required="required">
-										<option value="0">奖</option>
-										<option value="1">惩</option>
-								</select>
+			        			<input id="rap_category" class="easyui-combobox" data-options="
+									required:true,
+    								valueField: 'id',
+    								textField: 'text',
+    								data: [{
+										id: '0',
+										text: '奖'
+									},{
+										id: '1',
+										text: '惩'
+									}],
+    								onSelect: function(rec){
+    									var url = 'loadComboboxRAPItemData?category_id='+rec.id;
+    									$('#rap_item').combobox('reload', url);}">
 			       			   	<span id="rap_category_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
 			        	<tr style="margin-bottom: 10px;">
 			        		<td>奖惩项目：</td>
 			        		<td>
-			        			<input id="rap_item" name="rap_item" style="width: 180px;"/>  
+			        			<input id="rap_item" class="easyui-combobox" data-options="required:true,valueField:'id',textField:'text'">
 			       			    <span id="rap_item_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
@@ -144,8 +148,7 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRAPItem()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		奖惩类别：<!-- <input type="text" class="textbox" id="search_category_id" name="search_category_id" style="width: 110px;"/> -->
-	        				<select id="search_category_id" class="easyui-combobox" editable="false" style="width:100px" required="required">
+	        		奖惩类别：<select id="search_category_id" class="easyui-combobox" editable="false" style="width:100px" required="required">
 										<option value="0">奖</option>
 										<option value="1">惩</option>
 								</select>
@@ -158,21 +161,32 @@
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">奖惩项目信息</span></div>
 			        <table>
-			        	<tr style="margin-bottom: 10px;">
+			        	<!-- <tr style="margin-bottom: 10px;">
 			        		<td>奖惩项目ID：</td>
 			        		<td>
 			        			<input type="text" id="item_id" name="item_id" class="textbox" data-options="required:true" onblur="noBlurRewardPunishment()" style="width: 180px;"/>
 			        		    <span id="item_id_span" style="color: red"></span>	
 			        		</td>
-			        	</tr>
+			        	</tr> -->
 			        	<tr style="margin-bottom: 10px;">
 			        		<td>奖惩类别：：</td>
 			        		<td>
-			        			<select id="category_id" class="easyui-combobox" editable="false" style="width:180px" required="required"   onblur="noBlurRAPItem()">
+			        			<!-- <select id="category_id" class="easyui-combobox" editable="false" style="width:180px" required="required"   onblur="noBlurRAPItem()">
 										<option value="0">奖</option>
 										<option value="1">惩</option>
-									</select>
-			       			    <span id="category_id_span" style="color: red"></span>
+									</select> -->
+								<input id="category" class="easyui-combobox" data-options="
+									required:true,
+    								valueField: 'id',
+    								textField: 'text',
+    								data: [{
+										id: '0',
+										text: '奖'
+									},{
+										id: '1',
+										text: '惩'
+									}]">
+			       			    <span id="category_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
 			        	<tr style="margin-bottom: 10px;">

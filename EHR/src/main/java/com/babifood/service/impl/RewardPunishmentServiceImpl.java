@@ -23,14 +23,15 @@ public class RewardPunishmentServiceImpl implements RewardPunishmentService {
 		return RewardPunishmentDao.loadRAPItemAll(category_id,item_name);
 	}
 	@Override
-	public Integer saveRAPItem(String item_id, String item_name, String category_id) {
+	public Integer saveRAPItem(String item_name, String category_id,String category_name) {
 		// TODO Auto-generated method stub
-		return RewardPunishmentDao.saveRAPItem(item_id,item_name,category_id);
+		String item_id = IdGen.uuid();
+		return RewardPunishmentDao.saveRAPItem(item_id,item_name,category_id,category_name);
 	}
 	@Override
-	public Integer eidtRAPItem(String item_id, String item_name, String category_id) {
+	public Integer eidtRAPItem(String item_id, String item_name, String category_id,String category_name) {
 		// TODO Auto-generated method stub
-		return RewardPunishmentDao.eidtRAPItem(item_id,item_name,category_id);
+		return RewardPunishmentDao.eidtRAPItem(item_id,item_name,category_id,category_name);
 	}
 	@Override
 	public Integer removeRAPItem(String item_id) {
@@ -38,9 +39,9 @@ public class RewardPunishmentServiceImpl implements RewardPunishmentService {
 		return RewardPunishmentDao.removeRAPItem(item_id);
 	}
 	@Override
-	public List<Map<String, Object>> loadComboboxRAPItemData() {
+	public List<Map<String, Object>> loadComboboxRAPItemData(String category_id) {
 		// TODO Auto-generated method stub
-		return RewardPunishmentDao.loadComboboxRAPItemData();
+		return RewardPunishmentDao.loadComboboxRAPItemData(category_id);
 	}
 	@Override
 	public List<Map<String, Object>> loadRewardPunishment(String rap_category, String rap_item) {

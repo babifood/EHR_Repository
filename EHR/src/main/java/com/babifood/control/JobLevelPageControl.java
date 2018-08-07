@@ -47,9 +47,9 @@ public class JobLevelPageControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/saveJobLevel")
-	public Map<String,Object> saveJobLevel(Integer joblevel_id,String joblevel_name){
+	public Map<String,Object> saveJobLevel(String joblevel_name,String joblevel_desc){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = JobLevelPageService.saveJobLevel(joblevel_id, joblevel_name);
+		int rows = JobLevelPageService.saveJobLevel(joblevel_name,joblevel_desc);
 		if(rows>0){
 			map.put("status", "success");
 		}else{
@@ -66,9 +66,9 @@ public class JobLevelPageControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/editJobLevel")
-	public Map<String,Object> eidtJobLevel(Integer joblevel_id,String joblevel_name){
+	public Map<String,Object> eidtJobLevel(Integer joblevel_id,String joblevel_name,String joblevel_desc){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = JobLevelPageService.editJobLevel(joblevel_id, joblevel_name);
+		int rows = JobLevelPageService.editJobLevel(joblevel_id, joblevel_name,joblevel_desc);
 		if(rows>0){
 			map.put("status", "success");
 		}else{

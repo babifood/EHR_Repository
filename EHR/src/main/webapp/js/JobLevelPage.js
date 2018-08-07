@@ -1,3 +1,4 @@
+//@ sourceURL=JobLevelPage.js
 var objRowsJobLevel;
 var objRowsPosition;
 var objRowsPost;
@@ -47,13 +48,13 @@ function loadJobLevel(joblevel_name,position_name){
 		rownumbers:true,
 		columns:[[
 			{
-				field:"joblevel_id",
-				title:"职务级别ID",
-				width:100,
+				field:"joblevel_name",
+				title:"职务级别",
+				width:200,
 			},
 			{
-				field:"joblevel_name",
-				title:"职务级别名称",
+				field:"joblevel_desc",
+				title:"职务级别描述",
 				width:200,
 			},
 			{
@@ -62,14 +63,43 @@ function loadJobLevel(joblevel_name,position_name){
 				width:200,
 			},
 		]],
+		loadFilter:function(data){
+			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
+	            data = {
+	                total: data.length,
+	                rows: data
+	            }
+	        }
+	        var dg = $(this);
+	        var opts = dg.datagrid('options');
+	        var pager = dg.datagrid('getPager');
+	        pager.pagination({
+	            onSelectPage:function(pageNum, pageSize){
+	                opts.pageNumber = pageNum;
+	                opts.pageSize = pageSize;
+	                pager.pagination('refresh',{
+	                    pageNumber:pageNum,
+	                    pageSize:pageSize
+	                });
+	                dg.datagrid('loadData',data);
+	            }
+	        });
+	        if (!data.originalRows){
+	            data.originalRows = (data.rows);
+	        }
+	        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+	        var end = start + parseInt(opts.pageSize);
+	        data.rows = (data.originalRows.slice(start, end));
+	        return data;
+		}
 	});
 }
 //添加职级
 function addJobLevel(){
 	$("#JobLevel_dog").dialog("open").dialog("center").dialog("setTitle","添加职级");
-	$("#JobLevel_id").val("");
 	$("#JobLevel_name").val("");
-	$('#JobLevel_id').focus();
+	$("#JobLevel_desc").val("");
+	$('#JobLevel_name').focus();
 }
 //修改职级
 function editJobLevel(){
@@ -79,7 +109,8 @@ function editJobLevel(){
 		$("#JobLevel_dog").dialog("open").dialog("center").dialog("setTitle","修改职级");
 		$("#JobLevel_id").val(row.joblevel_id);
 		$("#JobLevel_name").val(row.joblevel_name);
-		$('#JobLevel_id').focus();
+		$("#JobLevel_desc").val(row.joblevel_desc);
+		$('#JobLevel_name').focus();
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
@@ -137,11 +168,11 @@ function resetJobLevel(){
 }
 //职级文本框失去焦点事件
 function noBlurJoblevel(){
-	if(!$("#JobLevel_id").val()==""){
-		$("#JobLevel_id_span").html("");
-	}
 	if(!$("#JobLevel_name").val()==""){
 		$("#JobLevel_name_span").html("");		
+	}
+	if(!$("#JobLevel_desc").val()==""){
+		$("#JobLevel_desc_span").html("");		
 	}
 }
 //保存职级
@@ -152,25 +183,26 @@ function saveJobLevel(){
 	var msg;
 	if(dog_title=="添加职级"){
 		data={
-				joblevel_id:$('#JobLevel_id').val(),
-				joblevel_name:$('#JobLevel_name').val()
+				joblevel_name:$('#JobLevel_name').val(),
+				joblevel_desc:$('#JobLevel_desc').val()
 		};
 		url = prefix+'/saveJobLevel';
 		msg = "职级保存成功!";
 	}else if(dog_title=="修改职级"){
 		data={
 				joblevel_id:objRowsJobLevel.joblevel_id,
-				joblevel_name:$('#JobLevel_name').val()	
+				joblevel_name:$('#JobLevel_name').val(),	
+				joblevel_desc:$('#JobLevel_desc').val()	
 			};
 		url = prefix+'/editJobLevel';
 		msg = "职级修改成功!";
 	}
-	if($("#JobLevel_id").val()==""){
-		$("#JobLevel_id_span").html("ID不能为空");
-		$('#JobLevel_id').focus();
-	}else if($("#JobLevel_name").val()==""){
+	if($("#JobLevel_name").val()==""){
 		$("#JobLevel_name_span").html("名称不能为空");
 		$('#JobLevel_name').focus();
+	}else if($("#JobLevel_desc").val()==""){
+		$("#JobLevel_desc_span").html("描述不能为空");
+		$('#JobLevel_desc').focus();
 	}else{
 		$.ajax({
 			url:url,
@@ -257,24 +289,19 @@ function loadPosition(position_name,JobLevel_name,post_name){
 		singleSelect:true,
 		rownumbers:true,
 		columns:[[
-			//{
-			//	field:"position_id",
-			//	title:"职位ID",
-			//	width:100,
-			//},
 			{
 				field:"position_name",
 				title:"职务名称",
 				width:100,
 			},
-			//{
-			//	field:"joblevel_id",
-			//	title:"所属职级ID",
-			//	width:100,
-			//},
 			{
 				field:"joblevel_name",
-				title:"所属职级名称",
+				title:"所属职务级别",
+				width:100,
+			},
+			{
+				field:"joblevel_desc",
+				title:"所属职务级别描述",
 				width:100,
 			},
 			{
@@ -283,6 +310,35 @@ function loadPosition(position_name,JobLevel_name,post_name){
 				width:100,
 			}
 		]],
+		loadFilter:function(data){
+			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
+	            data = {
+	                total: data.length,
+	                rows: data
+	            }
+	        }
+	        var dg = $(this);
+	        var opts = dg.datagrid('options');
+	        var pager = dg.datagrid('getPager');
+	        pager.pagination({
+	            onSelectPage:function(pageNum, pageSize){
+	                opts.pageNumber = pageNum;
+	                opts.pageSize = pageSize;
+	                pager.pagination('refresh',{
+	                    pageNumber:pageNum,
+	                    pageSize:pageSize
+	                });
+	                dg.datagrid('loadData',data);
+	            }
+	        });
+	        if (!data.originalRows){
+	            data.originalRows = (data.rows);
+	        }
+	        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+	        var end = start + parseInt(opts.pageSize);
+	        data.rows = (data.originalRows.slice(start, end));
+	        return data;
+		}
 	});
 }
 //加载职级下拉框
@@ -314,7 +370,7 @@ function editPosition(){
 		//$("#position_id").val(row.position_id);
 		$("#position_name").val(row.position_name);
 		$("#position_joblevel").combobox('setValue',row.joblevel_id);
-		$("#position_joblevel").combobox('setText',row.joblevel_name);
+		$("#position_joblevel").combobox('setText',row.joblevel_desc);
 		$('#position_id').focus();
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -499,6 +555,35 @@ function loadPost(post_name,position_name){
 				width:100,
 			}
 		]],
+		loadFilter:function(data){
+			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
+	            data = {
+	                total: data.length,
+	                rows: data
+	            }
+	        }
+	        var dg = $(this);
+	        var opts = dg.datagrid('options');
+	        var pager = dg.datagrid('getPager');
+	        pager.pagination({
+	            onSelectPage:function(pageNum, pageSize){
+	                opts.pageNumber = pageNum;
+	                opts.pageSize = pageSize;
+	                pager.pagination('refresh',{
+	                    pageNumber:pageNum,
+	                    pageSize:pageSize
+	                });
+	                dg.datagrid('loadData',data);
+	            }
+	        });
+	        if (!data.originalRows){
+	            data.originalRows = (data.rows);
+	        }
+	        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
+	        var end = start + parseInt(opts.pageSize);
+	        data.rows = (data.originalRows.slice(start, end));
+	        return data;
+		}
 	});
 }
 //加载职位下拉框
