@@ -85,6 +85,8 @@ public class InitAttendanceEntity {
 	private String createTime;//创建时间
 	
 	private String updateTime;//修改时间
+	
+	private String isAttend;//是否考勤  1-是  0-否
 
 	public Integer getId() {
 		return id;
@@ -420,6 +422,14 @@ public class InitAttendanceEntity {
 
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getIsAttend() {
+		return isAttend;
+	}
+
+	public void setIsAttend(String isAttend) {
+		this.isAttend = isAttend;
 	}
 	
 }

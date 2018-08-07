@@ -2,11 +2,13 @@ package com.babifood.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.InitAttendanceDao;
@@ -36,13 +38,13 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 	@Override
 	public void addInitAttendance(List<InitAttendanceEntity> attendanceList) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("INSERT INTO `ehr`.`ehr_init_attendance` (`YEAR`, `MONTH`, `P_NUMBER`, `P_NAME`, `COMPANY_CODE`, ");
+		sql.append("INSERT INTO `ehr_init_attendance` (`YEAR`, `MONTH`, `P_NUMBER`, `P_NAME`, `COMPANY_CODE`, ");
 		sql.append("`ORGANIZATION_CODE`, `DEPT_CODE`, `OFFICE_CODE`, `GROUP_CODE`, `POST`, `PUNCH_TYPE`, `ARRANGEMENT_TYPE`, ");
 		sql.append("`DATE`, `WEEK_DAY`, `NORMAL_START_TIME`, `NORMAL_END_TIME`, `NORMAL_TIME`, `PUNCH_START_TIME`, `PUNCH_END_TIME`, ");
 		sql.append("`ORIGINAL_TIME`, `WORK_TIME`, `LATE`, `LEAVE`, `COMPLETION`, `ABSENCE_HOURS`, `VACATION_HOURS`, `YEAR_VACATION`, ");
 		sql.append("`RELAXATION`, `THING_VACATION`, `SICK_VACATION`, `TRAIN_VACATION`, `PARENTAL_VACATION`, `MARRIAGE_VACATION`, ");
-		sql.append("`COMPANION_PARENTAL_VACATION`, `FUNERAL_VACATION`, `UNUSUAL_HOURS`, `OVERTIME_HOURS`, `TRAVEL_HOURS`, `MEAL_SUPPLEMENT`) ");
-		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		sql.append("`COMPANION_PARENTAL_VACATION`, `FUNERAL_VACATION`, `UNUSUAL_HOURS`, `OVERTIME_HOURS`, `TRAVEL_HOURS`, `MEAL_SUPPLEMENT`,`IS_ATTEND`) ");
+		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		List<Object[]> attend = new ArrayList<>();
 		for (InitAttendanceEntity entity : attendanceList) {
 			attend.add(new Object[] { entity.getYear(), entity.getMonth(), entity.getpNumber(), entity.getpName(),
@@ -56,7 +58,7 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 					entity.getSickVacation(), entity.getTrainVacation(), entity.getParentalVacation(),
 					entity.getMarriageVacation(), entity.getCompanionParentalVacation(), entity.getFuneralVacation(),
 					entity.getUnusualHours(), entity.getOvertimeHours(), entity.getTravelHours(),
-					entity.getMealSupplement() });
+					entity.getMealSupplement(), entity.getIsAttend()});
 		}
 		try {
 			jdbcTemplate.batchUpdate(sql.toString(), attend);
@@ -64,6 +66,41 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 			log.error("员工 初始化排班失败,pNumber:" + attendanceList.get(0).getpNumber() + ",pName:"
 					+ attendanceList.get(0).getpName(), e.getMessage());
 		}
+	}
+
+	@Override
+	public Map<String, Object> summaryArrangementInfo(String year, String month, String pNumber) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT SUM(standardWorkLength) AS standardWorkLength, SUM(`chiDao`) AS chiDao, ");
+		sql.append("SUM(`originalCheckingLength`) AS originalCheckingLength, SUM(zaoTui) AS zaoTui, ");
+		sql.append("SUM(kuangGong) AS kuangGong, SUM(nianJia) AS `year`, SUM(tiaoXiu) AS tiaoXiu, ");
+		sql.append("SUM(shiJia) AS shiJia, SUM(bingJia) AS bingJia, SUM(peixunJia) AS peixunJia, ");
+		sql.append("SUM(hunJia) AS hunJia, SUM(chanJia) AS chanJia, SUM(PeiChanJia) AS PeiChanJia, ");
+		sql.append("SUM(SangJia) AS SangJia, SUM(Qita) AS qita, SUM(Queqin) AS queqin, ");
+		sql.append("SUM(Qingjia) AS qingjia, SUM(Canbu) AS canbu, SUM(InOutJob) AS onboarding ");
+		sql.append("FROM ehr_checking_result where `YEAR` = ? and `MONTH` = ? and WorkNum = ?");
+		Map<String, Object> summary = null;
+		try {
+			summary = jdbcTemplate.queryForMap(sql.toString(), year, month, pNumber);
+		} catch (Exception e) {
+			log.error("统计员工考勤信息失败",e.getMessage());
+			throw e;
+		}
+		return summary;
+	}
+
+	@Override
+	public Double findYearSickHours(String year, String month, String pNumber) {
+		String sql = "SELECT SUM(SICK_VACATION) as sick from ehr_init_attendance where `YEAR` = ? and `MONTH` = ? and P_NUMBER = ?";
+		Double sickHours = 0.0;
+		try {
+			int ser = jdbcTemplate.queryForInt(sql, year, month, pNumber);
+			sickHours = Double.valueOf(ser);
+		} catch (Exception e) {
+			log.error("统计员工年度病假统计信息失败",e.getMessage());
+			throw e;
+		}
+		return sickHours;
 	}
 
 }
