@@ -23,10 +23,10 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 	public List<Map<String, Object>> loadRAPItemAll(String category_id,String item_name) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT RAPI_ID as item_id,RAPI_NAME as item_name,RAPI_CATEGORY_ID as category_id ");
+		sql.append("SELECT RAPI_ID as item_id,RAPI_NAME as item_name,RAPI_CATEGORY_ID as category_id,RAPI_CATEGORY_NAME as category_name ");
 		sql.append(" from ehr_rewardandpunishment_item where 1=1");
 		if(category_id!=null&&!category_id.equals("")){
-			sql.append(" and RAPI_CATEGORY_ID like '%"+category_id+"%'");
+			sql.append(" and RAPI_CATEGORY_ID = '"+category_id+"'");
 		}
 		if(item_name!=null&&!item_name.equals("")){
 			sql.append(" and RAPI_NAME like '%"+item_name+"%'");
@@ -43,15 +43,16 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		return list;
 	}
 	@Override
-	public Integer saveRAPItem(String item_id,String item_name,String category_id) {
+	public Integer saveRAPItem(String item_id,String item_name,String category_id,String category_name) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("insert into ehr_rewardandpunishment_item (RAPI_ID,RAPI_NAME,RAPI_CATEGORY_ID) ");
-		sql.append(" values(?,?,?)");
-		Object[] params=new Object[3];
+		sql.append("insert into ehr_rewardandpunishment_item (RAPI_ID,RAPI_NAME,RAPI_CATEGORY_ID,RAPI_CATEGORY_NAME) ");
+		sql.append(" values(?,?,?,?)");
+		Object[] params=new Object[4];
 		params[0]=item_id;
 		params[1]=item_name;
 		params[2]=category_id;
+		params[3]=category_name;
 		int rows =-1;
 		System.out.println("saveRAPItem"+sql);
 		try {
@@ -63,17 +64,46 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		return rows;
 	}
 	@Override
-	public Integer eidtRAPItem(String item_id,String item_name,String category_id) {
+	public Integer eidtRAPItem(String item_id,String item_name,String category_id,String category_name) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("update ehr_rewardandpunishment_item set RAPI_NAME=?,RAPI_CATEGORY_ID=? where RAPI_ID=?");
-		Object[] params=new Object[3];
+		sql.append("update ehr_rewardandpunishment_item set RAPI_NAME=?,RAPI_CATEGORY_ID=?,RAPI_CATEGORY_NAME=? where RAPI_ID=?");
+		Object[] params=new Object[4];
 		params[0]=item_name;
 		params[1]=category_id;
-		params[2]=item_id;
+		params[2]=category_name;
+		params[3]=item_id;
 		int rows =-1;
+		int count;
+		int CI=Integer.parseInt(category_id);
+		int CI1=Integer.parseInt(category_id);
 		try {
-			rows = jdbctemplate.update(sql.toString(), params);
+			StringBuffer sql_selectrewardandpunishment = new StringBuffer();
+			sql_selectrewardandpunishment.append("SELECT COUNT(RAP_ITEM_ID) from ehr_rewardandpunishment WHERE RAP_ITEM_ID='"+item_id+"'");
+			count=jdbctemplate.queryForInt(sql_selectrewardandpunishment.toString());
+			//rows:0存在已经使用该奖惩项目的奖惩记录(不允许修改奖惩类别)；大于1成功；-1失败
+			if(count>0){
+				StringBuffer sql_selectrewardandpunishment_category_id = new StringBuffer();
+				sql_selectrewardandpunishment_category_id.append("SELECT RAPI_CATEGORY_ID from ehr_rewardandpunishment_item WHERE RAPI_ID="+item_id);
+				CI1=jdbctemplate.queryForInt(sql_selectrewardandpunishment_category_id.toString());
+				if(CI!=CI1){
+					rows = 0;
+				}else{
+					try {
+						rows = jdbctemplate.update(sql.toString(), params);
+					} catch (Exception e) {
+						// TODO: handle exception
+						log.error("修改错误："+e.getMessage());
+					}
+				}
+			}else{
+				try {
+					rows = jdbctemplate.update(sql.toString(), params);
+				} catch (Exception e) {
+					// TODO: handle exception
+					log.error("修改错误："+e.getMessage());
+				}
+			}			
 		} catch (Exception e) {
 			// TODO: handle exception
 			log.error("查询错误："+e.getMessage());
@@ -87,9 +117,9 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		int state = 1;
 		int count;
 		try {
-			StringBuffer sql_selectjoblevelposition = new StringBuffer();
-			sql_selectjoblevelposition.append("SELECT COUNT(RAP_ITEM_ID) from ehr_rewardandpunishment WHERE RAP_ITEM_ID="+item_id);
-			count=jdbctemplate.queryForInt(sql_selectjoblevelposition.toString());
+			StringBuffer sql_selectrewardandpunishment = new StringBuffer();
+			sql_selectrewardandpunishment.append("SELECT COUNT(RAP_ITEM_ID) from ehr_rewardandpunishment WHERE RAP_ITEM_ID='"+item_id+"'");
+			count=jdbctemplate.queryForInt(sql_selectrewardandpunishment.toString());
 			//state:0存在已经使用该奖惩项目的奖惩记录1成功-1失败
 			if(count>0){
 		        state = 0;
@@ -111,11 +141,14 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 		return state;
 	}
 	@Override
-	public List<Map<String, Object>> loadComboboxRAPItemData() {
+	public List<Map<String, Object>> loadComboboxRAPItemData(String category_id) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select RAPI_ID as id,RAPI_NAME as text");
 		sql.append(" from ehr_rewardandpunishment_item");
+		if(category_id!=null&&!category_id.equals("")){
+			sql.append(" where RAPI_CATEGORY_ID = '"+category_id+"'");
+		}
 		List<Map<String, Object>> list = null;
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
@@ -130,7 +163,7 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 	public List<Map<String, Object>> loadRewardPunishment(String rap_category, String rap_item) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select u.RAP_ID as rap_id,u.RAPI_CATEGORY_ID as rap_category,u.RAP_P_ID as rap_p_id,u.RAP_P_NAME as rap_p"
+		sql.append("select u.RAP_ID as rap_id,u.RAPI_CATEGORY_ID as rap_category_id,r.RAPI_CATEGORY_NAME as rap_category_name,u.RAP_P_ID as rap_p_id,u.RAP_P_NAME as rap_p"
 				+ ",u.RAP_ITEM_ID as rap_item_id,u.RAP_DATE as rap_date,u.RAP_REASON as rap_reason"
 				+ ",u.RAP_MONEY as rap_money,u.RAP_PROPOSER_ID as rap_proposer_id,u.RAP_PROPOSER_NAME as rap_proposer"
 				+ ",u.RAP_DESC as rap_desc,r.RAPI_ID,r.RAPI_NAME as rap_item_name");

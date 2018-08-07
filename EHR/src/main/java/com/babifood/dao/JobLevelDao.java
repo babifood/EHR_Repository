@@ -14,9 +14,9 @@ public interface JobLevelDao {
 	//职级
 	public List<Map<String,Object>> loadJobLevelAll(Integer JobLevel_id,String JobLeverl_name,String position_name);
 	
-	public Integer saveJobLevel(Integer joblevel_id,String joblevel_name);
+	public Integer saveJobLevel(String joblevel_name,String joblevel_desc);
 	
-	public Integer eidtJobLevel(Integer joblevel_id,String joblevel_name);
+	public Integer eidtJobLevel(Integer joblevel_id,String joblevel_name,String joblevel_desc);
 	
 	public Integer removeJobLevel(Integer joblevel_id);
 	

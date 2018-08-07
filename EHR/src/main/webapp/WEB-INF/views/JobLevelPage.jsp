@@ -18,7 +18,7 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeJobLevel()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		职级名称：<input type="text" class="textbox" id="search_joblevel_name" name="search_joblevel_name" style="width: 110px;"/>
+	        		职务级别：<input type="text" class="textbox" id="search_joblevel_name" name="search_joblevel_name" style="width: 110px;"/>
 	        		包含职位：<input type="text" class="textbox" id="search_positionofjoblevel_name" name="search_positionofjoblevel_name" style="width: 110px;"/>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetJobLevel()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchJobLevel()">查询</a>
@@ -29,17 +29,17 @@
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">职级信息</span></div>
 			        <table>
 			        	<tr style="margin-bottom: 10px;">
-			        		<td>职务级别ID：</td>
-			        		<td>
-			        			<input type="text" id="JobLevel_id" name="JobLevel_id" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
-			        			<span id="JobLevel_id_span" style="color: red"></span>
-			        		</td>
-			        	</tr>
-			        	<tr style="margin-bottom: 10px;">
-			        		<td>职务级别名称：</td>
+			        		<td>职务级别：</td>
 			        		<td>
 			        			<input type="text" id="JobLevel_name" name="JobLevel_name" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
 			        			<span id="JobLevel_name_span" style="color: red"></span>
+			        		</td>
+			        	</tr>
+			        	<tr style="margin-bottom: 10px;">
+			        		<td>职务级别描述：</td>
+			        		<td>
+			        			<input type="text" id="JobLevel_desc" name="JobLevel_desc" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
+			        			<span id="JobLevel_desc_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
 			        </table>
@@ -78,7 +78,7 @@
 							</td>
 						</tr>
 						<tr style="margin-bottom: 10px;">
-							<td>所属职级名称：</td>
+							<td>所属职务级别：</td>
 							<td>
 								<input id="position_joblevel" name="position_joblevel" style="width: 180px;"/>  
 			       			   	<span id="position_joblevel_span" style="color: red"></span>
