@@ -142,7 +142,6 @@ function addRewardPunishment(){
 	$("#rap_p").val("");
 	$("#rap_desc").val("");
 	$('#rap_category').focus();
-	checkFormRAP(true);
 }
 //修改奖惩记录
 function editRewardPunishment(){
@@ -209,20 +208,6 @@ function noBlurRewardPunishment(){
 		$("#rap_desc_span").html("");
 	}
 }
-//表单验证
-function checkFormRAP(tRf){
-	var box =["rap_reason","rap_money"]
-	for(var i=0;i<box.length;i++){
-		notNullRAPdate(box[i],tRf);
-	}
-}
-//非空验证
-function notNullRAPdate(id,trueOrfalse){
-	$('#'+id).rapdatebox({
-		required : trueOrfalse,
-		missingMessage :'该输入项为必输项!',
-	});
-}
 //奖惩记录文本校验
 function checkDataRewardPunishment(){
 	if($('#rap_reason').val()==""){
@@ -230,7 +215,7 @@ function checkDataRewardPunishment(){
 		$('#rap_reason').focus();
 		return false;
 	}
-	if($('#rap_money').combobox('getValue')==""){
+	if($('#rap_money').val()==""){
 		$("#rap_money_span").html("奖惩金额不能为空");
 		$('#rap_money').focus();
 		return false;
@@ -444,7 +429,6 @@ function addRAPItem(){
 	$("#item_name").val("");
 	$("#category").combobox('setValue','');
 	$('#category').focus();
-	checkFormRAPI(true);
 }
 //修改奖惩项目
 function editRAPItem(){
@@ -478,20 +462,6 @@ function noBlurRAPItem(){
 	if(!$("#item_name").val()==""){
 		$("#item_name_span").html("");		
 	}
-}
-//表单验证
-function checkFormRAPI(tRf){
-	var box =["item_name"]
-	for(var i=0;i<box.length;i++){
-		notNullRAPIdate(box[i],tRf);
-	}
-}
-//非空验证
-function notNullRAPIdate(id,trueOrfalse){
-	$('#'+id).rapidatebox({
-		required : trueOrfalse,
-		missingMessage :'该输入项为必输项!',
-	});
 }
 //保存奖惩类别
 function saveRAPItem(){

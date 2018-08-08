@@ -30,7 +30,7 @@ public class ScheduledController {
 	 */
 	//@Scheduled(cron = "1 0 0/2 * * ?")
 	public void salaryCalculation(){
-		salaryService.salaryCalculation();
+		//salaryService.salaryCalculation();
 	}
 	
 }

@@ -29,15 +29,33 @@ public class personSelectionWindowDaoImpl implements personSelectionWindowDao {
 			log.error("loadpersonSelectionWindowDept查询错误"+e.getMessage());
 		}
 		return list;
+		
+		
 	}
 	//未选人员by部门id
 	@Override
-	public List<Map<String, Object>> loadunSelectPersonByDeptID(String dept_id) {
+	public List<Map<String, Object>> loadunSelectPersonByDeptID(String dept_id,int length) {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
-		sql.append("select p_id,p_number, p_name from ehr_person_basic_info");
+		sql.append("select p_id,p_number, p_name from ehr_person_basic_info where 1=1");
 		if(dept_id!=null&&!dept_id.equals("")){
-			sql.append(" where p_section_office_id="+dept_id);
+			if(length==3){
+				//公司
+				sql.append(" and p_company_id="+dept_id);
+			}else if(length==4){
+				//机构
+				sql.append(" and p_organization_id="+dept_id);
+			}else if(length==5){
+				//部门
+				sql.append(" and p_department_id="+dept_id);
+			}else if(length==6){
+				//科室
+				sql.append(" and p_section_office_id="+dept_id);
+			}else if(length==7){
+				//班组
+				sql.append(" and p_group_id="+dept_id);
+			}
+			
 		}
 		List<Map<String,Object>> list = null;
 		try {

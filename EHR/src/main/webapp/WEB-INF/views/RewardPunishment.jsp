@@ -130,8 +130,8 @@
 	        	<jsp:include page="personSelectionWindow.jsp" />
 	        </div>
 	        <div id="selectPerson_dlg_buttons">
-				<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok"  onclick="saveSelectPerson()" style="width: 90px;">保存1</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#selectPerson_dog').dialog('close')" style="width: 90px;">取消1</a>
+				<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok"  onclick="saveSelectPerson()" style="width: 90px;">保存</a><!-- 保存1 -->
+	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#selectPerson_dog').dialog('close')" style="width: 90px;">取消</a><!-- 取消1 -->
 			</div>
 	    </div> 
 	    

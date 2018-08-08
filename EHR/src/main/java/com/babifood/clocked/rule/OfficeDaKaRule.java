@@ -42,10 +42,14 @@ public class OfficeDaKaRule {
 		}
 		// =================有打卡记录=======================================
 		// 打卡开始时间
-		theReslut.setCheckingBeginTime(dftime.parse(df.format(theClockedRecord.getClockedDate())+" "+theClockedRecord.getBeginTime()+":00"));
+		if(theClockedRecord.getBeginTime()!=null&&!theClockedRecord.getBeginTime().equals("")){
+			theReslut.setCheckingBeginTime(dftime.parse(df.format(theClockedRecord.getClockedDate())+" "+theClockedRecord.getBeginTime()+":00"));
+		}
 		// 打卡结束时间
-		theReslut.setCheckingEndTime(dftime.parse(df.format(theClockedRecord.getClockedDate())+" "+theClockedRecord.getEndTime()+":00"));
-		if (theClockedRecord.getBeginTime() == null || theClockedRecord.getEndTime() == null) {
+		if(theClockedRecord.getEndTime()!=null&&!theClockedRecord.getEndTime().equals("")){
+			theReslut.setCheckingEndTime(dftime.parse(df.format(theClockedRecord.getClockedDate())+" "+theClockedRecord.getEndTime()+":00"));
+		}
+		if (theClockedRecord.getBeginTime() == null||theClockedRecord.getBeginTime().equals("") || theClockedRecord.getEndTime() == null||theClockedRecord.getEndTime().equals("")) {
 			theReslut.setOriginalCheckingLength(0d);//打卡时长
 //			theReslut.setKuangGong(theReslut.getStandWorkLength());//旷工时长
 			theReslut.setActualWorkLength(0d);//实际工作时长

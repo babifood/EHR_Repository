@@ -232,6 +232,7 @@ public class OfficeCalcRule {
 	 * 计算出差
 	 */
 	private void attachOneChuChai(ClockedResultBases theResult, ClockedBizData theClockedBizData) throws Exception {
+		SimpleDateFormat dftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date[] temp = ClockedBaseRule.calcActualTime(theResult, theClockedBizData);
 		// 如果出差开始时间 》 下班时间
 		if (temp[0].getTime() >= theResult.getStandEndTime().getTime()) {
@@ -259,7 +260,10 @@ public class OfficeCalcRule {
 				chuChaiEnd = temp[1];
 			}
 		}
-		double value = WorkHourRule.getOfficeWorkHoursBySameDay(temp[0].toString(), temp[1].toString(), theResult);
+		String beginTime = dftime.format(temp[0]);
+		String endTime = dftime.format(temp[1]);
+				
+		double value = WorkHourRule.getOfficeWorkHoursBySameDay(beginTime,endTime,theResult);
 		theResult.setChuCha(value);
 	}
 
