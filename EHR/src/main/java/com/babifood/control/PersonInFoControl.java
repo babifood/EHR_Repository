@@ -141,5 +141,19 @@ public class PersonInFoControl {
 	public PersonBasrcEntity getPersonByPnumber(String pNumber) {
 		return (PersonBasrcEntity) personInFoService.getPersonByPnumber(pNumber);
 	}
-
+	//加载OA同步员工工号
+	@ResponseBody
+	@RequestMapping("/loadOaSyncWorkNum")
+	public Map<String,Object> loadOaWorkNum(String workNum,String userName){
+		Map<String,Object> map =new HashMap<String,Object>();
+		List<Map<String, Object>> list = personInFoService.loadOaWorkNumInFo(workNum, userName);
+		map.put("total", list.size());
+		map.put("rows", list);
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("/getEhrWorkNum")
+	public Object getEhrWorkNum(){
+		return personInFoService.getRandomYxWorkNum();
+	}
 }

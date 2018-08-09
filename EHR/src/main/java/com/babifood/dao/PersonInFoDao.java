@@ -39,5 +39,9 @@ public interface PersonInFoDao {
 	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize);
 
 	public Object getPersonByPnumber(String pNumber);
+	
+	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum,String userName);
+	
+	public List<Map<String, Object>> loadEHRWorkNumInFo();
 
 }

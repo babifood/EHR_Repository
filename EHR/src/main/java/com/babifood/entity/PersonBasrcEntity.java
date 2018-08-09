@@ -24,6 +24,10 @@ public class PersonBasrcEntity {
 	private String p_organization;//单位机构
 	private String p_section_office_id;//科室编码
 	private String p_section_office;//科室
+	
+	private String p_group_id;//班组编码
+	private String p_group;//班组
+	
 	private String p_state;//员工状态
 	private String p_property;//员工性质
 	private String p_post_property;//岗位性质
@@ -652,6 +656,22 @@ public class PersonBasrcEntity {
 
 	public void setFamily(List<PersonFamily> family) {
 		this.family = family;
+	}
+
+	public String getP_group_id() {
+		return p_group_id;
+	}
+
+	public void setP_group_id(String p_group_id) {
+		this.p_group_id = p_group_id;
+	}
+
+	public String getP_group() {
+		return p_group;
+	}
+
+	public void setP_group(String p_group) {
+		this.p_group = p_group;
 	}
 	
 	

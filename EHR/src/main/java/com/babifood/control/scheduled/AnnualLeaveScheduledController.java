@@ -15,7 +15,6 @@ import com.babifood.service.AnnualLeaveService;
 public class AnnualLeaveScheduledController {
 	@Autowired
 	private AnnualLeaveService AnnualLeaveService;
-
 	@Scheduled(cron = "0 09 10 * * ?")
 	public void getAnuualLeave(){
 		List<Map<String, Object>> PersonlistNow = AnnualLeaveService.GetHireDate();
