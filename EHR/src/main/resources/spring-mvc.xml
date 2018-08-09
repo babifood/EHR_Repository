@@ -70,6 +70,7 @@ class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 	org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，所以如果显示的配置则需去掉配置
   <mvc:annotation-driven/> -->
   <mvc:annotation-driven/>
+
 <!-- 定时器开关--> 
   <task:annotation-driven/>
   
