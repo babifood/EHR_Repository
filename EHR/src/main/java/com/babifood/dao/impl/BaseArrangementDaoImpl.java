@@ -211,4 +211,26 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		return specialArrangementList;
 	}
 
+	@Override
+	public Map<String, Object> findBaseArrangementById(String arrangementId) {
+		StringBuffer sql = new StringBuffer(); 
+		sql.append("select ID as id,arrangement_name as arrangementName,");
+		sql.append("CASE arrangement_type WHEN '1' THEN '大小周' WHEN '2' THEN '1.5休' WHEN '3' THEN '双休' WHEN '4' THEN '单休' END as type,");
+		sql.append("arrangement_type as arrangementType,");
+		sql.append("start_time as startTime,end_time as endTime,concat(start_time,concat('~',end_time)) as time,remark");
+		sql.append(" from ehr_base_arrangement where isDelete = '0' and ID = ?");
+		List<Map<String, Object>> arrangementList = null;
+		Map<String, Object> arrangement = null;
+		try {
+			arrangementList = jdbcTemplate.queryForList(sql.toString(), arrangementId);
+		} catch (Exception e) {
+			log.error("根据Id查询基础排班信息失败", e.getMessage());
+			throw e;
+		}
+		if(arrangementList != null && arrangementList.size() > 0){
+			arrangement = arrangementList.get(0);
+		}
+		return arrangement;
+	}
+
 }
