@@ -125,6 +125,28 @@ function loadBaseSalary() {
 				editor : {
 					type:'numberbox',options:{precision:1,required:true}
 				},
+			},{
+				field : "workType",
+				title : "工作类型",
+				width : 100,
+				editor : {
+					type : 'combobox',
+					options : {
+						required:true,
+						editable:false,
+						valueField: 'value',
+						textField: 'text',
+						data: [{value: '0',text: '计时'},
+							{value: '1',text: '计件'}]
+					},
+				},
+				formatter:function(value,row,index){
+					if(row.workType == "0"){
+						return "计时";
+					} else if(row.workType == "1"){
+						return "计件";
+					}
+				}
 			},
 			{
 				field : "useTime",
@@ -169,23 +191,23 @@ function getBaseSalaryTools(){
 }
 
 var editBaseSalaryIndex;
-//是否可编辑
-function canEditBaseSalary() {
-	if (editBaseSalaryIndex == undefined) {
-		return true
-	}
-	if ($('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)) {
-		$('#base_salary_list').datagrid('endEdit', editBaseSalaryIndex);
-		editBaseSalaryIndex = undefined;
-		return true;
-	} else {
-		return false;
-	}
-}
+////是否可编辑
+//function canEditBaseSalary() {
+//	if (editBaseSalaryIndex == undefined) {
+//		return true
+//	}
+//	if ($('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)) {
+//		$('#base_salary_list').datagrid('endEdit', editBaseSalaryIndex);
+//		editBaseSalaryIndex = undefined;
+//		return true;
+//	} else {
+//		return false;
+//	}
+//}
 
 //添加数据
 function addBaseSalaryInfo() {
-	if (canEditBaseSalary()) {
+	if (editBaseSalaryIndex == undefined) {
 		$('#base_salary_list').datagrid('appendRow', {});
 		editBaseSalaryIndex = $('#base_salary_list').datagrid('getRows').length - 1;
 		$('#base_salary_list').datagrid('selectRow', editBaseSalaryIndex)
@@ -204,10 +226,10 @@ function addBaseSalaryInfo() {
 	}
 }
 
-//双击编辑
+//编辑
 function updateEmployeeBaseSalary(index) {
 	if (editBaseSalaryIndex != index) {
-		if (canEditBaseSalary()) {
+		if (editBaseSalaryIndex == undefined) {
 			$('#base_salary_list').datagrid('selectRow', index).datagrid(
 					'beginEdit', index);
 			editBaseSalaryIndex = index;
@@ -229,47 +251,49 @@ function updateEmployeeBaseSalary(index) {
 
 //删除宿舍信息
 function removeBaseSalaryInfo(){
-	var rowData =$('#base_salary_list').datagrid('getSelected');
-	var index = $("#base_salary_list").datagrid("getRowIndex",rowData);
-	var node = $("#base_salary_list").datagrid("getChecked");
-	if(index>=0){
-		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			if(r){
-				$.ajax({
-					url:prefix + "/baseSalary/remove",
-					type:'post',
-					data:{
-						id:rowData.id,
-						pNumber:rowData.pNumber
-					},
+	if(editBaseSalaryIndex == undefined){
+		var rowData =$('#base_salary_list').datagrid('getSelected');
+		var index = $("#base_salary_list").datagrid("getRowIndex",rowData);
+		var node = $("#base_salary_list").datagrid("getChecked");
+		if(index>=0){
+			$.messager.confirm("提示","确定要删除此数据？",function(r){
+				if(r){
+					$.ajax({
+						url:prefix + "/baseSalary/remove",
+						type:'post',
+						data:{
+							id:rowData.id,
+							pNumber:rowData.pNumber
+						},
 //					contentType:"application/x-www-form-urlencoded",
-					beforeSend:function(){
-						$.messager.progress({
-							text:'删除中......',
-						});
-					},
-					success:function(data){
-						$.messager.progress('close');
-						if(data.code=="1"){
-							$.messager.show({
-								title:'消息提醒',
-								msg:'删除成功!',
-								timeout:3000,
-								showType:'slide'
+						beforeSend:function(){
+							$.messager.progress({
+								text:'删除中......',
 							});
-							$('#base_salary_list').datagrid('cancelEdit', index)
-							.datagrid('deleteRow', index).datagrid('clearSelections',node);
-							$('#base_salary_list').datagrid('acceptChanges');
-							editDormitoryIndex = undefined;
-						}else{
-							$.messager.alert("消息提示！",data.msg,"warning");
+						},
+						success:function(data){
+							$.messager.progress('close');
+							if(data.code=="1"){
+								$.messager.show({
+									title:'消息提醒',
+									msg:'删除成功!',
+									timeout:3000,
+									showType:'slide'
+								});
+								$('#base_salary_list').datagrid('cancelEdit', index)
+								.datagrid('deleteRow', index).datagrid('clearSelections',node);
+								$('#base_salary_list').datagrid('acceptChanges');
+								editDormitoryIndex = undefined;
+							}else{
+								$.messager.alert("消息提示！",data.msg,"warning");
+							}
 						}
-					}
-				});
-			}
-		});
-	}else{
-		$.messager.alert("消息提示！","请选择一条数据！","info");
+					});
+				}
+			});
+		}else{
+			$.messager.alert("消息提示！","请选择一条数据！","info");
+		}
 	}
 }
 
@@ -277,7 +301,9 @@ function removeBaseSalaryInfo(){
 function saveBaseSalaryInfo() {
 	console.log("111111111111111");
 	var rowData = $('#base_salary_list').datagrid('getSelected');
-	if (canEditBaseSalary()) {
+	if ($('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)) {
+		$('#base_salary_list').datagrid('endEdit', editBaseSalaryIndex);
+		editBaseSalaryIndex = undefined;
 		$.ajax({
 			url : prefix + '/baseSalary/save',
 			type : 'post',
@@ -285,12 +311,13 @@ function saveBaseSalaryInfo() {
 				id:rowData.id,
 				pNumber : rowData.pNumber,
 				baseSalary : rowData.baseSalary,
-				fixedOvertimeSalary : rowData.fixedOvertimeSalary,
+				fixedOverTimeSalary : rowData.fixedOverTimeSalary,
 				postSalary : rowData.postSalary,
 				companySalary : rowData.companySalary,
 				callSubsidies : rowData.callSubsidies,
 				singelMeal : rowData.singelMeal,
 				performanceSalary : rowData.performanceSalary,
+				workType : rowData.workType,
 				useTime : rowData.useTime,
 			},
 			contentType : "application/x-www-form-urlencoded",
@@ -332,8 +359,6 @@ function reloadBaseSalaryInfo(){
 
 //下拉列表查询人员信息
 function searchBaseSalaryPerson(){
-	console.log($("#base_salary_p_number").val());
-	console.log($("#base_salary_p_name").val());
 	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_number = $("#base_salary_p_number").val();
 	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_name = $("#base_salary_p_name").val();
 	$('.combogrid-f').combogrid('grid').datagrid('reload');

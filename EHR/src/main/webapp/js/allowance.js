@@ -20,23 +20,14 @@ function loadAllowanceList() {
 		pageSize : 10,
 		pageList : [ 10, 20, 30 ],
 		pageNumber : 1,
-		columns : [ [ {
-			field : "year",
-			title : "年",
-			width : 100,
-		}, {
-			field : "month",
-			title : "月",
-			width : 100,
-		}, {
-			field : "pNumber",
-			title : "员工编号",
-			width : 100,
-		}, {
-			field : "pName",
-			title : "员工姓名",
-			width : 100,
-		}, {
+		frozenColumns:[[
+			{field : "year",title : "年",width : 100, }, 
+			{field : "month",title : "月",width : 100, }, 
+			{field : "pNumber",title : "员工工号",width : 100,}, 
+			{field : "pName",title : "员工姓名",width : 100,}
+			]],
+		columns : [ [
+		{
 			field : "organzationName",
 			title : "组织机构名称",
 			width : 100,

@@ -2,29 +2,31 @@ package com.babifood.entity;
 
 public class BaseSalaryEntity {
 
-	private Integer id;//主键
-	
-	private String pNumber;//员工工号
-	
-	private Double baseSalary;//基本工资
-	
-	private Double fixedOverTimeSalary;//固定加班工资
-	
-	private Double postSalary;//岗位工资
-	
-	private Double callSubsidies;//话费补贴
-	
-	private Double companySalary;//司龄工资
-	
-	private Double singelMeal;//单个餐补
-	
-	private Double performanceSalary;//绩效工资
-	
-	private String createTime;//创建时间
-	
-	private String useTime;//使用时间
-	
-	private String isDelete;//逻辑删除  0-有效数据   1-删除数据
+	private Integer id;// 主键
+
+	private String pNumber;// 员工工号
+
+	private Double baseSalary;// 基本工资
+
+	private Double fixedOverTimeSalary;// 固定加班工资
+
+	private Double postSalary;// 岗位工资
+
+	private Double callSubsidies;// 话费补贴
+
+	private Double companySalary;// 司龄工资
+
+	private Double singelMeal;// 单个餐补
+
+	private Double performanceSalary;// 绩效工资
+
+	private String workType;// 工作类型
+
+	private String createTime;// 创建时间
+
+	private String useTime;// 使用时间
+
+	private String isDelete;// 逻辑删除 0-有效数据 1-删除数据
 
 	public Integer getId() {
 		return id;
@@ -98,6 +100,14 @@ public class BaseSalaryEntity {
 		this.performanceSalary = performanceSalary;
 	}
 
+	public String getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(String workType) {
+		this.workType = workType;
+	}
+
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -121,5 +131,5 @@ public class BaseSalaryEntity {
 	public void setIsDelete(String isDelete) {
 		this.isDelete = isDelete;
 	}
-	
+
 }

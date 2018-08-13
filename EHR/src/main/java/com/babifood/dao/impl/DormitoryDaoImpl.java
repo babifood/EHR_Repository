@@ -73,9 +73,10 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	public List<Map<String, Object>> getUnStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id as id, a.floor as floor, a.room_no as roomNo, a.Bed_No as bedNo,");
-		sql.append("a.sex as sex, a.remark as remark,");
+		sql.append("a.sex as sex, a.remark as remark,c.p_number AS pNumber, c.p_name AS pName, ");
 		sql.append("IF(b.p_number IS NOT NULL,'已入住', '未入住') as stay  from ehr_dormitory a ");
-		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay where is_delete = '0') b on a.id = b.dormitory_id");
+		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay where is_delete = '0') b on a.id = b.dormitory_id ");
+		sql.append("LEFT JOIN ehr_person_basic_info c ON b.p_number = c.p_number ");
 		sql.append(" where a.is_delete = '0'");
 		if(!UtilString.isEmpty(params.get("floor") + "")){
 			sql.append(" AND a.floor = " + params.get("floor"));
@@ -106,29 +107,29 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Override
 	public List<Map<String, Object>> getStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select a.id as id, a.floor as floor, a.room_no as roomNo, a.Bed_No as bedNo, a.remark as remark, ");
-		sql.append("a.sex as sex,IF(b.p_number IS NOT NULL,'已入住', '未入住') as stay, ");
-		sql.append("b.stay_time as stayTime, c.p_number as pNumber, c.p_name as pName ");
-		sql.append("from ehr_dormitory a ");
-		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay where is_delete = '0') b on a.id = b.dormitory_id ");
-		sql.append("LEFT JOIN ehr_person_basic_info c on b.p_number = c.p_number");
-		sql.append(" where a.is_delete = '0' and b.p_number is not null");
+		sql.append("SELECT a.p_number AS pNumber, c.p_name AS pName, b.floor AS floor, ");
+		sql.append("b.room_no AS roomNo, b.Bed_No AS bedNo, b.sex AS sex, a.stay_time AS stayTime, ");
+		sql.append("a.out_time AS outTime ");
+		sql.append("FROM ehr_dormitory_stay a ");
+		sql.append("LEFT JOIN ehr_dormitory b ON a.dormitory_id = b.ID ");
+		sql.append("LEFT JOIN ehr_person_basic_info c ON a.p_number = c.p_number");
+		sql.append(" where 1=1 ");
 		if(!UtilString.isEmpty(params.get("floor") + "")){
-			sql.append(" AND a.floor = " + params.get("floor"));
+			sql.append(" AND b.floor = " + params.get("floor"));
 		}
 		if(!UtilString.isEmpty(params.get("sex") + "")){
-			sql.append(" AND a.sex = " + params.get("sex"));
+			sql.append(" AND b.sex = " + params.get("sex"));
 		}
 		if(!UtilString.isEmpty(params.get("pNumber") + "")){
-			sql.append(" AND b.p_number like '%" + params.get("pNumber") + "%'");
+			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
 		}
 		if(!UtilString.isEmpty(params.get("pName") + "")){
 			sql.append(" AND c.p_name like '%" + params.get("pName") + "%'");
 		}
 		if(!UtilString.isEmpty(params.get("roomNo") + "")){
-			sql.append(" AND a.room_no like '%" + params.get("roomNo") + "%'");
+			sql.append(" AND b.room_no like '%" + params.get("roomNo") + "%'");
 		}
-		sql.append(" Limit ?,?");
+		sql.append(" ORDER BY create_time DESC Limit ?,?");
 		List<Map<String, Object>> dormitorys = null;
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(),params.get("start") ,params.get("pageSize"));
@@ -140,15 +141,15 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	}
 
 	@Override
-	public Map<String, Object> findCheakingDormitory(String dormitoryId, String pnumber) {
+	public Map<String, Object> findCheakingDormitory(String pnumber) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT id, p_number as pNumber, dormitory_id as dormitoryId, stay_time as stayTime, out_time as outTime,");
 		sql.append("create_time as createTime, remark, is_delete as isDelete from ehr_dormitory_stay");
-		sql.append(" where p_number = ? and dormitory_id = ? and is_delete = '0'");
+		sql.append(" where p_number = ? and is_delete = '0'");
 		Map<String, Object> dormitory = null;
 		List<Map<String, Object>> dormitorys = null;
 		try {
-			dormitorys = jdbcTemplate.queryForList(sql.toString(), pnumber, dormitoryId);
+			dormitorys = jdbcTemplate.queryForList(sql.toString(), pnumber);
 		} catch (Exception e) {
 			log.error("根据ID查询床位信息失败",e.getMessage());
 			throw e;

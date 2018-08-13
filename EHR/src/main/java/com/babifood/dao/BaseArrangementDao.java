@@ -36,4 +36,6 @@ public interface BaseArrangementDao {
 
 	public List<Map<String, Object>> findSpecialArrangementOfMonth(String startDay, String endDay);
 
+	public Map<String, Object> findBaseArrangementById(String arrangementId);
+
 }

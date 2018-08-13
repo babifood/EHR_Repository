@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <style type="text/css">
 	.arrangement_list{
 		float: left;
@@ -15,11 +16,22 @@
     	<div data-options="fit:true,border:false,noheader:true" class="easyui-panel">
 			<table class="easyui-datagrid" id="arrangement_base_time"></table>
 			<div style="margin-bottom: 5px;" id="base_time_tools">
-	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addArrangementBaseTime()">添加</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeArrangementBaseTime()">删除</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveArrangementBaseTime()">保存</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelArrangementBaseTime()">取消</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="foundArrangement()">设置排班</a>     		
+				<shiro:hasPermission name="arrangement:add">
+		        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addArrangementBaseTime()">添加</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="arrangement:edit">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="updateArrangementBaseTime()">修改</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="arrangement:remove">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeArrangementBaseTime()">删除</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="arrangement:operate">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveArrangementBaseTime()">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelArrangementBaseTime()">取消</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="arrangement:setting">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="foundArrangement()">设置排班</a>     		
+		        </shiro:hasPermission>
 	        </div>
 		</div>
     </div>   

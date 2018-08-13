@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.babifood.constant.OperatingConstant;
 import com.babifood.dao.DeptPageDao;
 import com.babifood.entity.DeptEntity;
 import com.babifood.service.DeptPageService;
@@ -26,21 +26,72 @@ public class DeptPageServiceImpl implements DeptPageService {
 	
 	@Autowired
 	private DeptPageDao deptPageDao;
-
+	
 	@Override
-	public Map<String, Object> findOrganization(String deptCode) {
+	public List<Map<String,Object>> findOrganization(String deptCode) {
 		deptCode = UtilString.isEmpty(deptCode) ? "0000" : deptCode;
-		//当前部门
-		Map<String, Object> organize = deptPageDao.findOrganizeByDeptCode(deptCode);
-		if(MapUtils.isNotEmpty(organize)){
-			List<Map<String, Object>> organizeList = getOrganizeChildren(organize.get("deptCode")+"");
-			if(!CollectionUtils.isEmpty(organizeList)){
-				organize.put("children", organizeList);
+		Map<String, List<Map<String,Object>>> deptMapList = findAllDepts(deptCode);
+		List<Map<String,Object>> deptList = null;
+		if(deptMapList != null && deptMapList.size() > 0){
+			deptList = deptMapList.get(deptCode.substring(0,deptCode.length() - 4));
+			if(deptList != null && deptList.size() > 0){
+				getOrganizeChildrens(deptList,deptMapList);
 			}
 		}
-		return organize;
+		//当前部门
+//		Map<String, Object> organize = deptPageDao.findOrganizeByDeptCode(deptCode);
+//		if(MapUtils.isNotEmpty(organize)){
+//			List<Map<String, Object>> organizeList = getOrganizeChildren(organize.get("deptCode")+"");
+//			if(!CollectionUtils.isEmpty(organizeList)){
+//				organize.put("children", organizeList);
+//			}
+//		}
+//		OperatingLogUtil.recordOperatingLog("", OperatingConstant.OPERATING_TYPE_FIND, "1", this.getClass().getName(), "组织机构树查询");
+		return deptList;
 	}
 
+	/**
+	 * 获取对应的下级组织机构
+	 * @param deptList
+	 * @param deptMapList
+	 */
+	private void getOrganizeChildrens(List<Map<String, Object>> deptList,
+		Map<String, List<Map<String, Object>>> deptMapList) {
+		for(Map<String, Object> map : deptList){
+			String deptCode = map.get("deptCode")+"";
+			List<Map<String, Object>> depts = deptMapList.get(deptCode);
+			if(depts != null && depts.size() > 0){
+				getOrganizeChildrens(depts, deptMapList);
+				map.put("children", depts);
+			} else {
+				map.put("state", "open");
+			}
+		}
+	}
+
+	/**
+	 * 查询所有组织机构--Map
+	 * @param pCode
+	 * @return
+	 */
+	private Map<String, List<Map<String,Object>>> findAllDepts(String pCode) {
+		Map<String, List<Map<String,Object>>> deptMapList = new HashMap<String, List<Map<String,Object>>>();
+		List<Map<String,Object>> dataSource = deptPageDao.findAll(pCode);
+		if(dataSource != null && dataSource.size() > 0){
+			for(Map<String,Object> map : dataSource){
+				String deptCode = map.get("deptCode") + "";
+				String pcode = deptCode.substring(0, deptCode.length() - 4);
+				List<Map<String, Object>> deptList = deptMapList.get(pcode);
+				if(deptList == null){
+					deptList = new ArrayList<Map<String, Object>>();
+				}
+				deptList.add(map);
+				deptMapList.put(pcode, deptList);
+			}
+		}
+		return deptMapList;
+	}
+	
 	/**
 	 * 获取下级所有下级
 	 * @param id
@@ -161,7 +212,7 @@ public class DeptPageServiceImpl implements DeptPageService {
 		if("0".equals(type)){//模板
 			dataSource = new ArrayList<Map<String, Object>>();
 		} else {//数据
-			dataSource = deptPageDao.findAll();
+			dataSource = deptPageDao.findAll(null);
 		}
 		ExcelUtil.exportExcel("部门信息列表", row1Name, dataSource, ouputStream, sort);
 	}

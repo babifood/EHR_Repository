@@ -2,8 +2,10 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/targetArrangement.css" />
 <div class="main" style="height: 98%;">
 		<div style="padding-left: 60px;background-color: #99BBE8;height: 30px;text-align: inherit;">
-			<div style="padding: 7px;width: 40%;">
-				<span style="font-size: 16px;" id="target_arrangement_name"></span><span style="font-size: 16px;margin-left: 10px" id="target_arrangement_time"></span><span style="font-size: 16px;margin-left: 20px" id="target_arrangement_type"></span>
+			<div style="padding: 7px;">
+				<span style="font-size: 16px;" id="target_arrangement_name"></span>
+				<span style="font-size: 16px;margin-left: 10px" id="target_arrangement_time"></span>
+				<span style="font-size: 16px;margin-left: 20px" id="target_arrangement_type"></span>
 			</div>
 		</div>
 		<div id="myrl"

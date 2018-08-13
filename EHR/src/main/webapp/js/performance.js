@@ -91,6 +91,7 @@ function exportPerformance(type){
 function performanceImport(){
 	$('#performance_file').filebox('clear');
 	$("#performance_dialog").dialog("open");
+	$("#performance_booten").linkbutton('enable');
 }
 
 //导入Excel
@@ -114,19 +115,16 @@ function importPerformanceInfos(){
             return true;  
         }, 
 		success : function(result) {
-			var result = eval('(' + result + ')');
-			console.log("1111111111111");
 			if (result.code == "1") {
 				$.messager.alert('提示!', '导入成功','info',
 					function() {
-						$("#performance_booten").linkbutton('enable');
 						$('#performance_dialog').dialog('close');
 						$("#performance_list_datagrid").datagrid("reload");
 				    });
 			} else {
 				$.messager.confirm('提示',"导入失败!");
-				$("#performance_booten").linkbutton('enable');
 			}
+			$("#performance_booten").linkbutton('enable');
 		}
 	})
 	$('#performance_uploadExcel').submit();

@@ -114,7 +114,7 @@ function loadBaseTimes() {
 				},
 			}
 		]],
-		onDblClickRow:updateArrangementBaseTime,
+//		onDblClickRow:updateArrangementBaseTime,
 	});
 }
 
@@ -142,47 +142,49 @@ function endEditingArrangement(){
 
 //删除
 function removeArrangementBaseTime(){
-	var rowData =$('#arrangement_base_time').datagrid('getSelected');
-	var index = $("#arrangement_base_time").datagrid("getRowIndex",rowData);
-	var node = $("#arrangement_base_time").datagrid("getChecked");
-	if(index>=0){
-		$.messager.confirm("提示","确定要删除此数据？",function(r){
-			if(r){
-				$.ajax({
-					url:prefix+'/arrangement/base/remove',
-					type:'post',
-					data:{
-						id:rowData.id
-					},
-					contentType:"application/x-www-form-urlencoded",
-					beforeSend:function(){
-						$.messager.progress({
-							text:'删除中......',
-						});
-					},
-					success:function(data){
-						$.messager.progress('close');
-						if(data.code=="1"){
-							$.messager.show({
-								title:'消息提醒',
-								msg:'删除成功!',
-								timeout:3000,
-								showType:'slide'
+	if(editIndex1 == undefined){
+		var rowData =$('#arrangement_base_time').datagrid('getSelected');
+		var index = $("#arrangement_base_time").datagrid("getRowIndex",rowData);
+		var node = $("#arrangement_base_time").datagrid("getChecked");
+		if(index>=0){
+			$.messager.confirm("提示","确定要删除此数据？",function(r){
+				if(r){
+					$.ajax({
+						url:prefix+'/arrangement/base/remove',
+						type:'post',
+						data:{
+							id:rowData.id
+						},
+						contentType:"application/x-www-form-urlencoded",
+						beforeSend:function(){
+							$.messager.progress({
+								text:'删除中......',
 							});
-							$('#arrangement_base_time').datagrid('cancelEdit', index)
-							.datagrid('deleteRow', index).datagrid('clearSelections',node);
-							$('#arrangement_base_time').datagrid('acceptChanges');
-							editIndex1 = undefined;
-						}else{
-							$.messager.alert("消息提示！","删除失败!","warning");
+						},
+						success:function(data){
+							$.messager.progress('close');
+							if(data.code=="1"){
+								$.messager.show({
+									title:'消息提醒',
+									msg:'删除成功!',
+									timeout:3000,
+									showType:'slide'
+								});
+								$('#arrangement_base_time').datagrid('cancelEdit', index)
+								.datagrid('deleteRow', index).datagrid('clearSelections',node);
+								$('#arrangement_base_time').datagrid('acceptChanges');
+								editIndex1 = undefined;
+							}else{
+								$.messager.alert("消息提示！","删除失败!","warning");
+							}
 						}
-					}
-				});
-			}
-		});
-	}else{
-		$.messager.alert("消息提示！","请选择一条数据！","info");
-	}	
+					});
+				}
+			});
+		}else{
+			$.messager.alert("消息提示！","请选择一条数据！","info");
+		}	
+	}
 }
 
 //保存
@@ -236,16 +238,22 @@ function cancelArrangementBaseTime(){
 	editIndex1 = undefined;
 }
 
-//双击编辑
-function updateArrangementBaseTime(index){
-	if (editIndex1 != index){
-		if (endEditingArrangement()){
-			$('#arrangement_base_time').datagrid('selectRow', index)
-					.datagrid('beginEdit', index);
-			editIndex1 = index;
-			var editors = $("#arrangement_base_time").datagrid('getEditors',editIndex1);  
-		} else {
-			$('#arrangement_base_time').datagrid('selectRow', editIndex1);
+//编辑
+function updateArrangementBaseTime(){
+	var row = $('#arrangement_base_time').datagrid("getSelected");
+	if(!row){
+		$.messager.alert("消息提示！","请选择一条数据","warning");
+	} else {
+		var index = $('#arrangement_base_time').datagrid("getRowIndex", row);	
+		if (editIndex1 != index){
+			if (endEditingArrangement()){
+				$('#arrangement_base_time').datagrid('selectRow', index)
+						.datagrid('beginEdit', index);
+				editIndex1 = index;
+				var editors = $("#arrangement_base_time").datagrid('getEditors',editIndex1);  
+			} else {
+				$('#arrangement_base_time').datagrid('selectRow', editIndex1);
+			}
 		}
 	}
 }
@@ -259,12 +267,7 @@ function foundArrangement(){
 		$("#arrangement_time").text(rowData.startTime + " ~ " + rowData.endTime);
 		arrangeInit(rowData.id);
 	} else {
-		$.messager.show({
-			title:'消息提醒',
-			msg:'请选择排班',
-			timeout:3000,
-			showType:'slide'
-		});
+		$.messager.alert("消息提示！","请选择排班!","warning");
 	}
 }
 
@@ -371,12 +374,7 @@ function settingArangement(){
 						}
 						$('#arrangement_select').window('close');
 					} else {
-						$.messager.show({
-							title:'消息提醒',
-							msg:result.msg,
-							timeout:3000,
-							showType:'slide'
-						});
+						$.messager.alert("消息提示！",result.msg,"warning");
 					}
 				}
 			});

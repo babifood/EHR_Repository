@@ -21,7 +21,7 @@ public interface DeptPageDao {
 
 	public List<Map<String, Object>> findAllDepts();
 
-	public List<Map<String, Object>> findAll();
+	public List<Map<String, Object>> findAll(String pCode);
 
 	public Map<String, Object> queryCountByDeptCode(String deptCode);
 

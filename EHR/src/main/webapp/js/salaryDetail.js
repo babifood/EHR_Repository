@@ -20,12 +20,14 @@ function loadSalaryDetails() {
 		pageNumber:1,
 		toolbar : "#salaryDetail_datagrid_tools",
 		singleSelect : true,
-		columns : [[
-			{field : "id",title : "",hidden : "true",width : 100, }, 
+		frozenColumns:[[
 			{field : "year",title : "年",width : 100, }, 
 			{field : "month",title : "月",width : 100, }, 
 			{field : "pNumber",title : "员工工号",width : 100,}, 
-			{field : "pName",title : "员工姓名",width : 100,},
+			{field : "pName",title : "员工姓名",width : 100,}
+			]],
+		columns : [[
+			{field : "id",title : "",hidden : "true",width : 100, }, 
 			{field : "companyName",title : "公司名称",width : 100,},
 			{field : "organizationName",title : "单位机构名称",	width : 100,},
 			{field : "deptName",title : "部门信息",width : 100,},
@@ -103,6 +105,10 @@ function exportSalaryDetail() {
 
 //计算薪资
 function salaryCalculation(type){
+	console.log("1111111111111");
+	$("#salaryDetail_calculate").linkbutton('disable');
+	$("#salaryDetail_accounting").linkbutton('disable');
+	$("#salaryDetail_archive").linkbutton('disable');
 	$.ajax({
 		url : prefix + "/salaryDetail/calculation",
 		data : {
@@ -122,7 +128,11 @@ function salaryCalculation(type){
 			} else if (result.code == 1) {
 				$.messager.alert('提示', value+"成功", 'info');
 			} 
+			$("#salaryDetail_calculate").linkbutton('enable');
+			$("#salaryDetail_accounting").linkbutton('enable');
+			$("#salaryDetail_archive").linkbutton('enable');
 		}
 	})
+	
 }
 

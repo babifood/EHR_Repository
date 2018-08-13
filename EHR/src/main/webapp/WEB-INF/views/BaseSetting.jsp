@@ -1,13 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <div data-options="fit:true,border:false,noheader:true" class="easyui-panel">
 	<table class="easyui-datagrid" id="base_setting_list"></table>
 	<div id="base_setting_list_tools">
 		<div style="margin-bottom: 5px;">
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addBaseSeetingInfo()">添加</a>
-<!-- 			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeBaseSeetingInfo()">删除</a> -->
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveBaseSeetingInfo()">保存</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelBaseSeetingInfo()">取消</a>
+			<shiro:hasPermission name="baseSetting:add">
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addBaseSeetingInfo()">添加</a>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="baseSetting:edit">
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateEmployeeBaseSetting()">修改</a>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="baseSetting:operate">
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveBaseSeetingInfo()">保存</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelBaseSeetingInfo()">取消</a>
+			</shiro:hasPermission>
 		</div>
       	<div style="padding: 0 0 0 7px;color: #333;padding-left: 10px">
       		<div>

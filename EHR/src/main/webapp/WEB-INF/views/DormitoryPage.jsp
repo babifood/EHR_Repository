@@ -1,16 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <div id="dormitory_tabs" class="easyui-tabs" data-options="fit:true">
-	<div title="床位管理"  style="display:none;">
+	<div title="住宿管理"  style="display:none;">
 		<div data-options="fit:true,border:false,noheader:true" class="easyui-panel">
 			<table class="easyui-datagrid" id="dormitory_list"></table>
 			<div style="margin-bottom: 5px;" id="dormitory_list_tools">
 				<div>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addDormitoryInfo()">添加</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeDormitoryInfo()">删除</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveDormitoryInfo()">保存</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelDormitoryInfo()">取消</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="checkingDormitory()">入住</a>
+					<shiro:hasPermission name="dormitory:add">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addDormitoryInfo()">添加</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="dormitory:delete">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeDormitoryInfo()">删除</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="dormitory:operate">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveDormitoryInfo()">保存</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelDormitoryInfo()">取消</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="dormitory:checking">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="checkingDormitory()">入住</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitory()">搬出</a>
+					</shiro:hasPermission>
 				</div>
 	        	<div style="margin-left: 10px">
 	        		楼层：<input type="text" class="easyui-combobox" id="dormitory_floor" data-options="valueField: 'value',textField: 'text', 
@@ -26,13 +36,13 @@
 	        </div>
 		</div>
 	</div>
-	<div title="入住员工"  style="display:none;">
+	<div title="住宿记录"  style="display:none;">
 		<div data-options="fit:true,border:false,noheader:true" class="easyui-panel">
 			<table class="easyui-datagrid" id="stay_dormitory_list"></table>
 			<div style="margin-bottom: 5px;" id="stay_dormitory_list_tools">
-				<div>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="moveOutDormitory()">搬出</a>
-				</div>
+<!-- 				<div> -->
+<!-- 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="moveOutDormitory()">搬出</a> -->
+<!-- 				</div> -->
 	        	<div style="margin-left: 10px">
 	        		<div>
 	        			工号：<input type="text" class="textbox" id="checking_dormitory_pnumber" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;

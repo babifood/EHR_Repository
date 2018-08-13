@@ -15,7 +15,6 @@ import com.babifood.entity.BaseArrangementEntity;
 import com.babifood.entity.PersonBasrcEntity;
 import com.babifood.entity.SpecialArrangementEntity;
 import com.babifood.service.BaseArrangementService;
-import com.babifood.utils.AppContext;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 
@@ -121,14 +120,19 @@ public class BaseArrangementServiceImpl implements BaseArrangementService {
 	 * 保存特殊排班信息
 	 */
 	@Override
-	public Map<String, Object> saveSpecialArrangement(SpecialArrangementEntity arrangement) {
+	public Map<String, Object> saveSpecialArrangement(SpecialArrangementEntity specialArrangement) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if (UtilDateTime.isLaterThanCurrentMonth(arrangement.getDate(), "yyyy-MM-dd")) {
+		if (UtilDateTime.isLaterThanCurrentMonth(specialArrangement.getDate(), "yyyy-MM-dd")) {
+			if("0".equals(specialArrangement.getIsAttend())){
+				Map<String, Object> arrangement = baseArrangementDao.findBaseArrangementById(specialArrangement.getArrangementId());
+				specialArrangement.setStartTime(arrangement.get("startTime") + "");
+				specialArrangement.setEndTime(arrangement.get("endTime") + "");
+			}
 			int count = 0;
-			if (UtilString.isEmpty(arrangement.getId())) {
-				count = baseArrangementDao.addSpecialArrangement(arrangement);
+			if (UtilString.isEmpty(specialArrangement.getId())) {
+				count = baseArrangementDao.addSpecialArrangement(specialArrangement);
 			} else {
-				count = baseArrangementDao.updateSpecialArrangement(arrangement);
+				count = baseArrangementDao.updateSpecialArrangement(specialArrangement);
 			}
 			System.out.println(count);
 			result.put("code", "1");

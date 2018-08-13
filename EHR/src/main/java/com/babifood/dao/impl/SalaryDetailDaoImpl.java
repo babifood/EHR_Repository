@@ -222,7 +222,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		sql.append("a.REAL_WAGES AS realWages, a.RELAXATION AS relaxation,a.RICE_STICK AS riceStick, a.SECURITY_BONUS as security, ");
 		sql.append("a.SICK_DEDUCTION AS sickDeduction, a.STAY_ALLOWANCE AS stay, a.THING_DEDUCTION AS thingDeduction, ");
 		sql.append("a.TOTAL_DEDUCTION AS totalDeduction, a.TRAIN_DEDUCTION as trainDeduction, a.WAGE_PAYABLE AS wagePayable, ");
-		sql.append("a.YEAR_DEDUCTION AS yearDeduction, b.DEPT_NAME AS organzationName, c.DEPT_CODE AS deptName, ");
+		sql.append("a.YEAR_DEDUCTION AS yearDeduction, b.DEPT_NAME AS organzationName, c.DEPT_NAME AS deptName, ");
 		sql.append("a.LATER_AND_LEAVE_DEDUCTION AS laterAndLeaveDeduction, a.COMPLETION_DEDUCTION AS completionDeduction, ");
 		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName FROM ehr_salary_details a ");
 		sql.append("LEFT JOIN ehr_dept b on a.ORGANIZATION_CODE = b.DEPT_CODE ");

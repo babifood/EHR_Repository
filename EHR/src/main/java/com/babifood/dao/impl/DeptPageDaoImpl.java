@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.DeptPageDao;
 import com.babifood.entity.DeptEntity;
+import com.babifood.utils.UtilString;
 
 @Repository
 public class DeptPageDaoImpl implements DeptPageDao {
@@ -24,8 +25,8 @@ public class DeptPageDaoImpl implements DeptPageDao {
 	@Override
 	public List<Map<String, Object>> findOrganizeList(String pCode) {
 		StringBuffer sql = new StringBuffer();
-		sql.append(
-				"select a.ID as id, a.dept_code as deptCode ,a.dept_name as name,a.dept_name as deptName ,a.dept_name as text , a.pCode as pCode ,type,a.remark as remark,state");
+		sql.append("select a.ID as id, a.dept_code as deptCode ,a.dept_name as name, type,state,");
+		sql.append("a.dept_name as deptName ,a.dept_name as text , a.pCode as pCode ,a.remark as remark");
 		sql.append(" FROM ehr_dept a ");
 		sql.append(" where a.pCode = ?");
 		List<Map<String, Object>> list = null;
@@ -119,8 +120,8 @@ public class DeptPageDaoImpl implements DeptPageDao {
 	@Override
 	public List<Map<String, Object>> findAllDepts() {
 		StringBuffer sql = new StringBuffer();
-		sql.append(
-				"select ID as id,dept_code as deptCode,dept_name as deptName,pCode as pCode,remark as remark from ehr_dept");
+		sql.append("select ID as id,dept_code as deptCode,dept_name as deptName,");
+		sql.append("pCode as pCode,remark as remark from ehr_dept");
 		List<Map<String, Object>> list = null;
 		try {
 			list = jdbctemplate.queryForList(sql.toString());
@@ -131,11 +132,14 @@ public class DeptPageDaoImpl implements DeptPageDao {
 	}
 	
 	@Override
-	public List<Map<String, Object>> findAll() {
+	public List<Map<String, Object>> findAll(String pcode) {
 		StringBuffer sql = new StringBuffer();
-		sql.append(
-				"select a.dept_name as deptName,a.dept_code as deptCode ,a.remark as remark ,a.pCode as pCode, b.dept_name as pName ");
+		sql.append("select a.dept_name as deptName,a.dept_code as deptCode , a.state,");
+		sql.append("a.remark as remark ,a.pCode as pCode, b.dept_name as pName ,a.dept_name as text ");
 		sql.append("from ehr_dept a left join ehr_dept b on a.pCode = b.dept_code ");
+		if(!UtilString.isEmpty(pcode)){
+			sql.append(" where a.dept_code like '%" + pcode + "%'");
+		}
 		List<Map<String, Object>> list = null;
 		try {
 			list = jdbctemplate.queryForList(sql.toString());

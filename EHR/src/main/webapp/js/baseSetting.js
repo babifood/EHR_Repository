@@ -182,7 +182,7 @@ function loadBaseSettingInfo() {
 				}
 			}
 		} ] ],
-		onDblClickRow:updateEmployeeBaseSetting,
+//		onDblClickRow:updateEmployeeBaseSetting,
 	})
 }
 
@@ -254,24 +254,30 @@ function addBaseSeetingInfo() {
 }
 
 // 双击编辑
-function updateEmployeeBaseSetting(index) {
-	if (editBaseSettingIndex != index) {
-		if (canEditBaseSetting()) {
-			$('#base_setting_list').datagrid('selectRow', index).datagrid(
-					'beginEdit', index);
-			editBaseSettingIndex = index;
-			var editors = $("#base_setting_list").datagrid('getEditors',
-					editBaseSettingIndex);
-			var sumEditor = editors[1];
-			// 设置sum字段为只读属性
-			$(sumEditor.target).attr({
-				'readonly' : true,
-				'unselectable' : 'on'
-			});
-			$(sumEditor.target).css('background', '#DCDCDC');
-		} else {
-			$('#base_setting_list').datagrid('selectRow',
-					editBaseSettingIndex);
+function updateEmployeeBaseSetting() {
+	var row = $("#base_setting_list").datagrid("getSelected");
+	if(!row){
+		$.messager.alert("消息提示！", "请选择一条数据", "warning");
+	} else {
+		var index = $('#base_setting_list').datagrid("getRowIndex", row);
+		if (editBaseSettingIndex != index) {
+			if (canEditBaseSetting()) {
+				$('#base_setting_list').datagrid('selectRow', index).datagrid(
+						'beginEdit', index);
+				editBaseSettingIndex = index;
+				var editors = $("#base_setting_list").datagrid('getEditors',
+						editBaseSettingIndex);
+				var sumEditor = editors[1];
+				// 设置sum字段为只读属性
+				$(sumEditor.target).attr({
+					'readonly' : true,
+					'unselectable' : 'on'
+				});
+				$(sumEditor.target).css('background', '#DCDCDC');
+			} else {
+				$('#base_setting_list').datagrid('selectRow',
+						editBaseSettingIndex);
+			}
 		}
 	}
 }
@@ -306,10 +312,10 @@ function saveBaseSeetingInfo() {
 						showType : 'slide'
 					});
 					$('#base_setting_list').datagrid('acceptChanges');
-					loadBaseSettingInfo();
 				} else {
 					$.messager.alert("消息提示！", data.msg, "warning");
 				}
+				loadBaseSettingInfo();
 			}
 		});
 	}

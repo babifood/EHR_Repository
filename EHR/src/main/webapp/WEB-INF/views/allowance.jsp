@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,9 +15,13 @@
 				<div >
 					<a href="javascript:void(0)" id="mb" class="easyui-menubutton" data-options="menu:'#allowance_menubutton',iconCls:'icon-edit'">导入/导出</a>
 					<div id="allowance_menubutton" style="width:150px;">   
-					    <div data-options="iconCls:'icon-load'" onclick="exportAllowance(0)">下载模板</div>   
-					    <div data-options="iconCls:'icon-redo'" onclick="allowanceImport()">导入</div>   
-					    <div data-options="iconCls:'icon-remove'" onclick="exportAllowance(1)">导出</div>   
+						<shiro:hasPermission name="allowance:import">
+						    <div data-options="iconCls:'icon-load'" onclick="exportAllowance(0)">下载模板</div>   
+						    <div data-options="iconCls:'icon-redo'" onclick="allowanceImport()">导入</div>
+					    </shiro:hasPermission>
+					    <shiro:hasPermission name="allowance:export">   
+						    <div data-options="iconCls:'icon-remove'" onclick="exportAllowance(1)">导出</div>  
+					    </shiro:hasPermission> 
 					</div> 
 				</div>
 			</div>

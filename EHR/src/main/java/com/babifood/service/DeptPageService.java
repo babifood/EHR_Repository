@@ -8,7 +8,7 @@ import com.babifood.entity.DeptEntity;
 
 public interface DeptPageService {
 
-	public Map<String,Object> findOrganization(String id);
+	public List<Map<String,Object>> findOrganization(String id);
 
 	public Map<String, Object> addDept(DeptEntity deptEntity);
 

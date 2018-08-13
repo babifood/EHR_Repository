@@ -25,7 +25,6 @@ import com.babifood.dao.SalaryCalculationDao;
 import com.babifood.entity.BaseFieldsEntity;
 import com.babifood.entity.SalaryDetailEntity;
 import com.babifood.service.AllowanceService;
-import com.babifood.service.EmployeeBaseSettingService;
 import com.babifood.service.InitAttendanceService;
 import com.babifood.service.PersonInFoService;
 import com.babifood.service.SalaryDetailService;
@@ -54,9 +53,6 @@ public class SalaryCalculationService {
 	private SalaryDetailService salaryDetailService;
 
 	@Autowired
-	private EmployeeBaseSettingService baseSettingService;
-	
-	@Autowired
 	private CalculationFormulaDao calculationFormulaDao;
 	
 	@Autowired
@@ -73,8 +69,7 @@ public class SalaryCalculationService {
 			}
 			if(type < 3){
 				int days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));// 该月天数
-				Map<String, String> formulaList;
-				formulaList = getFormula();
+				Map<String, String> formulaList = getFormula();
 				Integer count = personInfoService.getPersonCount();
 				final int threadCount = 200;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
@@ -182,12 +177,11 @@ public class SalaryCalculationService {
 		if (allowances == null || allowances.size() <= 0) {
 			allowances = new HashMap<String, Object>();
 		}
-		Map<String, Object> baseSetting = baseSettingService.findBaseSettingByPnumber(pNumber);
 		Map<String, Object> performanceInfo = performanceDao.getPerformanceInfo(year, month, pNumber);
 		if(performanceInfo == null){
 			performanceInfo = new HashMap<String, Object>();
 		}
-		BaseFieldsEntity baseFields = getBaseFields(year, month, employee, arrangementSummary, salary, allowances, baseSetting, performanceInfo);
+		BaseFieldsEntity baseFields = getBaseFields(year, month, employee, arrangementSummary, salary, allowances, performanceInfo);
 		
 		SalaryDetailEntity salaryDerail = new SalaryDetailEntity();
 
@@ -200,7 +194,7 @@ public class SalaryCalculationService {
 		setBaseSalaryInfo(salaryDerail, baseFields);
 		ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("JavaScript");
 		// 考勤相关信息
-		setInfoAboutAttendance(salaryDerail, baseFields, baseSetting, formulaList, scriptEngine);
+		setInfoAboutAttendance(salaryDerail, baseFields, formulaList, scriptEngine);
 		// 计算各类补贴
 		calculationAllowance(salaryDerail, baseFields, formulaList, scriptEngine);
 		// 计算各类奖金
@@ -225,7 +219,7 @@ public class SalaryCalculationService {
 	 * @return
 	 */
 	private BaseFieldsEntity getBaseFields(String year, String month, Map<String, Object> employee, Map<String, Object> arrangementSummary, Map<String, Object> salary,
-			Map<String, Object> allowances, Map<String, Object> baseSetting, Map<String, Object> performanceInfo) {
+			Map<String, Object> allowances, Map<String, Object> performanceInfo) {
 		String pNumber = employee.get("pNumber") + "";// 员工编号
 		BaseFieldsEntity baseFields = new BaseFieldsEntity();
 		Double sickGrandHours = initAttendanceService.findYearSickHours(year, month, pNumber);
@@ -331,8 +325,8 @@ public class SalaryCalculationService {
 				: allowances.get("stay") + "");
 		baseFields.setThingHours(UtilString.isEmpty(arrangementSummary.get("shiJia") + "") ? "0.0"
 				: arrangementSummary.get("shiJia") + "");
-		baseFields.setWorkType(UtilString.isEmpty(baseSetting.get("workType") + "") ? "0" : baseSetting.get("workType") + "");
-		baseFields.setWorkPlace(UtilString.isEmpty(baseSetting.get("workPlace") + "") ? "0" : baseSetting.get("workPlace") + "");
+		baseFields.setWorkType(UtilString.isEmpty(salary.get("workType") + "") ? "0" : salary.get("workType") + "");
+		baseFields.setWorkPlace(UtilString.isEmpty(salary.get("workPlace") + "") ? "0" : salary.get("workPlace") + "");
 		return baseFields;
 	}
 
@@ -443,7 +437,7 @@ public class SalaryCalculationService {
 	 * @param arrangementSummary
 	 * @throws ScriptException 
 	 */
-	private void setInfoAboutAttendance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields, Map<String, Object> baseSetting, Map<String, String> formulaList, ScriptEngine scriptEngine) throws Exception {
+	private void setInfoAboutAttendance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields, Map<String, String> formulaList, ScriptEngine scriptEngine) throws Exception {
 		String laterAndLeaveFormula = formulaList.get("laterAndLeaveFormula");
 		String completionFormula = formulaList.get("completionFormula");
 		String thingFormula = formulaList.get("thingFormula");

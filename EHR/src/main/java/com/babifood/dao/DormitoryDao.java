@@ -17,7 +17,7 @@ public interface DormitoryDao {
 
 	public List<Map<String, Object>> getStayDormitory(Map<String, Object> params);
 
-	public Map<String, Object> findCheakingDormitory(String dormitoryId, String pnumber);
+	public Map<String, Object> findCheakingDormitory(String dormitoryId);
 
 	public void insertCheakingDormitory(String dormitoryId, String pnumber, String stayTime);
 

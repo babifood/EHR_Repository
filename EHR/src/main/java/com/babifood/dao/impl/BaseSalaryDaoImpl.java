@@ -50,8 +50,8 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("INSERT INTO `ehr_base_salary` (`P_NUMBER`, `base_salary`, ");
 		sql.append("`fixed_overtime_salary`, `post_salary`, `Call_subsidies`, ");
 		sql.append("`company_salary`, `singel_meal`, `performance_salary`, ");
-		sql.append("`create_time`, `use_time`, `is_delete`) ");
-		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		sql.append("`create_time`, `work_type`, `use_time`, `is_delete`) ");
+		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
 					BASE64Util.encode(baseSalary.getBaseSalary() + ""),
@@ -61,7 +61,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 					BASE64Util.encode(baseSalary.getCompanySalary() + ""),
 					BASE64Util.encode(baseSalary.getSingelMeal() + ""),
 					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), baseSalary.getCreateTime(),
-					baseSalary.getUseTime(), "0");
+					baseSalary.getWorkType(), baseSalary.getUseTime(), "0");
 		} catch (Exception e) {
 			log.error("新增基础薪资信息总数失败", e.getMessage());
 			throw e;
@@ -96,7 +96,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("SELECT a.ID AS id, a.base_salary AS baseSalary, a.Call_subsidies AS callSubsidies, ");
 		sql.append("a.company_salary AS companySalary, a.fixed_overtime_salary AS fixedOverTimeSalary, ");
 		sql.append("a.performance_salary AS performanceSalary, a.post_salary AS postSalary, a.P_NUMBER AS pNumber, ");
-		sql.append("a.singel_meal AS singelMeal, a.use_time AS useTime, b.p_name AS pName ");
+		sql.append("a.singel_meal AS singelMeal, a.use_time AS useTime, b.p_name AS pName, a.WORK_TYPE as workType ");
 		sql.append("FROM ehr_base_salary a LEFT JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
 		sql.append("WHERE a.is_delete = '0' ");
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
@@ -123,7 +123,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("fixed_overtime_salary AS fixedOverTimeSalary, post_salary AS postSalary, ");
 		sql.append("Call_subsidies AS callSubsidies, company_salary as companySalary, ");
 		sql.append("singel_meal AS singelMeal,performance_salary AS performanceSalary, ");
-		sql.append("use_time AS useTime, is_delete as isDelete ");
+		sql.append("use_time AS useTime, is_delete as isDelete, work_type as workType ");
 		sql.append("FROM ehr_base_salary ");
 		sql.append("WHERE P_NUMBER = ? AND is_delete = '0'");
 		List<Map<String, Object>> baseSalarys = null;

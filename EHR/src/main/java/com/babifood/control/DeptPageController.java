@@ -32,12 +32,7 @@ public class DeptPageController {
 	@ResponseBody
 	@RequestMapping("loadTree")
 	public List<Map<String, Object>> loadOrganzations(String deptCode) {
-		long start = System.currentTimeMillis();
-		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-		result.add(deptService.findOrganization(deptCode));
-		long end = System.currentTimeMillis();
-		System.out.println(end - start);
-		return result;
+		return deptService.findOrganization(deptCode);
 	}
 	
 	/**

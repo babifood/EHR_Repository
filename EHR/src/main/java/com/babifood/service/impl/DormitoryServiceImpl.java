@@ -152,7 +152,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 	public Map<String, Object> cheakingDormitory(String dormitoryId, String pnumber, String stayTime) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			Map<String, Object> dormitory = dormitoryDao.findCheakingDormitory(dormitoryId, pnumber);
+			Map<String, Object> dormitory = dormitoryDao.findCheakingDormitory(pnumber);
 			if (dormitory != null && dormitory.size() > 0) {
 				result.put("code", "0");
 				result.put("msg", "该员工已入住宿舍，不能重新入住");

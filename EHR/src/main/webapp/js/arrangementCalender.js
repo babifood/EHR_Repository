@@ -305,13 +305,7 @@ function drawCld(SY, SM) {
             if (data.code === "1") {
             	rows = data.arrangementList;
             } else {
-            	$.messager.show({
-            		title:'提示消息消息',
-            		msg:data.msg,
-            		timeout:3000,
-            		showType:'slide'
-            	});
-
+            	$.messager.alert("消息提示！",data.msg,"warning");
             }
         },
     });
@@ -349,7 +343,6 @@ function drawCld(SY, SM) {
             if (s.length > 0) {  //农历节日
                 if (s.length > 8) s = s.substr(0, 7) + '...';
                 	s = s.fontcolor('red');
-                
             } 
             
             if (rows && Object.keys(rows).length > 0) {   //将从数据库查询到的数据回显。
@@ -419,12 +412,7 @@ function addSpecialArrangement(){
 
 function updateSpecialArrangement(){
 	if(!arrangementNode){
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择特殊排班",
-			timeout:5000,
-			showType:'slide'
-		});
+		$.messager.alert("消息提示！","请选择特殊排班","warning");
 		return ;
 	}
 	var id = arrangementNode.getAttribute("data_id");
@@ -461,23 +449,12 @@ function updateSpecialArrangement(){
 					    }
 					})
 				} else {
-					$.messager.show({
-						title:"提示消息",
-						msg:data.msg,
-						timeout:5000,
-						showType:'slide'
-					});
-
+					$.messager.alert("消息提示！",data.msg,"warning");
 				}
 			}
 		});
 	} else {
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择节假日",
-			timeout:5000,
-			showType:'slide'
-		});
+		$.messager.alert("消息提示！","请选择节假日","warning");
 	}
 	
 }
@@ -491,12 +468,7 @@ function setAttendValue(isAttend){
 
 function removeSpecialArrangement(){
 	if(!arrangementNode){
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择特殊排班",
-			timeout:5000,
-			showType:'slide'
-		});
+		$.messager.alert("消息提示！","请选择特殊排班","warning");
 		return ;
 	}
 	var id = arrangementNode.getAttribute("data_id");
@@ -518,12 +490,7 @@ function removeSpecialArrangement(){
 			}
 		});
 	} else {
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择节假日",
-			timeout:5000,
-			showType:'slide'
-		});
+		$.messager.alert("消息提示！","请选择节假日","warning");
 	}
 }
 
