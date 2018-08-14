@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
 import com.babifood.service.DormitoryService;
 
@@ -49,8 +50,25 @@ public class DormitoryController {
 	
 	@RequestMapping("checkout")
 	@ResponseBody
-	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pNumber) {
-		return dormitoryService.cheakoutDormitory(dormitoryId, pNumber);
+	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pNumber, String outTime, String type) {
+		return dormitoryService.cheakoutDormitory(dormitoryId, pNumber, outTime, type);
 	}
 	
+	@RequestMapping("cost")
+	@ResponseBody
+	public Map<String, Object> queryDormitoryCostList(Integer page,Integer rows,String floor, String roomNo, String pNumber, String pName) {
+		return dormitoryService.queryDormitoryCostList(page, rows, floor, roomNo, pNumber, pName);
+	}
+	
+	@RequestMapping("saveCost")
+	@ResponseBody
+	public Map<String, Object> saveCost(DormitoryCostEntity dormitoryCost) {
+		return dormitoryService.saveCost(dormitoryCost);
+	}
+	
+	@RequestMapping("removeCost")
+	@ResponseBody
+	public Map<String, Object> removeCost(Integer id) {
+		return dormitoryService.removeCost(id);
+	}
 }
