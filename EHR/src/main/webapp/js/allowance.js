@@ -62,6 +62,7 @@ function loadAllowanceList() {
 		}, {
 			field : "stay",
 			title : "驻外/住宿津贴",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "otherAllowance",
@@ -70,6 +71,7 @@ function loadAllowanceList() {
 		}, {
 			field : "performanceBonus",
 			title : "绩效奖金",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "security",
@@ -90,10 +92,12 @@ function loadAllowanceList() {
 		}, {
 			field : "mealDeduction",
 			title : "餐费扣除",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "dormDeduction",
 			title : "住宿扣除",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "beforeDeduction",
@@ -129,31 +133,38 @@ function loadAllowanceList() {
 			width : 100,
 		}, {
 			field : "reserved4",
+			hidden:"true",
 			title : "预留字段4",
 			width : 100,
 		}, {
 			field : "reserved5",
 			title : "预留字段5",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved6",
 			title : "预留字段6",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved7",
 			title : "预留字段7",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved8",
 			title : "预留字段8",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved9",
 			title : "预留字段9",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved10",
 			title : "预留字段10",
+			hidden:"true",
 			width : 100,
 		} ] ]
 	})

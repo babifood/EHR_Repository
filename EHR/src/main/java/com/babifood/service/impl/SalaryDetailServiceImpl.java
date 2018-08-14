@@ -24,9 +24,6 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 	public Map<String, Object> saveCurrentMonthSalary(SalaryDetailEntity salaryDerail) {
 		Map<String, Object> currentMonthSalary = salaryDetailDao.findCurrentMonthSalary(salaryDerail.getYear(), salaryDerail.getMonth(), salaryDerail.getpNumber());
 		if(currentMonthSalary != null && !"".equals(currentMonthSalary.get(""))){
-			if("".equals(currentMonthSalary.get(""))){
-//				salaryDerail.set
-			}
 			salaryDerail.setId(Integer.valueOf(currentMonthSalary.get("Id")+""));
 			salaryDetailDao.updateSalaryDetail(salaryDerail);
 		} else {

@@ -3,6 +3,7 @@ package com.babifood.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
 
 public interface DormitoryDao {
@@ -28,6 +29,16 @@ public interface DormitoryDao {
 	public int getCountOfUnStayDormitory(Map<String, Object> params);
 
 	public int getCountOfStayDormitory(Map<String, Object> params);
+
+	public int queryDormitoryCostCount(Map<String, Object> params);
+
+	public List<Map<String, Object>> queryDormitoryCostList(Map<String, Object> params);
+
+	public void saveCost(DormitoryCostEntity dormitoryCost);
+
+	public void removeCost(Integer id);
+
+	public void moveOutProcedure(String dormitoryId, String pnumber, String outTime);
 
 
 }

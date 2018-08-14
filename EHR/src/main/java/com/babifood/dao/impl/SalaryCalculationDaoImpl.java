@@ -24,8 +24,8 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 	public Map<String, Object> findBaseSalary(String date, String pNumber) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT P_NUMBER as pNumber,base_salary as baseSalary,fixed_overtime_salary as fixedOverTimeSalary,post_salary as postSalary,");
-		sql.append("call_subsidies as callSubsidies,company_salary as companySalary,performance_salary as performanceSalary,singel_meal as singelMeal ");
-		sql.append("from ehr_base_salary where P_NUMBER = ? and use_time > ? ORDER BY use_time DESC limit 1");
+		sql.append("call_subsidies as callSubsidies,company_salary as companySalary,performance_salary as performanceSalary,singel_meal as singelMeal, ");
+		sql.append("stay_subsidy AS stay from ehr_base_salary where P_NUMBER = ? and use_time <= ? ORDER BY use_time DESC limit 1");
 		List<Map<String, Object>> baseSalaryList = null;
 		Map<String, Object> baseSalary = null;
 		try {

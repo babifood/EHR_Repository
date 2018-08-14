@@ -211,8 +211,8 @@ public class AllowanceServiceImpl implements AllowanceService {
 	public void exportExcel(OutputStream ouputStream, String type) throws Exception {
 		Map<String, String> row1Name = getExportRow1Name();
 		String[] sort = new String[] { "year", "month", "pNumber", "pName", "highTem", "lowTem", "nightShift",
-				"morningShift", "stay", "otherAllowance", "performanceBonus", "otherBonus", "compensatory", "security",
-				"addOther", "mealDeduction", "dormDeduction", "overSalary", "insurance", "beforeDeduction",
+				"morningShift", "otherAllowance",  "otherBonus", "compensatory", "security",
+				"addOther", "overSalary", "insurance", "beforeDeduction",
 				"providentFund", "afterOtherDeduction", "reserved1", "reserved2", "reserved3", "reserved4", "reserved5",
 				"reserved6", "reserved7", "reserved8", "reserved9", "reserved10" };
 		List<Map<String, Object>> dataSource = null;

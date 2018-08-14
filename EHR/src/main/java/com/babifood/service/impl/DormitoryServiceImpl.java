@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.babifood.dao.DormitoryDao;
+import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
 import com.babifood.service.DormitoryService;
 import com.babifood.utils.UtilString;
@@ -169,15 +170,73 @@ public class DormitoryServiceImpl implements DormitoryService {
 	}
 
 	@Override
-	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pnumber) {
+	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pnumber, String outTime, String type) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			dormitoryDao.cheakoutDormitory(dormitoryId, pnumber);
+			if("1".equals(type)){
+				dormitoryDao.cheakoutDormitory(dormitoryId, pnumber);
+			} else {
+				dormitoryDao.moveOutProcedure(dormitoryId, pnumber, outTime);
+			}
 			result.put("code", "1");
 			result.put("msg", "办理退住宿舍成功");
 		} catch (Exception e) {
 			result.put("code", "1");
 			result.put("msg", "办理退住宿舍失败");
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> queryDormitoryCostList(Integer page, Integer rows, String floor, String roomNo,
+			String pNumber, String pName) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		Integer pageNum = page == null? 1 : page <= 0 ? 1 : page;
+		Integer pageSize = rows == null? 10 : rows <= 0 ? 10 : rows;
+		params.put("start", (pageNum - 1) * pageSize);
+		params.put("pageSize", pageSize);
+		params.put("floor", floor);
+		params.put("roomNo", roomNo);
+		params.put("pNumber", pNumber);
+		params.put("pName", pName);
+		try {
+			int count = dormitoryDao.queryDormitoryCostCount(params);
+			List<Map<String, Object>> costList = dormitoryDao.queryDormitoryCostList(params);
+			result.put("code", "1");
+			result.put("total", count);
+			result.put("rows", costList);
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "查询住宿费用信息失败");
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> saveCost(DormitoryCostEntity dormitoryCost) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			dormitoryDao.saveCost(dormitoryCost);
+			result.put("code", "1");
+			result.put("msg", "保存住宿费用信息成功");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "保存住宿费用信息失败");
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> removeCost(Integer id) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			dormitoryDao.removeCost(id);
+			result.put("code", "1");
+			result.put("msg", "删除住宿费用信息成功");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "删除住宿费用信息失败");
 		}
 		return result;
 	}

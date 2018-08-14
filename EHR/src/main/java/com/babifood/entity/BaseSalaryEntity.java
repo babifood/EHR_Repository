@@ -6,19 +6,21 @@ public class BaseSalaryEntity {
 
 	private String pNumber;// 员工工号
 
-	private Double baseSalary;// 基本工资
+	private String baseSalary;// 基本工资
 
-	private Double fixedOverTimeSalary;// 固定加班工资
+	private String fixedOverTimeSalary;// 固定加班工资
 
-	private Double postSalary;// 岗位工资
+	private String postSalary;// 岗位工资
 
-	private Double callSubsidies;// 话费补贴
+	private String callSubsidies;// 话费补贴
 
-	private Double companySalary;// 司龄工资
+	private String companySalary;// 司龄工资
 
-	private Double singelMeal;// 单个餐补
+	private String singelMeal;// 单个餐补
 
-	private Double performanceSalary;// 绩效工资
+	private String performanceSalary;// 绩效工资
+	
+	private String stay;//住宿补贴
 
 	private String workType;// 工作类型
 
@@ -44,60 +46,68 @@ public class BaseSalaryEntity {
 		this.pNumber = pNumber;
 	}
 
-	public Double getBaseSalary() {
+	public String getBaseSalary() {
 		return baseSalary;
 	}
 
-	public void setBaseSalary(Double baseSalary) {
+	public void setBaseSalary(String baseSalary) {
 		this.baseSalary = baseSalary;
 	}
 
-	public Double getFixedOverTimeSalary() {
+	public String getFixedOverTimeSalary() {
 		return fixedOverTimeSalary;
 	}
 
-	public void setFixedOverTimeSalary(Double fixedOverTimeSalary) {
+	public void setFixedOverTimeSalary(String fixedOverTimeSalary) {
 		this.fixedOverTimeSalary = fixedOverTimeSalary;
 	}
 
-	public Double getPostSalary() {
+	public String getPostSalary() {
 		return postSalary;
 	}
 
-	public void setPostSalary(Double postSalary) {
+	public void setPostSalary(String postSalary) {
 		this.postSalary = postSalary;
 	}
 
-	public Double getCallSubsidies() {
+	public String getCallSubsidies() {
 		return callSubsidies;
 	}
 
-	public void setCallSubsidies(Double callSubsidies) {
+	public void setCallSubsidies(String callSubsidies) {
 		this.callSubsidies = callSubsidies;
 	}
 
-	public Double getCompanySalary() {
+	public String getCompanySalary() {
 		return companySalary;
 	}
 
-	public void setCompanySalary(Double companySalary) {
+	public void setCompanySalary(String companySalary) {
 		this.companySalary = companySalary;
 	}
 
-	public Double getSingelMeal() {
+	public String getSingelMeal() {
 		return singelMeal;
 	}
 
-	public void setSingelMeal(Double singelMeal) {
+	public void setSingelMeal(String singelMeal) {
 		this.singelMeal = singelMeal;
 	}
 
-	public Double getPerformanceSalary() {
+	public String getPerformanceSalary() {
 		return performanceSalary;
 	}
 
-	public void setPerformanceSalary(Double performanceSalary) {
+	public void setPerformanceSalary(String performanceSalary) {
 		this.performanceSalary = performanceSalary;
+	}
+
+	public String getStay() {
+		return stay;
+	}
+
+	public void setStay(String stay) {
+		this.stay = stay;
 	}
 
 	public String getWorkType() {

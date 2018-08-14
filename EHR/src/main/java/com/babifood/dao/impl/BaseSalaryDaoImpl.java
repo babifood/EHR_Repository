@@ -49,9 +49,9 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		StringBuffer sql = new StringBuffer();
 		sql.append("INSERT INTO `ehr_base_salary` (`P_NUMBER`, `base_salary`, ");
 		sql.append("`fixed_overtime_salary`, `post_salary`, `Call_subsidies`, ");
-		sql.append("`company_salary`, `singel_meal`, `performance_salary`, ");
+		sql.append("`company_salary`, `singel_meal`, `performance_salary`, `stay_subsidy`, ");
 		sql.append("`create_time`, `work_type`, `use_time`, `is_delete`) ");
-		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
 					BASE64Util.encode(baseSalary.getBaseSalary() + ""),
@@ -60,7 +60,9 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 					BASE64Util.encode(baseSalary.getCallSubsidies() + ""),
 					BASE64Util.encode(baseSalary.getCompanySalary() + ""),
 					BASE64Util.encode(baseSalary.getSingelMeal() + ""),
-					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), baseSalary.getCreateTime(),
+					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), 
+					BASE64Util.encode(baseSalary.getStay() + ""), 
+					baseSalary.getCreateTime(),
 					baseSalary.getWorkType(), baseSalary.getUseTime(), "0");
 		} catch (Exception e) {
 			log.error("新增基础薪资信息总数失败", e.getMessage());
@@ -73,7 +75,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		StringBuffer sql = new StringBuffer();
 		sql.append("UPDATE `ehr_base_salary` SET `P_NUMBER`=?, `base_salary`=?, `fixed_overtime_salary`=?, ");
 		sql.append("`post_salary`=?, `Call_subsidies`=?, `company_salary`=?, `singel_meal`=?, ");
-		sql.append("`performance_salary`=?, `use_time`=? ");
+		sql.append("`performance_salary`=?, `stay_subsidy`= ?, `use_time`=? ");
 		sql.append("WHERE `ID`=?");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
@@ -83,7 +85,8 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 					BASE64Util.encode(baseSalary.getCallSubsidies() + ""),
 					BASE64Util.encode(baseSalary.getCompanySalary() + ""),
 					BASE64Util.encode(baseSalary.getSingelMeal() + ""),
-					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), baseSalary.getUseTime());
+					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), 
+					BASE64Util.encode(baseSalary.getStay() + ""), baseSalary.getUseTime());
 		} catch (Exception e) {
 			log.error("修改基础薪资信息失败", e.getMessage());
 			throw e;
@@ -93,7 +96,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 	@Override
 	public List<Map<String, Object>> queryBaseSalaryList(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT a.ID AS id, a.base_salary AS baseSalary, a.Call_subsidies AS callSubsidies, ");
+		sql.append("SELECT a.ID AS id, a.base_salary AS baseSalary, a.Call_subsidies AS callSubsidies, a.stay_subsidy AS stay, ");
 		sql.append("a.company_salary AS companySalary, a.fixed_overtime_salary AS fixedOverTimeSalary, ");
 		sql.append("a.performance_salary AS performanceSalary, a.post_salary AS postSalary, a.P_NUMBER AS pNumber, ");
 		sql.append("a.singel_meal AS singelMeal, a.use_time AS useTime, b.p_name AS pName, a.WORK_TYPE as workType ");
@@ -121,7 +124,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT ID as id, P_NUMBER AS pNumber, base_salary as baseSalary, ");
 		sql.append("fixed_overtime_salary AS fixedOverTimeSalary, post_salary AS postSalary, ");
-		sql.append("Call_subsidies AS callSubsidies, company_salary as companySalary, ");
+		sql.append("Call_subsidies AS callSubsidies, company_salary as companySalary, stay_subsidy AS stay, ");
 		sql.append("singel_meal AS singelMeal,performance_salary AS performanceSalary, ");
 		sql.append("use_time AS useTime, is_delete as isDelete, work_type as workType ");
 		sql.append("FROM ehr_base_salary ");

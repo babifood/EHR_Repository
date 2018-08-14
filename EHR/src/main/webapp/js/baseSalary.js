@@ -75,7 +75,7 @@ function loadBaseSalary() {
 				title : "基本工资",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -83,7 +83,7 @@ function loadBaseSalary() {
 				title : "固定加班工资",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -91,7 +91,7 @@ function loadBaseSalary() {
 				title : "岗位工资",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -99,7 +99,7 @@ function loadBaseSalary() {
 				title : "司龄工资",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -107,7 +107,7 @@ function loadBaseSalary() {
 				title : "话费补贴",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -115,7 +115,7 @@ function loadBaseSalary() {
 				title : "单个餐补",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -123,7 +123,7 @@ function loadBaseSalary() {
 				title : "绩效工资",
 				width : 100,
 				editor : {
-					type:'numberbox',options:{precision:1,required:true}
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},{
 				field : "workType",
@@ -147,6 +147,14 @@ function loadBaseSalary() {
 						return "计件";
 					}
 				}
+			},
+			{
+				field : "stay",
+				title : "住宿补贴",
+				width : 100,
+				editor : {
+					type:'numberbox',options:{precision:2,required:true}
+				},
 			},
 			{
 				field : "useTime",
@@ -299,7 +307,6 @@ function removeBaseSalaryInfo(){
 
 //保存基础设置信息
 function saveBaseSalaryInfo() {
-	console.log("111111111111111");
 	var rowData = $('#base_salary_list').datagrid('getSelected');
 	if ($('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)) {
 		$('#base_salary_list').datagrid('endEdit', editBaseSalaryIndex);
@@ -317,6 +324,7 @@ function saveBaseSalaryInfo() {
 				callSubsidies : rowData.callSubsidies,
 				singelMeal : rowData.singelMeal,
 				performanceSalary : rowData.performanceSalary,
+				stay : rowData.stay,
 				workType : rowData.workType,
 				useTime : rowData.useTime,
 			},

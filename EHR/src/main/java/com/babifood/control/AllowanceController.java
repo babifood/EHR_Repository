@@ -39,10 +39,12 @@ public class AllowanceController {
 	@ResponseBody
 	@RequestMapping("export")
 	public void exportExcel(HttpServletResponse response,String type) throws Exception {
+		String filename = new String("津贴扣款列表".getBytes("UTF-8"),"ISO8859-1");
+		if("1".equals(type)){
+			filename += UtilDateTime.getCurrentTime("yyyyMMddHHmmss");
+		}
 		response.setContentType("application/vnd.ms-excel");    
-		response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-disposition", "attachment;filename=" + 
-        		"部门信息" + UtilDateTime.getCurrentTime("yyyyMMddHHmmss") + ".xls");    
+        response.setHeader("Content-disposition", "attachment;filename=" + filename + ".xls");    
         OutputStream ouputStream = response.getOutputStream();    
         allowanceService.exportExcel(ouputStream,type);
 	}

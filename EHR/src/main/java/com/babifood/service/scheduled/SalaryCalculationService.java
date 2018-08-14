@@ -1,5 +1,6 @@
 package com.babifood.service.scheduled;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,19 +58,40 @@ public class SalaryCalculationService {
 	
 	@Autowired
 	private PerformanceDao performanceDao;
+	
+	private NumberFormat numberFormat;
+	
+	private Map<String, String> formulaList;
+	
+	private String year;
+	
+	private String month;
+	
+	private int days;
+	
+	private ScriptEngine scriptEngine;
+	
+	private void init() throws Exception{
+		numberFormat = NumberFormat.getInstance();
+		numberFormat.setMinimumFractionDigits(2);
+		formulaList = getFormula();
+		year = UtilDateTime.getCurrentYear();
+//			UtilDateTime.getYearOfPreMonth();// 当前年
+		month = UtilDateTime.getCurrentMonth(); 
+//			UtilDateTime.getPreMonth();// 当前月
+		days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));
+		scriptEngine = new ScriptEngineManager().getEngineByName("JavaScript");
+	}
 
 	public Map<String, Object> salaryCalculation(Integer type){
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			String year = UtilDateTime.getYearOfPreMonth();// 当前年
-			String month = UtilDateTime.getPreMonth();// 当前月
+			init();
 			Integer currentType = salaryCalculationDao.findSalaryCalculationStatus(year, month);
 			if(type < currentType || (type == 3 && (currentType == 1 || currentType == 3))){
 				return getSalaryCalculation(type, currentType);
 			}
 			if(type < 3){
-				int days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));// 该月天数
-				Map<String, String> formulaList = getFormula();
 				Integer count = personInfoService.getPersonCount();
 				final int threadCount = 200;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
@@ -79,20 +101,12 @@ public class SalaryCalculationService {
 					Callable<Boolean> c1 = new Callable<Boolean>() {
 						@Override
 						public Boolean call() throws Exception {
-							return calculationEmployeesSalary(index, threadCount, year, month, days, formulaList);
+							return calculationEmployeesSalary(index, threadCount);
 						}
 					};
 					//执行任务并获取Future对象
 					Future<Boolean> f1 = threadPoolTaskExecutor.submit(c1);
 					list.add(f1);
-	//			Thread thread = new Thread(new Runnable() {
-	//				@Override
-	//				public void run() {
-	//					// 多线程执行
-	//					calculationEmployeesSalary(index, threadCount, year, month, days, formulaList);
-	//				}
-	//			});
-	//			threadPoolTaskExecutor.execute(thread);
 				}
 				for(int i = 0; i < num; i++){
 					System.out.println(list.get(i).get());
@@ -133,12 +147,12 @@ public class SalaryCalculationService {
 	 * @param days
 	 * @return 
 	 */
-	public Boolean calculationEmployeesSalary(int index, int threadCount, String year, String month, int days, Map<String, String> formulaList) {
+	public Boolean calculationEmployeesSalary(int index, int threadCount) {
 		List<Map<String, Object>> employeeList = personInfoService.findPagePersonInfo(index, threadCount);// 查询员工列表
 		if (employeeList != null && employeeList.size() > 0) {
 			for (Map<String, Object> employee : employeeList) {
 				try {
-					calculationSalaryByEmployee(employee, year, month, days, formulaList);
+					calculationSalaryByEmployee(employee);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -156,8 +170,7 @@ public class SalaryCalculationService {
 	 * @param days
 	 * @throws Exception
 	 */
-	public void calculationSalaryByEmployee(Map<String, Object> employee, String year, String month, int days, Map<String, String> formulaList)
-			throws Exception {
+	public void calculationSalaryByEmployee(Map<String, Object> employee)throws Exception {
 		String pNumber = employee.get("pNumber") + "";// 员工编号
 		if(formulaList == null || formulaList.size() <= 0){
 			formulaList = getFormula();
@@ -170,7 +183,7 @@ public class SalaryCalculationService {
 		}
 		String lastDay = year + "-" + month + "-" + days;// 该月最后一天
 		Map<String, Object> salary = salaryCalculationDao.findBaseSalary(lastDay, pNumber);
-		if (salary != null && salary.size() <= 0) {
+		if (salary == null || salary.size() <= 0) {
 			throw new Exception("基本薪资信息异常");
 		}
 		Map<String, Object> allowances = allowanceService.findEmployAllowance(year, month, pNumber);
@@ -181,7 +194,7 @@ public class SalaryCalculationService {
 		if(performanceInfo == null){
 			performanceInfo = new HashMap<String, Object>();
 		}
-		BaseFieldsEntity baseFields = getBaseFields(year, month, employee, arrangementSummary, salary, allowances, performanceInfo);
+		BaseFieldsEntity baseFields = getBaseFields(employee, arrangementSummary, salary, allowances, performanceInfo);
 		
 		SalaryDetailEntity salaryDerail = new SalaryDetailEntity();
 
@@ -192,17 +205,17 @@ public class SalaryCalculationService {
 		setBaseInfo(salaryDerail, employee);
 		// 基础薪资信息
 		setBaseSalaryInfo(salaryDerail, baseFields);
-		ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("JavaScript");
+		
 		// 考勤相关信息
-		setInfoAboutAttendance(salaryDerail, baseFields, formulaList, scriptEngine);
+		setInfoAboutAttendance(salaryDerail, baseFields);
 		// 计算各类补贴
-		calculationAllowance(salaryDerail, baseFields, formulaList, scriptEngine);
+		calculationAllowance(salaryDerail, baseFields);
 		// 计算各类奖金
-		calculationBonus(salaryDerail, baseFields, formulaList, scriptEngine);
+		calculationBonus(salaryDerail, baseFields);
 		// 计算各类扣款
 		calculationDeduction(salaryDerail, baseFields);
 		// 计算薪资
-		calculationSalary(salaryDerail, baseFields, formulaList, scriptEngine);
+		calculationSalary(salaryDerail, baseFields);
 
 		salaryDetailService.saveCurrentMonthSalary(salaryDerail);
 	}
@@ -218,7 +231,7 @@ public class SalaryCalculationService {
 	 * @param baseSetting
 	 * @return
 	 */
-	private BaseFieldsEntity getBaseFields(String year, String month, Map<String, Object> employee, Map<String, Object> arrangementSummary, Map<String, Object> salary,
+	private BaseFieldsEntity getBaseFields(Map<String, Object> employee, Map<String, Object> arrangementSummary, Map<String, Object> salary,
 			Map<String, Object> allowances, Map<String, Object> performanceInfo) {
 		String pNumber = employee.get("pNumber") + "";// 员工编号
 		BaseFieldsEntity baseFields = new BaseFieldsEntity();
@@ -321,8 +334,8 @@ public class SalaryCalculationService {
 				: arrangementSummary.get("bingJia") + "");
 		baseFields.setSingelMeal(UtilString.isEmpty(salary.get("singelMeal") + "") ? "0.0"
 				: salary.get("singelMeal") + "");
-		baseFields.setStay(UtilString.isEmpty(allowances.get("stay") + "") ? "0.0"
-				: allowances.get("stay") + "");
+		baseFields.setStay(UtilString.isEmpty(salary.get("stay") + "") ? "0.0"
+				: salary.get("stay") + "");
 		baseFields.setThingHours(UtilString.isEmpty(arrangementSummary.get("shiJia") + "") ? "0.0"
 				: arrangementSummary.get("shiJia") + "");
 		baseFields.setWorkType(UtilString.isEmpty(salary.get("workType") + "") ? "0" : salary.get("workType") + "");
@@ -340,7 +353,7 @@ public class SalaryCalculationService {
 	 * @throws Exception 
 	 * @throws ScriptException 
 	 */
-	private void calculationSalary(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields, Map<String, String> formulaList, ScriptEngine scriptEngine) throws Exception {
+	private void calculationSalary(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		String wagePayableFormula = formulaList.get("wagePayableFormula");
 		String personalTaxFormula = formulaList.get("personalTaxFormula");
 		String realWagesFormula = formulaList.get("realWagesFormula");
@@ -353,9 +366,9 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(realWagesFormula)){
 			realWagesFormula = SalaryConstant.REAL_WAGES_FORMULA;
 		}
-		salaryDerail.setWagePayable(Double.valueOf(scriptEngine.eval(replaceFields(wagePayableFormula, salaryDerail, baseFields, formulaList))+""));// 应发工资
-		salaryDerail.setPersonalTax(Double.valueOf(scriptEngine.eval(replaceFields(personalTaxFormula, salaryDerail, baseFields, formulaList))+""));// 个税
-		salaryDerail.setRealWages(Double.valueOf(scriptEngine.eval(replaceFields(realWagesFormula, salaryDerail, baseFields, formulaList))+""));// 实发工资
+		salaryDerail.setWagePayable(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(wagePayableFormula, salaryDerail, baseFields, formulaList))+"")));// 应发工资
+		salaryDerail.setPersonalTax(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(personalTaxFormula, salaryDerail, baseFields, formulaList))+"")));// 个税
+		salaryDerail.setRealWages(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(realWagesFormula, salaryDerail, baseFields, formulaList))+"")));// 实发工资
 	}
 
 	/**
@@ -365,12 +378,12 @@ public class SalaryCalculationService {
 	 * @param allowances
 	 */
 	private void calculationDeduction(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
-		salaryDerail.setMealDeduction(Double.valueOf(baseFields.getMealDeduction()));// 餐费扣款
-		salaryDerail.setDormDeduction(Double.valueOf(baseFields.getDormDeduction()));// 住宿扣款
-		salaryDerail.setBeforeDeduction(Double.valueOf(baseFields.getBeforeDeduction()));// 税前其他扣款
-		salaryDerail.setInsurance(Double.valueOf(baseFields.getInsurance()));// 社保扣款
-		salaryDerail.setProvidentFund(Double.valueOf(baseFields.getProvidentFund()));// 公积金扣款
-		salaryDerail.setAfterDeduction(Double.valueOf(baseFields.getAfterDeduction()));// 其他扣款（税后）
+		salaryDerail.setMealDeduction(numberFormat.format(Double.valueOf(baseFields.getMealDeduction())));// 餐费扣款
+		salaryDerail.setDormDeduction(numberFormat.format(Double.valueOf(baseFields.getDormDeduction())));// 住宿扣款
+		salaryDerail.setBeforeDeduction(numberFormat.format(Double.valueOf(baseFields.getBeforeDeduction())));// 税前其他扣款
+		salaryDerail.setInsurance(numberFormat.format(Double.valueOf(baseFields.getInsurance())));// 社保扣款
+		salaryDerail.setProvidentFund(numberFormat.format(Double.valueOf(baseFields.getProvidentFund())));// 公积金扣款
+		salaryDerail.setAfterDeduction(numberFormat.format(Double.valueOf(baseFields.getAfterDeduction())));// 其他扣款（税后）
 	}
 
 	/**
@@ -379,16 +392,16 @@ public class SalaryCalculationService {
 	 * @param salaryDerail
 	 * @param allowances
 	 */
-	private void calculationBonus(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields, Map<String, String> formulaList, ScriptEngine scriptEngine) throws Exception {
+	private void calculationBonus(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		String performanceFormula = formulaList.get("performanceFormula");
 		if(UtilString.isEmpty(performanceFormula)){
 			performanceFormula = SalaryConstant.PERFORMANCE_FORMULA;
 		}
-		salaryDerail.setPerformanceBonus(Double.valueOf(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields, formulaList))+""));// 绩效奖金
-		salaryDerail.setSecurity(Double.valueOf(baseFields.getSecurity()));// 安全奖
-		salaryDerail.setCompensatory(Double.valueOf(baseFields.getCompensatory()));// 礼金、补偿金
-		salaryDerail.setOtherBonus(Double.valueOf(baseFields.getOtherBonus()));// 其他奖金
-		salaryDerail.setAddOther(Double.valueOf(baseFields.getAddOther()));// 加其他
+		salaryDerail.setPerformanceBonus(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields, formulaList))+"")));// 绩效奖金
+		salaryDerail.setSecurity(numberFormat.format(Double.valueOf(baseFields.getSecurity())));// 安全奖
+		salaryDerail.setCompensatory(numberFormat.format(Double.valueOf(baseFields.getCompensatory())));// 礼金、补偿金
+		salaryDerail.setOtherBonus(numberFormat.format(Double.valueOf(baseFields.getOtherBonus())));// 其他奖金
+		salaryDerail.setAddOther(numberFormat.format(Double.valueOf(baseFields.getAddOther())));// 加其他
 	}
 
 	/**
@@ -401,7 +414,7 @@ public class SalaryCalculationService {
 	 * @throws Exception 
 	 * @throws  
 	 */
-	private void calculationAllowance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields, Map<String, String> formulaList, ScriptEngine scriptEngine) throws Exception {
+	private void calculationAllowance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		String riceStickFormula = formulaList.get("riceStickFormula");
 		String callSunSalaryFormula = formulaList.get("callSunSalaryFormula");
 		String highTemFormula = formulaList.get("highTemFormula");
@@ -418,14 +431,14 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(lowTemFormula)){
 			lowTemFormula = SalaryConstant.LOWTEM_ALLOWANCE_FORMULA;
 		}
-		salaryDerail.setRiceStick(Double.valueOf(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields, formulaList))+""));// 餐补
-		salaryDerail.setCallSubsidies(Double.valueOf(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields, formulaList))+""));// 话费补贴
-		salaryDerail.setHighTem(Double.valueOf(scriptEngine.eval(replaceFields(highTemFormula, salaryDerail, baseFields, formulaList))+""));// 高温补贴
-		salaryDerail.setLowTem(Double.valueOf(scriptEngine.eval(replaceFields(lowTemFormula, salaryDerail, baseFields, formulaList))+""));// 低温补贴
-		salaryDerail.setMorningShift(Double.valueOf(baseFields.getMorningShift()));// 早班津贴
-		salaryDerail.setNightShift(Double.valueOf(baseFields.getNightShift()));// 夜班津贴
-		salaryDerail.setStay(Double.valueOf(baseFields.getStay()));// 住宿补贴
-		salaryDerail.setOtherAllowance(Double.valueOf(baseFields.getOtherAllowance()));// 其他津贴
+		salaryDerail.setRiceStick(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields, formulaList))+"")));// 餐补
+		salaryDerail.setCallSubsidies(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields, formulaList))+"")));// 话费补贴
+		salaryDerail.setHighTem(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(highTemFormula, salaryDerail, baseFields, formulaList))+"")));// 高温补贴
+		salaryDerail.setLowTem(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(lowTemFormula, salaryDerail, baseFields, formulaList))+"")));// 低温补贴
+		salaryDerail.setMorningShift(numberFormat.format(Double.valueOf(baseFields.getMorningShift())));// 早班津贴
+		salaryDerail.setNightShift(numberFormat.format(Double.valueOf(baseFields.getNightShift())));// 夜班津贴
+		salaryDerail.setStay(numberFormat.format(Double.valueOf(baseFields.getStay())));// 住宿补贴
+		salaryDerail.setOtherAllowance(numberFormat.format(Double.valueOf(baseFields.getOtherAllowance())));// 其他津贴
 	}
 
 	/**
@@ -437,7 +450,7 @@ public class SalaryCalculationService {
 	 * @param arrangementSummary
 	 * @throws ScriptException 
 	 */
-	private void setInfoAboutAttendance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields, Map<String, String> formulaList, ScriptEngine scriptEngine) throws Exception {
+	private void setInfoAboutAttendance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		String laterAndLeaveFormula = formulaList.get("laterAndLeaveFormula");
 		String completionFormula = formulaList.get("completionFormula");
 		String thingFormula = formulaList.get("thingFormula");
@@ -466,22 +479,22 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(totalFormula)){
 			totalFormula = SalaryConstant.TOTAL_DEDUCTION_FORMULA;
 		}
-		salaryDerail.setLaterAndLeaveDeduction(Double.valueOf(scriptEngine.eval(replaceFields(laterAndLeaveFormula, salaryDerail, baseFields, formulaList))+""));// 迟到早退扣除薪资
-		salaryDerail.setCompletionDeduction(Double.valueOf(scriptEngine.eval(replaceFields(completionFormula, salaryDerail, baseFields, formulaList))+""));// 旷工扣除
-		salaryDerail.setAttendanceHours(Double.valueOf(baseFields.getAttendanceHours()));// 应出勤小时数
-		salaryDerail.setAbsenceHours(Double.valueOf(baseFields.getAbsenceHours()));// 缺勤小时数
-		salaryDerail.setOverSalary(Double.valueOf(baseFields.getOverSalary()));//加班费
-		salaryDerail.setThingDeduction(Double.valueOf(scriptEngine.eval(replaceFields(thingFormula, salaryDerail, baseFields, formulaList))+""));// 事假
-		salaryDerail.setSickDeduction(Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields, formulaList))+""));// 病假
-		salaryDerail.setYearDeduction(0.0);// 年假
-		salaryDerail.setMarriageDeduction(0.0);// 婚假
-		salaryDerail.setFuneralDeduction(0.0);// 丧假
-		salaryDerail.setRelaxation(0.0);// 调休
-		salaryDerail.setTrainDeduction(0.0);// 培训假
-		salaryDerail.setCompanionParentalDeduction(0.0);// 陪产假
-		salaryDerail.setParentalDeduction(Double.valueOf(scriptEngine.eval(replaceFields(parentalFormula, salaryDerail, baseFields, formulaList))+""));// 产假
-		salaryDerail.setOnboarding(Double.valueOf(scriptEngine.eval(replaceFields(onboardingFormula, salaryDerail, baseFields, formulaList))+""));// 月中入职、离职导致缺勤
-		salaryDerail.setTotalDeduction(Double.valueOf(scriptEngine.eval(replaceFields(totalFormula, salaryDerail, baseFields, formulaList))+""));// 应扣合计
+		salaryDerail.setLaterAndLeaveDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(laterAndLeaveFormula, salaryDerail, baseFields, formulaList))+"")));// 迟到早退扣除薪资
+		salaryDerail.setCompletionDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(completionFormula, salaryDerail, baseFields, formulaList))+"")));// 旷工扣除
+		salaryDerail.setAttendanceHours(numberFormat.format(Double.valueOf(baseFields.getAttendanceHours())));// 应出勤小时数
+		salaryDerail.setAbsenceHours(numberFormat.format(Double.valueOf(baseFields.getAbsenceHours())));// 缺勤小时数
+		salaryDerail.setOverSalary(numberFormat.format(Double.valueOf(baseFields.getOverSalary())));//加班费
+		salaryDerail.setThingDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(thingFormula, salaryDerail, baseFields, formulaList))+"")));// 事假
+		salaryDerail.setSickDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields, formulaList))+"")));// 病假
+		salaryDerail.setYearDeduction(numberFormat.format(0.0));// 年假
+		salaryDerail.setMarriageDeduction(numberFormat.format(0.0));// 婚假
+		salaryDerail.setFuneralDeduction(numberFormat.format(0.0));// 丧假
+		salaryDerail.setRelaxation(numberFormat.format(0.0));// 调休
+		salaryDerail.setTrainDeduction(numberFormat.format(0.0));// 培训假
+		salaryDerail.setCompanionParentalDeduction(numberFormat.format(0.0));// 陪产假
+		salaryDerail.setParentalDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(parentalFormula, salaryDerail, baseFields, formulaList))+"")));// 产假
+		salaryDerail.setOnboarding(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(onboardingFormula, salaryDerail, baseFields, formulaList))+"")));// 月中入职、离职导致缺勤
+		salaryDerail.setTotalDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(totalFormula, salaryDerail, baseFields, formulaList))+"")));// 应扣合计
 	}
 
 	/**
@@ -491,10 +504,10 @@ public class SalaryCalculationService {
 	 * @param salary
 	 */
 	private void setBaseSalaryInfo(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
-		salaryDerail.setBaseSalary(Double.valueOf(baseFields.getBaseSalary()));// 基本薪资
-		salaryDerail.setFixedOvertimeSalary(Double.valueOf(baseFields.getFixedOverTimeSalary()));// 固定加班费
-		salaryDerail.setCompanySalary(Double.valueOf(baseFields.getCompanySalary()));// 司龄工资
-		salaryDerail.setPostSalary(Double.valueOf(baseFields.getPostSalary()));// 岗位工资
+		salaryDerail.setBaseSalary(numberFormat.format(Double.valueOf(baseFields.getBaseSalary())));// 基本薪资
+		salaryDerail.setFixedOvertimeSalary(numberFormat.format(Double.valueOf(baseFields.getFixedOverTimeSalary())));// 固定加班费
+		salaryDerail.setCompanySalary(numberFormat.format(Double.valueOf(baseFields.getCompanySalary())));// 司龄工资
+		salaryDerail.setPostSalary(numberFormat.format(Double.valueOf(baseFields.getPostSalary())));// 岗位工资
 	}
 
 	/**

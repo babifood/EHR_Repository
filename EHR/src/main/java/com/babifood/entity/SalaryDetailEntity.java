@@ -34,89 +34,89 @@ public class SalaryDetailEntity {
 
 	private String postName;// 岗位名称
 
-	private Double attendanceHours;// 应出勤小时候
+	private String attendanceHours;// 应出勤小时候
 
-	private Double absenceHours;// 缺勤小时数
+	private String absenceHours;// 缺勤小时数
 
-	private Double baseSalary;// 基本工资
+	private String baseSalary;// 基本工资
 
-	private Double fixedOvertimeSalary;// 固定加班工资
+	private String fixedOvertimeSalary;// 固定加班工资
 
-	private Double postSalary;// 岗位工资
+	private String postSalary;// 岗位工资
 
-	private Double callSubsidies;// 话费补贴
+	private String callSubsidies;// 话费补贴
 
-	private Double companySalary;// 司龄工资
+	private String companySalary;// 司龄工资
 
-	private Double overSalary;// 加班工资
+	private String overSalary;// 加班工资
 
-	private Double riceStick;// 饭贴
+	private String riceStick;// 饭贴
 
-	private Double highTem;// 高温津贴
+	private String highTem;// 高温津贴
 
-	private Double lowTem;// 低温津贴
+	private String lowTem;// 低温津贴
 
-	private Double morningShift;// 早班津贴
+	private String morningShift;// 早班津贴
 
-	private Double nightShift;// 夜班津贴
+	private String nightShift;// 夜班津贴
 
-	private Double stay;// 驻外/住宿津贴
+	private String stay;// 驻外/住宿津贴
 
-	private Double otherAllowance;// 其他津贴
+	private String otherAllowance;// 其他津贴
 
-	private Double security;// 安全奖金
+	private String security;// 安全奖金
 
-	private Double performanceBonus;// 绩效奖金
+	private String performanceBonus;// 绩效奖金
 
-	private Double compensatory;// 礼金/补偿金
+	private String compensatory;// 礼金/补偿金
 
-	private Double otherBonus;// 其他奖金
+	private String otherBonus;// 其他奖金
 
-	private Double addOther;// 加其他
+	private String addOther;// 加其他
 
-	private Double mealDeduction;// 餐费扣款
+	private String mealDeduction;// 餐费扣款
 
-	private Double dormDeduction;// 住宿扣款
+	private String dormDeduction;// 住宿扣款
 
-	private Double beforeDeduction;// 其他扣款（税前）
+	private String beforeDeduction;// 其他扣款（税前）
 
-	private Double insurance;// 社保扣款
+	private String insurance;// 社保扣款
 
-	private Double providentFund;// 公积金扣款
+	private String providentFund;// 公积金扣款
 
-	private Double afterDeduction;// 其他扣款（税后）
+	private String afterDeduction;// 其他扣款（税后）
 
-	private Double laterAndLeaveDeduction;// 迟到和早退扣款
+	private String laterAndLeaveDeduction;// 迟到和早退扣款
 
-	private Double completionDeduction;// 旷工扣款
+	private String completionDeduction;// 旷工扣款
 	
-	private Double yearDeduction;// 年假
+	private String yearDeduction;// 年假
 
-	private Double relaxation;// 调休
+	private String relaxation;// 调休
 
-	private Double thingDeduction;// 事假
+	private String thingDeduction;// 事假
 
-	private Double sickDeduction;// 病假
+	private String sickDeduction;// 病假
 
-	private Double trainDeduction;// 培训假
+	private String trainDeduction;// 培训假
 
-	private Double parentalDeduction;// 产假
+	private String parentalDeduction;// 产假
 
-	private Double marriageDeduction;// 婚假
+	private String marriageDeduction;// 婚假
 
-	private Double companionParentalDeduction;// 陪产假
+	private String companionParentalDeduction;// 陪产假
 
-	private Double funeralDeduction;// 丧假
+	private String funeralDeduction;// 丧假
 
-	private Double onboarding;// 月中入职、离职导致缺勤
+	private String onboarding;// 月中入职、离职导致缺勤
 
-	private Double totalDeduction;// 应扣合计
+	private String totalDeduction;// 应扣合计
 
-	private Double wagePayable;// 应发工资
+	private String wagePayable;// 应发工资
 
-	private Double personalTax;// 代缴税金
+	private String personalTax;// 代缴税金
 
-	private Double realWages;// 实发工资
+	private String realWages;// 实发工资
 	
 	private String status;//计算薪资状态  1-计算   2-核算  3-归档
 
@@ -248,339 +248,339 @@ public class SalaryDetailEntity {
 		this.postName = postName;
 	}
 
-	public Double getAttendanceHours() {
+	public String getAttendanceHours() {
 		return attendanceHours;
 	}
 
-	public void setAttendanceHours(Double attendanceHours) {
+	public void setAttendanceHours(String attendanceHours) {
 		this.attendanceHours = attendanceHours;
 	}
 
-	public Double getAbsenceHours() {
+	public String getAbsenceHours() {
 		return absenceHours;
 	}
 
-	public void setAbsenceHours(Double absenceHours) {
+	public void setAbsenceHours(String absenceHours) {
 		this.absenceHours = absenceHours;
 	}
 
-	public Double getBaseSalary() {
+	public String getBaseSalary() {
 		return baseSalary;
 	}
 
-	public void setBaseSalary(Double baseSalary) {
+	public void setBaseSalary(String baseSalary) {
 		this.baseSalary = baseSalary;
 	}
 
-	public Double getFixedOvertimeSalary() {
+	public String getFixedOvertimeSalary() {
 		return fixedOvertimeSalary;
 	}
 
-	public void setFixedOvertimeSalary(Double fixedOvertimeSalary) {
+	public void setFixedOvertimeSalary(String fixedOvertimeSalary) {
 		this.fixedOvertimeSalary = fixedOvertimeSalary;
 	}
 
-	public Double getPostSalary() {
+	public String getPostSalary() {
 		return postSalary;
 	}
 
-	public void setPostSalary(Double postSalary) {
+	public void setPostSalary(String postSalary) {
 		this.postSalary = postSalary;
 	}
 
-	public Double getCallSubsidies() {
+	public String getCallSubsidies() {
 		return callSubsidies;
 	}
 
-	public void setCallSubsidies(Double callSubsidies) {
+	public void setCallSubsidies(String callSubsidies) {
 		this.callSubsidies = callSubsidies;
 	}
 
-	public Double getCompanySalary() {
+	public String getCompanySalary() {
 		return companySalary;
 	}
 
-	public void setCompanySalary(Double companySalary) {
+	public void setCompanySalary(String companySalary) {
 		this.companySalary = companySalary;
 	}
 
-	public Double getOverSalary() {
+	public String getOverSalary() {
 		return overSalary;
 	}
 
-	public void setOverSalary(Double overSalary) {
+	public void setOverSalary(String overSalary) {
 		this.overSalary = overSalary;
 	}
 
-	public Double getRiceStick() {
+	public String getRiceStick() {
 		return riceStick;
 	}
 
-	public void setRiceStick(Double riceStick) {
+	public void setRiceStick(String riceStick) {
 		this.riceStick = riceStick;
 	}
 
-	public Double getHighTem() {
+	public String getHighTem() {
 		return highTem;
 	}
 
-	public void setHighTem(Double highTem) {
+	public void setHighTem(String highTem) {
 		this.highTem = highTem;
 	}
 
-	public Double getLowTem() {
+	public String getLowTem() {
 		return lowTem;
 	}
 
-	public void setLowTem(Double lowTem) {
+	public void setLowTem(String lowTem) {
 		this.lowTem = lowTem;
 	}
 
-	public Double getMorningShift() {
+	public String getMorningShift() {
 		return morningShift;
 	}
 
-	public void setMorningShift(Double morningShift) {
+	public void setMorningShift(String morningShift) {
 		this.morningShift = morningShift;
 	}
 
-	public Double getNightShift() {
+	public String getNightShift() {
 		return nightShift;
 	}
 
-	public void setNightShift(Double nightShift) {
+	public void setNightShift(String nightShift) {
 		this.nightShift = nightShift;
 	}
 
-	public Double getStay() {
+	public String getStay() {
 		return stay;
 	}
 
-	public void setStay(Double stay) {
+	public void setStay(String stay) {
 		this.stay = stay;
 	}
 
-	public Double getOtherAllowance() {
+	public String getOtherAllowance() {
 		return otherAllowance;
 	}
 
-	public void setOtherAllowance(Double otherAllowance) {
+	public void setOtherAllowance(String otherAllowance) {
 		this.otherAllowance = otherAllowance;
 	}
 
-	public Double getSecurity() {
+	public String getSecurity() {
 		return security;
 	}
 
-	public void setSecurity(Double security) {
+	public void setSecurity(String security) {
 		this.security = security;
 	}
 
-	public Double getPerformanceBonus() {
+	public String getPerformanceBonus() {
 		return performanceBonus;
 	}
 
-	public void setPerformanceBonus(Double performanceBonus) {
+	public void setPerformanceBonus(String performanceBonus) {
 		this.performanceBonus = performanceBonus;
 	}
 
-	public Double getCompensatory() {
+	public String getCompensatory() {
 		return compensatory;
 	}
 
-	public void setCompensatory(Double compensatory) {
+	public void setCompensatory(String compensatory) {
 		this.compensatory = compensatory;
 	}
 
-	public Double getOtherBonus() {
+	public String getOtherBonus() {
 		return otherBonus;
 	}
 
-	public void setOtherBonus(Double otherBonus) {
+	public void setOtherBonus(String otherBonus) {
 		this.otherBonus = otherBonus;
 	}
 
-	public Double getAddOther() {
+	public String getAddOther() {
 		return addOther;
 	}
 
-	public void setAddOther(Double addOther) {
+	public void setAddOther(String addOther) {
 		this.addOther = addOther;
 	}
 
-	public Double getMealDeduction() {
+	public String getMealDeduction() {
 		return mealDeduction;
 	}
 
-	public void setMealDeduction(Double mealDeduction) {
+	public void setMealDeduction(String mealDeduction) {
 		this.mealDeduction = mealDeduction;
 	}
 
-	public Double getDormDeduction() {
+	public String getDormDeduction() {
 		return dormDeduction;
 	}
 
-	public void setDormDeduction(Double dormDeduction) {
+	public void setDormDeduction(String dormDeduction) {
 		this.dormDeduction = dormDeduction;
 	}
 
-	public Double getBeforeDeduction() {
+	public String getBeforeDeduction() {
 		return beforeDeduction;
 	}
 
-	public void setBeforeDeduction(Double beforeDeduction) {
+	public void setBeforeDeduction(String beforeDeduction) {
 		this.beforeDeduction = beforeDeduction;
 	}
 
-	public Double getInsurance() {
+	public String getInsurance() {
 		return insurance;
 	}
 
-	public void setInsurance(Double insurance) {
+	public void setInsurance(String insurance) {
 		this.insurance = insurance;
 	}
 
-	public Double getProvidentFund() {
+	public String getProvidentFund() {
 		return providentFund;
 	}
 
-	public void setProvidentFund(Double providentFund) {
+	public void setProvidentFund(String providentFund) {
 		this.providentFund = providentFund;
 	}
 
-	public Double getAfterDeduction() {
+	public String getAfterDeduction() {
 		return afterDeduction;
 	}
 
-	public void setAfterDeduction(Double afterDeduction) {
+	public void setAfterDeduction(String afterDeduction) {
 		this.afterDeduction = afterDeduction;
 	}
 
-	public Double getLaterAndLeaveDeduction() {
+	public String getLaterAndLeaveDeduction() {
 		return laterAndLeaveDeduction;
 	}
 
-	public void setLaterAndLeaveDeduction(Double laterAndLeaveDeduction) {
+	public void setLaterAndLeaveDeduction(String laterAndLeaveDeduction) {
 		this.laterAndLeaveDeduction = laterAndLeaveDeduction;
 	}
 
-	public Double getCompletionDeduction() {
+	public String getCompletionDeduction() {
 		return completionDeduction;
 	}
 
-	public void setCompletionDeduction(Double completionDeduction) {
+	public void setCompletionDeduction(String completionDeduction) {
 		this.completionDeduction = completionDeduction;
 	}
 
-	public Double getYearDeduction() {
+	public String getYearDeduction() {
 		return yearDeduction;
 	}
 
-	public void setYearDeduction(Double yearDeduction) {
+	public void setYearDeduction(String yearDeduction) {
 		this.yearDeduction = yearDeduction;
 	}
 
-	public Double getRelaxation() {
+	public String getRelaxation() {
 		return relaxation;
 	}
 
-	public void setRelaxation(Double relaxation) {
+	public void setRelaxation(String relaxation) {
 		this.relaxation = relaxation;
 	}
 
-	public Double getThingDeduction() {
+	public String getThingDeduction() {
 		return thingDeduction;
 	}
 
-	public void setThingDeduction(Double thingDeduction) {
+	public void setThingDeduction(String thingDeduction) {
 		this.thingDeduction = thingDeduction;
 	}
 
-	public Double getSickDeduction() {
+	public String getSickDeduction() {
 		return sickDeduction;
 	}
 
-	public void setSickDeduction(Double sickDeduction) {
+	public void setSickDeduction(String sickDeduction) {
 		this.sickDeduction = sickDeduction;
 	}
 
-	public Double getTrainDeduction() {
+	public String getTrainDeduction() {
 		return trainDeduction;
 	}
 
-	public void setTrainDeduction(Double trainDeduction) {
+	public void setTrainDeduction(String trainDeduction) {
 		this.trainDeduction = trainDeduction;
 	}
 
-	public Double getParentalDeduction() {
+	public String getParentalDeduction() {
 		return parentalDeduction;
 	}
 
-	public void setParentalDeduction(Double parentalDeduction) {
+	public void setParentalDeduction(String parentalDeduction) {
 		this.parentalDeduction = parentalDeduction;
 	}
 
-	public Double getMarriageDeduction() {
+	public String getMarriageDeduction() {
 		return marriageDeduction;
 	}
 
-	public void setMarriageDeduction(Double marriageDeduction) {
+	public void setMarriageDeduction(String marriageDeduction) {
 		this.marriageDeduction = marriageDeduction;
 	}
 
-	public Double getCompanionParentalDeduction() {
+	public String getCompanionParentalDeduction() {
 		return companionParentalDeduction;
 	}
 
-	public void setCompanionParentalDeduction(Double companionParentalDeduction) {
+	public void setCompanionParentalDeduction(String companionParentalDeduction) {
 		this.companionParentalDeduction = companionParentalDeduction;
 	}
 
-	public Double getFuneralDeduction() {
+	public String getFuneralDeduction() {
 		return funeralDeduction;
 	}
 
-	public void setFuneralDeduction(Double funeralDeduction) {
+	public void setFuneralDeduction(String funeralDeduction) {
 		this.funeralDeduction = funeralDeduction;
 	}
 
-	public Double getOnboarding() {
+	public String getOnboarding() {
 		return onboarding;
 	}
 
-	public void setOnboarding(Double onboarding) {
+	public void setOnboarding(String onboarding) {
 		this.onboarding = onboarding;
 	}
 
-	public Double getTotalDeduction() {
+	public String getTotalDeduction() {
 		return totalDeduction;
 	}
 
-	public void setTotalDeduction(Double totalDeduction) {
+	public void setTotalDeduction(String totalDeduction) {
 		this.totalDeduction = totalDeduction;
 	}
 
-	public Double getWagePayable() {
+	public String getWagePayable() {
 		return wagePayable;
 	}
 
-	public void setWagePayable(Double wagePayable) {
+	public void setWagePayable(String wagePayable) {
 		this.wagePayable = wagePayable;
 	}
 
-	public Double getPersonalTax() {
+	public String getPersonalTax() {
 		return personalTax;
 	}
 
-	public void setPersonalTax(Double personalTax) {
+	public void setPersonalTax(String personalTax) {
 		this.personalTax = personalTax;
 	}
 
-	public Double getRealWages() {
+	public String getRealWages() {
 		return realWages;
 	}
 
-	public void setRealWages(Double realWages) {
+	public void setRealWages(String realWages) {
 		this.realWages = realWages;
 	}
 

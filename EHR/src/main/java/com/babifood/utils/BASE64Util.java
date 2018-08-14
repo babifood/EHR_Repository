@@ -412,11 +412,17 @@ public class BASE64Util {
 			if(!UtilString.isEmpty(map.get("beforeDeduction")+"")){
 				map.put("beforeDeduction", BASE64Util.decode(map.get("beforeDeduction")+""));
 			}
+			if(!UtilString.isEmpty(map.get("afterOtherDeduction")+"")){
+				map.put("afterOtherDeduction", BASE64Util.decode(map.get("afterOtherDeduction")+""));
+			}
 			if(!UtilString.isEmpty(map.get("addOther")+"")){
 				map.put("addOther", BASE64Util.decode(map.get("addOther")+""));
 			}
 			if(!UtilString.isEmpty(map.get("mealDeduction")+"")){
 				map.put("mealDeduction", BASE64Util.decode(map.get("mealDeduction")+""));
+			}
+			if(!UtilString.isEmpty(map.get("dormBonus")+"")){
+				map.put("dormBonus", BASE64Util.decode(map.get("dormBonus")+""));
 			}
 			if(!UtilString.isEmpty(map.get("dormDeduction")+"")){
 				map.put("dormDeduction", BASE64Util.decode(map.get("dormDeduction")+""));
