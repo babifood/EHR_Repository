@@ -131,6 +131,7 @@ function salaryCalculation(type){
 			$("#salaryDetail_calculate").linkbutton('enable');
 			$("#salaryDetail_accounting").linkbutton('enable');
 			$("#salaryDetail_archive").linkbutton('enable');
+			$("#salaryDetail_datagrid").datagrid("reload");
 		}
 	})
 	

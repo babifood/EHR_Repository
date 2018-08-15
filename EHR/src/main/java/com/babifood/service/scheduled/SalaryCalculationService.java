@@ -1,6 +1,6 @@
 package com.babifood.service.scheduled;
 
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,7 +59,7 @@ public class SalaryCalculationService {
 	@Autowired
 	private PerformanceDao performanceDao;
 	
-	private NumberFormat numberFormat;
+	private DecimalFormat numberFormat;
 	
 	private Map<String, String> formulaList;
 	
@@ -72,8 +72,7 @@ public class SalaryCalculationService {
 	private ScriptEngine scriptEngine;
 	
 	private void init() throws Exception{
-		numberFormat = NumberFormat.getInstance();
-		numberFormat.setMinimumFractionDigits(2);
+		numberFormat = new DecimalFormat("#0.00");
 		formulaList = getFormula();
 		year = UtilDateTime.getCurrentYear();
 //			UtilDateTime.getYearOfPreMonth();// 当前年

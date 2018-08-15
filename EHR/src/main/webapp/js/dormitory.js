@@ -584,7 +584,7 @@ function moveOutDormitory(){
 	var rowData = $("#dormitory_list").datagrid("getSelected");
 	if(!rowData || !rowData.pNumber){
 		$.messager.alert("消息提示！","请选择已入组员工","warning");
-	} else if (rowData.outTime == null) {
+	} else if (rowData.outTime == null || rowData.outTime == "") {
 		$.messager.alert("消息提示！","请选先办理搬出手续","warning");
 	}else {
 		selectDormitoryCost(1);
@@ -592,30 +592,34 @@ function moveOutDormitory(){
 }
 
 function selectDormitoryCost(type){
-	$.messager.confirm("提示","确定搬出宿舍吗？",function(r){
-		if(r){
-			var rowData = $("#dormitory_list").datagrid("getSelected");
-			var outTime = $("#dormitory_moveout_time").val();
-			$.ajax({
-				url:prefix + "/dormitory/checkout",
-				type:"post",
-				data:{
-					dormitoryId:rowData.id,
-					pNumber:rowData.pNumber,
-					outTime:outTime,
-					type:type
-				},
-				success:function(result){
-					if(result.code == "1"){
-						$("#dormitory_list").datagrid("reload");
-					} else {
-						$.messager.alert("消息提示！",result.msg,"warning");
+	var outTime = $("#dormitory_moveout_time").val();
+	if(!outTime){
+		$.messager.alert("消息提示！","请选择搬出时间","warning");
+	} else {
+		$.messager.confirm("提示","确定搬出宿舍吗？",function(r){
+			if(r){
+				var rowData = $("#dormitory_list").datagrid("getSelected");
+				$.ajax({
+					url:prefix + "/dormitory/checkout",
+					type:"post",
+					data:{
+						dormitoryId:rowData.id,
+						pNumber:rowData.pNumber,
+						outTime:outTime,
+						type:type
+					},
+					success:function(result){
+						if(result.code == "1"){
+							$("#dormitory_list").datagrid("reload");
+						} else {
+							$.messager.alert("消息提示！",result.msg,"warning");
+						}
 					}
-				}
-			});
-			$("#dormitory_outtime_dialog").dialog("close");
-		}
-	})
+				});
+				$("#dormitory_outtime_dialog").dialog("close");
+			}
+		})
+	}
 }
 
 //清空搜索条件

@@ -165,6 +165,14 @@ function loadBaseSalary() {
 					options : {
 						required:true,
 						editable:false,
+						parser: function (s) {
+		                    if (!s) return new Date();
+		                    var arr = s.split('-');
+		                    return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+		                },
+		                formatter: function (d) {
+		                    var a = parseInt(d.getMonth())<parseInt('9')?'0'+parseInt(d.getMonth()+ 1):d.getMonth() + 1;
+		                    return d.getFullYear() + '-' +a; }
 					},
 				},
 			}

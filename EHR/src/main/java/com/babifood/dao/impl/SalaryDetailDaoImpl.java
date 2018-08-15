@@ -85,7 +85,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 					BASE64Util.encode(salaryDerail.getYearDeduction()),
 					BASE64Util.encode(salaryDerail.getLaterAndLeaveDeduction()),
 					BASE64Util.encode(salaryDerail.getCompletionDeduction()),
-					BASE64Util.encode(salaryDerail.getRealWages()), BASE64Util.encode(salaryDerail.getThingDeduction()),
+					BASE64Util.encode(salaryDerail.getRelaxation()), BASE64Util.encode(salaryDerail.getThingDeduction()),
 					BASE64Util.encode(salaryDerail.getSickDeduction()),
 					BASE64Util.encode(salaryDerail.getTrainDeduction()),
 					BASE64Util.encode(salaryDerail.getParentalDeduction()),

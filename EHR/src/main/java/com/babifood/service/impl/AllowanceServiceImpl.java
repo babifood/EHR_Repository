@@ -30,6 +30,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 		param.put("pNumber", pNumber);
 		param.put("month", month);
 		List<Map<String, Object>> employAllowance = allowanceDao.findEmployAllowance(param);
+		BASE64Util.Base64DecodeMap(employAllowance);
 		if (employAllowance != null && employAllowance.size() > 0) {
 			return employAllowance.get(0);
 		}
