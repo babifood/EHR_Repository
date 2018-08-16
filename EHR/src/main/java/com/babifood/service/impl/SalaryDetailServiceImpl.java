@@ -64,11 +64,11 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		Map<String, String> row1Name = getRow1Names();
 		String[] sort = new String[]{"year", "month", "pNumber", "pName", "companyName", "organizationName",
 				"deptName", "officeName", "groupName", "postName", "baseSalary", "fixedOvertimeSalary", 
-				"postSalary", "companySalary", "totalDeduction", "wagePayable", "realWages", "callSubsidies", 
-				"riceStick", "highTem", "lowTem", "morningShift", "nightShift", "stay", "otherAllowance", 
-				"security", "performanceBonus", "compensatory", "otherBonus", "addOther", "overSalary",  
-				"attendanceHours", "absenceHours", "thingDeduction", "sickDeduction", "parentalDeduction", 
-				"onboarding", "laterAndLeaveDeduction", "completionDeduction", "yearDeduction", 
+				"postSalary", "companySalary", "totalDeduction", "wagePayable", "personalTax", "realWages", 
+				"callSubsidies", "riceStick", "highTem", "lowTem", "morningShift", "nightShift", "stay", 
+				"otherAllowance", "security", "performanceBonus", "compensatory", "otherBonus", "addOther", 
+				"overSalary", "attendanceHours", "absenceHours", "thingDeduction", "sickDeduction", 
+				"parentalDeduction", "onboarding", "laterAndLeaveDeduction", "completionDeduction", "yearDeduction", 
 				"relaxation", "trainDeduction", "marriageDeduction", "companionParentalDeduction", "funeralDeduction", 
 				"mealDeduction", "dormDeduction", "insurance", "providentFund", "beforeDeduction", "afterDeduction",};
 		List<Map<String, Object>> dataSource = salaryDetailDao.getPageSalaryDetails(new HashMap<String, Object>());;
@@ -106,18 +106,18 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		row1Name.put("morningShift", "早班津贴");
 		row1Name.put("nightShift", "夜班津贴");
 		row1Name.put("stay", "驻外/住宿津贴");
-		row1Name.put("otherAllowance", "其他津贴");
+		row1Name.put("otherAllowance", "其它津贴");
 		row1Name.put("security", "安全奖金");
 		row1Name.put("performanceBonus", "绩效奖金");
 		row1Name.put("compensatory", "礼金/补偿金");
-		row1Name.put("otherBonus", "其他奖金");
-		row1Name.put("addOther", "加其他");
+		row1Name.put("otherBonus", "其它奖金");
+		row1Name.put("addOther", "加其它");
 		row1Name.put("mealDeduction", "餐费扣款");
 		row1Name.put("dormDeduction", "住宿扣款");
-		row1Name.put("beforeDeduction", "其他扣款（税前）");
+		row1Name.put("beforeDeduction", "其它扣款（税前）");
 		row1Name.put("insurance", "社保扣款");
 		row1Name.put("providentFund", "公积金");
-		row1Name.put("afterDeduction", "其他扣款（税后）");
+		row1Name.put("afterDeduction", "其它扣款（税后）");
 		row1Name.put("laterAndLeaveDeduction", "迟到和早退扣款");
 		row1Name.put("completionDeduction", "旷工扣款");
 		row1Name.put("yearDeduction", "年假");
@@ -131,8 +131,9 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		row1Name.put("funeralDeduction", "丧假");
 		row1Name.put("onboarding", "月中入职、离职");
 		row1Name.put("totalDeduction", "应扣合计");
-		row1Name.put("wagePayable", "代缴税金");
+		row1Name.put("wagePayable", "应发工资");
 		row1Name.put("realWages", "实发工资");
+		row1Name.put("personalTax", "代缴税金");
 		return row1Name;
 	}
 

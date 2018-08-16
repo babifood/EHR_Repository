@@ -10,7 +10,6 @@ function loadAllowanceList() {
 	$("#allowance_list_datagrid").datagrid({
 		url : prefix + "/allowance/page",
 		fit : true,
-//		fitColumns : true,
 		striped : true,
 		border : false,
 		toolbar : "#allowance_list_datagrid_tools",
@@ -21,10 +20,10 @@ function loadAllowanceList() {
 		pageList : [ 10, 20, 30 ],
 		pageNumber : 1,
 		frozenColumns:[[
-			{field : "year",title : "年",width : 100, }, 
-			{field : "month",title : "月",width : 100, }, 
-			{field : "pNumber",title : "员工工号",width : 100,}, 
-			{field : "pName",title : "员工姓名",width : 100,}
+			{field : "year",title : "年",width : 40, }, 
+			{field : "month",title : "月",width : 30, }, 
+			{field : "pNumber",title : "员工工号",width : 60,}, 
+			{field : "pName",title : "员工姓名",width : 60,}
 			]],
 		columns : [ [
 		{
@@ -66,7 +65,7 @@ function loadAllowanceList() {
 			width : 100,
 		}, {
 			field : "otherAllowance",
-			title : "其他津贴",
+			title : "其它津贴",
 			width : 100,
 		}, {
 			field : "performanceBonus",
@@ -83,11 +82,11 @@ function loadAllowanceList() {
 			width : 100,
 		}, {
 			field : "otherBonus",
-			title : "其他奖金",
+			title : "其它奖金",
 			width : 100,
 		}, {
 			field : "addOther",
-			title : "加其他",
+			title : "加其它",
 			width : 100,
 		}, {
 			field : "mealDeduction",
@@ -219,7 +218,6 @@ function importAllowanceInfos() {
 		},
 		success : function(result) {
 			var result = eval('(' + result + ')');
-			console.log("1111111111111");
 			if (result.code == "1") {
 				$.messager.alert('提示!', '导入成功', 'info', function() {
 					$("#allowance_booten").linkbutton('enable');

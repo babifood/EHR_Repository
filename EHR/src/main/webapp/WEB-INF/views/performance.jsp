@@ -23,6 +23,11 @@
 						    <div data-options="iconCls:'icon-remove'" onclick="exportPerformance(1)">导出</div>
 					    </shiro:hasPermission>   
 					</div> 
+					<shiro:hasPermission name="performance:edit">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="updatePerformanceSocre()">修改</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="savePerformanceSocre()">保存</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelPerformanceSocre()">取消</a>
+					</shiro:hasPermission>
 				</div>
 			</div>
 			<div>

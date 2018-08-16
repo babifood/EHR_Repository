@@ -1,5 +1,8 @@
 package com.babifood.service.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.babifood.dao.DormitoryDao;
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
 import com.babifood.service.DormitoryService;
+import com.babifood.utils.BASE64Util;
+import com.babifood.utils.ExcelUtil;
+import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 
 @Service
@@ -22,7 +29,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 
 	@Autowired
 	private DormitoryDao dormitoryDao;
-
+	
 	@Override
 	public Map<String, Object> saveDormitory(DormitoryEntity dormitory) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -241,4 +248,93 @@ public class DormitoryServiceImpl implements DormitoryService {
 		return result;
 	}
 
+	@Override
+	public Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type, String year, String month) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, String> row1Name = getRow1Name();
+		String[] sort = new String[]{"year", "month", "pNumber", "pName", "floor", "roomNo", "bedNo", "dormBonus", "dormDeduction"};
+		List<Map<String, Object>> dormitoryCosts = null;
+		try {
+			if("1".equals(type)){
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("month", UtilString.isEmpty(month) ? UtilDateTime.getPreMonth() : month);
+				param.put("year", UtilString.isEmpty(year) ? UtilDateTime.getYearOfPreMonth() : year);
+				dormitoryCosts = dormitoryDao.queryDormitoryCostList(param);
+			} else {
+				dormitoryCosts = new ArrayList<Map<String, Object>>();
+			}
+			ExcelUtil.exportExcel("住宿费项列表", row1Name, dormitoryCosts, ouputStream, sort);
+			result.put("code", "1");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "导出excel失败");
+		}
+		return result;
+	}
+
+	private Map<String, String> getRow1Name() {
+		Map<String, String> row1Name = new HashMap<String, String>();
+		row1Name.put("year", "年");
+		row1Name.put("month", "月");
+		row1Name.put("pNumber", "员工工号");
+		row1Name.put("pName", "员工姓名");
+		row1Name.put("floor", "楼层");
+		row1Name.put("roomNo", "房间号");
+		row1Name.put("bedNo", "床位号");
+		row1Name.put("dormBonus", "宿舍奖励");
+		row1Name.put("dormDeduction", "住宿扣款");
+		return row1Name;
+	}
+	
+	@Override
+	public Map<String, Object> importDormitoryCost(CommonsMultipartFile file, String type) {
+		Map<String, Object> result = new HashMap<>();
+		Map<String, String> row1Name = getImportRow1Name();
+		List<Map<String, Object>> values = null;
+		try {
+			values = ExcelUtil.importExcel(file, row1Name);
+			if(values != null && values.size() > 0){
+				List<Object[]> dormitoryCostParam = getDormitoryCostParam(values);
+				dormitoryDao.saveDormitoryCosts(dormitoryCostParam);
+			}
+			result.put("code", "1");
+			result.put("msg", "导入数据成功");
+		} catch (IOException e) {
+			e.printStackTrace();
+			result.put("code", "0");
+			result.put("msg", "excel数据异常，导入数据失败");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "保存导入数据异常，导入数据失败");
+		}
+		return result;
+	}
+
+	private List<Object[]> getDormitoryCostParam(List<Map<String, Object>> values) {
+		List<Object[]> objList = new ArrayList<>();
+		if (values != null && values.size() > 0) {
+			for (Map<String, Object> map : values) {
+				Object[] obj = new Object[] { map.get("year"), map.get("month"), map.get("pNumber"),
+						BASE64Util.getDecodeStringTowDecimal(map.get("dormBonus")),
+						BASE64Util.getDecodeStringTowDecimal(map.get("dormDeduction")) };
+				objList.add(obj);
+			}
+		}
+		return objList;
+	}
+
+	private Map<String, String> getImportRow1Name() {
+		Map<String, String> row1Name = new HashMap<String, String>();
+		row1Name.put("年", "year");
+		row1Name.put("月", "month");
+		row1Name.put("员工工号", "pNumber");
+		row1Name.put("员工姓名", "pName");
+		row1Name.put("楼层", "floor");
+		row1Name.put("房间号", "roomNo");
+		row1Name.put("床位号", "bedNo");
+		row1Name.put("宿舍奖励", "dormBonus");
+		row1Name.put("住宿扣款", "dormDeduction");
+		return row1Name;
+	}
+	
 }

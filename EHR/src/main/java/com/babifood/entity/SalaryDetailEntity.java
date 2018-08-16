@@ -62,7 +62,7 @@ public class SalaryDetailEntity {
 
 	private String stay;// 驻外/住宿津贴
 
-	private String otherAllowance;// 其他津贴
+	private String otherAllowance;// 其它津贴
 
 	private String security;// 安全奖金
 
@@ -70,21 +70,21 @@ public class SalaryDetailEntity {
 
 	private String compensatory;// 礼金/补偿金
 
-	private String otherBonus;// 其他奖金
+	private String otherBonus;// 其它奖金
 
-	private String addOther;// 加其他
+	private String addOther;// 加其它
 
 	private String mealDeduction;// 餐费扣款
 
 	private String dormDeduction;// 住宿扣款
 
-	private String beforeDeduction;// 其他扣款（税前）
+	private String beforeDeduction;// 其它扣款（税前）
 
 	private String insurance;// 社保扣款
 
 	private String providentFund;// 公积金扣款
 
-	private String afterDeduction;// 其他扣款（税后）
+	private String afterDeduction;// 其它扣款（税后）
 
 	private String laterAndLeaveDeduction;// 迟到和早退扣款
 

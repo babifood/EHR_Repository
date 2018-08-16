@@ -98,7 +98,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 		List<Map<String, Object>> values = null;
 		try {
 			values = ExcelUtil.importExcel(file, row1Name);
-			if(values != null || values.size() > 0){
+			if(values != null && values.size() > 0){
 				List<Object[]> performanceParam = getPerformanceParam(values);
 				performanceDao.savePerformance(performanceParam);
 			}
@@ -138,6 +138,20 @@ public class PerformanceServiceImpl implements PerformanceService{
 			performanceParam.add(obj);
 		}
 		return performanceParam;
+	}
+
+	@Override
+	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			performanceDao.updatePerformanceScore(year, month, pNumber, score);
+			result.put("code", "1");
+			result.put("msg", "修改绩效分值成功");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "修改绩效分值失败");
+		}
+		return result;
 	}
 
 }

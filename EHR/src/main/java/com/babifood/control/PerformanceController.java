@@ -48,4 +48,10 @@ public class PerformanceController {
 	public Map<String, Object> importExcel(@RequestParam(value="excel")CommonsMultipartFile file, String type){
 		return performanceService.importExcel(file, type);
 	}
+	
+	@RequestMapping("save")
+	@ResponseBody
+	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score) {
+		return performanceService.savePerformanceScore(year, month, pNumber, score);
+	}
 }

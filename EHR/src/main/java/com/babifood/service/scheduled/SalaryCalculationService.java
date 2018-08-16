@@ -1,6 +1,5 @@
 package com.babifood.service.scheduled;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,6 +28,7 @@ import com.babifood.service.AllowanceService;
 import com.babifood.service.InitAttendanceService;
 import com.babifood.service.PersonInFoService;
 import com.babifood.service.SalaryDetailService;
+import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 
@@ -59,8 +59,6 @@ public class SalaryCalculationService {
 	@Autowired
 	private PerformanceDao performanceDao;
 	
-	private DecimalFormat numberFormat;
-	
 	private Map<String, String> formulaList;
 	
 	private String year;
@@ -72,7 +70,6 @@ public class SalaryCalculationService {
 	private ScriptEngine scriptEngine;
 	
 	private void init() throws Exception{
-		numberFormat = new DecimalFormat("#0.00");
 		formulaList = getFormula();
 		year = UtilDateTime.getCurrentYear();
 //			UtilDateTime.getYearOfPreMonth();// 当前年
@@ -365,9 +362,9 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(realWagesFormula)){
 			realWagesFormula = SalaryConstant.REAL_WAGES_FORMULA;
 		}
-		salaryDerail.setWagePayable(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(wagePayableFormula, salaryDerail, baseFields, formulaList))+"")));// 应发工资
-		salaryDerail.setPersonalTax(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(personalTaxFormula, salaryDerail, baseFields, formulaList))+"")));// 个税
-		salaryDerail.setRealWages(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(realWagesFormula, salaryDerail, baseFields, formulaList))+"")));// 实发工资
+		salaryDerail.setWagePayable(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(wagePayableFormula, salaryDerail, baseFields, formulaList))+""));// 应发工资
+		salaryDerail.setPersonalTax(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(personalTaxFormula, salaryDerail, baseFields, formulaList))+""));// 个税
+		salaryDerail.setRealWages(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(realWagesFormula, salaryDerail, baseFields, formulaList))+""));// 实发工资
 	}
 
 	/**
@@ -377,12 +374,12 @@ public class SalaryCalculationService {
 	 * @param allowances
 	 */
 	private void calculationDeduction(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
-		salaryDerail.setMealDeduction(numberFormat.format(Double.valueOf(baseFields.getMealDeduction())));// 餐费扣款
-		salaryDerail.setDormDeduction(numberFormat.format(Double.valueOf(baseFields.getDormDeduction())));// 住宿扣款
-		salaryDerail.setBeforeDeduction(numberFormat.format(Double.valueOf(baseFields.getBeforeDeduction())));// 税前其他扣款
-		salaryDerail.setInsurance(numberFormat.format(Double.valueOf(baseFields.getInsurance())));// 社保扣款
-		salaryDerail.setProvidentFund(numberFormat.format(Double.valueOf(baseFields.getProvidentFund())));// 公积金扣款
-		salaryDerail.setAfterDeduction(numberFormat.format(Double.valueOf(baseFields.getAfterDeduction())));// 其他扣款（税后）
+		salaryDerail.setMealDeduction(BASE64Util.getStringTowDecimal(baseFields.getMealDeduction()));// 餐费扣款
+		salaryDerail.setDormDeduction(BASE64Util.getStringTowDecimal(baseFields.getDormDeduction()));// 住宿扣款
+		salaryDerail.setBeforeDeduction(BASE64Util.getStringTowDecimal(baseFields.getBeforeDeduction()));// 税前其它扣款
+		salaryDerail.setInsurance(BASE64Util.getStringTowDecimal(baseFields.getInsurance()));// 社保扣款
+		salaryDerail.setProvidentFund(BASE64Util.getStringTowDecimal(baseFields.getProvidentFund()));// 公积金扣款
+		salaryDerail.setAfterDeduction(BASE64Util.getStringTowDecimal(baseFields.getAfterDeduction()));// 其它扣款（税后）
 	}
 
 	/**
@@ -396,11 +393,11 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(performanceFormula)){
 			performanceFormula = SalaryConstant.PERFORMANCE_FORMULA;
 		}
-		salaryDerail.setPerformanceBonus(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields, formulaList))+"")));// 绩效奖金
-		salaryDerail.setSecurity(numberFormat.format(Double.valueOf(baseFields.getSecurity())));// 安全奖
-		salaryDerail.setCompensatory(numberFormat.format(Double.valueOf(baseFields.getCompensatory())));// 礼金、补偿金
-		salaryDerail.setOtherBonus(numberFormat.format(Double.valueOf(baseFields.getOtherBonus())));// 其他奖金
-		salaryDerail.setAddOther(numberFormat.format(Double.valueOf(baseFields.getAddOther())));// 加其他
+		salaryDerail.setPerformanceBonus(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields, formulaList))+""));// 绩效奖金
+		salaryDerail.setSecurity(BASE64Util.getStringTowDecimal(baseFields.getSecurity()));// 安全奖
+		salaryDerail.setCompensatory(BASE64Util.getStringTowDecimal(baseFields.getCompensatory()));// 礼金、补偿金
+		salaryDerail.setOtherBonus(BASE64Util.getStringTowDecimal(baseFields.getOtherBonus()));// 其它奖金
+		salaryDerail.setAddOther(BASE64Util.getStringTowDecimal(baseFields.getAddOther()));// 加其它
 	}
 
 	/**
@@ -430,14 +427,14 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(lowTemFormula)){
 			lowTemFormula = SalaryConstant.LOWTEM_ALLOWANCE_FORMULA;
 		}
-		salaryDerail.setRiceStick(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields, formulaList))+"")));// 餐补
-		salaryDerail.setCallSubsidies(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields, formulaList))+"")));// 话费补贴
-		salaryDerail.setHighTem(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(highTemFormula, salaryDerail, baseFields, formulaList))+"")));// 高温补贴
-		salaryDerail.setLowTem(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(lowTemFormula, salaryDerail, baseFields, formulaList))+"")));// 低温补贴
-		salaryDerail.setMorningShift(numberFormat.format(Double.valueOf(baseFields.getMorningShift())));// 早班津贴
-		salaryDerail.setNightShift(numberFormat.format(Double.valueOf(baseFields.getNightShift())));// 夜班津贴
-		salaryDerail.setStay(numberFormat.format(Double.valueOf(baseFields.getStay())));// 住宿补贴
-		salaryDerail.setOtherAllowance(numberFormat.format(Double.valueOf(baseFields.getOtherAllowance())));// 其他津贴
+		salaryDerail.setRiceStick(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields, formulaList))+""));// 餐补
+		salaryDerail.setCallSubsidies(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields, formulaList))+""));// 话费补贴
+		salaryDerail.setHighTem(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(highTemFormula, salaryDerail, baseFields, formulaList))+""));// 高温补贴
+		salaryDerail.setLowTem(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(lowTemFormula, salaryDerail, baseFields, formulaList))+""));// 低温补贴
+		salaryDerail.setMorningShift(BASE64Util.getStringTowDecimal(baseFields.getMorningShift()));// 早班津贴
+		salaryDerail.setNightShift(BASE64Util.getStringTowDecimal(baseFields.getNightShift()));// 夜班津贴
+		salaryDerail.setStay(BASE64Util.getStringTowDecimal(baseFields.getStay()));// 住宿补贴
+		salaryDerail.setOtherAllowance(BASE64Util.getStringTowDecimal(baseFields.getOtherAllowance()));// 其它津贴
 	}
 
 	/**
@@ -478,22 +475,22 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(totalFormula)){
 			totalFormula = SalaryConstant.TOTAL_DEDUCTION_FORMULA;
 		}
-		salaryDerail.setLaterAndLeaveDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(laterAndLeaveFormula, salaryDerail, baseFields, formulaList))+"")));// 迟到早退扣除薪资
-		salaryDerail.setCompletionDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(completionFormula, salaryDerail, baseFields, formulaList))+"")));// 旷工扣除
-		salaryDerail.setAttendanceHours(numberFormat.format(Double.valueOf(baseFields.getAttendanceHours())));// 应出勤小时数
-		salaryDerail.setAbsenceHours(numberFormat.format(Double.valueOf(baseFields.getAbsenceHours())));// 缺勤小时数
-		salaryDerail.setOverSalary(numberFormat.format(Double.valueOf(baseFields.getOverSalary())));//加班费
-		salaryDerail.setThingDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(thingFormula, salaryDerail, baseFields, formulaList))+"")));// 事假
-		salaryDerail.setSickDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields, formulaList))+"")));// 病假
-		salaryDerail.setYearDeduction(numberFormat.format(0.0));// 年假
-		salaryDerail.setMarriageDeduction(numberFormat.format(0.0));// 婚假
-		salaryDerail.setFuneralDeduction(numberFormat.format(0.0));// 丧假
-		salaryDerail.setRelaxation(numberFormat.format(0.0));// 调休
-		salaryDerail.setTrainDeduction(numberFormat.format(0.0));// 培训假
-		salaryDerail.setCompanionParentalDeduction(numberFormat.format(0.0));// 陪产假
-		salaryDerail.setParentalDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(parentalFormula, salaryDerail, baseFields, formulaList))+"")));// 产假
-		salaryDerail.setOnboarding(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(onboardingFormula, salaryDerail, baseFields, formulaList))+"")));// 月中入职、离职导致缺勤
-		salaryDerail.setTotalDeduction(numberFormat.format(Double.valueOf(scriptEngine.eval(replaceFields(totalFormula, salaryDerail, baseFields, formulaList))+"")));// 应扣合计
+		salaryDerail.setLaterAndLeaveDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(laterAndLeaveFormula, salaryDerail, baseFields, formulaList))+""));// 迟到早退扣除薪资
+		salaryDerail.setCompletionDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(completionFormula, salaryDerail, baseFields, formulaList))+""));// 旷工扣除
+		salaryDerail.setAttendanceHours(BASE64Util.getStringTowDecimal(baseFields.getAttendanceHours()));// 应出勤小时数
+		salaryDerail.setAbsenceHours(BASE64Util.getStringTowDecimal(baseFields.getAbsenceHours()));// 缺勤小时数
+		salaryDerail.setOverSalary(BASE64Util.getStringTowDecimal(baseFields.getOverSalary()));//加班费
+		salaryDerail.setThingDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(thingFormula, salaryDerail, baseFields, formulaList))+""));// 事假
+		salaryDerail.setSickDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields, formulaList))+""));// 病假
+		salaryDerail.setYearDeduction(BASE64Util.getStringTowDecimal("0"));// 年假
+		salaryDerail.setMarriageDeduction(BASE64Util.getStringTowDecimal("0"));// 婚假
+		salaryDerail.setFuneralDeduction(BASE64Util.getStringTowDecimal("0"));// 丧假
+		salaryDerail.setRelaxation(BASE64Util.getStringTowDecimal("0"));// 调休
+		salaryDerail.setTrainDeduction(BASE64Util.getStringTowDecimal("0"));// 培训假
+		salaryDerail.setCompanionParentalDeduction(BASE64Util.getStringTowDecimal("0"));// 陪产假
+		salaryDerail.setParentalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(parentalFormula, salaryDerail, baseFields, formulaList))+""));// 产假
+		salaryDerail.setOnboarding(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(onboardingFormula, salaryDerail, baseFields, formulaList))+""));// 月中入职、离职导致缺勤
+		salaryDerail.setTotalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(totalFormula, salaryDerail, baseFields, formulaList))+""));// 应扣合计
 	}
 
 	/**
@@ -503,10 +500,10 @@ public class SalaryCalculationService {
 	 * @param salary
 	 */
 	private void setBaseSalaryInfo(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
-		salaryDerail.setBaseSalary(numberFormat.format(Double.valueOf(baseFields.getBaseSalary())));// 基本薪资
-		salaryDerail.setFixedOvertimeSalary(numberFormat.format(Double.valueOf(baseFields.getFixedOverTimeSalary())));// 固定加班费
-		salaryDerail.setCompanySalary(numberFormat.format(Double.valueOf(baseFields.getCompanySalary())));// 司龄工资
-		salaryDerail.setPostSalary(numberFormat.format(Double.valueOf(baseFields.getPostSalary())));// 岗位工资
+		salaryDerail.setBaseSalary(BASE64Util.getStringTowDecimal(baseFields.getBaseSalary()));// 基本薪资
+		salaryDerail.setFixedOvertimeSalary(BASE64Util.getStringTowDecimal(baseFields.getFixedOverTimeSalary()));// 固定加班费
+		salaryDerail.setCompanySalary(BASE64Util.getStringTowDecimal(baseFields.getCompanySalary()));// 司龄工资
+		salaryDerail.setPostSalary(BASE64Util.getStringTowDecimal(baseFields.getPostSalary()));// 岗位工资
 	}
 
 	/**

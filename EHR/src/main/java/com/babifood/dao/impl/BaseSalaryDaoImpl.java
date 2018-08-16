@@ -54,14 +54,14 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
-					BASE64Util.encode(baseSalary.getBaseSalary() + ""),
-					BASE64Util.encode(baseSalary.getFixedOverTimeSalary() + ""),
-					BASE64Util.encode(baseSalary.getPostSalary() + ""),
-					BASE64Util.encode(baseSalary.getCallSubsidies() + ""),
-					BASE64Util.encode(baseSalary.getCompanySalary() + ""),
-					BASE64Util.encode(baseSalary.getSingelMeal() + ""),
-					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), 
-					BASE64Util.encode(baseSalary.getStay() + ""), 
+					BASE64Util.encode(baseSalary.getBaseSalary()),
+					BASE64Util.encode(baseSalary.getFixedOverTimeSalary()),
+					BASE64Util.encode(baseSalary.getPostSalary()),
+					BASE64Util.encode(baseSalary.getCallSubsidies()),
+					BASE64Util.encode(baseSalary.getCompanySalary()),
+					BASE64Util.encode(baseSalary.getSingelMeal()),
+					BASE64Util.encode(baseSalary.getPerformanceSalary()), 
+					BASE64Util.encode(baseSalary.getStay()), 
 					baseSalary.getCreateTime(),
 					baseSalary.getWorkType(), baseSalary.getUseTime(), "0");
 		} catch (Exception e) {
@@ -79,14 +79,14 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("WHERE `ID`=?");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
-					BASE64Util.encode(baseSalary.getBaseSalary() + ""),
-					BASE64Util.encode(baseSalary.getFixedOverTimeSalary() + ""),
-					BASE64Util.encode(baseSalary.getPostSalary() + ""),
-					BASE64Util.encode(baseSalary.getCallSubsidies() + ""),
-					BASE64Util.encode(baseSalary.getCompanySalary() + ""),
-					BASE64Util.encode(baseSalary.getSingelMeal() + ""),
-					BASE64Util.encode(baseSalary.getPerformanceSalary() + ""), 
-					BASE64Util.encode(baseSalary.getStay() + ""), baseSalary.getUseTime());
+					BASE64Util.encode(baseSalary.getBaseSalary()),
+					BASE64Util.encode(baseSalary.getFixedOverTimeSalary()),
+					BASE64Util.encode(baseSalary.getPostSalary()),
+					BASE64Util.encode(baseSalary.getCallSubsidies()),
+					BASE64Util.encode(baseSalary.getCompanySalary()),
+					BASE64Util.encode(baseSalary.getSingelMeal()),
+					BASE64Util.encode(baseSalary.getPerformanceSalary()), 
+					BASE64Util.encode(baseSalary.getStay()), baseSalary.getUseTime());
 		} catch (Exception e) {
 			log.error("修改基础薪资信息失败", e.getMessage());
 			throw e;

@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,9 @@ import java.util.Map;
  * 3、给定一个字符串，用Base64方法对其进行加密后解密，得到的结果就不是开始时候的字符串了。<br/>
  */
 public class BASE64Util {
+	
+	private static DecimalFormat numberFormat = new DecimalFormat("#0.00");
+	
 	 /**
      * 功能：编码字符串
      *
@@ -517,10 +521,33 @@ public class BASE64Util {
 		}
 	}
     
+    public static String getDecodeStringTowDecimal(Object obj) {
+    	String decodeStr = "";
+		try {
+			decodeStr = encode(getStringTowDecimal(obj));
+		} catch (Exception e) {
+			decodeStr = (String) obj;
+		}
+		return decodeStr;
+	}
+    
+    public static String getStringTowDecimal(Object obj) {
+    	String decodeStr = "";
+		try {
+			decodeStr = UtilString.isEmpty(obj+"") ? "0" : obj.toString();
+			decodeStr = numberFormat.format(Double.valueOf(decodeStr));
+		} catch (Exception e) {
+			decodeStr = (String) obj;
+		}
+		return decodeStr;
+	}
+    
     public static void main(String[] args) {
-		String salary = "10000";
-		String code = new BASE64Util().encode(salary);
-		System.out.println(code);
-		System.out.println(new BASE64Util().decode(code));
+    	System.out.println(getDecodeStringTowDecimal("123456"));
+    	System.out.println(decode(getDecodeStringTowDecimal("123456")));
+//		String salary = "10000";
+//		String code = encode(salary);
+//		System.out.println(code);
+//		System.out.println(decode(code));
 	}
 }

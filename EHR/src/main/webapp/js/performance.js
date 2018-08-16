@@ -22,6 +22,11 @@ function loadPerformanceList(){
 		pageNumber : 1,
 		columns : [[
 			{
+				field : "id",
+				title : "年",
+				hidden:"true",
+				width : 100,
+			},{
 				field : "year",
 				title : "年",
 				width : 100,
@@ -57,6 +62,12 @@ function loadPerformanceList(){
 				field : "performanceScore",
 				title : "绩效分值",
 				width : 100,
+				editor:{
+					type:'text',
+					options:{
+						required:true,
+					},
+				},
 			},{
 				field : "performanceSalary",
 				title : "绩效工资",
@@ -115,7 +126,8 @@ function importPerformanceInfos(){
             return true;  
         }, 
 		success : function(result) {
-			if (result.code == "1") {
+			var obj = JSON.parse(result);
+			if (obj.code == "1") {
 				$.messager.alert('提示!', '导入成功','info',
 					function() {
 						$('#performance_dialog').dialog('close');
@@ -128,5 +140,72 @@ function importPerformanceInfos(){
 		}
 	})
 	$('#performance_uploadExcel').submit();
+}
+
+var performanceIndex;
+
+//修改绩效分数
+function updatePerformanceSocre() {
+	if(performanceIndex == null){
+		var row = $('#performance_list_datagrid').datagrid("getSelected");
+		if(!row){
+			$.messager.alert("消息提示！","请选择一条数据","warning");
+		} else {
+			var index = $('#performance_list_datagrid').datagrid("getRowIndex", row);
+			if (performanceIndex != index){
+				$('#performance_list_datagrid').datagrid('selectRow', index)
+				.datagrid('beginEdit', index);
+				performanceIndex = index;
+			} else {
+				$('#performance_list_datagrid').datagrid('selectRow', performanceIndex);
+			}
+		}
+	}
+}
+
+//取消
+function cancelPerformanceSocre(){
+	$('#performance_list_datagrid').datagrid('rejectChanges');
+	performanceIndex = undefined;
+}
+
+//保存绩效分数
+function savePerformanceSocre() {
+	if (performanceIndex >= 0 && $('#performance_list_datagrid').datagrid('validateRow', performanceIndex)){
+		$('#performance_list_datagrid').datagrid('endEdit', performanceIndex);
+		var rows = $('#performance_list_datagrid').datagrid("getRows");
+		var rowData = rows[performanceIndex];
+		$.ajax({
+			url:prefix+'/performance/save',
+			type:'post',
+			data:{
+				year:rowData.year,
+				month:rowData.month,
+				pNumber:rowData.pNumber,
+				score:rowData.performanceScore
+			},
+			beforeSend:function(){
+				$.messager.progress({
+					text:'保存中......',
+				});
+			},
+			success:function(data){
+				$.messager.progress('close');
+				if(data.code=="1"){
+					$.messager.show({
+						title:'消息提醒',
+						msg:'保存成功!',
+						timeout:3000,
+						showType:'slide'
+					});
+					performanceIndex = undefined;
+					$('#performance_list_datagrid').datagrid('reload');
+				}else{
+					$.messager.alert("消息提示！","保存失败!","warning");
+					$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+				}
+			}
+		});
+	}
 }
 

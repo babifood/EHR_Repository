@@ -43,8 +43,8 @@
 			<form id="allowance_uploadExcel"  method="post" enctype="multipart/form-data" style="margin-top: 5px">  
    				<table style="width: 100%">
    					<tr>
-   						<td style="width:20%;">重复覆盖：</td><td style="width:10%;"><input type="radio" name="type" value="1"></td>
-   						<td style="width:69%">重复忽略：<input type="radio" name="type" value="0"></td>
+   						<td style="width:20%;">覆盖导入：</td><td style="width:10%;"><input type="radio" name="type" value="1"></td>
+   						<td style="width:69%">追加导入：<input type="radio" name="type" value="0"></td>
    					</tr>
    					<tr>
    						<td style="width:20%;">选择文件：</td><td style="width:10%;"></td>

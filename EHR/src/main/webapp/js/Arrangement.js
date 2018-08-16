@@ -120,7 +120,7 @@ function loadBaseTimes() {
 
 var editIndex1;
 function addArrangementBaseTime(){
-	if (endEditingArrangement()){
+	if (editIndex1 == undefined){
 		$('#arrangement_base_time').datagrid('appendRow',{});
 		editIndex1 = $('#arrangement_base_time').datagrid('getRows').length-1;
 		$('#arrangement_base_time').datagrid('selectRow', editIndex1)
@@ -129,16 +129,16 @@ function addArrangementBaseTime(){
 }
 
 //结束编辑
-function endEditingArrangement(){
-	if (editIndex1 == undefined){return true}
-	if ($('#arrangement_base_time').datagrid('validateRow', editIndex1)){
-		$('#arrangement_base_time').datagrid('endEdit', editIndex1);
-		editIndex1 = undefined;
-		return true;
-	} else {
-		return false;
-	}
-}
+//function endEditingArrangement(){
+//	if (editIndex1 == undefined){return true}
+//	if ($('#arrangement_base_time').datagrid('validateRow', editIndex1)){
+//		$('#arrangement_base_time').datagrid('endEdit', editIndex1);
+//		editIndex1 = undefined;
+//		return true;
+//	} else {
+//		return false;
+//	}
+//}
 
 //删除
 function removeArrangementBaseTime(){
@@ -173,7 +173,6 @@ function removeArrangementBaseTime(){
 								$('#arrangement_base_time').datagrid('cancelEdit', index)
 								.datagrid('deleteRow', index).datagrid('clearSelections',node);
 								$('#arrangement_base_time').datagrid('acceptChanges');
-								editIndex1 = undefined;
 							}else{
 								$.messager.alert("消息提示！","删除失败!","warning");
 							}
@@ -189,7 +188,8 @@ function removeArrangementBaseTime(){
 
 //保存
 function saveArrangementBaseTime(){
-	if (endEditingArrangement()){
+	if (editIndex1 >= 0 && $('#arrangement_base_time').datagrid('validateRow', editIndex1)){
+		$('#arrangement_base_time').datagrid('endEdit', editIndex1);
 		$.ajax({
 			url:prefix+'/arrangement/base/save',
 			type:'post',
@@ -209,9 +209,11 @@ function saveArrangementBaseTime(){
 						timeout:3000,
 						showType:'slide'
 					});
+					editIndex1 = undefined;
 					$('#arrangement_base_time').datagrid('reload');
 				}else{
 					$.messager.alert("消息提示！","保存失败!","warning");
+					$('#arrangement_base_time').datagrid('beginEdit', editIndex1);
 				}
 			}
 		});
@@ -240,19 +242,17 @@ function cancelArrangementBaseTime(){
 
 //编辑
 function updateArrangementBaseTime(){
-	var row = $('#arrangement_base_time').datagrid("getSelected");
-	if(!row){
-		$.messager.alert("消息提示！","请选择一条数据","warning");
-	} else {
-		var index = $('#arrangement_base_time').datagrid("getRowIndex", row);	
-		if (editIndex1 != index){
-			if (endEditingArrangement()){
-				$('#arrangement_base_time').datagrid('selectRow', index)
-						.datagrid('beginEdit', index);
+	if (editIndex1 == undefined){
+		var row = $('#arrangement_base_time').datagrid("getSelected");
+		if(!row){
+			$.messager.alert("消息提示！","请选择一条数据","warning");
+		} else {
+			var index = $('#arrangement_base_time').datagrid("getRowIndex", row);	
+			console.log(editIndex1);
+			if (editIndex1 != index){
+				$('#arrangement_base_time').datagrid('beginEdit', index);
 				editIndex1 = index;
 				var editors = $("#arrangement_base_time").datagrid('getEditors',editIndex1);  
-			} else {
-				$('#arrangement_base_time').datagrid('selectRow', editIndex1);
 			}
 		}
 	}

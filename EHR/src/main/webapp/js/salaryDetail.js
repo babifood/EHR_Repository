@@ -21,10 +21,10 @@ function loadSalaryDetails() {
 		toolbar : "#salaryDetail_datagrid_tools",
 		singleSelect : true,
 		frozenColumns:[[
-			{field : "year",title : "年",width : 100, }, 
-			{field : "month",title : "月",width : 100, }, 
-			{field : "pNumber",title : "员工工号",width : 100,}, 
-			{field : "pName",title : "员工姓名",width : 100,}
+			{field : "year",title : "年",width : 40, }, 
+			{field : "month",title : "月",width : 30, }, 
+			{field : "pNumber",title : "员工工号",width : 60,}, 
+			{field : "pName",title : "员工姓名",width : 60,}
 			]],
 		columns : [[
 			{field : "id",title : "",hidden : "true",width : 100, }, 
@@ -53,18 +53,18 @@ function loadSalaryDetails() {
 			{field : "morningShift",title : "早班津贴",width : 100,},
 			{field : "nightShift",title : "夜班津贴",width : 100,},
 			{field : "stay",title : "驻外/住宿津贴",width : 100,},
-			{field : "otherAllowance",title : "其他津贴",width : 100,},
+			{field : "otherAllowance",title : "其它津贴",width : 100,},
 			{field : "security",title : "安全奖金",width : 100,},
 			{field : "compensatory",title : "礼金/补偿金",width : 100,},
-			{field : "otherBonus",title : "其他奖金",width : 100,},
-			{field : "addOther",title : "加其他",width : 100,},
+			{field : "otherBonus",title : "其它奖金",width : 100,},
+			{field : "addOther",title : "加其它",width : 100,},
 			{field : "mealDeduction",title : "餐费扣款",width : 100,},
 			{field : "dormDeduction",title : "住宿扣款",width : 100,},
-			{field : "beforeDeduction",title : "其他扣款（税前）",width : 100,},
+			{field : "beforeDeduction",title : "其它扣款（税前）",width : 100,},
 			{field : "insurance",title : "社保扣款",width : 100,},
 			{field : "providentFund",title : "公积金扣款",width : 100,},
 			{field : "mealDeduction",title : "餐费扣款",width : 100,},
-			{field : "afterDeduction",title : "其他扣款（税后）",width : 100,},
+			{field : "afterDeduction",title : "其它扣款（税后）",width : 100,},
 			{field : "laterAndLeaveDeduction",title : "迟到和早退扣款",width : 100,},
 			{field : "completionDeduction",title : "旷工扣款",width : 100, },
 			{field : "yearDeduction",title : "年假扣款",width : 100,},
@@ -105,7 +105,25 @@ function exportSalaryDetail() {
 
 //计算薪资
 function salaryCalculation(type){
-	console.log("1111111111111");
+	var value = "试算";
+	if(type == 1){
+		value = "试算";
+		calculationSalary(type, value);
+	} else if(type == 2){
+		value = "核算";
+		calculationSalary(type, value);
+	} else if(type == 3){
+		value = "归档";
+		console.log("11111111111111");
+		$.messager.confirm("提示","归档后不能再次修改，确定归档吗？",function(r){
+			if(r){
+				calculationSalary(type, value);
+			}
+		})	
+	}
+}
+
+function calculationSalary(type, value){
 	$("#salaryDetail_calculate").linkbutton('disable');
 	$("#salaryDetail_accounting").linkbutton('disable');
 	$("#salaryDetail_archive").linkbutton('disable');
@@ -114,13 +132,13 @@ function salaryCalculation(type){
 		data : {
 			type:type
 		},
+		beforeSend:function(){
+			$.messager.progress({
+				text:value + '进行中，请稍后......',
+			});
+		},
 		success:function(result){
-			var value = "试算";
-			if(type == 2){
-				value = "核算";
-			} else if(type == 3){
-				value = "归档";
-			}
+			$.messager.progress('close');
 			if(result.code == 2){
 				$.messager.alert('提示', result.msg, 'info');
 			} else if (result.code == 0) {
@@ -134,6 +152,4 @@ function salaryCalculation(type){
 			$("#salaryDetail_datagrid").datagrid("reload");
 		}
 	})
-	
 }
-

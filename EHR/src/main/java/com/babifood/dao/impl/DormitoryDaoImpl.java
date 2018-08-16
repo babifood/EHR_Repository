@@ -345,7 +345,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		sql.append(" VALUES (?, ?, ?, ?, ?)");
 		try {
 			jdbcTemplate.update(sql.toString(), dormitoryCost.getYear(), dormitoryCost.getMonth(), dormitoryCost.getpNumber(), 
-					BASE64Util.encode(dormitoryCost.getDormBonus()), BASE64Util.encode(dormitoryCost.getDormDeduction()));
+					BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormBonus()), BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormDeduction()));
 		} catch (Exception e) {
 			log.error("保存住宿费用信息失败",e.getMessage());
 			throw e;
@@ -372,6 +372,20 @@ public class DormitoryDaoImpl implements DormitoryDao {
 			log.error("删除入住信息失败",e.getMessage());
 			throw e;
 		}
+	}
+
+	@Override
+	public void saveDormitoryCosts(List<Object[]> performanceParam) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("REPLACE INTO `ehr_dormitory_allowances` (`YEAR`, `MONTH`, `P_NUMBER`, `DORM_BONUS`, `DORM_DEDUCTION`)");
+		sql.append(" VALUES (?, ?, ?, ?, ?)");
+		try {
+			jdbcTemplate.batchUpdate(sql.toString(),performanceParam);
+		} catch (Exception e) {
+			log.error("保存住宿费用信息失败",e.getMessage());
+			throw e;
+		}
+		
 	}
 
 }

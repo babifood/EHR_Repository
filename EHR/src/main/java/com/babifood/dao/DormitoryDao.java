@@ -40,5 +40,7 @@ public interface DormitoryDao {
 
 	public void moveOutProcedure(String dormitoryId, String pnumber, String outTime);
 
+	public void saveDormitoryCosts(List<Object[]> performanceParam);
+
 
 }

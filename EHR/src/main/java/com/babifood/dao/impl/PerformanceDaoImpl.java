@@ -138,4 +138,15 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return performanceInfo;
 	}
 
+	@Override
+	public void updatePerformanceScore(String year, String month, String pNumber, String score) {
+		String sql = "update ehr_performance set performance_score = ? where P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?";
+		try {
+			jdbcTemplate.update(sql, score, pNumber, month, year);
+		} catch (Exception e) {
+			log.error("修改绩效分值失败", e.getMessage());
+			throw e;
+		}
+	}
+
 }

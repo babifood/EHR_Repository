@@ -30,7 +30,7 @@ public class BaseFieldsEntity {
 	
 	private String nightShift;//夜班津贴
 	
-	private String otherAllowance;//其他补贴
+	private String otherAllowance;//其它补贴
 	
 	private String stay;//驻外/住宿津贴
 
@@ -40,11 +40,11 @@ public class BaseFieldsEntity {
 	
 	private String security;//安全奖金
 	
-	private String otherBonus;//其他奖励
+	private String otherBonus;//其它奖励
 	
-	private String beforeDeduction;//其他扣款（税前）
+	private String beforeDeduction;//其它扣款（税前）
 
-	private String addOther;//加其他
+	private String addOther;//加其它
 	
 	private String companyAge;//司龄
 	
@@ -68,7 +68,7 @@ public class BaseFieldsEntity {
 	
 	private String thingHours;//事假时间
 	
-	private String afterDeduction;//其他扣款（税后）
+	private String afterDeduction;//其它扣款（税后）
 	
 	private String lateTime;//迟到次数
 	

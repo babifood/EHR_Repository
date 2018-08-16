@@ -62,24 +62,34 @@
 			</div>
 		</div>
 	</div>
-	<div title="宿舍奖励扣款"  style="display:none;">
+	<div title="宿舍费用管理"  style="display:none;">
 		<div data-options="fit:true,border:false,noheader:true" class="easyui-panel">
 			<table class="easyui-datagrid" id="dormitory_cost_list"></table>
 			<div style="margin-bottom: 5px;" id="dormitory_cost_list_tools">
 				<div>
-					<shiro:hasPermission name="cost:add">
+					<a href="javascript:void(0)" id="mb" class="easyui-menubutton" data-options="menu:'#dormitory_cost_menubutton',iconCls:'icon-edit'">导入/导出</a>
+					<div id="dormitory_cost_menubutton" style="width:150px;">   
+<%-- 						<shiro:hasPermission name="cost:import"> --%>
+						    <div data-options="iconCls:'icon-load'" onclick="exportDormitoryCost(0)">下载模板</div>   
+						    <div data-options="iconCls:'icon-redo'" onclick="dormitoryCostImport()">导入</div>
+<%-- 					    </shiro:hasPermission> --%>
+<%-- 					    <shiro:hasPermission name="cost:export">    --%>
+						    <div data-options="iconCls:'icon-remove'" onclick="exportDormitoryCost(1)">导出</div>  
+<%-- 					    </shiro:hasPermission>  --%>
+					</div> 
+<%-- 					<shiro:hasPermission name="cost:add"> --%>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addDormitoryCost()">添加</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="cost:delete">
+<%-- 					</shiro:hasPermission> --%>
+<%-- 					<shiro:hasPermission name="cost:delete"> --%>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeDormitoryCost()">删除</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="cost:edit">
+<%-- 					</shiro:hasPermission> --%>
+<%-- 					<shiro:hasPermission name="cost:edit"> --%>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="updateDormitoryCost()">修改</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="cost:operate">
+<%-- 					</shiro:hasPermission> --%>
+<%-- 					<shiro:hasPermission name="cost:operate"> --%>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveDormitoryCost()">保存</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelDormitoryCost()">取消</a>
-					</shiro:hasPermission>
+<%-- 					</shiro:hasPermission> --%>
 				</div>
 				<div>
         			工号：<input type="text" class="textbox" id="dormitory_cost_pnumber" oninput="searchDormitoryCostList()"/> &nbsp;&nbsp;&nbsp;
@@ -116,9 +126,20 @@
 	<div style="margin : 5px;width: 300px">
 		请选择搬出时间：<input class="easyui-datebox" id="dormitory_moveout_time" style="width: 200px"/>
 	</div>
+	<div id="dormitory_outtime_buttons" style="text-align: center;">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="selectDormitoryCost(0)" style="width: 90px;">保存</a> 
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_outtime_dialog').dialog('close')" style="width: 90px;">取消</a>
+	</div>
 </div>
-<div id="dormitory_outtime_buttons" style="text-align: center;">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="selectDormitoryCost(0)" style="width: 90px;">保存</a> 
-	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_outtime_dialog').dialog('close')" style="width: 90px;">取消</a>
+<div class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" id="dormitory_cost_dialog" closed="true" buttons="#dormitory_cost_dialog_buttons">
+	<div style="text-align: center;">
+		<form id="dormitory_cost_uploadExcel"  method="post" enctype="multipart/form-data" style="margin-top: 20px">  
+  				选择文件：　<input id = "dormitory_cost_file" name = "excel" class="easyui-filebox" style="width:200px" data-options="prompt:'请选择文件...'" accept=".xls,.xlsx">  
+		</form>
+	</div>  
+	<div style="text-align: center; padding: 5px 0;" id="dormitory_cost_dialog_buttons">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="importPerformanceInfos()" style="width: 90px;" id="dormitory_cost_booten">导入</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_cost_dialog').dialog('close')" style="width: 90px;">取消</a>
+	</div>
 </div>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/dormitory.js">

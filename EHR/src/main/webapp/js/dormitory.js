@@ -15,7 +15,7 @@ function loadDate(){
 				loadDormitoryInfo();
 			} else if(title == "住宿记录"){
 				loadStayDormitoryInfo();
-			} else if (title == "宿舍奖励扣款") {
+			} else if (title == "宿舍费用管理") {
 				loadDormitoryCostList();
 			}
 		}
@@ -979,4 +979,53 @@ function clearSearchDormitoryCost() {
 	$("#dormitory_cost_roomNo").val("");
 	$("#dormitory_cost_floor").combobox("clear");
 	$("#dormitory_cost_list").datagrid("load",{});
+}
+
+//导出
+function exportDormitoryCost(type){
+	window.location.href = prefix + "/dormitory/export?type=" + type;
+}
+
+//导入弹框
+function dormitoryCostImport(){
+	$('#dormitory_cost_file').filebox('clear');
+	$("#dormitory_cost_dialog").dialog("open");
+	$("#dormitory_cost_booten").linkbutton('enable');
+}
+
+//导入Excel
+function importPerformanceInfos(){
+	$("#dormitory_cost_uploadExcel").form({
+		type : 'post',
+		url : prefix + "/dormitory/importExcel",
+		dataType : "json",
+		onSubmit: function() {
+			var fileName= $('#dormitory_cost_file').filebox('getValue'); 
+			//对文件格式进行校验  
+            var d1=/\.[^\.]+$/.exec(fileName);
+			if (fileName == "") {  
+			      $.messager.alert('Excel批量绩效导入', '请选择将要上传的文件!'); 
+			      return false;  
+			 }else if(d1!=".xls"){
+				 $.messager.alert('提示','请选择xls格式文件！','info');  
+				 return false; 
+			 }
+			 $("#dormitory_cost_booten").linkbutton('disable');
+            return true;  
+        }, 
+		success : function(result) {
+			var obj = JSON.parse(result);
+			if (obj.code == "1") {
+				$.messager.alert('提示!', '导入成功','info',
+					function() {
+						$('#dormitory_cost_dialog').dialog('close');
+						$("#dormitory_cost_list").datagrid("reload");
+				    });
+			} else {
+				$.messager.confirm('提示',"导入失败!");
+			}
+			$("#dormitory_cost_booten").linkbutton('enable');
+		}
+	})
+	$('#dormitory_cost_uploadExcel').submit();
 }
