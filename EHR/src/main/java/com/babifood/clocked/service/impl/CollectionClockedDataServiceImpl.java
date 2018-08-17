@@ -169,15 +169,27 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 //    	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
 //      System.out.println(simple.toString());  
 //      System.out.println("YX"+random);
-		int a=100001;
-		int[] i=  {100001,100002,100003,100004,100005,100006};
-		for(int j=0;j<i.length;j++){
-			if(a==i[j]){
-				j=0;
-				a=a+1;
+//		int a=100001;
+//		int[] i=  {100001,100002,100003,100004,100005,100006};
+//		for(int j=0;j<i.length;j++){
+//			if(a==i[j]){
+//				j=0;
+//				a=a+1;
+//			}
+//		}
+//		System.out.println(a);
+		int[] codes = new int[5];
+		codes[0] = 7;
+		codes[1] = 8;
+		codes[2] = 9;
+		codes[3] = 10;
+		codes[4] = 1;
+		int p_this_dept_code = codes[0];
+		for(int i=0;i<codes.length;i++){
+			if(p_this_dept_code<codes[i]){
+				p_this_dept_code=codes[i];
 			}
 		}
-		System.out.println(a);
-		
+		System.out.println(p_this_dept_code);
 	}
 }

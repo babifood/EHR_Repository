@@ -16,18 +16,18 @@
 	        <div id="role_tbar" style="padding: 5px;">
 	        	<div style="margin-bottom: 5px;">
 	        		<shiro:hasPermission name="role:add">
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addRole()">添加</a>
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addRole()">添加</a>
 	        		</shiro:hasPermission>
 	        		<shiro:hasPermission name="role:edit">
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRole()">修改</a>
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editRole()">修改</a>
 	        		</shiro:hasPermission>
 	        		<shiro:hasPermission name="role:remove">
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRole()">删除</a>
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRole()">删除</a>
 	        		</shiro:hasPermission>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
 	        		角色名称：<input type="text" class="textbox" id="search_role_name" name="search_role_name" style="width: 110px;"/>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchRole()">查询</a>
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchRole()">查询</a>
 	        	</div>
 	        </div>
 	        <div id="role_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#role_dlg_buttons" style="width: 450px;">
@@ -51,22 +51,28 @@
 		        </div>
 		     </div>	  		
 	        <div id="role_dlg_buttons" style="text-align: center;">
-	        	<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveRole()" style="width: 90px;">保存</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#role_dog').dialog('close')" style="width: 90px;">取消</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveRole()" style="width: 90px;">保存</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#role_dog').dialog('close')" style="width: 90px;">取消</a>
 	        </div>
 	    </div>   
 	    <div title="添加用户">   
 	        <table id="user_tbo"></table>  
 	        <div id="user_tbar" style="padding: 5px;">
 	        	<div style="margin-bottom: 5px;">
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addUser()">添加</a>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改</a>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeUser()">删除</a>
+	        	<shiro:hasPermission name="user:add">
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addUser()">添加</a>
+	        	</shiro:hasPermission>
+	        	<shiro:hasPermission name="user:edit">
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改</a>
+	        	</shiro:hasPermission>
+	        	<shiro:hasPermission name="user:remove">	
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeUser()">删除</a>
+	        	</shiro:hasPermission>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
 	        		用户账号：<input type="text" class="textbox" id="search_user_name" name="search_user_name" style="width: 110px;"/>
 	        		用户名称：<input type="text" class="textbox" id="search_show_name" name="search_show_name" style="width: 110px;"/>
-	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchUser()">查询</a>
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchUser()">查询</a>
 	        	</div>
 	        </div>  
 	        <div id="user_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#user_dlg_buttons" style="width: 450px;">
@@ -102,8 +108,8 @@
 		        </div>
 		     </div>	  		
 	        <div id="user_dlg_buttons" style="text-align: center;">
-	        	<a href="#" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width: 90px;">保存</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#user_dog').dialog('close')" style="width: 90px;">取消</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width: 90px;">保存</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#user_dog').dialog('close')" style="width: 90px;">取消</a>
 	        </div>  
 	    </div>   
 	    <div title="菜单授权">   
@@ -120,7 +126,9 @@
 		        </div>  
 		     </div>
 		     <div style="width: 100%;text-align: center;">
-		     	<a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="saveMenuRole()" style="width: 80px;">保存</a>  
+		     <shiro:hasPermission name="menu:save">
+		     	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" onclick="saveMenuRole()" style="width: 80px;">保存</a>  
+		     </shiro:hasPermission>
 		     </div>      
 	    </div>   
 	</div>  

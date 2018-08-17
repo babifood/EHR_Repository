@@ -91,6 +91,7 @@ public class PersonBasrcEntity {
 	private String p_c_corruption;//反贪腐承诺书
 	private String p_c_probation;//试用期考核表
 	private String p_create_date;//创建时间
+	private String p_this_dept_code;//当前末及部门
 	
 	private List<PersonEducationEntity> education;//教育背景
 	private List<PersonCultivateFront> cultivateFront;//培训经历_入职前
@@ -672,6 +673,14 @@ public class PersonBasrcEntity {
 
 	public void setP_group(String p_group) {
 		this.p_group = p_group;
+	}
+
+	public String getP_this_dept_code() {
+		return p_this_dept_code;
+	}
+
+	public void setP_this_dept_code(String p_this_dept_code) {
+		this.p_this_dept_code = p_this_dept_code;
 	}
 	
 	

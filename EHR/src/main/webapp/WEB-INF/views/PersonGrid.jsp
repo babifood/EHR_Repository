@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
     <!--人事档案 -->
     <!-- 引入样式 -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/PersonGrid.css"/>
@@ -8,9 +9,15 @@
 		<table id="person_grid"></table>
 		<div id="person_tbar">
 			<div style="margin-bottom: 5px;">
+			<shiro:hasPermission name="person:add">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addPersonInFo()">添加</a>
+	        </shiro:hasPermission>
+	        <shiro:hasPermission name="person:edit">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editPersonInFo()">修改</a>
+	        </shiro:hasPermission>
+	        <shiro:hasPermission name="person:remove">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removePersonInFo()">删除</a>
+	       </shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>

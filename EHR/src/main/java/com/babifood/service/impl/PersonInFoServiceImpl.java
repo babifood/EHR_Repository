@@ -30,10 +30,23 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 	@Override
 	public Integer savePersonInfo(PersonBasrcEntity personInFo) {
 		// TODO Auto-generated method stub
+		String[] codes = new String[5];
+		codes[0] = personInFo.getP_company_id()==null?"":personInFo.getP_company_id();
+		codes[1] = personInFo.getP_organization_id()==null?"":personInFo.getP_organization_id();
+		codes[2] = personInFo.getP_department_id()==null?"":personInFo.getP_department_id();
+		codes[3] = personInFo.getP_section_office_id()==null?"":personInFo.getP_section_office_id();
+		codes[4] = personInFo.getP_group_id()==null?"":personInFo.getP_group_id();
+		String p_this_dept_code = codes[0];
+		for(int i=0;i<codes.length;i++){
+			if(p_this_dept_code.length()<codes[i].length()){
+				p_this_dept_code=codes[i];
+			}
+		}
 		if(personInFo.getP_id().equals("")||personInFo.getP_id()==null){
 			personInFo.setP_id(IdGen.uuid());
 		}
 		personInFo.setP_create_date(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		personInFo.setP_this_dept_code(p_this_dept_code);
 		return personInFoDao.savePersonInfo(personInFo);
 	}
 	@Override

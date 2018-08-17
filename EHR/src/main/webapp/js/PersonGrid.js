@@ -155,7 +155,15 @@ function loadCompanyComboBox(){
 	    },
 	    onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	loadOrganizationCombotree(newValue)
+	    	$("#p_organization_id").val("");//单位机构编号
+	    	$("#p_organization").combotree("setValue","");//单位机构
+	    	$("#p_department_id").val("");//所属部门编号
+	    	$("#p_department").combotree("setValue","");//所属部门
+	    	$("#p_section_office_id").val("");//科室编号
+	    	$("#p_section_office").combotree("setValue","");//科室
+	    	$("#p_group_id").val("");//班组编号
+	    	$("#p_group").combotree("setValue","");//班组
+	    	loadOrganizationCombotree(newValue);
 	    }
 	});
 }
@@ -172,7 +180,13 @@ function loadOrganizationCombotree(newValue){
 	    },
 	    onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	loadDepartmentCombotree(newValue)
+	    	$("#p_department_id").val("");//所属部门编号
+	    	$("#p_department").combotree("setValue","");//所属部门
+	    	$("#p_section_office_id").val("");//科室编号
+	    	$("#p_section_office").combotree("setValue","");//科室
+	    	$("#p_group_id").val("");//班组编号
+	    	$("#p_group").combotree("setValue","");//班组
+	    	loadDepartmentCombotree(newValue);
 	    }
 	});  
 }
@@ -189,7 +203,11 @@ function loadDepartmentCombotree(newValue){
 	    },
 	    onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	loadSectionCombotree(newValue)
+	    	$("#p_section_office_id").val("");//科室编号
+	    	$("#p_section_office").combotree("setValue","");//科室
+	    	$("#p_group_id").val("");//班组编号
+	    	$("#p_group").combotree("setValue","");//班组
+	    	loadSectionCombotree(newValue);
 	    }
 	});  
 }
@@ -207,7 +225,9 @@ function loadSectionCombotree(newValue){
 	    	$("#p_section_office_id").val(rec.id);
 	    },onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	loadGroupCombotree(newValue)
+	    	$("#p_group_id").val("");//班组编号
+	    	$("#p_group").combotree("setValue","");//班组
+	    	loadGroupCombotree(newValue);
 	    }  
 	});  
 }
@@ -257,7 +277,7 @@ function checkFormData(){
 		}
 	}
 	for(var j=0;j<uasyUIbox.length;j++){
-		if($('#'+uasyUIbox[j]).val()==""){
+		if($('#'+uasyUIbox[j]).val()==""||$('#'+uasyUIbox[j]).val()==null){
 			check = false;
 			break;
 		}
@@ -496,8 +516,8 @@ function editFromSetValues(data){
 	$("#p_section_office_id").val(data.p_section_office_id);//科室编号
 	$("#p_section_office").combotree("setValue",data.p_section_office);//科室
 	
-	$("#p_group_id").val(data.p_group_id);//科室编号
-	$("#p_group").combotree("setValue",data.p_group);//科室
+	$("#p_group_id").val(data.p_group_id);//班组编号
+	$("#p_group").combotree("setValue",data.p_group);//班组
 	
 	$("#p_state").combobox('setValue',data.p_state);//员工状态
 	$("#p_property").combobox('setValue',data.p_property);//员工性质
@@ -1045,12 +1065,6 @@ function loadEducation(){
 				field:"e_xuewei",
 				title:"学位",
 				width:100,
-				editor:{
-					type:'validatebox',
-					options:{
-						required:true
-					},
-				},
 			},
 			{
 				field:"e_desc",

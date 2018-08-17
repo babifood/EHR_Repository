@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,14 +15,18 @@
 				年份：<input type="text" class="easyui-numberspinner" id="year" name="year" style="width: 110px;"/>
 	        	月份：<input type="text" class="easyui-numberspinner" id="month" name="month" style="width: 110px;"
 	        			data-options="min:1,max:12"/>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="initData()">数据初始化</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="executeData()">数据归集</a>
+	        <shiro:hasPermission name="check:init">
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="initData()">数据初始化</a>
+	       	</shiro:hasPermission>
+	       	<shiro:hasPermission name="cherk:execute">
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="executeData()">数据归集</a>
+	        </shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="WorkNum" name="WorkNum" style="width: 110px;"/>
 	        	姓名：<input type="text" class="textbox" id="UserName" name="UserName" style="width: 110px;"/>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clockedReset()">重置</a>
-	        	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="clockedSearch()">查询</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clockedReset()">重置</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="clockedSearch()">查询</a>
 	        </div>
 		</div>
 	</div>
