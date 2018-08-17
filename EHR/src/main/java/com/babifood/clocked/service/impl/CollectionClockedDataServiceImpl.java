@@ -1,6 +1,10 @@
 package com.babifood.clocked.service.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +26,7 @@ import com.babifood.clocked.rule.MobileCalcRule;
 import com.babifood.clocked.rule.MobileDaKaRule;
 import com.babifood.clocked.rule.OfficeCalcRule;
 import com.babifood.clocked.rule.OfficeDaKaRule;
+import com.babifood.clocked.rule.WorkHourRule;
 import com.babifood.clocked.service.CollectionClockedDataService;
 import com.babifood.clocked.service.LoadClockedResultService;
 @Service
@@ -164,20 +169,42 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		return rows;
 	}
 	public static void main(String[] args) {
-//    	Long simple=System.currentTimeMillis();
-//    	//三位随机数
-//    	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
-//      System.out.println(simple.toString());  
-//      System.out.println("YX"+random);
-		int a=100001;
-		int[] i=  {100001,100002,100003,100004,100005,100006};
-		for(int j=0;j<i.length;j++){
-			if(a==i[j]){
-				j=0;
-				a=a+1;
-			}
-		}
-		System.out.println(a);
+//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		String strBegin="2018-08-01 09:33:00";
+//		String strEnd="2018-08-01 17:30:00";
+//		Date beginDate =null;
+//		try {
+//			beginDate = df.parse(strBegin);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		Date endDate=null;
+//		try {
+//			endDate = df.parse(strEnd);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		double length = WorkHourRule.getQingJiaTimeLength(beginDate,endDate);
+//		System.out.println(length);
+		
+//		int i,min,max;
+//		int A[]={74,48,30,17,62};  // 声明整数数组A,并赋初值
+//		 
+//		min=max=A[0];
+//		System.out.print("数组A的元素包括：");
+//		for(i=0;i<A.length;i++){
+//			System.out.print(A[i]+" ");
+//			if(A[i]>max)   // 判断最大值
+//			max=A[i];
+//			if(A[i]<min)   // 判断最小值
+//			min=A[i];
+//		}
+//		System.out.println("\n数组的最大值是："+max); // 输出最大值
+//		System.out.println("数组的最小值是："+min); // 输出最小值
+		String s=null;
+		System.out.println(s.length());
 		
 	}
 }

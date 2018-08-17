@@ -30,7 +30,7 @@ public class LoginControl {
 				session.setAttribute("status", "账号不存在");
 			} else if (IncorrectCredentialsException.class.getName().equals(
 					exceptionClassName)) {
-				session.setAttribute("status", "密码错误");
+				session.setAttribute("status", "用户名或密码不正确");
 				//throw new CustomException("用户名/密码错误");
 			//} else if("randomCodeError".equals(exceptionClassName)){
 				//throw new CustomException("验证码错误 ");

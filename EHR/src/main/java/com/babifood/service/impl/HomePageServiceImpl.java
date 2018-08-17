@@ -16,8 +16,13 @@ public class HomePageServiceImpl implements HomePageService {
 	public List<Map<String, Object>> LoadTerrMenu(String id,String role_id) {
 		// TODO Auto-generated method stub
 		String strId = id==null||id.equals("")?"0":id;
-		
-		return homePageDao.LoadTreeMenu(strId,role_id);
+		List<Map<String, Object>>  TerrMenuList = homePageDao.LoadTreeMenu(strId,role_id);
+		for (Map<String, Object> map : TerrMenuList) {
+			if(map.get("flag").equals("1")){
+				map.put("state", "open");
+			}
+		}
+		return TerrMenuList;
 	}
 
 }

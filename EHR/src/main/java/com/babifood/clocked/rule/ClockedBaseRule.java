@@ -82,7 +82,7 @@ public class ClockedBaseRule {
 //					value = 8;
 //				}
 //			}
-			theResult.setNianJia(theResult.getNianJia() + value);
+			theResult.setNianJia(value);
 		} else if ("事假".equals(theClockedBizData.getBizFlag1())) {
 			theResult.setShiJia(value);
 		} else if ("病假".equals(theClockedBizData.getBizFlag1())) {
@@ -102,8 +102,11 @@ public class ClockedBaseRule {
 		} else {
 			theResult.setOtherQingJia(value);
 		}
+		double qingjiaSum = theResult.getNianJia()+theResult.getShiJia()+theResult.getBingJia()+theResult.getHunJia()
+		+theResult.getSangJia()+theResult.getPeiXunJia()+theResult.getChanJia()+theResult.getPeiChanJia()+theResult.getTiaoXiu()+theResult.getOtherQingJia();
+		
 		// 设置请假时数
-		theResult.setQingJia(value);
+		theResult.setQingJia(qingjiaSum);
 	}
 	/**
 	 * 计算实际的业务时间--只适合异动单/出差单/请假三种业务单据

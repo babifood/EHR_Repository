@@ -19,7 +19,7 @@ public class HomePageDaoImpl implements HomePageDao {
 	public List<Map<String,Object>> LoadTreeMenu(String id,String role_id) {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
-		sql.append("select m.id,m.text,m.state,m.iconCls,m.url,m.nid");
+		sql.append("select m.id,m.text,m.state,m.iconCls,m.url,m.nid,m.flag");
 		sql.append(" from ehr_menu m inner join ehr_role_menu r");
 		sql.append(" on m.id = r.menu_tbo_id");
 		sql.append(" where m.nid = ?");

@@ -40,7 +40,7 @@ function loadSumClockedResult(){
 		toolbar:"#clocked_tbar",
 		singleSelect:true,
 		//rownumbers:true,
-		columns:[[
+		frozenColumns:[[
 			{
 				field:"period",
 				title:"日期区间",
@@ -55,7 +55,9 @@ function loadSumClockedResult(){
 				field:"UserName",
 				title:"姓名",
 				
-			},
+			}
+		]],  
+		columns:[[
 			{
 				field:"Company",
 				title:"公司名称",
@@ -296,7 +298,7 @@ function loadClockedResult(year,month,workNum,periodEndDate){
 //		toolbar:"#clocked_tbar",
 		singleSelect:true,
 		//rownumbers:true,
-		columns:[[
+		frozenColumns:[[
 			{
 				field:"Year",
 				title:"年度",
@@ -316,7 +318,9 @@ function loadClockedResult(year,month,workNum,periodEndDate){
 				field:"UserName",
 				title:"姓名",
 				
-			},
+			}
+		]],
+		columns:[[
 			{
 				field:"Company",
 				title:"公司名称",

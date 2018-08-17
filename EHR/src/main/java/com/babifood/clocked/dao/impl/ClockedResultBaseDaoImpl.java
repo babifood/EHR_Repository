@@ -92,13 +92,14 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("Qingjia,Yidong,Jiaban,Chuchai,Canbu, ");
 		sql.append("EventBeginTime,EventEndTime,Clockflag ");
 		sql.append("from ehr_checking_result ");
-		sql.append("where Year=? and Month = ? and WorkNum=? and checkingDate<=?");
+		sql.append("where Year=? and Month = ? and WorkNum=? ");
+		//sql.append("and checkingDate<=? ");
 		sql.append("order by WorkNum,checkingDate");
-		Object[] params=new Object[4];
+		Object[] params=new Object[3];
 		params[0]=year;
 		params[1]=month;
 		params[2]=workNum;
-		params[3]=periodEndDate;
+//		params[3]=periodEndDate;
 		List<Map<String, Object>> list=jdbctemplate.queryForList(sql.toString(),params);
 		return list;
 	}

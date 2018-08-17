@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://shiro.apache.org/tags" prefix="shiro" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,10 +12,18 @@
 		<table id="certificaten_grid"></table>
 		<div id="certificaten_tbar">
 			<div style="margin-bottom: 5px;">
-	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addCertificaten()">添加</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeCertificaten()">删除</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="acceptCertificaten()">保存</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="rejectCertificaten()">取消</a>        		
+				<shiro:hasPermission name="certificate:add">
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addCertificaten()">添加</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="certificate:remove">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeCertificaten()">删除</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="certificate:save">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="acceptCertificaten()">保存</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="certificate:undo">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="rejectCertificaten()">取消</a>        		
+	        	</shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>

@@ -90,6 +90,7 @@ public class OfficeCalcRule {
 			}
 			// 缺勤时长
 			theResult.setQueQin(theResult.getStandWorkLength() - finalHours);
+			
 			// 实际工作时长
 			if (theResult.getStandWorkLength() - theResult.getQingJia() - theResult.getQueQin() < 0) {
 				theResult.setActualWorkLength(0d);

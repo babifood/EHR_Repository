@@ -98,9 +98,9 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql_insert_basrc.append("p_c_yingpin_table,p_c_interview_tab,p_c_id_copies,p_c_xueli,p_c_xuewei,");
 		sql_insert_basrc.append("p_c_bank_nub,p_c_tijian_tab,p_c_health,p_c_img,p_c_welcome,p_c_staff,p_c_admin,p_c_shebao,");
 		sql_insert_basrc.append("p_c_shangbao,p_c_secrecy,p_c_prohibida,p_c_contract,p_c_post,p_c_corruption,p_c_probation,p_create_date,");
-		sql_insert_basrc.append("p_organization_id,p_organization,p_section_office_id,p_section_office,p_group_id,p_group)");
-		sql_insert_basrc.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		Object[] sql_insert_basrc_params=new Object[74];
+		sql_insert_basrc.append("p_organization_id,p_organization,p_section_office_id,p_section_office,p_group_id,p_group,p_this_dept_code)");
+		sql_insert_basrc.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		Object[] sql_insert_basrc_params=new Object[75];
 		sql_insert_basrc_params[0]=personInFo.getP_id();sql_insert_basrc_params[1]=personInFo.getP_number();
 		sql_insert_basrc_params[2]=personInFo.getP_name();sql_insert_basrc_params[3]=personInFo.getP_sex();
 		sql_insert_basrc_params[4]=personInFo.getP_age();sql_insert_basrc_params[5]=personInFo.getP_title();
@@ -138,6 +138,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql_insert_basrc_params[68]=personInFo.getP_organization_id();sql_insert_basrc_params[69]=personInFo.getP_organization();
 		sql_insert_basrc_params[70]=personInFo.getP_section_office_id();sql_insert_basrc_params[71]=personInFo.getP_section_office();
 		sql_insert_basrc_params[72]=personInFo.getP_group_id();sql_insert_basrc_params[73]=personInFo.getP_group();
+		sql_insert_basrc_params[74]=personInFo.getP_this_dept_code();
 		//教育背景
 		List<Object[]> education_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getEducation().size();i++){

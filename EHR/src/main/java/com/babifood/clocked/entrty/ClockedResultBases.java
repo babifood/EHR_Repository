@@ -143,7 +143,7 @@ public class ClockedResultBases {
 		finalEndTime = getCheckingEndTime()==null?getEventEndTime():getCheckingEndTime();
 		if (getCheckingEndTime() != null && getEventEndTime() != null) {
 			if (getCheckingEndTime().after(getEventEndTime())) {
-				finalEndTime = getEventBeginTime();
+				finalEndTime = getEventEndTime();
 			}
 		}
 		return finalEndTime;

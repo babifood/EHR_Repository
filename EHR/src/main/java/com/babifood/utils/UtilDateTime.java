@@ -1,6 +1,7 @@
 package com.babifood.utils;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -211,6 +212,15 @@ public final class UtilDateTime {
 		} else {
 			return true;
 		}
+//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//		String checkDate = df.format(date);
+//		String startDate = df.format(start);
+//		String endDate = df.format(end);
+//		if(checkDate.equals(startDate)&&checkDate.equals(endDate)){
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
 
 	/**
