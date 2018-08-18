@@ -249,10 +249,7 @@ public class WorkHourRule {
 		if (tmpBegin.getTime() <= standBeginTime.getTime() && tmpEnd.getTime() >= standEndTime.getTime()) {
 			int[] x = UtilDateTime.getTimeInterval(standBeginTime, standEndTime);
 			value = x[1];
-			// 存在休息情况
-//			if (theClockedResult.getXiuBeginTime() != null) {
-//				value = value - 1;
-//			}
+			value = value - 1;
 			return value;
 		}
 		// ======================处理迟到或早退现象=============================
