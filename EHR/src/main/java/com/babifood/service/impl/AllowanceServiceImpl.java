@@ -7,15 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.babifood.constant.OperationConstant;
 import com.babifood.dao.AllowanceDao;
+import com.babifood.entity.LoginEntity;
 import com.babifood.service.AllowanceService;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.ExcelUtil;
 import com.babifood.utils.UtilString;
+import com.cn.babifood.operation.LogManager;
+import com.cn.babifood.operation.annotation.LogMethod;
 
 @Service
 public class AllowanceServiceImpl implements AllowanceService {
@@ -263,9 +268,13 @@ public class AllowanceServiceImpl implements AllowanceService {
 		return row1Name;
 	}
 
+	@LogMethod
 	@Override
 	public Map<String, Object> getPageAllowanceList(Integer page, Integer rows, String pNumber, String pName,
 			String organzationName, String deptName, String officeName) {
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String,	Object> param = new HashMap<String, Object>();
 		Integer pageNum = page == null ? 1 : page;
@@ -284,7 +293,9 @@ public class AllowanceServiceImpl implements AllowanceService {
 			result.put("total", total);
 			result.put("rows", employAllowance);
 			result.put("code", "1");
+			LogManager.putContectOfLogInfo(param.toString());
 		} catch (Exception e) {
+			LogManager.putContectOfLogInfo(e.getMessage());
 			result.put("code", "0");
 			result.put("msg", "分页查询数据失败");
 		}

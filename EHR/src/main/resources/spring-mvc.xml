@@ -79,4 +79,17 @@ class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 	    <property name="maxUploadSize" value="32505856" />  
 	    <property name="maxInMemorySize" value="4096" />  
 	</bean>
+	
+	<!-- 操作日志 -->
+	<bean id="logTemplate" class="com.babifood.dao.impl.LogTemplateImpl" />
+    <bean id="log" class="com.cn.babifood.operation.LogAop">
+        <property name="logTemplateImpl" ref="logTemplate" />
+    </bean>
+    <aop:config>
+        <aop:aspect id="logAop" ref="log">
+            <aop:pointcut id="target" expression="execution (* com.babifood.service.*.*(..))"/>
+            <aop:around method="around" pointcut-ref="target"/>
+        </aop:aspect>
+    </aop:config>
+	
 </beans>
