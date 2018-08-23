@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +18,7 @@ import com.babifood.utils.CustomerContextHolder;
 public class PersonInFoDaoImpl implements PersonInFoDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
-	Logger log = LoggerFactory.getLogger(LoginDaoImpl.class);
+	public static final Logger log = Logger.getLogger(LoginDaoImpl.class);
 	@Override
 	public List<Map<String, Object>> loadPersonInFo(String search_p_number,String search_p_name) {
 		// TODO Auto-generated method stub
@@ -471,7 +470,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		try {
 			personList = jdbctemplate.queryForList(sql.toString(), ids);
 		} catch (Exception e) {
-			log.error("根据员工ids查询员工信息失败：",e.getMessage());
+			log.error("根据员工ids查询员工信息失败："+e.getMessage());
 		}
 		return personList;
 	}
@@ -482,7 +481,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		try{
 			count = jdbctemplate.queryForInt(sql);
 		} catch (Exception e) {
-			log.error("查询员工数量失败：",e.getMessage());
+			log.error("查询员工数量失败："+e.getMessage());
 			throw e;
 		}
 		return count;
@@ -506,7 +505,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		try {
 			pagePerson = jdbctemplate.queryForList(sql.toString(), startIndex,pageSize);
 		} catch (Exception e) {
-			log.error("查询员工数量失败：",e.getMessage());
+			log.error("查询员工数量失败："+e.getMessage());
 			throw e;
 		}
 		return pagePerson;
@@ -568,7 +567,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		try {
 			personList = jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			log.error("查询员工工号信息失败：",e.getMessage());
+			log.error("查询员工工号信息失败："+e.getMessage());
 		}
 		return personList;
 	}

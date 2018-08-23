@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ import com.babifood.entity.Certificaten;
 public class CertificatenDaoImpl implements CertificatenDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
-	Logger log = LoggerFactory.getLogger(CertificatenDaoImpl.class);
+	public static final Logger log = Logger.getLogger(CertificatenDaoImpl.class);
 	@Override
 	public List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name){
 		// TODO Auto-generated method stub

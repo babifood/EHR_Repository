@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ import com.babifood.clocked.entrty.ClockedBizData;
 import com.babifood.utils.CustomerContextHolder;
 @Repository
 public class ColeckEventResultDaoImpl implements ColeckEventResultDao {
+	public static final Logger log = Logger.getLogger(ColeckEventResultDaoImpl.class);
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
@@ -32,7 +34,13 @@ public class ColeckEventResultDaoImpl implements ColeckEventResultDao {
 		Object[] params=new Object[2];
 		params[0]=year;
 		params[1]=month;
-		List<Map<String,Object>> list = jdbctemplate.queryForList(sql.toString(),params);
+		List<Map<String,Object>> list=null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(), params);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("读取OA数据失败："+e.getMessage());
+		}
 		if(list.size()>0){
 			clockedBizList = new ArrayList<ClockedBizData>();
 			for (Map<String, Object> map : list) {

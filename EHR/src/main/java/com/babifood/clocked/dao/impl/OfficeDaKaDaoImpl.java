@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,7 @@ import com.babifood.clocked.dao.OfficeDaKaDao;
 import com.babifood.clocked.entrty.OfficeDaKaRecord;
 @Repository
 public class OfficeDaKaDaoImpl implements OfficeDaKaDao {
+	public static final Logger log = Logger.getLogger(OfficeDaKaDaoImpl.class);
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
@@ -39,7 +41,13 @@ public class OfficeDaKaDaoImpl implements OfficeDaKaDao {
 		sql.append("inner join ehr_person_basic_info b ");
 		sql.append("on r.WorkNum = b.p_number ");
 		sql.append("where DATE_FORMAT(r.ClockedDate,'%Y-%m') =?");
-		List<Map<String,Object>> list = jdbctemplate.queryForList(sql.toString(),s);
+		List<Map<String,Object>> list=null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(), s);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询数据失败："+e.getMessage());
+		}
 		if(list.size()>0){
 			officeList = new ArrayList<OfficeDaKaRecord>();
 			for (Map<String, Object> map : list) {

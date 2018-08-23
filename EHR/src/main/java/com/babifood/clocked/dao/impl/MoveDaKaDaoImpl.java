@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ import com.babifood.clocked.entrty.MobileDaKaLog;
 import com.babifood.utils.CustomerContextHolder;
 @Repository
 public class MoveDaKaDaoImpl implements MoveDaKaDao {
+	public static final Logger log = Logger.getLogger(MoveDaKaDaoImpl.class);
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
@@ -36,7 +38,13 @@ public class MoveDaKaDaoImpl implements MoveDaKaDao {
 		sql.append("where to_char(clocktime, 'yyyy-mm')=? ");
 		sql.append("and m.code='100024' ");
 		sql.append("order by m.code,a.clocktime");
-		List<Map<String,Object>> list = jdbctemplate.queryForList(sql.toString(),s);
+		List<Map<String,Object>> list=null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(), s);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("读取OA数据失败："+e.getMessage());
+		}
 		if(list.size()>0){
 			mobileList = new ArrayList<MobileDaKaLog>();
 			for (Map<String, Object> map : list) {

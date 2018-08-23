@@ -249,6 +249,11 @@
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.babifood.aoplog</groupId>
+			<artifactId>babi-operation</artifactId>
+			<version>1.0.0</version>
+		</dependency>
     </dependencies>
     
     <build>
