@@ -23,7 +23,7 @@ import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
 @Service
 public class PersonInFoServiceImpl implements PersonInFoService {
-	public static final Logger log = Logger.getLogger(LoginDaoImpl.class);
+	public static final Logger log = Logger.getLogger(PersonInFoServiceImpl.class);
 	@Autowired
 	PersonInFoDao personInFoDao;
 	@Autowired

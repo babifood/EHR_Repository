@@ -20,19 +20,19 @@ public interface NewUsersDao {
 	
 	public Integer editRole(String role_id,String role_name,String role_desc,String state,String organization_code,String organization_name);
 	
-	public Integer removeRole(String role_id);
+	public void removeRole(String role_id);
 	
 	public List<Map<String,Object>> loadRoleWhereUser(String user_id);
 	
 	public List<Map<String,Object>> loadComboboxData();
 	
-	public Integer saveUser(LoginEntity userEntity);
+	public void saveUser(LoginEntity userEntity);
 	
-	public Integer editUser(LoginEntity userEntity);
+	public void editUser(LoginEntity userEntity);
 	
-	public Integer removeUser(String user_id);
+	public void removeUser(String user_id);
 	
-	public Integer saveMenuRole(RoleMenuEntity[] roleMenuEntity);
+	public void saveMenuRole(RoleMenuEntity[] roleMenuEntity);
 	
 	public List<Map<String,Object>> getMenuIds(String role_id);
 	
