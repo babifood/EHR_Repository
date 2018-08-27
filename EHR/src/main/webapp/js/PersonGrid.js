@@ -613,7 +613,7 @@ function removePersonInFo(){
 							});
 							$("#person_grid").datagrid('reload');
 						}else{
-							$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+							$.messager.alert("消息提示！","数据删除失败！","warning");
 						}
 					}
 				});
@@ -918,7 +918,7 @@ function savePersonInFo(){
 					$('#person_win').window('close');
 					$("#person_grid").datagrid('reload');
 				}else{
-					$.messager.alert("消息提示！","请求异常，请检查网络！","warning");
+					$.messager.alert("消息提示！","添加数据失败！","warning");
 				}
 			}
 		});

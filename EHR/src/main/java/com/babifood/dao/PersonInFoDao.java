@@ -12,9 +12,9 @@ public interface PersonInFoDao {
 
 	public List<Map<String, Object>> loadEducation(String e_p_id);
 
-	public Integer savePersonInfo(PersonBasrcEntity personInFo);
+	public void savePersonInfo(PersonBasrcEntity personInFo);
 
-	public Integer removePersonInFo(String p_id);
+	public void removePersonInFo(String p_id);
 
 	public List<Map<String, Object>> loadCultivateFront(String c_p_id);
 
@@ -40,7 +40,6 @@ public interface PersonInFoDao {
 
 	public Object getPersonByPnumber(String pNumber);
 	
-	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum,String userName);
 	
 	public List<Map<String, Object>> loadEHRWorkNumInFo();
 
