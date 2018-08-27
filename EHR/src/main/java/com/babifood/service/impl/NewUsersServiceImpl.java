@@ -286,8 +286,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 	@Override
 	public List<UserRoleEntity> loadRoleWhereUser(String user_id) {
 		// TODO Auto-generated method stub
-		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
-		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putUserIdOfLogInfo("用户id:"+user_id);
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		List<Map<String,Object>> list = null;
 		try {
