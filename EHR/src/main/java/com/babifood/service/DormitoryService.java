@@ -3,7 +3,7 @@ package com.babifood.service;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
@@ -31,6 +31,6 @@ public interface DormitoryService {
 
 	public Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type, String year, String month);
 
-	public Map<String, Object> importDormitoryCost(CommonsMultipartFile file, String type);
+	public Map<String, Object> importDormitoryCost(MultipartFile file, String type);
 
 }

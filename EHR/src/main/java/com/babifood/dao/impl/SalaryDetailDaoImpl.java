@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class SalaryDetailDaoImpl implements SalaryDetailDao {
 
-	Logger log = LoggerFactory.getLogger(SalaryDetailDaoImpl.class);
+	private static Logger log = Logger.getLogger(SalaryDetailDaoImpl.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -30,7 +29,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		try {
 			salaryDetails = jdbcTemplate.queryForList(sql, year, month, pNumber);
 		} catch (Exception e) {
-			log.error("查询当月薪资明细失败,pNumber=" + pNumber, e.getMessage());
+			log.error("查询当月薪资明细失败,pNumber=" + pNumber, e);
 			throw e;
 		}
 		if (salaryDetails != null && salaryDetails.size() > 0) {
@@ -97,7 +96,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 					BASE64Util.encode(salaryDerail.getWagePayable()), BASE64Util.encode(salaryDerail.getPersonalTax()),
 					BASE64Util.encode(salaryDerail.getRealWages()), salaryDerail.getId());
 		} catch (Exception e) {
-			log.error("修改当月薪资明细失败,pNumber=" + salaryDerail.getpNumber(), e.getMessage());
+			log.error("修改当月薪资明细失败,pNumber=" + salaryDerail.getpNumber(), e);
 			throw e;
 		}
 	}
@@ -160,7 +159,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 					BASE64Util.encode(salaryDerail.getWagePayable()), BASE64Util.encode(salaryDerail.getPersonalTax()),
 					BASE64Util.encode(salaryDerail.getRealWages()));
 		} catch (Exception e) {
-			log.error("新增当月薪资明细失败,pNumber=" + salaryDerail.getpNumber(), e.getMessage());
+			log.error("新增当月薪资明细失败,pNumber=" + salaryDerail.getpNumber(), e);
 			throw e;
 		}
 	}
@@ -196,7 +195,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询薪资明细数量失败", e.getMessage());
+			log.error("查询薪资明细数量失败", e);
 			throw e;
 		}
 		return count;
@@ -260,7 +259,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 				salaryDetailList = jdbcTemplate.queryForList(sql.toString());
 			}
 		} catch (Exception e) {
-			log.error("查询薪资明细列表失败", e.getMessage());
+			log.error("查询薪资明细列表失败", e);
 			throw e;
 		}
 		return salaryDetailList;

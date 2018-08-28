@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class BaseSalaryDaoImpl implements BaseSalaryDao {
 
-	Logger log = LoggerFactory.getLogger(BaseSalaryDaoImpl.class);
+	private static Logger log = Logger.getLogger(BaseSalaryDaoImpl.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -38,7 +37,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询基础薪资信息总数失败", e.getMessage());
+			log.error("查询基础薪资信息总数失败", e);
 			throw e;
 		}
 		return count;
@@ -65,7 +64,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 					baseSalary.getCreateTime(),
 					baseSalary.getWorkType(), baseSalary.getUseTime(), "0");
 		} catch (Exception e) {
-			log.error("新增基础薪资信息总数失败", e.getMessage());
+			log.error("新增基础薪资信息总数失败", e);
 			throw e;
 		}
 	}
@@ -88,7 +87,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 					BASE64Util.encode(baseSalary.getPerformanceSalary()), 
 					BASE64Util.encode(baseSalary.getStay()), baseSalary.getUseTime());
 		} catch (Exception e) {
-			log.error("修改基础薪资信息失败", e.getMessage());
+			log.error("修改基础薪资信息失败", e);
 			throw e;
 		}
 	}
@@ -113,7 +112,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		try {
 			baseSalaryList = jdbcTemplate.queryForList(sql.toString(), params.get("start"), params.get("pageSize"));
 		} catch (Exception e) {
-			log.error("分页查询基础薪资信息失败", e.getMessage());
+			log.error("分页查询基础薪资信息失败", e);
 			throw e;
 		}
 		return baseSalaryList;
@@ -133,7 +132,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		try {
 			baseSalarys = jdbcTemplate.queryForList(sql.toString(), pNumber);
 		} catch (Exception e) {
-			log.error("根据员工编号查询基础薪资信息失败", e.getMessage());
+			log.error("根据员工编号查询基础薪资信息失败", e);
 			throw e;
 		}
 		return baseSalarys;
@@ -147,7 +146,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		try {
 			jdbcTemplate.update(sql.toString(), id);
 		} catch (Exception e) {
-			log.error("修改基础薪资信息失败", e.getMessage());
+			log.error("修改基础薪资信息失败", e);
 			throw e;
 		}
 	}

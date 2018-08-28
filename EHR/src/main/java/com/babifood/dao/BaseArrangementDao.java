@@ -38,4 +38,6 @@ public interface BaseArrangementDao {
 
 	public Map<String, Object> findBaseArrangementById(String arrangementId);
 
+	public List<Map<String, Object>> findArrangementTargets(Integer id);
+
 }

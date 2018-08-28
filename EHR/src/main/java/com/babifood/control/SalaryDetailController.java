@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.babifood.service.SalaryDetailService;
-import com.babifood.service.scheduled.SalaryCalculationService;
+import com.babifood.service.salary.SalaryCalculationService;
 import com.babifood.utils.UtilDateTime;
 
 @Controller

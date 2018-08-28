@@ -132,14 +132,15 @@
 	</div>
 </div>
 <div class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" id="dormitory_cost_dialog" closed="true" buttons="#dormitory_cost_dialog_buttons">
-	<div style="text-align: center;">
-		<form id="dormitory_cost_uploadExcel"  method="post" enctype="multipart/form-data" style="margin-top: 20px">  
-  				选择文件：　<input id = "dormitory_cost_file" name = "excel" class="easyui-filebox" style="width:200px" data-options="prompt:'请选择文件...'" accept=".xls,.xlsx">  
-		</form>
-	</div>  
-	<div style="text-align: center; padding: 5px 0;" id="dormitory_cost_dialog_buttons">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="importPerformanceInfos()" style="width: 90px;" id="dormitory_cost_booten">导入</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_cost_dialog').dialog('close')" style="width: 90px;">取消</a>
-	</div>
+<!-- 	<div style="text-align: center;"> -->
+<!-- 		<form id="dormitory_cost_uploadExcel"  method="post" enctype="multipart/form-data" style="margin-top: 20px">   -->
+<!--   				选择文件：　<input id = "dormitory_cost_file" name = "excel" class="easyui-filebox" style="width:200px" data-options="prompt:'请选择文件...'" accept=".xls,.xlsx">   -->
+<!-- 		</form> -->
+<!-- 	</div>   -->
+<!-- 	<div style="text-align: center; padding: 5px 0;" id="dormitory_cost_dialog_buttons"> -->
+<!-- 		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="importPerformanceInfos()" style="width: 90px;" id="dormitory_cost_booten">导入</a> -->
+<!-- 		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_cost_dialog').dialog('close')" style="width: 90px;">取消</a> -->
+<!-- 	</div> -->
 </div>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/dormitory.js">
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"/>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/dormitory.js"/>

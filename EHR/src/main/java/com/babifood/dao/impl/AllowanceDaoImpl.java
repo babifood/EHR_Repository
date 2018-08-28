@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class AllowanceDaoImpl implements AllowanceDao {
 	
-	Logger log = LoggerFactory.getLogger(AllowanceDaoImpl.class);
+	private static Logger log = Logger.getLogger(AllowanceDaoImpl.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -74,7 +73,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 				allowances = jdbcTemplate.queryForList(sql.toString(), param.get("start"), param.get("pageSize"));
 			}
 		} catch (Exception e) {
-			log.error("查询员工津贴和扣款信息失败，员工编号：" + param.get("pNumber"), e.getMessage());
+			log.error("查询员工津贴和扣款信息失败，员工编号：" + param.get("pNumber"), e);
 			throw e;
 		}
 		return allowances;
@@ -96,7 +95,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 		try {
 			jdbcTemplate.batchUpdate(sql.toString(), values);
 		} catch (Exception e) {
-			log.error("批量插入员工补贴、扣款信息失败", e.getMessage());
+			log.error("批量插入员工补贴、扣款信息失败", e);
 			throw e;
 		}
 	}
@@ -128,7 +127,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 		try {
 			total = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询津贴、扣款信息列表失败", e.getMessage());
+			log.error("查询津贴、扣款信息列表失败", e);
 			throw e;
 		}
 		return total;

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.dao.DormitoryDao;
 import com.babifood.entity.DormitoryCostEntity;
@@ -287,7 +287,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 	}
 	
 	@Override
-	public Map<String, Object> importDormitoryCost(CommonsMultipartFile file, String type) {
+	public Map<String, Object> importDormitoryCost(MultipartFile file, String type) {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, String> row1Name = getImportRow1Name();
 		List<Map<String, Object>> values = null;

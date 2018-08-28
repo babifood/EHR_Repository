@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ import com.babifood.utils.BASE64Util;
 @Repository
 public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 	
-	Logger log = LoggerFactory.getLogger(SalaryCalculationDaoImpl.class);
+	private static Logger log = Logger.getLogger(SalaryCalculationDaoImpl.class);
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -31,7 +30,7 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 		try {
 			baseSalaryList = jdbcTemplate.queryForList(sql.toString(), pNumber, date);
 		} catch (Exception e) {
-			log.error("查询基本薪资失败", e.getMessage());
+			log.error("查询基本薪资失败", e);
 			throw e;
 		}
 		if(baseSalaryList != null && baseSalaryList.size() > 0){
@@ -49,7 +48,7 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 		try {
 			statusList = jdbcTemplate.queryForList(sql, Integer.class, year, month);
 		} catch (Exception e) {
-			log.error("查询薪资计算状态失败", e.getMessage());
+			log.error("查询薪资计算状态失败", e);
 			throw e;
 		}
 		if(statusList != null && statusList.size() > 0){
@@ -64,7 +63,7 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 		try {
 			jdbcTemplate.update(sql, year, month, type);
 		} catch (Exception e) {
-			log.error("新增或修复薪资计算状态失败", e.getMessage());
+			log.error("新增或修复薪资计算状态失败", e);
 			throw e;
 		}
 	}

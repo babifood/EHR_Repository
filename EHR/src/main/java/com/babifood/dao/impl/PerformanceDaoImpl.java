@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class PerformanceDaoImpl implements PerformanceDao {
 
-	Logger log = LoggerFactory.getLogger(PerformanceDaoImpl.class);
+	private static Logger log = Logger.getLogger(PerformanceDaoImpl.class);
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -47,7 +46,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询绩效数量信息失败", e.getMessage());
+			log.error("查询绩效数量信息失败", e);
 			throw e;
 		}
 		return count;
@@ -102,7 +101,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 				performanceList = jdbcTemplate.queryForList(sql.toString(), params.get("start"), params.get("pageSize"));
 			}
 		} catch (Exception e) {
-			log.error("分页查询绩效信息列表失败", e.getMessage());
+			log.error("分页查询绩效信息列表失败", e);
 			throw e;
 		}
 		return performanceList;
@@ -114,7 +113,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		try {
 			jdbcTemplate.batchUpdate(sql, performanceParam);
 		} catch (Exception e) {
-			log.error("批量新增绩效薪资信息失败", e.getMessage());
+			log.error("批量新增绩效薪资信息失败", e);
 			throw e;
 		}
 	}
@@ -129,7 +128,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		try {
 			performanceList = jdbcTemplate.queryForList(sql.toString(), pNumber, month, year);
 		} catch (Exception e) {
-			log.error("查询员工绩效薪资信息失败", e.getMessage());
+			log.error("查询员工绩效薪资信息失败", e);
 			throw e;
 		}
 		if(performanceList != null && performanceList.size() > 0){
@@ -144,7 +143,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		try {
 			jdbcTemplate.update(sql, score, pNumber, month, year);
 		} catch (Exception e) {
-			log.error("修改绩效分值失败", e.getMessage());
+			log.error("修改绩效分值失败", e);
 			throw e;
 		}
 	}

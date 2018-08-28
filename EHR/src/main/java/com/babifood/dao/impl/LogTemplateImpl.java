@@ -15,10 +15,10 @@ public class LogTemplateImpl implements LogTemplate {
 	@Override
 	public void saveLog(Object arg0) {
 		OperationLog operationLog = (OperationLog) arg0;
-		String sql = "INSERT INTO `ehr_operating_log` (`operate_time`, `user_id`, `operate_type`, `ip`, `contect`) VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO `ehr_operating_log` (`operate_time`, `user_id`, `operate_type`, `ip`, `contect`, `module`) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			jdbcTemplate.update(sql, UtilDateTime.getCurrentTime("yyyy-MM-dd HH:mm:ss"), operationLog.getUserId(), 
-					operationLog.getOperatType(), operationLog.getIp(), operationLog.getContect());
+					operationLog.getOperatType(), operationLog.getIp(), operationLog.getContect(), operationLog.getModule());
 		} catch (Exception e) {
 			throw e;
 		}

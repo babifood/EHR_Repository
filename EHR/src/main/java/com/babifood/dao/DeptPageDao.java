@@ -25,6 +25,6 @@ public interface DeptPageDao {
 
 	public Map<String, Object> queryCountByDeptCode(String deptCode);
 
-	public List<Map<String, Object>> findDeptsByDeptCodes(String[] deptCodeList);
+	public List<Map<String, Object>> findDeptsByDeptCodes(Object[] deptCodeList);
 
 }

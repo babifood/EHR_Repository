@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,7 @@ import com.babifood.dao.CalculationFormulaDao;
 @Repository
 public class CalculationFormulaDaoImpl implements CalculationFormulaDao {
 
-	Logger log = LoggerFactory.getLogger(CalculationFormulaDaoImpl.class);
+	private static Logger log = Logger.getLogger(CalculationFormulaDaoImpl.class);
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -31,7 +30,7 @@ public class CalculationFormulaDaoImpl implements CalculationFormulaDao {
 		try {
 			formulaMapList = jdbcTemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			log.error("查询公式列表失败", e.getMessage());
+			log.error("查询公式列表失败", e);
 			throw e;
 		}
 		return formulaMapList;

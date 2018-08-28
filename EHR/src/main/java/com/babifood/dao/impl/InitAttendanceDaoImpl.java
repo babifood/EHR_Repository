@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.InitAttendanceDao;
@@ -17,7 +15,7 @@ import com.babifood.entity.InitAttendanceEntity;
 @Repository
 public class InitAttendanceDaoImpl implements InitAttendanceDao {
 
-	Logger log = LoggerFactory.getLogger(InitAttendanceDaoImpl.class);
+	private static Logger log = Logger.getLogger(InitAttendanceDaoImpl.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -30,7 +28,7 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString(), pNumber, year, month);
 		} catch (Exception e) {
-			log.error("操作数据库失败", e.getMessage());
+			log.error("操作数据库失败", e);
 		}
 		return count;
 	}
@@ -64,7 +62,7 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 			jdbcTemplate.batchUpdate(sql.toString(), attend);
 		} catch (Exception e) {
 			log.error("员工 初始化排班失败,pNumber:" + attendanceList.get(0).getpNumber() + ",pName:"
-					+ attendanceList.get(0).getpName(), e.getMessage());
+					+ attendanceList.get(0).getpName(), e);
 		}
 	}
 
@@ -83,7 +81,7 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 		try {
 			summary = jdbcTemplate.queryForMap(sql.toString(), year, month, pNumber);
 		} catch (Exception e) {
-			log.error("统计员工考勤信息失败",e.getMessage());
+			log.error("统计员工考勤信息失败",e);
 			throw e;
 		}
 		return summary;
@@ -97,7 +95,7 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 			int ser = jdbcTemplate.queryForInt(sql, year, month, pNumber);
 			sickHours = Double.valueOf(ser);
 		} catch (Exception e) {
-			log.error("统计员工年度病假统计信息失败",e.getMessage());
+			log.error("统计员工年度病假统计信息失败",e);
 			throw e;
 		}
 		return sickHours;

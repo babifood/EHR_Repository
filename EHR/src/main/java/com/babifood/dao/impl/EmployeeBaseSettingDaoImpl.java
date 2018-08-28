@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class EmployeeBaseSettingDaoImpl implements EmployeeBaseSettingDao {
 
-	Logger log = LoggerFactory.getLogger(EmployeeBaseSettingDaoImpl.class);
+	private static Logger log = Logger.getLogger(EmployeeBaseSettingDaoImpl.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -49,7 +48,7 @@ public class EmployeeBaseSettingDaoImpl implements EmployeeBaseSettingDao {
 		try {
 			total = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询基础设置信息总数失败", e.getMessage());
+			log.error("查询基础设置信息总数失败", e);
 			throw e;
 		}
 		return total;
@@ -83,7 +82,7 @@ public class EmployeeBaseSettingDaoImpl implements EmployeeBaseSettingDao {
 		try {
 			baseSettingList = jdbcTemplate.queryForList(sql.toString(), params.get("start"), params.get("pageSize"));
 		} catch (Exception e) {
-			log.error("分页查询基础设置信息失败", e.getMessage());
+			log.error("分页查询基础设置信息失败", e);
 			throw e;
 		}
 		return baseSettingList;
@@ -96,7 +95,7 @@ public class EmployeeBaseSettingDaoImpl implements EmployeeBaseSettingDao {
 			jdbcTemplate.update(sql, baseSetting.getpNumber(), baseSetting.getWorkType(), baseSetting.getIsmeal(),
 					baseSetting.getWorkPlace());
 		} catch (Exception e) {
-			log.error("新增基础设置信息失败", e.getMessage());
+			log.error("新增基础设置信息失败", e);
 			throw e;
 		}
 	}
@@ -108,7 +107,7 @@ public class EmployeeBaseSettingDaoImpl implements EmployeeBaseSettingDao {
 			jdbcTemplate.update(sql, baseSetting.getpNumber(), baseSetting.getWorkType(), baseSetting.getIsmeal(),
 					baseSetting.getWorkPlace(), baseSetting.getId());
 		} catch (Exception e) {
-			log.error("修改基础设置信息失败", e.getMessage());
+			log.error("修改基础设置信息失败", e);
 			throw e;
 		}
 	}
@@ -122,7 +121,7 @@ public class EmployeeBaseSettingDaoImpl implements EmployeeBaseSettingDao {
 		try {
 			baseSetting = jdbcTemplate.queryForMap(sql.toString(), pNumber);
 		} catch (Exception e) {
-			log.error("查询员工基础设置信息失败，pNumber=" + pNumber, e.getMessage());
+			log.error("查询员工基础设置信息失败，pNumber=" + pNumber, e);
 			throw e;
 		}
 		return baseSetting;

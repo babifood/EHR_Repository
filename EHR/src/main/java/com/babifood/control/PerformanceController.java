@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.service.PerformanceService;
 import com.babifood.utils.UtilDateTime;
@@ -45,7 +45,7 @@ public class PerformanceController {
 	
 	@RequestMapping(value = "importExcel", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> importExcel(@RequestParam(value="excel")CommonsMultipartFile file, String type){
+	public Map<String, Object> importExcel(@RequestParam(value="file",required = false) MultipartFile file, String type){
 		return performanceService.importExcel(file, type);
 	}
 	

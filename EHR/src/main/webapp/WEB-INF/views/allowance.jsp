@@ -39,25 +39,31 @@
 		</div>
 	</div>
 	<div class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" id="allowance_dialog" closed="true" buttons="#allowance_dialog_buttons">
-		<div style="text-align: center;">
-			<form id="allowance_uploadExcel"  method="post" enctype="multipart/form-data" style="margin-top: 5px">  
-   				<table style="width: 100%">
-   					<tr>
-   						<td style="width:20%;">覆盖导入：</td><td style="width:10%;"><input type="radio" name="type" value="1"></td>
-   						<td style="width:69%">追加导入：<input type="radio" name="type" value="0"></td>
-   					</tr>
-   					<tr>
-   						<td style="width:20%;">选择文件：</td><td style="width:10%;"></td>
-   						<td style="width:69%"><input id = "allowance_file" name = "excel" class="easyui-filebox" style="width:200px" data-options="prompt:'请选择文件...'" accept=".xls,.xlsx"></td>
-   					</tr>
-   				</table>
-			</form>
-		</div>  
-		<div style="text-align: center; padding: 5px 0;" id="allowance_dialog_buttons">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="importAllowanceInfos()" style="width: 90px;" id="allowance_booten">导入</a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#allowance_dialog').dialog('close')" style="width: 90px;">取消</a>
-		</div>
+<!-- 		<div style="text-align: center;"> -->
+<!-- 			<form id="allowance_uploadExcel"  method="post" enctype="multipart/form-data" style="margin-top: 5px">   -->
+<!--    				<table style="width: 100%"> -->
+<!--    					<tr> -->
+<!--    						<td style="width:20%;">覆盖导入：</td><td style="width:10%;"><input type="radio" name="type" value="1"></td> -->
+<!--    						<td style="width:69%">追加导入：<input type="radio" name="type" value="0"></td> -->
+<!--    					</tr> -->
+<!--    					<tr> -->
+<!--    						<td style="width:20%;">选择文件：</td><td style="width:10%;"></td> -->
+<!--    						<td style="width:69%"><input id = "allowance_file" name = "excel" class="easyui-filebox" style="width:200px" data-options="prompt:'请选择文件...'" accept=".xls,.xlsx"></td> -->
+<!--    					</tr> -->
+<!--    				</table> -->
+<!-- 			</form> -->
+<!-- 			<form id="test_form" enctype="multipart/form-data" action="" method="post">     -->
+<!-- 		        <button class="easyui-linkbutton" id="uploadEventBtn" type="button" >择文件</button>   -->
+<!-- 		        <input type="file" name="file"  style="width:0px;height:0px;" id="uploadEventFile">   -->
+<!-- 		        <input id="uploadEventPath" class="textbox" disabled="disabled"  type="text" placeholder="请择excel表" />                                            -->
+<!-- 		    </form> -->
+<!-- 		</div>   -->
+<!-- 		<div style="text-align: center; padding: 5px 0;" id="allowance_dialog_buttons"> -->
+<!-- 			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="user.uploadBtn()" style="width: 90px;" id="allowance_booten">导入</a> -->
+<!-- 			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#allowance_dialog').dialog('close')" style="width: 90px;">取消</a> -->
+<!-- 		</div> -->
 	</div>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/allowance.js">
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"/>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/allowance.js"/>
 </body>
 </html>

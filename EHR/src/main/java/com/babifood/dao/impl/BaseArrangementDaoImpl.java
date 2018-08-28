@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ import com.babifood.entity.SpecialArrangementEntity;
 @Repository
 public class BaseArrangementDaoImpl implements BaseArrangementDao {
 
-	Logger log = LoggerFactory.getLogger(BaseArrangementDaoImpl.class);
+	private static Logger log = Logger.getLogger(BaseArrangementDaoImpl.class);
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -65,7 +64,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {	
 			specialArrangements = jdbcTemplate.queryForList(sql.toString(),arrangementId, date + "%");
 		} catch (Exception e) {
-			log.error("查询特殊排版列表失败", e.getMessage());
+			log.error("查询特殊排版列表失败", e);
 			throw e;
 		}
 		return specialArrangements;
@@ -82,7 +81,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 			count = jdbcTemplate.update(sql.toString(), arrangement.getDate(),arrangement.getArrangementId(),
 					arrangement.getIsAttend(),arrangement.getStartTime(),arrangement.getEndTime(),arrangement.getRemark());
 		} catch (Exception e) {
-			log.error("保存特殊排版列表失败", e.getMessage());
+			log.error("保存特殊排版列表失败", e);
 			throw e;
 		}
 		return count;
@@ -96,7 +95,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 			count = jdbcTemplate.update(sql, arrangement.getDate(),arrangement.getArrangementId(),arrangement.getStartTime(),
 					arrangement.getEndTime(),arrangement.getIsAttend(),arrangement.getRemark(),arrangement.getId());
 		} catch (Exception e) {
-			log.error("修改特殊排版列表失败", e.getMessage());
+			log.error("修改特殊排版列表失败", e);
 			throw e;
 		}
 		return count;
@@ -109,7 +108,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			count = jdbcTemplate.update(sql, id);
 		} catch (Exception e) {
-			log.error("修改特殊排版列表失败", e.getMessage());
+			log.error("修改特殊排版列表失败", e);
 			throw e;
 		}
 		return count;
@@ -124,7 +123,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			arrangement = jdbcTemplate.queryForMap(sql.toString(), id);
 		} catch (Exception e) {
-			log.error("根据id查询特殊排版失败", e.getMessage());
+			log.error("根据id查询特殊排版失败", e);
 			throw e;
 		}
 		return arrangement;
@@ -151,7 +150,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			arrangementList = jdbcTemplate.queryForList(sql.toString(), targetIds.toArray());
 		} catch (Exception e) {
-			log.error("根据目标id查询排班失败", e.getMessage());
+			log.error("根据目标id查询排班失败", e);
 			throw e;
 		}
 		return arrangementList;
@@ -164,7 +163,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			count = jdbcTemplate.update(sql, targetId,type,arrangementId);
 		} catch (Exception e) {
-			log.error("绑定排班失败", e.getMessage());
+			log.error("绑定排班失败", e);
 			throw e;
 		}
 		return count;
@@ -176,7 +175,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			jdbcTemplate.update(sql, targetId);
 		} catch (Exception e) {
-			log.error("删除已绑定排班失败", e.getMessage());
+			log.error("删除已绑定排班失败", e);
 		}
 	}
 	
@@ -190,7 +189,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			specialArrangementList = jdbcTemplate.queryForList(sql.toString(), start , endTime);
 		} catch (Exception e) {
-			log.error("查询当月排班列表失败", e.getMessage());
+			log.error("查询当月排班列表失败", e);
 			throw e;
 		}
 		return specialArrangementList;
@@ -205,7 +204,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			specialArrangementList = jdbcTemplate.queryForList(sql.toString(), startDay , endDay);
 		} catch (Exception e) {
-			log.error("查询当月排班列表失败", e.getMessage());
+			log.error("查询当月排班列表失败", e);
 			throw e;
 		}
 		return specialArrangementList;
@@ -224,13 +223,28 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		try {
 			arrangementList = jdbcTemplate.queryForList(sql.toString(), arrangementId);
 		} catch (Exception e) {
-			log.error("根据Id查询基础排班信息失败", e.getMessage());
+			log.error("根据Id查询基础排班信息失败", e);
 			throw e;
 		}
 		if(arrangementList != null && arrangementList.size() > 0){
 			arrangement = arrangementList.get(0);
 		}
 		return arrangement;
+	}
+
+	/**
+	 * 查询基础作息时间关联部门和人员ID列表
+	 */
+	@Override
+	public List<Map<String, Object>> findArrangementTargets(Integer id) {
+		String sql = "SELECT target_id FROM ehr_arrangement_target WHERE arrangement_id = ?";
+		List<Map<String, Object>> arrangements = null;
+		try {
+			arrangements = jdbcTemplate.queryForList(sql, id);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return arrangements;
 	}
 
 }

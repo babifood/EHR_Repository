@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.dao.AllowanceDao;
 import com.babifood.entity.LoginEntity;
@@ -22,22 +24,36 @@ import com.babifood.utils.UtilString;
 import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
 
+/**
+ * 津贴、扣款数据操作类
+ * @author wangguocheng
+ *
+ */
 @Service
 public class AllowanceServiceImpl implements AllowanceService {
 
+	private static Logger logger = Logger.getLogger(AllowanceServiceImpl.class);
+	
 	@Autowired
 	private AllowanceDao allowanceDao;
 	
+	/**
+	 * 查询员工津贴、奖金、扣款信息
+	 */
 	@Override
 	public Map<String, Object> findEmployAllowance(String year, String month, String pNumber) {
 		Map<String,	Object> param = new HashMap<String, Object>();
 		param.put("year", year);
 		param.put("pNumber", pNumber);
 		param.put("month", month);
-		List<Map<String, Object>> employAllowance = allowanceDao.findEmployAllowance(param);
-		BASE64Util.Base64DecodeMap(employAllowance);
-		if (employAllowance != null && employAllowance.size() > 0) {
-			return employAllowance.get(0);
+		try {
+			List<Map<String, Object>> employAllowance = allowanceDao.findEmployAllowance(param);
+			BASE64Util.Base64DecodeMap(employAllowance);
+			if (employAllowance != null && employAllowance.size() > 0) {
+				return employAllowance.get(0);
+			}
+		} catch (Exception e) {
+			logger.error("查询员工津贴/扣款的导入信息失败",e);
 		}
 		return null;
 	}
@@ -45,8 +61,12 @@ public class AllowanceServiceImpl implements AllowanceService {
 	/**
 	 * 导入Excel数据
 	 */
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	@Override
 	public Map<String, Object> importExcel(MultipartFile file, String type) {
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_IMPORT);
 		Map<String, Object> result = new HashMap<>();
 		Map<String, String> row1Name = getRow1Name();
 		List<Map<String, Object>> values = null;
@@ -60,12 +80,15 @@ public class AllowanceServiceImpl implements AllowanceService {
 			result.put("code", "1");
 			result.put("msg", "导入数据成功");
 		} catch (IOException e) {
-			e.printStackTrace();
 			result.put("code", "0");
 			result.put("msg", "excel数据异常，导入数据失败");
+			logger.error("导入员工津贴/扣款信息失败",e);
+			LogManager.putContectOfLogInfo("导入员工津贴/扣款信息失败:"+e.getMessage());
 		} catch (Exception e) {
 			result.put("code", "0");
 			result.put("msg", "保存导入数据异常，导入数据失败");
+			logger.error("保存员工津贴/扣款信息失败",e);
+			LogManager.putContectOfLogInfo("保存员工津贴/扣款信息失败:"+e.getMessage());
 		}
 		return result;
 	}
@@ -137,6 +160,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 			}
 		}
 		allowanceDao.saveEmployAllowances(allowanceValues);
+		LogManager.putContectOfLogInfo("追加导入员工津贴/扣款信息,导入条数：" + allowanceValues.size());
 	}
 
 	/**
@@ -163,6 +187,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 			allowanceValues.add(object);
 		}
 		allowanceDao.saveEmployAllowances(allowanceValues);
+		LogManager.putContectOfLogInfo("覆盖导入员工津贴/扣款信息，导入条数：" + allowanceValues.size());
 	}
 
 	/**
@@ -215,22 +240,35 @@ public class AllowanceServiceImpl implements AllowanceService {
 	 */
 	@Override
 	public void exportExcel(OutputStream ouputStream, String type) throws Exception {
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EXPORT);
 		Map<String, String> row1Name = getExportRow1Name();
 		String[] sort = new String[] { "year", "month", "pNumber", "pName", "highTem", "lowTem", "nightShift",
 				"morningShift", "otherAllowance",  "otherBonus", "compensatory", "security",
 				"addOther", "overSalary", "insurance", "beforeDeduction",
 				"providentFund", "afterOtherDeduction", "reserved1", "reserved2", "reserved3", "reserved4", "reserved5",
 				"reserved6", "reserved7", "reserved8", "reserved9", "reserved10" };
-		List<Map<String, Object>> dataSource = null;
-		if("0".equals(type)){//模板
-			dataSource = new ArrayList<Map<String, Object>>();
-		} else {//数据
-			dataSource = allowanceDao.findEmployAllowance(new HashMap<String, Object>());
-			BASE64Util.Base64DecodeMap(dataSource);
+		try {
+			List<Map<String, Object>> dataSource = null;
+			if("0".equals(type)){//模板
+				dataSource = new ArrayList<Map<String, Object>>();
+			} else {//数据
+				dataSource = allowanceDao.findEmployAllowance(new HashMap<String, Object>());
+				BASE64Util.Base64DecodeMap(dataSource);
+			}
+			ExcelUtil.exportExcel("津贴/奖金/扣款列表", row1Name, dataSource, ouputStream, sort);
+			LogManager.putContectOfLogInfo("导出津贴/奖金/扣款列表数据");
+		} catch (Exception e) {
+			logger.error("导出津贴/奖金/扣款列表数据失败",e);
+			LogManager.putContectOfLogInfo("导出津贴/奖金/扣款列表数据失败:" + e.getMessage());
 		}
-		ExcelUtil.exportExcel("部门信息列表", row1Name, dataSource, ouputStream, sort);
 	}
 
+	/**
+	 * 导出数据第一行名称
+	 * @return
+	 */
 	private Map<String, String> getExportRow1Name() {
 		Map<String, String> row1Name = new HashMap<String, String>();
 		row1Name.put("year", "年");
@@ -268,7 +306,10 @@ public class AllowanceServiceImpl implements AllowanceService {
 		return row1Name;
 	}
 
-	@LogMethod
+	/**
+	 * 分页查询津贴、奖金、扣款的数据
+	 */
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	@Override
 	public Map<String, Object> getPageAllowanceList(Integer page, Integer rows, String pNumber, String pName,
 			String organzationName, String deptName, String officeName) {
@@ -293,9 +334,10 @@ public class AllowanceServiceImpl implements AllowanceService {
 			result.put("total", total);
 			result.put("rows", employAllowance);
 			result.put("code", "1");
-			LogManager.putContectOfLogInfo(param.toString());
+			LogManager.putContectOfLogInfo("查询参数:" + param.toString());
 		} catch (Exception e) {
-			LogManager.putContectOfLogInfo(e.getMessage());
+			logger.error("分页查询津贴/奖金/扣款信息失败",e);
+			LogManager.putContectOfLogInfo("查询失败:"+e.getMessage());
 			result.put("code", "0");
 			result.put("msg", "分页查询数据失败");
 		}

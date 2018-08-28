@@ -3,8 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class DormitoryDaoImpl implements DormitoryDao {
 	
-	Logger log = LoggerFactory.getLogger(DormitoryDaoImpl.class);
+	private static Logger log = Logger.getLogger(DormitoryDaoImpl.class);
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -31,7 +30,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 			jdbcTemplate.update(sql, dormitory.getFloor(), dormitory.getRoomNo(), dormitory.getBedNo(),
 					dormitory.getSex(), dormitory.getRemark(), "0");
 		} catch (Exception e) {
-			log.error("新增宿舍床位信息失败",e.getMessage());
+			log.error("新增宿舍床位信息失败",e);
 			throw e;
 		}
 	}
@@ -43,7 +42,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 			jdbcTemplate.update(sql, dormitory.get("floor"), dormitory.get("roomNo"), dormitory.get("bedNo"),
 					dormitory.get("sex"), dormitory.get("remark"), dormitory.get("isDelete"), dormitory.get("id"));
 		} catch (Exception e) {
-			log.error("更新宿舍床位信息失败",e.getMessage());
+			log.error("更新宿舍床位信息失败",e);
 			throw e;
 		}
 	}
@@ -62,7 +61,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(), id);
 		} catch (Exception e) {
-			log.error("根据ID查询床位信息失败",e.getMessage());
+			log.error("根据ID查询床位信息失败",e);
 			throw e;
 		}
 		if(dormitorys != null && dormitorys.size() > 0){
@@ -100,7 +99,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(),params.get("start") ,params.get("pageSize"));
 		} catch (Exception e) {
-			log.error("查询未入住宿舍信息失败",e.getMessage());
+			log.error("查询未入住宿舍信息失败",e);
 			throw e;
 		}
 		return dormitorys;
@@ -136,7 +135,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(),params.get("start") ,params.get("pageSize"));
 		} catch (Exception e) {
-			log.error("查询已入住宿舍信息失败",e.getMessage());
+			log.error("查询已入住宿舍信息失败",e);
 			throw e;
 		}
 		return dormitorys;
@@ -153,7 +152,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(), pnumber);
 		} catch (Exception e) {
-			log.error("根据ID查询床位信息失败",e.getMessage());
+			log.error("根据ID查询床位信息失败",e);
 			throw e;
 		}
 		if(dormitorys != null && dormitorys.size() > 0){
@@ -169,7 +168,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			jdbcTemplate.update(sql, pnumber, stayTime, "", dormitoryId, UtilDateTime.getCurrentTime("yyyy-MM-dd HH:mm:ss"), "0");
 		} catch (Exception e) {
-			log.error("新增入住信息失败",e.getMessage());
+			log.error("新增入住信息失败",e);
 			throw e;
 		}
 	}
@@ -181,7 +180,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			count = jdbcTemplate.update(sql, pnumber, dormitoryId);
 		} catch (Exception e) {
-			log.error("删除入住信息失败",e.getMessage());
+			log.error("删除入住信息失败",e);
 			throw e;
 		}
 		return count;
@@ -197,7 +196,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(), floor, roomNo, bedNo);
 		} catch (Exception e) {
-			log.error("询床位信息失败",e.getMessage());
+			log.error("询床位信息失败",e);
 			throw e;
 		}
 		if(dormitorys != null && dormitorys.size() > 0){
@@ -232,7 +231,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询未入住宿舍信息失败",e.getMessage());
+			log.error("查询未入住宿舍信息失败",e);
 			throw e;
 		}
 		return count;
@@ -265,7 +264,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询已入住宿舍信息失败",e.getMessage());
+			log.error("查询已入住宿舍信息失败",e);
 			throw e;
 		}
 		return count;
@@ -295,7 +294,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
-			log.error("查询费用信息条数失败",e.getMessage());
+			log.error("查询费用信息条数失败",e);
 			throw e;
 		}
 		return count;
@@ -332,7 +331,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 			costList = jdbcTemplate.queryForList(sql.toString());
 			BASE64Util.Base64DecodeMap(costList);
 		} catch (Exception e) {
-			log.error("查询费用信息列表失败",e.getMessage());
+			log.error("查询费用信息列表失败",e);
 			throw e;
 		}
 		return costList;
@@ -347,7 +346,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 			jdbcTemplate.update(sql.toString(), dormitoryCost.getYear(), dormitoryCost.getMonth(), dormitoryCost.getpNumber(), 
 					BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormBonus()), BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormDeduction()));
 		} catch (Exception e) {
-			log.error("保存住宿费用信息失败",e.getMessage());
+			log.error("保存住宿费用信息失败",e);
 			throw e;
 		}
 	}
@@ -358,7 +357,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			jdbcTemplate.update(sql, id);
 		} catch (Exception e) {
-			log.error("删除住宿费用信息失败",e.getMessage());
+			log.error("删除住宿费用信息失败",e);
 			throw e;
 		}
 	}
@@ -369,7 +368,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			jdbcTemplate.update(sql, outTime, pnumber, dormitoryId);
 		} catch (Exception e) {
-			log.error("删除入住信息失败",e.getMessage());
+			log.error("删除入住信息失败",e);
 			throw e;
 		}
 	}
@@ -382,7 +381,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		try {
 			jdbcTemplate.batchUpdate(sql.toString(),performanceParam);
 		} catch (Exception e) {
-			log.error("保存住宿费用信息失败",e.getMessage());
+			log.error("保存住宿费用信息失败",e);
 			throw e;
 		}
 		

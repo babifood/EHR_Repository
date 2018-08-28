@@ -3,6 +3,7 @@ prefix = "http://" + prefix +"/EHR";
 
 $(function() {
 	loadPerformanceList();
+	initPerformanceImportExcel();
 })
 
 //加载绩效信息列表
@@ -77,6 +78,22 @@ function loadPerformanceList(){
 	})
 }
 
+function initPerformanceImportExcel(){
+	$("#performance_dialog").importExcel1({
+		url:prefix + "/performance/importExcel",
+		success:function(result){
+			if (result.code == "1") {
+				$.messager.alert('提示!', '导入成功', 'info', function() {
+					$("#performance_dialog").dialog('close');
+					$("#performance_list_datagrid").datagrid("reload");
+				});
+			} else {
+				$.messager.confirm('提示', "导入失败!");
+			}
+		}
+	});
+}
+
 //条件查询绩效信息列表
 function loadConditionPerformance(){
 	var pNumber = $("#performance_salary_pNumber").val();
@@ -100,9 +117,10 @@ function exportPerformance(type){
 
 //导入弹框
 function performanceImport(){
-	$('#performance_file').filebox('clear');
-	$("#performance_dialog").dialog("open");
-	$("#performance_booten").linkbutton('enable');
+//	$('#performance_file').filebox('clear');
+//	$("#performance_dialog").dialog("open");
+//	$("#performance_booten").linkbutton('enable');
+	$("#performance_dialog").importExcel1.dialog();
 }
 
 //导入Excel

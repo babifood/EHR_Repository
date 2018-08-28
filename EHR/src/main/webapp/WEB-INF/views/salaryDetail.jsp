@@ -14,7 +14,7 @@
 			<div>
 				<div >
 					<shiro:hasPermission name="salaryDetail:export">
-						<a href="javascript:void(0)" class="easyui-menubutton"data-options="menu:'#salary_detail_menubutton',iconCls:'icon-edit'">导入/导出</a>
+						<a href="javascript:void(0)" class="easyui-menubutton"data-options="menu:'#salary_detail_menubutton',iconCls:'icon-edit'">导出</a>
 						<div id="salary_detail_menubutton" style="width:150px;">   
 						    <div data-options="iconCls:'icon-remove'" onclick="exportSalaryDetail()">导出</div>   
 						</div> 
@@ -43,6 +43,6 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/salaryDetail.js">
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/salaryDetail.js"/>
 </body>
 </html>

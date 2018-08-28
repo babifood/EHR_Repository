@@ -1,8 +1,10 @@
 var prefix = window.location.host;
 prefix = "http://" + prefix + "/EHR";
 
+var user;
 $(function() {
 	loadAllowanceList();
+	initAllowanceImportExcel();
 })
 
 // 加载绩效信息列表
@@ -169,6 +171,28 @@ function loadAllowanceList() {
 	})
 }
 
+//导入excel的初始条件
+function initAllowanceImportExcel(){
+	$("#allowance_dialog").importExcel1({
+		url:prefix + "/allowance/importExcel",
+		success:function(result){
+			if (result.code == "1") {
+				$.messager.alert('提示!', '导入成功', 'info', function() {
+					$("#allowance_dialog").dialog('close');
+					$("#allowance_list_datagrid").datagrid("reload");
+				});
+			} else {
+				$.messager.confirm('提示', "导入失败!");
+			}
+		}
+	});
+}
+
+//导入弹框
+function allowanceImport() {
+	$("#allowance_dialog").importExcel1.dialog();
+}
+
 // 条件查询绩效信息列表
 function loadConditionAllowance() {
 	var pNumber = $("#allowance_pNumber").val();
@@ -190,14 +214,69 @@ function exportAllowance(type) {
 	window.location.href = prefix + "/allowance/export?type=" + type;
 }
 
-// 导入弹框
-function allowanceImport() {
-	$('#allowance_file').filebox('clear');
-	$("#allowance_dialog").dialog("open");
+function importAllowanceInfos1(){
+	console.log("11111111111111111111");
+	if(canSubmit()){
+		console.log("222222222222222222222");
+		
+		var file = $('#allowance_file').filebox("getText");
+		console.log(file);
+	    //判断文件上传是否为空
+	    if (file == null || file == "") {
+	        $.messager.alert('系统提示', '请选择将要上传的文件!');
+	        return;
+	    }
+	    //分割文件的类型
+	    var file_typename = file.substring(file.lastIndexOf('.'), file.length);
+	    if (file_typename == '.xlsx' || file_typename == '.xls') {
+	        var options = {
+	            method: 'POST',
+	            url: prefix + "/allowance/improtExcel",
+	            data: file,
+	            dataType: 'text',
+	            success: function (data) {
+	            	console.log("3333333333333333333333333");
+	            	consolo.log(data);
+	                if (data == 'True') {
+	                    $.messager.show({
+	                        title: '提示',
+	                        msg: '用户批量导入成功',
+	                        showType: 'slide'
+	                    })
+	                    $('#allowance_file').filebox("setText", "");
+
+	                } else {
+	                    //$.messager.alert('警告', '导入异常，请检查是否正确使用模板！')
+	                    $.messager.alert('提示', data)
+	                }
+	            }
+	        }
+	        $('#allowance_file').ajaxSubmit(options);
+	    } else {
+	        $.messager.alert('提示', '请选择正确的文件类型')
+	    }
+//		$("#allowance_booten").linkbutton('disable');
+	}
+}
+
+
+function canSubmit() {
+	var fileName = $('#allowance_file').filebox('getValue');
+	// 对文件格式进行校验
+	var d1 = /\.[^\.]+$/.exec(fileName);
+	if (fileName == "") {
+		$.messager.alert('Excel批量绩效导入', '请选择将要上传的文件!');
+		return false;
+	} else if (d1 != ".xls") {
+		$.messager.alert('提示', '请选择xls格式文件！', 'info');
+		return false;
+	}
+	return true;
 }
 
 // 导入Excel
-function importAllowanceInfos() {
+function importAllowanceInfos11111() {
+	console.log("11111111111111111111");
 	$("#allowance_uploadExcel").form({
 		type : 'post',
 		url : prefix + "/allowance/improtExcel",
@@ -217,8 +296,9 @@ function importAllowanceInfos() {
 			return true;
 		},
 		success : function(result) {
-			var result = eval('(' + result + ')');
-			if (result.code == "1") {
+			console.log(result);
+			var obj = JSON.parse(result);
+			if (obj.code == "1") {
 				$.messager.alert('提示!', '导入成功', 'info', function() {
 					$("#allowance_booten").linkbutton('enable');
 					$('#allowance_dialog').dialog('close');

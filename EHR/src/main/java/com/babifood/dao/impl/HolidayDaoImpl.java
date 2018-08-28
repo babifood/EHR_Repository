@@ -3,6 +3,7 @@ package com.babifood.dao.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,8 @@ import com.babifood.entity.HolidayEntity;
 @Repository
 public class HolidayDaoImpl implements HolidayDao {
 
+	private static Logger logger = Logger.getLogger(HolidayDaoImpl.class);
+	
 	@Autowired
 	private JdbcTemplate jdbctemplate;
 
@@ -25,7 +28,7 @@ public class HolidayDaoImpl implements HolidayDao {
 			count = jdbctemplate.update(sql.toString(), holidayEntity.getHolidayName(), holidayEntity.getStartDate(),
 					holidayEntity.getEndDate(), holidayEntity.getRemark());
 		} catch (Exception e) {
-			System.out.println();
+			logger.error("新增节假日失败",e);
 		}
 		return count;
 	}

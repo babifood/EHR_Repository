@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,7 @@ import com.babifood.utils.UtilString;
 @Repository
 public class DeptPageDaoImpl implements DeptPageDao {
 
-	Logger log = LoggerFactory.getLogger(DeptPageDaoImpl.class);
+	private static Logger log = Logger.getLogger(DeptPageDaoImpl.class);
 
 	@Autowired
 	JdbcTemplate jdbctemplate;
@@ -33,7 +32,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		try {
 			list = jdbctemplate.queryForList(sql.toString(), pCode);
 		} catch (Exception e) {
-			log.error("查询组织机构失败" + e.getMessage());
+			log.error("查询组织机构失败" + e);
 		}
 		return list;
 	}
@@ -49,7 +48,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		try {
 			organize = jdbctemplate.queryForMap(sql.toString(), deptCode);
 		} catch (Exception e) {
-			log.error("查询组织机构失败" + e.getMessage());
+			log.error("查询组织机构失败" + e);
 		}
 		return organize;
 	}
@@ -67,7 +66,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 			count = jdbctemplate.update(sql.toString(), deptEntity.getId(),deptEntity.getDeptName(), deptEntity.getDeptCode(),
 					deptEntity.getType(), deptEntity.getpCode(), deptEntity.getRemark(), deptEntity.getSource_type());
 		} catch (Exception e) {
-			log.error("新增组织机构失败", e.getMessage());
+			log.error("新增组织机构失败", e);
 		}
 		if (count <= 0) {
 			throw new Exception("插入数据异常");
@@ -84,7 +83,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 			count = jdbctemplate.update(sql.toString(), deptEntity.getDeptName(),deptEntity.getDeptCode(), deptEntity.getpCode(),
 					deptEntity.getRemark(), deptEntity.getId());
 		} catch (Exception e) {
-			log.error("修改组织机构失败", e.getMessage());
+			log.error("修改组织机构失败", e);
 		}
 		return count;
 	}
@@ -96,7 +95,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		try {
 			jdbctemplate.update(sql.toString(), deptCode);
 		} catch (Exception e) {
-			log.error("删除组织机构失败", e.getMessage());
+			log.error("删除组织机构失败", e);
 		}
 	}
 
@@ -112,7 +111,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		} catch (Exception e) {
 			dept.put("code", "0");
 			dept.put("msg", "查询数据异常");
-			log.error("根据id查询组织机构信息失败", e.getMessage());
+			log.error("根据id查询组织机构信息失败", e);
 		}
 		return dept;
 	}
@@ -126,7 +125,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		try {
 			list = jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			log.error("查询所有组织机构信息失败", e.getMessage());
+			log.error("查询所有组织机构信息失败", e);
 		}
 		return list;
 	}
@@ -144,7 +143,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		try {
 			list = jdbctemplate.queryForList(sql.toString());
 		} catch (Exception e) {
-			log.error("查询所有组织机构信息失败", e.getMessage());
+			log.error("查询所有组织机构信息失败", e);
 		}
 		return list;
 	}
@@ -161,14 +160,14 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		} catch (Exception e) {
 			result.put("code", "0");
 			result.put("msg", "系统异常，请稍后重试");
-			log.error("根据id查询组织机构信息失败", e.getMessage());
+			log.error("根据id查询组织机构信息失败", e);
 		}
 		return result;
 		
 	}
 
 	@Override
-	public List<Map<String, Object>> findDeptsByDeptCodes(String[] deptCodeList) {
+	public List<Map<String, Object>> findDeptsByDeptCodes(Object[] deptCodeList) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select dept_code as deptCode,dept_name as deptName,type from ehr_dept ");
 		sql.append(" where dept_code in (");
@@ -184,7 +183,7 @@ public class DeptPageDaoImpl implements DeptPageDao {
 		try {
 			deptList = jdbctemplate.queryForList(sql.toString(), deptCodeList);
 		} catch (Exception e) {
-			log.error("根据deptCodes查询部门列表失败", e.getMessage());
+			log.error("根据deptCodes查询部门列表失败", e);
 		}
 		return deptList;
 	}

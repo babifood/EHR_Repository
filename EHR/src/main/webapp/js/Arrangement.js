@@ -50,7 +50,7 @@ function loadBaseTimes() {
 				editor:{
 					type:'text',
 					options:{
-						required:true,
+						required: true,
 					},
 				},
 			},
@@ -65,7 +65,6 @@ function loadBaseTimes() {
 					    required: true,
 					    showSeconds: false
 					},
-					default:'8:00',
 				}
 			},
 			{
@@ -90,6 +89,7 @@ function loadBaseTimes() {
 					options:{
 						valueField: 'id',
 						textField: 'text',
+						required: true,
 						data:[{"id":1,"text":"大小周","selected":true},{"id":2,"text":"1.5休"},{"id":3,"text":"双休"},{"id":4,"text":"单休"}]
 					},
 				},
@@ -123,8 +123,7 @@ function addArrangementBaseTime(){
 	if (editIndex1 == undefined){
 		$('#arrangement_base_time').datagrid('appendRow',{});
 		editIndex1 = $('#arrangement_base_time').datagrid('getRows').length-1;
-		$('#arrangement_base_time').datagrid('selectRow', editIndex1)
-		.datagrid('beginEdit', editIndex1); 
+		$('#arrangement_base_time').datagrid('beginEdit', editIndex1); 
 	}
 }
 
