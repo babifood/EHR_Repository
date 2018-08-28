@@ -10,6 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.dao.NewUsersDao;
 import com.babifood.dao.impl.LoginDaoImpl;
@@ -27,7 +28,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 	public static final Logger log = Logger.getLogger(NewUsersServiceImpl.class);
 	@Autowired
 	NewUsersDao newUsersDao;
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<Map<String, Object>> loadUserAll(String user_name,String show_name) {
 		// TODO Auto-generated method stub
@@ -69,7 +70,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return returnList;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<Map<String, Object>> loadRoleAll(String role_name) {
 		// TODO Auto-generated method stub
@@ -87,7 +88,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer saveRole(String role_name, String role_desc, String state,String organization_code,String organization_name) {
 		// TODO Auto-generated method stub
@@ -106,7 +107,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer editRole(String role_id, String role_name, String role_desc, String state,String organization_code,String organization_name) {
 		// TODO Auto-generated method stub
@@ -124,7 +125,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer removeRole(String role_id) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -143,7 +144,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<Map<String, Object>> loadComboboxData() {
 		// TODO Auto-generated method stub
@@ -160,7 +161,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer saveUser(LoginEntity userEntity) {
 		// TODO Auto-generated method stub
@@ -182,7 +183,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer editUser(LoginEntity userEntity) {
 		// TODO Auto-generated method stub
@@ -208,7 +209,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer removeUser(String user_id) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -226,7 +227,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public Integer saveMenuRole(RoleMenuEntity[] roleMenuEntity) {
 		// TODO Auto-generated method stub
@@ -245,7 +246,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return rows;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<Map<String, Object>> getMenuIds(String role_id) {
 		// TODO Auto-generated method stub
@@ -263,7 +264,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<Map<String, Object>> loadCheckTreeMenu(String id) {
 		// TODO Auto-generated method stub
@@ -282,7 +283,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<UserRoleEntity> loadRoleWhereUser(String user_id) {
 		// TODO Auto-generated method stub
@@ -309,7 +310,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return roleList;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<RoleAuthorityEntity> loadRoleAuthority(String orle_id) {
 		// TODO Auto-generated method stub
@@ -339,7 +340,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		}
 		return authorityList;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.USER)
 	@Override
 	public List<Map<String, Object>> loadCombotreeDeptData(String id) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();

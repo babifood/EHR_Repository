@@ -11,6 +11,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.dao.PersonInFoDao;
 import com.babifood.dao.SynchronousOaAccountInfoDao;
@@ -28,7 +29,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 	PersonInFoDao personInFoDao;
 	@Autowired
 	SynchronousOaAccountInfoDao synchronousOaAccountInfoDao;
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadPersonInFo(String search_p_number,String search_p_name) {
 		// TODO Auto-generated method stub
@@ -46,7 +47,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadEducation(String e_p_id) {
 		// TODO Auto-generated method stub
@@ -64,7 +65,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Integer savePersonInfo(PersonBasrcEntity personInFo) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -100,7 +101,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return status;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Integer removePersonInFo(String p_id) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -119,7 +120,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return status;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadCultivateFront(String c_p_id) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -137,7 +138,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadCultivateLater(String c_p_id) {
 		// TODO Auto-generated method stub
@@ -155,7 +156,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadWorkFront(String w_p_id) {
 		// TODO Auto-generated method stub
@@ -173,7 +174,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadWorkLater(String w_p_id) {
 		// TODO Auto-generated method stub
@@ -191,7 +192,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadCertificate(String c_p_id) {
 		// TODO Auto-generated method stub
@@ -209,7 +210,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadFamily(String f_p_id) {
 		// TODO Auto-generated method stub
@@ -227,7 +228,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Object getPersonFoPid(String p_id) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -245,7 +246,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return obj;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadComboboxCompanyData() {
 		// TODO Auto-generated method stub
@@ -262,7 +263,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Integer getPersonCount() {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -279,7 +280,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return count;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> findPagePersonInfo(int index, int threadCount) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -296,7 +297,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		return list;
 		
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Object getPersonByPnumber(String pNumber) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -314,7 +315,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return obj;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum, String userName) {
 		// TODO Auto-generated method stub
@@ -331,7 +332,7 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod
+	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Object getRandomYxWorkNum() {
 		// TODO Auto-generated method stub
