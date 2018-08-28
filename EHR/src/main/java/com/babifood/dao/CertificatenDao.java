@@ -14,6 +14,6 @@ public interface CertificatenDao {
 
 	Integer removeCertificaten(String c_id);
 
-	Integer saveCertificaten(Certificaten certificaten);
+	void saveCertificaten(Certificaten certificaten);
 	
 }

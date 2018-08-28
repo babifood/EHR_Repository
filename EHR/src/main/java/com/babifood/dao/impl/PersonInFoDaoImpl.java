@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,14 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.babifood.dao.PersonInFoDao;
 import com.babifood.entity.PersonBasrcEntity;
-import com.babifood.utils.CustomerContextHolder;
 @Repository
+@Transactional
 public class PersonInFoDaoImpl implements PersonInFoDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
-	Logger log = LoggerFactory.getLogger(LoginDaoImpl.class);
+	public static final Logger log = Logger.getLogger(LoginDaoImpl.class);
 	@Override
-	public List<Map<String, Object>> loadPersonInFo(String search_p_number,String search_p_name) {
+	public List<Map<String, Object>> loadPersonInFo(String search_p_number,String search_p_name) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -44,17 +44,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(search_p_name!=null&&!search_p_name.equals("")){
 			sql.append(" and p_name like '%"+search_p_name+"%'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> loadEducation(String e_p_id) {
+	public List<Map<String, Object>> loadEducation(String e_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -63,20 +56,11 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(e_p_id.equals("")||e_p_id!=null){
 			sql.append(" and e_p_id='"+e_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
-	@Transactional("txManager")
 	@Override
-	public Integer savePersonInfo(PersonBasrcEntity personInFo) {
+	public void savePersonInfo(PersonBasrcEntity personInFo) throws DataAccessException{
 		// TODO Auto-generated method stub
-		int row = 1;
 		StringBuffer sql_basrc = new StringBuffer("delete from ehr_person_basic_info where p_id=?");//人员档案信息
 		StringBuffer sql_education = new StringBuffer("delete from ehr_person_education where e_p_id=?");//教育背景
 		StringBuffer sql_cultivateFront = new StringBuffer("delete from ehr_person_cultivate_front where c_p_id=?");//培训经历-入职前
@@ -246,35 +230,27 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 					});
 		}	
 		final String family_insert_sql = "insert into ehr_person_family (f_p_id,f_relation,f_name,f_date,f_company,f_duty,f_desc) values(?,?,?,?,?,?,?)";						
-		try {
-			jdbctemplate.update(sql_basrc.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_education.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_cultivateFront.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_cultivateLater.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_workFront.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_workLater.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_certificate.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_family.toString(),personInFo.getP_id());
-			jdbctemplate.update(sql_insert_basrc.toString(),sql_insert_basrc_params);
-			jdbctemplate.batchUpdate(education_insert_sql,education_params);
-			jdbctemplate.batchUpdate(cultivateFront_insert_sql,cultivateFront_params);
-			jdbctemplate.batchUpdate(cultivateLater_insert_sql,cultivateLater_params);
-			jdbctemplate.batchUpdate(workFront_insert_sql,workFront_params);
-			jdbctemplate.batchUpdate(workLater_insert_sql,workLater_params);
-			jdbctemplate.batchUpdate(certificate_insert_sql,certificate_params);
-			jdbctemplate.batchUpdate(family_insert_sql,family_params);
-		} catch (Exception e) {
-			// TODO: handle exception
-			row =-1;
-			log.error("查询错误："+e.getMessage());
-		}
-		return row;
+		
+		jdbctemplate.update(sql_basrc.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_education.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_cultivateFront.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_cultivateLater.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_workFront.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_workLater.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_certificate.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_family.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_insert_basrc.toString(),sql_insert_basrc_params);
+		jdbctemplate.batchUpdate(education_insert_sql,education_params);
+		jdbctemplate.batchUpdate(cultivateFront_insert_sql,cultivateFront_params);
+		jdbctemplate.batchUpdate(cultivateLater_insert_sql,cultivateLater_params);
+		jdbctemplate.batchUpdate(workFront_insert_sql,workFront_params);
+		jdbctemplate.batchUpdate(workLater_insert_sql,workLater_params);
+		jdbctemplate.batchUpdate(certificate_insert_sql,certificate_params);
+		jdbctemplate.batchUpdate(family_insert_sql,family_params);
 	}
-	@Transactional("txManager")
 	@Override
-	public Integer removePersonInFo(String p_id) {
+	public void removePersonInFo(String p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
-		int state = 1;
 		StringBuffer sql_basrc = new StringBuffer("delete from ehr_person_basic_info where p_id=?");//人员档案信息
 		StringBuffer sql_education = new StringBuffer("delete from ehr_person_education where e_p_id=?");//教育背景
 		StringBuffer sql_cultivateFront = new StringBuffer("delete from ehr_person_cultivate_front where c_p_id=?");//培训经历-入职前
@@ -283,24 +259,19 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		StringBuffer sql_workLater = new StringBuffer("delete from ehr_person_work_later where w_p_id=?");//工作经历-入职后
 		StringBuffer sql_certificate = new StringBuffer("delete from ehr_person_certificate where c_p_id=?");//获得证书
 		StringBuffer sql_family = new StringBuffer("delete from ehr_person_family where f_p_id=?");//家庭背景
-		try {
-			jdbctemplate.update(sql_basrc.toString(),p_id);
-			jdbctemplate.update(sql_education.toString(),p_id);
-			jdbctemplate.update(sql_cultivateFront.toString(),p_id);
-			jdbctemplate.update(sql_cultivateLater.toString(),p_id);
-			jdbctemplate.update(sql_workFront.toString(),p_id);
-			jdbctemplate.update(sql_workLater.toString(),p_id);
-			jdbctemplate.update(sql_certificate.toString(),p_id);
-			jdbctemplate.update(sql_family.toString(),p_id);
-		} catch (Exception e) {
-			// TODO: handle exception
-			state = -1;
-			log.error("查询错误："+e.getMessage());
-		}
-		return state;
+
+		jdbctemplate.update(sql_basrc.toString(),p_id);
+		jdbctemplate.update(sql_education.toString(),p_id);
+		jdbctemplate.update(sql_cultivateFront.toString(),p_id);
+		jdbctemplate.update(sql_cultivateLater.toString(),p_id);
+		jdbctemplate.update(sql_workFront.toString(),p_id);
+		jdbctemplate.update(sql_workLater.toString(),p_id);
+		jdbctemplate.update(sql_certificate.toString(),p_id);
+		jdbctemplate.update(sql_family.toString(),p_id);
+
 	}
 	@Override
-	public List<Map<String, Object>> loadCultivateFront(String c_p_id) {
+	public List<Map<String, Object>> loadCultivateFront(String c_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -309,17 +280,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(c_p_id.equals("")||c_p_id!=null){
 			sql.append(" and c_p_id='"+c_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> loadCultivateLater(String c_p_id) {
+	public List<Map<String, Object>> loadCultivateLater(String c_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -328,17 +292,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(c_p_id.equals("")||c_p_id!=null){
 			sql.append(" and c_p_id='"+c_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> loadWorkFront(String w_p_id) {
+	public List<Map<String, Object>> loadWorkFront(String w_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -347,17 +304,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(w_p_id.equals("")||w_p_id!=null){
 			sql.append(" and w_p_id='"+w_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> loadWorkLater(String w_p_id) {
+	public List<Map<String, Object>> loadWorkLater(String w_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -366,17 +316,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(w_p_id.equals("")||w_p_id!=null){
 			sql.append(" and w_p_id='"+w_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> loadCertificate(String c_p_id) {
+	public List<Map<String, Object>> loadCertificate(String c_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -385,17 +328,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(c_p_id.equals("")||c_p_id!=null){
 			sql.append(" and c_p_id='"+c_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> loadFamily(String f_p_id) {
+	public List<Map<String, Object>> loadFamily(String f_p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -404,17 +340,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(f_p_id.equals("")||f_p_id!=null){
 			sql.append(" and f_p_id='"+f_p_id+"'");
 		}
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public Object getPersonFoPid(String p_id) {
+	public Object getPersonFoPid(String p_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -430,31 +359,18 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql.append("p_c_bank_nub,p_c_tijian_tab,p_c_health,p_c_img,p_c_welcome,p_c_staff,p_c_admin,p_c_shebao,");
 		sql.append("p_c_shangbao,p_c_secrecy,p_c_prohibida,p_c_contract,p_c_post,p_c_corruption,p_c_probation,p_create_date");
 		sql.append(" from ehr_person_basic_info where p_id=?");
-		PersonBasrcEntity personBasrc =null;
-        try{
-        	personBasrc = jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), p_id);
-        }catch(Exception e) {
-            log.error("查询错误："+e.getMessage());
-        }
-		return personBasrc;
+		return jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), p_id);
 	}
 	@Override
-	public List<Map<String, Object>> loadComboboxCompanyData() {
+	public List<Map<String, Object>> loadComboboxCompanyData() throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		//type 1代表集团，2代表公司，3代表部门，4代表科室
 		sql.append("select dept_code,dept_name from ehr_dept where type = '2'");
-		List<Map<String, Object>> list = null;
-		try {
-			list=jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> findPersonListByIds(String[] ids) {
+	public List<Map<String, Object>> findPersonListByIds(String[] ids) throws DataAccessException{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select p_id as id,p_number as pNumber,p_name as pName ");
 		sql.append(" from ehr_person_basic_info ");
@@ -467,28 +383,14 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 			}
 		}
 		sql.append(")");
-		List<Map<String, Object>> personList = null;
-		try {
-			personList = jdbctemplate.queryForList(sql.toString(), ids);
-		} catch (Exception e) {
-			log.error("根据员工ids查询员工信息失败：",e.getMessage());
-		}
-		return personList;
+		return jdbctemplate.queryForList(sql.toString(), ids);
 	}
 	@Override
-	public Integer getPersonCount() {
-		String sql = "select count(*) from ehr_person_basic_info ";
-		Integer count = 0;
-		try{
-			count = jdbctemplate.queryForInt(sql);
-		} catch (Exception e) {
-			log.error("查询员工数量失败：",e.getMessage());
-			throw e;
-		}
-		return count;
+	public Integer getPersonCount() throws DataAccessException{
+		return jdbctemplate.queryForInt("select count(*) from ehr_person_basic_info");
 	}
 	@Override
-	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize) {
+	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize) throws DataAccessException{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.p_id as pId,a.p_number as pNumber,a.p_name as pName,b.dept_name as companyName,");
 		sql.append("b.dept_code as companyCode,c.dept_name deptName,c.dept_code as deptCode,d.dept_name organizationName,");
@@ -500,19 +402,11 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql.append(" LEFT JOIN ehr_dept d on a.P_organization_id = d.dept_code");
 		sql.append(" LEFT JOIN ehr_dept e on a.P_section_office_id = e.dept_code");
 		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID");
-//		sql.append("");
 		sql.append(" LIMIT ?,?");
-		List<Map<String, Object>> pagePerson = null;
-		try {
-			pagePerson = jdbctemplate.queryForList(sql.toString(), startIndex,pageSize);
-		} catch (Exception e) {
-			log.error("查询员工数量失败：",e.getMessage());
-			throw e;
-		}
-		return pagePerson;
+		return jdbctemplate.queryForList(sql.toString(), startIndex,pageSize);
 	}
 	@Override
-	public Object getPersonByPnumber(String pNumber) {
+	public Object getPersonByPnumber(String pNumber) throws DataAccessException{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append("p_id,p_number,p_name,p_sex,p_age,p_title,p_post_id,p_post,p_level_id,p_level_name,p_company_id,p_company_name,p_department_id,p_department,p_state,p_property,");
@@ -527,50 +421,12 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql.append("p_c_bank_nub,p_c_tijian_tab,p_c_health,p_c_img,p_c_welcome,p_c_staff,p_c_admin,p_c_shebao,");
 		sql.append("p_c_shangbao,p_c_secrecy,p_c_prohibida,p_c_contract,p_c_post,p_c_corruption,p_c_probation,p_create_date");
 		sql.append(" from ehr_person_basic_info where p_number=?");
-		PersonBasrcEntity personBasrc =null;
-        try{
-        	personBasrc = jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), pNumber);
-        }catch(Exception e) {
-            log.error("查询错误："+e.getMessage());
-        }
-		return personBasrc;
+		return jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), pNumber);
 	}
 	@Override
-	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum, String userName) {
+	public List<Map<String, Object>> loadEHRWorkNumInFo() throws DataAccessException{
 		// TODO Auto-generated method stub
-		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
-		StringBuffer sql = new StringBuffer();
-		sql.append("select ");
-		sql.append("name,code from org_member where code is not null");
-		if(workNum!=null&&!workNum.equals("")){
-			sql.append(" and code like '%"+workNum+"%'");
-		}
-		if(userName!=null&&!userName.equals("")){
-			sql.append(" and name like '%"+userName+"%'");
-		}
-		List<Map<String, Object>> map= null;
-		try {
-			map = jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询错误："+e.getMessage());
-		}finally{
-			CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
-		}
-		return map;
-	}
-	@Override
-	public List<Map<String, Object>> loadEHRWorkNumInFo() {
-		// TODO Auto-generated method stub
-		StringBuffer sql = new StringBuffer();
-		sql.append("select p_number from ehr_person_basic_info");
-		List<Map<String, Object>> personList = null;
-		try {
-			personList = jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			log.error("查询员工工号信息失败：",e.getMessage());
-		}
-		return personList;
+		return jdbctemplate.queryForList("select p_number from ehr_person_basic_info");
 	}
 
 }

@@ -14,15 +14,25 @@
   <!-- 配置读取外部配置文件 -->
   <context:property-placeholder location="classpath:jdbc.properties" />
   <!-- 配置EHR数据源 -->
-  <bean id="EHRdataSource" class="org.apache.commons.dbcp.BasicDataSource"
-    destroy-method="close" p:driverClassName="${jdbc.mysql.driverClassName}"
-    p:url="${jdbc.mysql.url}" p:username="${jdbc.mysql.username}" p:password="${jdbc.mysql.password}" />
+  <bean id="EHRdataSource" 
+  	class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close" 
+    p:driverClassName="${jdbc.mysql.driverClassName}"
+    p:url="${jdbc.mysql.url}" 
+    p:username="${jdbc.mysql.username}" 
+    p:password="${jdbc.mysql.password}" />
    <!-- 配置OA数据源 -->
-  <bean id="OAdataSource" class="org.apache.commons.dbcp.BasicDataSource"
-    destroy-method="close" p:driverClassName="${jdbc.oracle.driverClassName}"
-    p:url="${jdbc.oracle.url}" p:username="${jdbc.oracle.username}" p:password="${jdbc.oracle.password}" />
+  <bean id="OAdataSource" 
+  	class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close" 
+    p:driverClassName="${jdbc.oracle.driverClassName}"
+    p:url="${jdbc.oracle.url}" 
+    p:username="${jdbc.oracle.username}" 
+    p:password="${jdbc.oracle.password}" />
+  
   <context:annotation-config /> <!-- 此行语句使得resource autowired 等四个注解可以使用 -->
-   <bean id="dataSource" class="com.babifood.utils.DynamicDataSource">
+   
+  <bean id="dataSource" class="com.babifood.utils.DynamicDataSource">
 		<!-- 通过key-value的形式来关联数据源 -->
 		<property name="targetDataSources">
 			<map key-type="java.lang.String">
@@ -30,8 +40,7 @@
 				<entry value-ref="OAdataSource" key="OA"></entry>
 			</map>
 		</property>
-		<property name="defaultTargetDataSource" ref="EHRdataSource" >
-		</property>
+		<property name="defaultTargetDataSource" ref="EHRdataSource"/>
 	</bean>
    
   <!-- 实例化jdbcTemplate,同时注入数据源 -->
@@ -39,17 +48,16 @@
     p:dataSource-ref="dataSource" />
    
   <!-- 配置事务管理器 -->
-  <bean id="txManager"
-    class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="dataSource" />
+  <bean id="txManager" 
+  		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="dataSource"/>
   </bean>
-   
   <!-- 事务扫描开始(开启@Tranctional) -->
   <tx:annotation-driven transaction-manager="txManager" />
  
-   <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+  <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="5" />
 		<property name="maxPoolSize" value="20" />
 		<property name="queueCapacity" value="25" />
-	</bean>
+  </bean>
 </beans>

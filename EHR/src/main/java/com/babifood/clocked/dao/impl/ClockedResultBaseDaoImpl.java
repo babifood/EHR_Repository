@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ import com.babifood.clocked.entrty.ClockedResultBases;
 import com.babifood.utils.CustomerContextHolder;
 @Repository
 public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
-	Logger log = LoggerFactory.getLogger(ClockedResultBaseDaoImpl.class);
+	public static final Logger log = Logger.getLogger(ClockedResultBaseDaoImpl.class);
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
@@ -71,8 +70,15 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		Object[] params=new Object[2];
 		params[0]=year;
 		params[1]=month;
-		jdbctemplate.update(sql_delete.toString(),params);
-		return jdbctemplate.batchUpdate(strSql,paramsList);
+		int[] rwso = null;
+		try {
+			jdbctemplate.update(sql_delete.toString(), params);
+			rwso = jdbctemplate.batchUpdate(strSql,paramsList);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("插入数据失败："+e.getMessage());
+		}
+		return rwso;
 	}
 	@Override
 	public List<Map<String, Object>> loadClockedResultData(int year,int month,String workNum,String periodEndDate) throws Exception {
@@ -99,7 +105,13 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		params[1]=month;
 		params[2]=workNum;
 		params[3]=periodEndDate;
-		List<Map<String, Object>> list=jdbctemplate.queryForList(sql.toString(),params);
+		List<Map<String, Object>> list =null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(), params);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询数据出错："+e.getMessage());
+		}
 		return list;
 	}
 	@Override
@@ -125,7 +137,13 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		Object[] params=new Object[2];
 		params[0]=year;
 		params[1]=month;
-		List<Map<String, Object>> list=jdbctemplate.queryForList(sql.toString(),params);
+		List<Map<String, Object>> list =null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(), params);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询数据出错："+e.getMessage());
+		}
 		return list;
 	}
 	@Override
@@ -162,8 +180,15 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 					saveDataList.get(i).getEventEndTime(),saveDataList.get(i).getWorkNum(),
 					saveDataList.get(i).getCheckingDate()
 					});
-		}	
-		return jdbctemplate.batchUpdate(strSql,paramsList);
+		}
+		int[] rows = null;
+		try {
+			rows = jdbctemplate.batchUpdate(strSql, paramsList);
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("更新数据失败："+e.getMessage());
+		}
+		return rows;
 	}
 	/**
 	 * 查询考勤结果汇总数据
@@ -195,7 +220,13 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,PostCode,Post,CheckingType,PaiBanType");
 		sql.append(" ORDER BY Year,Month desc");
 	
-		List<Map<String, Object>> list=jdbctemplate.queryForList(sql.toString());
+		List<Map<String, Object>> list = null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("查询数据失败："+e.getMessage());
+		}
 		return list;
 	}
 }

@@ -87,7 +87,7 @@ public class ClockedControl {
 			e.printStackTrace();
 			throw new CustomException("错误消息："+e.getMessage());
 		}
-		if(rows.length>0){
+		if(rows!=null&&rows.length>0){
 			map.put("status", "success");
 		}else{
 			map.put("status", "error");
@@ -111,7 +111,7 @@ public class ClockedControl {
 			e.printStackTrace();
 			throw new CustomException("错误消息："+e.getMessage());
 		}
-		if(rows.length>0){
+		if(rows!=null&&rows.length>0){
 			map.put("status", "success");
 		}else{
 			map.put("status", "error");
