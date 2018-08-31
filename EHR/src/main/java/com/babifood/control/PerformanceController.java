@@ -51,7 +51,7 @@ public class PerformanceController {
 	
 	@RequestMapping("save")
 	@ResponseBody
-	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score) {
-		return performanceService.savePerformanceScore(year, month, pNumber, score);
+	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score, String salary) {
+		return performanceService.savePerformanceScore(year, month, pNumber, score, salary);
 	}
 }

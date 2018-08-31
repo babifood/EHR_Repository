@@ -24,8 +24,6 @@ public class OperationConstant {
 	
 	public static final String OPERATION_LOG_TYPE_CHECKOUT = "搬出";//搬出
 	
-	public static final String OPERATION_LOG_TYPE_FORMALITIES = "搬出手续";//搬出手续
-	
 	public static final String OPERATION_LOG_TYPE_ARCHIVE = "归档";//归档
 	
 	public static String OPERATING_TYPE_INITIALIZE = "初始化";

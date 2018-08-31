@@ -33,7 +33,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 		sql.append("a.reserved8, a.reserved9, a.reserved10, a.year, a.month, a.P_NUMBER AS pNumber, ");
 		sql.append("b.p_name as pName, c.DEPT_NAME AS organzationName, d.DEPT_NAME AS deptName, ");
 		sql.append("e.DEPT_NAME AS officeName FROM EHR_ALLOWANCES a ");
-		sql.append("LEFT JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
+		sql.append("INNER JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");
@@ -104,7 +104,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 	public Integer getAllowanceCount(Map<String, Object> param) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT COUNT(*) FROM EHR_ALLOWANCES a ");
-		sql.append("LEFT JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
+		sql.append("INNER JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");

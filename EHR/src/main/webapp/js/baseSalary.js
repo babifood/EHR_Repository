@@ -150,7 +150,7 @@ function loadBaseSalary() {
 			},
 			{
 				field : "stay",
-				title : "住宿补贴",
+				title : "外住补贴",
 				width : 100,
 				editor : {
 					type:'numberbox',options:{precision:2,required:true}

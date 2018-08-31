@@ -488,6 +488,9 @@ public class BASE64Util {
 			if(!UtilString.isEmpty(map.get("completionDeduction")+"")){
 				map.put("completionDeduction", BASE64Util.decode(map.get("completionDeduction")+""));
 			}
+			if(!UtilString.isEmpty(map.get("pSalary")+"")){
+				map.put("pSalary", BASE64Util.decode(map.get("pSalary")+""));
+			}
 			if(!UtilString.isEmpty(map.get("reserved1")+"")){
 				map.put("reserved1", BASE64Util.decode(map.get("reserved1")+""));
 			}

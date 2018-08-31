@@ -13,6 +13,11 @@ import com.babifood.entity.BaseSalaryEntity;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilString;
 
+/**
+ * 基础薪资dao层
+ * @author wangguocheng
+ *
+ */
 @Repository
 public class BaseSalaryDaoImpl implements BaseSalaryDao {
 
@@ -21,11 +26,14 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	/**
+	 * 查询基础薪资信息总数
+	 */
 	@Override
 	public int queryCountOfBaseSalarys(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT COUNT(*) FROM ehr_base_salary a ");
-		sql.append("LEFT JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
+		sql.append("INNER JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
 		sql.append("WHERE a.is_delete = '0'");
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.P_NUMBER like '%" + params.get("pNumber") + "%'");
@@ -43,6 +51,9 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		return count;
 	}
 
+	/**
+	 * 新增基础薪资信息
+	 */
 	@Override
 	public void insertBaseSalary(BaseSalaryEntity baseSalary) {
 		StringBuffer sql = new StringBuffer();
@@ -53,22 +64,25 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
-					BASE64Util.encode(baseSalary.getBaseSalary()),
-					BASE64Util.encode(baseSalary.getFixedOverTimeSalary()),
-					BASE64Util.encode(baseSalary.getPostSalary()),
-					BASE64Util.encode(baseSalary.getCallSubsidies()),
-					BASE64Util.encode(baseSalary.getCompanySalary()),
-					BASE64Util.encode(baseSalary.getSingelMeal()),
-					BASE64Util.encode(baseSalary.getPerformanceSalary()), 
-					BASE64Util.encode(baseSalary.getStay()), 
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getBaseSalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getFixedOverTimeSalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getPostSalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getCallSubsidies()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getCompanySalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getSingelMeal()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getPerformanceSalary()), 
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getStay()), 
 					baseSalary.getCreateTime(),
 					baseSalary.getWorkType(), baseSalary.getUseTime(), "0");
 		} catch (Exception e) {
-			log.error("新增基础薪资信息总数失败", e);
+			log.error("新增基础薪资信息失败", e);
 			throw e;
 		}
 	}
 
+	/**
+	 * 修改基础薪资信息
+	 */
 	@Override
 	public void updateBaseSalary(BaseSalaryEntity baseSalary) {
 		StringBuffer sql = new StringBuffer();
@@ -78,20 +92,23 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("WHERE `ID`=?");
 		try {
 			jdbcTemplate.update(sql.toString(), baseSalary.getpNumber(),
-					BASE64Util.encode(baseSalary.getBaseSalary()),
-					BASE64Util.encode(baseSalary.getFixedOverTimeSalary()),
-					BASE64Util.encode(baseSalary.getPostSalary()),
-					BASE64Util.encode(baseSalary.getCallSubsidies()),
-					BASE64Util.encode(baseSalary.getCompanySalary()),
-					BASE64Util.encode(baseSalary.getSingelMeal()),
-					BASE64Util.encode(baseSalary.getPerformanceSalary()), 
-					BASE64Util.encode(baseSalary.getStay()), baseSalary.getUseTime());
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getBaseSalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getFixedOverTimeSalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getPostSalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getCallSubsidies()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getCompanySalary()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getSingelMeal()),
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getPerformanceSalary()), 
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getStay()), baseSalary.getUseTime());
 		} catch (Exception e) {
 			log.error("修改基础薪资信息失败", e);
 			throw e;
 		}
 	}
 
+	/**
+	 * 分页查询基础薪资信息
+	 */
 	@Override
 	public List<Map<String, Object>> queryBaseSalaryList(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -99,7 +116,9 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("a.company_salary AS companySalary, a.fixed_overtime_salary AS fixedOverTimeSalary, ");
 		sql.append("a.performance_salary AS performanceSalary, a.post_salary AS postSalary, a.P_NUMBER AS pNumber, ");
 		sql.append("a.singel_meal AS singelMeal, a.use_time AS useTime, b.p_name AS pName, a.WORK_TYPE as workType ");
-		sql.append("FROM ehr_base_salary a LEFT JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
+		sql.append("FROM (SELECT * FROM ehr_base_salary t WHERE t.use_time = ");
+		sql.append("(SELECT MAX(use_time) FROM ehr_base_salary WHERE P_NUMBER = t.p_number)) a ");
+		sql.append("INNER JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
 		sql.append("WHERE a.is_delete = '0' ");
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.P_NUMBER like '%" + params.get("pNumber") + "%'");
@@ -118,6 +137,9 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		return baseSalaryList;
 	}
 
+	/**
+	 * 根据员工编号查询基础薪资信息
+	 */
 	@Override
 	public List<Map<String, Object>> findBaseSalaryByPNumber(String pNumber) {
 		StringBuffer sql = new StringBuffer();
@@ -138,6 +160,9 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		return baseSalarys;
 	}
 
+	/**
+	 * 修改基础薪资信息
+	 */
 	@Override
 	public void deleteBaseSalaryById(Integer id) {
 		StringBuffer sql = new StringBuffer();

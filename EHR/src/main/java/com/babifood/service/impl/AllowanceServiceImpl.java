@@ -41,19 +41,25 @@ public class AllowanceServiceImpl implements AllowanceService {
 	 * 查询员工津贴、奖金、扣款信息
 	 */
 	@Override
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	public Map<String, Object> findEmployAllowance(String year, String month, String pNumber) {
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		Map<String,	Object> param = new HashMap<String, Object>();
 		param.put("year", year);
 		param.put("pNumber", pNumber);
 		param.put("month", month);
 		try {
 			List<Map<String, Object>> employAllowance = allowanceDao.findEmployAllowance(param);
+			LogManager.putContectOfLogInfo("查询员工津贴、奖金、扣款信息");
 			BASE64Util.Base64DecodeMap(employAllowance);
 			if (employAllowance != null && employAllowance.size() > 0) {
 				return employAllowance.get(0);
 			}
 		} catch (Exception e) {
 			logger.error("查询员工津贴/扣款的导入信息失败",e);
+			LogManager.putContectOfLogInfo("查询员工津贴、奖金、扣款信息失败，错误信息：" + e.getMessage());
 		}
 		return null;
 	}
@@ -61,8 +67,8 @@ public class AllowanceServiceImpl implements AllowanceService {
 	/**
 	 * 导入Excel数据
 	 */
-	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	@Override
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	public Map<String, Object> importExcel(MultipartFile file, String type) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -138,6 +144,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 	 * 忽略重复数据导入
 	 * @param values
 	 */
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	private void getEmployAllowanceParamIgnore(List<Map<String, Object>> values) {
 		List<Object[]> allowanceValues = new ArrayList<Object[]>();
 		Map<String, Object> value = values.get(0);
@@ -167,6 +174,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 	 * 更新重复条目导入
 	 * @param values
 	 */
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	private void getEmployAllowanceParamCover(List<Map<String, Object>> values) {
 		List<Object[]> allowanceValues = new ArrayList<Object[]>();
 		Map<String, Object> value = values.get(0);
@@ -239,6 +247,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 	 * @throws Exception 
 	 */
 	@Override
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	public void exportExcel(OutputStream ouputStream, String type) throws Exception {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -309,8 +318,8 @@ public class AllowanceServiceImpl implements AllowanceService {
 	/**
 	 * 分页查询津贴、奖金、扣款的数据
 	 */
-	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	@Override
+	@LogMethod(module = ModuleConstant.ALLOWANCE)
 	public Map<String, Object> getPageAllowanceList(Integer page, Integer rows, String pNumber, String pName,
 			String organzationName, String deptName, String officeName) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -336,10 +345,10 @@ public class AllowanceServiceImpl implements AllowanceService {
 			result.put("code", "1");
 			LogManager.putContectOfLogInfo("查询参数:" + param.toString());
 		} catch (Exception e) {
-			logger.error("分页查询津贴/奖金/扣款信息失败",e);
-			LogManager.putContectOfLogInfo("查询失败:"+e.getMessage());
 			result.put("code", "0");
 			result.put("msg", "分页查询数据失败");
+			logger.error("分页查询津贴/奖金/扣款信息失败",e);
+			LogManager.putContectOfLogInfo("查询失败:"+e.getMessage());
 		}
 		return result;
 	}

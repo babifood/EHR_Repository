@@ -62,6 +62,7 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 		String sql = "replace into ehr_salary_calculation_status (`YEAR`, `MONTH`, `status`) values (?, ?, ?)";
 		try {
 			jdbcTemplate.update(sql, year, month, type);
+			log.info("薪资计算========>修改计算状态");
 		} catch (Exception e) {
 			log.error("新增或修复薪资计算状态失败", e);
 			throw e;

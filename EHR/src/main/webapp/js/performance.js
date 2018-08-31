@@ -70,9 +70,15 @@ function loadPerformanceList(){
 					},
 				},
 			},{
-				field : "performanceSalary",
+				field : "pSalary",
 				title : "绩效工资",
 				width : 100,
+				editor:{
+					type:'text',
+					options:{
+						required:true,
+					},
+				},
 			}
 		]]
 	})
@@ -161,6 +167,8 @@ function importPerformanceInfos(){
 }
 
 var performanceIndex;
+var pSalary;
+var performanceScore;
 
 //修改绩效分数
 function updatePerformanceSocre() {
@@ -174,6 +182,8 @@ function updatePerformanceSocre() {
 				$('#performance_list_datagrid').datagrid('selectRow', index)
 				.datagrid('beginEdit', index);
 				performanceIndex = index;
+				pSalary = row.pSalary;
+				performanceScore = row.performanceScore;
 			} else {
 				$('#performance_list_datagrid').datagrid('selectRow', performanceIndex);
 			}
@@ -189,41 +199,51 @@ function cancelPerformanceSocre(){
 
 //保存绩效分数
 function savePerformanceSocre() {
+	console.log(2222222222222);
 	if (performanceIndex >= 0 && $('#performance_list_datagrid').datagrid('validateRow', performanceIndex)){
 		$('#performance_list_datagrid').datagrid('endEdit', performanceIndex);
 		var rows = $('#performance_list_datagrid').datagrid("getRows");
 		var rowData = rows[performanceIndex];
-		$.ajax({
-			url:prefix+'/performance/save',
-			type:'post',
-			data:{
-				year:rowData.year,
-				month:rowData.month,
-				pNumber:rowData.pNumber,
-				score:rowData.performanceScore
-			},
-			beforeSend:function(){
-				$.messager.progress({
-					text:'保存中......',
-				});
-			},
-			success:function(data){
-				$.messager.progress('close');
-				if(data.code=="1"){
-					$.messager.show({
-						title:'消息提醒',
-						msg:'保存成功!',
-						timeout:3000,
-						showType:'slide'
+		if(pSalary != null && pSalary != "" && rowData.performanceScore){
+			$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+			$.messager.alert("消息提示！","绩效分数非导入，不能修改!","warning");
+		} else if(performanceScore != null && performanceScore != "" && rowData.pSalary){
+			$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+			$.messager.alert("消息提示！","绩效工资非导入，不能修改!","warning");
+		} else {
+			$.ajax({
+				url:prefix+'/performance/save',
+				type:'post',
+				data:{
+					year:rowData.year,
+					month:rowData.month,
+					pNumber:rowData.pNumber,
+					score:rowData.performanceScore,
+					salary:rowData.pSalary
+				},
+				beforeSend:function(){
+					$.messager.progress({
+						text:'保存中......',
 					});
-					performanceIndex = undefined;
-					$('#performance_list_datagrid').datagrid('reload');
-				}else{
-					$.messager.alert("消息提示！","保存失败!","warning");
-					$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+				},
+				success:function(data){
+					$.messager.progress('close');
+					if(data.code=="1"){
+						$.messager.show({
+							title:'消息提醒',
+							msg:'保存成功!',
+							timeout:3000,
+							showType:'slide'
+						});
+						performanceIndex = undefined;
+						$('#performance_list_datagrid').datagrid('reload');
+					}else{
+						$.messager.alert("消息提示！","保存失败!","warning");
+						$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 }
 

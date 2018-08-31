@@ -13,6 +13,6 @@ public interface PerformanceDao {
 
 	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber);
 
-	public void updatePerformanceScore(String year, String month, String pNumber, String score);
+	public void updatePerformanceScore(String year, String month, String pNumber, String score, String salary);
 
 }

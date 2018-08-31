@@ -69,27 +69,27 @@
 				<div>
 					<a href="javascript:void(0)" id="mb" class="easyui-menubutton" data-options="menu:'#dormitory_cost_menubutton',iconCls:'icon-edit'">导入/导出</a>
 					<div id="dormitory_cost_menubutton" style="width:150px;">   
-<%-- 						<shiro:hasPermission name="cost:import"> --%>
+						<shiro:hasPermission name="cost:import">
 						    <div data-options="iconCls:'icon-load'" onclick="exportDormitoryCost(0)">下载模板</div>   
 						    <div data-options="iconCls:'icon-redo'" onclick="dormitoryCostImport()">导入</div>
-<%-- 					    </shiro:hasPermission> --%>
-<%-- 					    <shiro:hasPermission name="cost:export">    --%>
+					    </shiro:hasPermission>
+					    <shiro:hasPermission name="cost:export">   
 						    <div data-options="iconCls:'icon-remove'" onclick="exportDormitoryCost(1)">导出</div>  
-<%-- 					    </shiro:hasPermission>  --%>
+					    </shiro:hasPermission> 
 					</div> 
-<%-- 					<shiro:hasPermission name="cost:add"> --%>
+					<shiro:hasPermission name="cost:add">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addDormitoryCost()">添加</a>
-<%-- 					</shiro:hasPermission> --%>
-<%-- 					<shiro:hasPermission name="cost:delete"> --%>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="cost:delete">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeDormitoryCost()">删除</a>
-<%-- 					</shiro:hasPermission> --%>
-<%-- 					<shiro:hasPermission name="cost:edit"> --%>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="cost:edit">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="updateDormitoryCost()">修改</a>
-<%-- 					</shiro:hasPermission> --%>
-<%-- 					<shiro:hasPermission name="cost:operate"> --%>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="cost:operate">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="saveDormitoryCost()">保存</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelDormitoryCost()">取消</a>
-<%-- 					</shiro:hasPermission> --%>
+					</shiro:hasPermission>
 				</div>
 				<div>
         			工号：<input type="text" class="textbox" id="dormitory_cost_pnumber" oninput="searchDormitoryCostList()"/> &nbsp;&nbsp;&nbsp;

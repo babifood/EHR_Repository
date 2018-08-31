@@ -3,6 +3,7 @@ package com.babifood.service.salary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.babifood.constant.ModuleConstant;
+import com.babifood.constant.OperationConstant;
 import com.babifood.constant.SalaryConstant;
 import com.babifood.dao.CalculationFormulaDao;
 import com.babifood.dao.PerformanceDao;
@@ -34,6 +37,8 @@ import com.babifood.service.SalaryDetailService;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
+import com.cn.babifood.operation.LogManager;
+import com.cn.babifood.operation.annotation.LogMethod;
 
 @Service
 public class SalaryCalculationService {
@@ -82,16 +87,20 @@ public class SalaryCalculationService {
 //			UtilDateTime.getPreMonth();// 当前月
 		days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));
 		scriptEngine = new ScriptEngineManager().getEngineByName("JavaScript");
-		logger.info("薪资计算年份："+year+",月份："+month);
+		logger.info("薪资计算========>薪资计算年份："+year+",月份："+month);
 	}
 
+	@LogMethod(module = ModuleConstant.CALCULATIONSALARY)
 	public Map<String, Object> salaryCalculation(Integer type){
 		Map<String, Object> result = new HashMap<String, Object>();
+		String calculationType = type == 1 ? "薪资试算" : type == 2 ? "薪资核算" : "薪资归档";
 		try {
 			init();
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			LogManager.putUserIdOfLogInfo(login.getUser_id());
+			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_CALCULATION);
 			Integer currentType = salaryCalculationDao.findSalaryCalculationStatus(year, month);
-			logger.info("操作人userId："+login.getUser_id()+",用户名："+login.getUser_name()+",currentType:"+currentType+"type:"+type);
+			logger.info("薪资计算========>操作人userId："+login.getUser_id()+",用户名："+login.getUser_name()+",currentType:"+currentType+"type:"+type);
 			if(type < currentType || (type == 3 && (currentType == 1 || currentType == 3))){
 				return getSalaryCalculation(type, currentType);
 			}
@@ -99,44 +108,55 @@ public class SalaryCalculationService {
 				Integer count = personInfoService.getPersonCount();
 				final int threadCount = 200;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
-				List<Future<Boolean>> list = new ArrayList<>();
+				logger.info("薪资计算========>使用线程数量，num=" + num);
+				List<Future<String>> list = new ArrayList<>();
 				for (int i = 0; i < num; i++) {
 					final int index = i;
-					Callable<Boolean> c1 = new Callable<Boolean>() {
+					Callable<String> c1 = new Callable<String>() {
 						@Override
-						public Boolean call() throws Exception {
+						public String call() throws Exception {
 							return calculationEmployeesSalary(index, threadCount);
 						}
 					};
 					//执行任务并获取Future对象
-					Future<Boolean> f1 = threadPoolTaskExecutor.submit(c1);
+					Future<String> f1 = threadPoolTaskExecutor.submit(c1);
 					list.add(f1);
 				}
 				for(int i = 0; i < num; i++){
-					System.out.println(list.get(i).get());
+					logger.info("薪资计算========>使用线程编号：i=" + i + ",执行结果：" + list.get(i).get());
 				}
 			}
 			salaryCalculationDao.updateSalaryCalculationStatus(year, month, type);
 			result.put("code", "1");
+			LogManager.putContectOfLogInfo(calculationType);
 		} catch (Exception e) {
 			result.put("code", "0");
+			result.put("msg", calculationType + "失败");
+			logger.error("薪资计算========>" + calculationType + "失败", e);
+			LogManager.putContectOfLogInfo("薪资计算========>" + calculationType + "失败，错误信息:" + e.getMessage());
 		}
 		return result;
 	}
 
+	@LogMethod(module = ModuleConstant.CALCULATIONSALARY)
 	private Map<String, Object> getSalaryCalculation(Integer type, Integer currentType) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("code", "2");
 		if(type == 1 && currentType == 2){
 			result.put("msg", "该月薪资已核算，不能重新试算");
+			LogManager.putContectOfLogInfo("该月薪资已核算，不能重新试算");
 		} else if (type == 1 && currentType == 3) {
 			result.put("msg", "该月薪资已归档，不能重新试算");
+			LogManager.putContectOfLogInfo("该月薪资已归档，不能重新试算");
 		} else if (type == 2 && currentType == 3) {
 			result.put("msg", "该月薪资已归档，不能重新核算");
+			LogManager.putContectOfLogInfo("该月薪资已归档，不能重新核算");
 		} else if (type == 3 && currentType == 3) {
 			result.put("msg", "该月薪资已归档，不能重复归档");
+			LogManager.putContectOfLogInfo("该月薪资已归档，不能重复归档");
 		} else if (type == 3 && currentType <= 1) {
 			result.put("msg", "该月薪资未核算，不能归档");
+			LogManager.putContectOfLogInfo("该月薪资未核算，不能归档");
 		} 
 		return result;
 	}
@@ -151,19 +171,21 @@ public class SalaryCalculationService {
 	 * @param days
 	 * @return 
 	 */
-	public Boolean calculationEmployeesSalary(int index, int threadCount) {
+	public String calculationEmployeesSalary(int index, int threadCount) {
 		List<Map<String, Object>> employeeList = personInfoService.findPagePersonInfo(index, threadCount);// 查询员工列表
+		List<SalaryDetailEntity> salaryDetails = new ArrayList<SalaryDetailEntity>();
 		if (employeeList != null && employeeList.size() > 0) {
-			logger.info("薪资计算index："+index+",员工数量："+employeeList.size());
+			logger.info("薪资计算========>薪资计算index："+index+",员工数量："+employeeList.size());
 			for (Map<String, Object> employee : employeeList) {
 				try {
-					calculationSalaryByEmployee(employee);
+					SalaryDetailEntity salaryDerail = calculationSalaryByEmployee(employee);
+					salaryDetails.add(salaryDerail);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return true;
+		return salaryDetailService.saveSalaryDetailEntityList(salaryDetails);
 	}
 
 	/**
@@ -175,9 +197,9 @@ public class SalaryCalculationService {
 	 * @param days
 	 * @throws Exception
 	 */
-	public void calculationSalaryByEmployee(Map<String, Object> employee)throws Exception {
+	public SalaryDetailEntity calculationSalaryByEmployee(Map<String, Object> employee)throws Exception {
 		String pNumber = employee.get("pNumber") + "";// 员工编号
-		logger.info("员工薪资计算开始，员工编号:"+pNumber);
+		logger.info("薪资计算========>员工薪资计算开始，员工编号:"+pNumber);
 		if(formulaList == null || formulaList.size() <= 0){
 			formulaList = getFormula();
 		}
@@ -223,7 +245,8 @@ public class SalaryCalculationService {
 		// 计算薪资
 		calculationSalary(salaryDerail, baseFields);
 
-		salaryDetailService.saveCurrentMonthSalary(salaryDerail);
+//		salaryDetailService.saveCurrentMonthSalary(salaryDerail);
+		return salaryDerail;
 	}
 
 	/**
@@ -239,7 +262,7 @@ public class SalaryCalculationService {
 	 */
 	private BaseFieldsEntity getBaseFields(Map<String, Object> employee, Map<String, Object> arrangementSummary, Map<String, Object> salary,
 			Map<String, Object> allowances, Map<String, Object> performanceInfo) {
-		logger.info("员工薪资计算:获取计算因子");
+		logger.info("薪资计算========>员工薪资计算:获取计算因子");
 		String pNumber = employee.get("pNumber") + "";// 员工编号
 		BaseFieldsEntity baseFields = new BaseFieldsEntity();
 		Double sickGrandHours = initAttendanceService.findYearSickHours(year, month, pNumber);
@@ -253,8 +276,15 @@ public class SalaryCalculationService {
 				: arrangementSummary.get("standardWorkLength") + "");
 		baseFields.setBaseSalary(UtilString.isEmpty(salary.get("baseSalary") + "") ? "0.0"
 				: salary.get("baseSalary") + "");
-		baseFields.setCompanyAge(UtilString.isEmpty(employee.get("companyAge") + "") ? "0"
-				: employee.get("companyAge") + "");
+		int companyday = 0;
+		try {
+			String inDate = UtilString.isEmpty(employee.get("inDate") + "") ? "0"
+					: employee.get("inDate") + "";
+			int alloverday = (int) ((new Date().getTime() - UtilDateTime.getDate(inDate, "yyyy-MM-dd").getTime())/(24 * 60 * 60 * 1000));
+			companyday = alloverday/365;//司龄（年）
+		} catch (Exception e) {
+		}
+		baseFields.setCompanyAge(companyday + "");
 		baseFields.setBeforeDeduction(UtilString.isEmpty(allowances.get("beforeDeduction") + "") ? "0.0"
 				: allowances.get("beforeDeduction") + "");
 		baseFields.setCallSubsidies(UtilString.isEmpty(salary.get("callSubsidies") + "") ? "0.0"
@@ -307,6 +337,8 @@ public class SalaryCalculationService {
 				: performanceInfo.get("performanceScore") + "");
 		baseFields.setPerformanceSalary(UtilString.isEmpty(salary.get("performanceSalary") + "") ? "0.0"
 				: salary.get("performanceSalary") + "");
+		baseFields.setPSalary(UtilString.isEmpty(performanceInfo.get("pSalary") + "") ? "-1"
+				: performanceInfo.get("pSalary") + "");
 		baseFields.setPiece("1");
 		baseFields.setPiming("0");
 		baseFields.setPostSalary(UtilString.isEmpty(salary.get("postSalary") + "") ? "0.0"
@@ -361,7 +393,7 @@ public class SalaryCalculationService {
 	 * @throws ScriptException 
 	 */
 	private void calculationSalary(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
-		logger.info("员工薪资计算:计算个税，应发工资/实发工资");
+		logger.info("薪资计算========>员工薪资计算:计算个税，应发工资/实发工资");
 		String wagePayableFormula = formulaList.get("wagePayableFormula");
 		String personalTaxFormula = formulaList.get("personalTaxFormula");
 		String realWagesFormula = formulaList.get("realWagesFormula");
@@ -386,7 +418,7 @@ public class SalaryCalculationService {
 	 * @param allowances
 	 */
 	private void calculationDeduction(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
-		logger.info("员工薪资计算:扣款数据计算");
+		logger.info("薪资计算========>员工薪资计算:扣款数据计算");
 		salaryDerail.setMealDeduction(BASE64Util.getStringTowDecimal(baseFields.getMealDeduction()));// 餐费扣款
 		salaryDerail.setDormDeduction(BASE64Util.getStringTowDecimal(baseFields.getDormDeduction()));// 住宿扣款
 		salaryDerail.setBeforeDeduction(BASE64Util.getStringTowDecimal(baseFields.getBeforeDeduction()));// 税前其它扣款
@@ -402,7 +434,7 @@ public class SalaryCalculationService {
 	 * @param allowances
 	 */
 	private void calculationBonus(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
-		logger.info("员工薪资计算:奖金数据计算");
+		logger.info("薪资计算========>员工薪资计算:奖金数据计算");
 		String performanceFormula = formulaList.get("performanceFormula");
 		if(UtilString.isEmpty(performanceFormula)){
 			performanceFormula = SalaryConstant.PERFORMANCE_FORMULA;
@@ -425,7 +457,7 @@ public class SalaryCalculationService {
 	 * @throws  
 	 */
 	private void calculationAllowance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
-		logger.info("员工薪资计算:补贴数据计算");
+		logger.info("薪资计算========>员工薪资计算:补贴数据计算");
 		String riceStickFormula = formulaList.get("riceStickFormula");
 		String callSunSalaryFormula = formulaList.get("callSunSalaryFormula");
 		String highTemFormula = formulaList.get("highTemFormula");
@@ -462,7 +494,7 @@ public class SalaryCalculationService {
 	 * @throws ScriptException 
 	 */
 	private void setInfoAboutAttendance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
-		logger.info("员工薪资计算:考勤数据计算");
+		logger.info("薪资计算========>员工薪资计算:考勤数据计算");
 		String laterAndLeaveFormula = formulaList.get("laterAndLeaveFormula");
 		String completionFormula = formulaList.get("completionFormula");
 		String thingFormula = formulaList.get("thingFormula");
@@ -516,7 +548,7 @@ public class SalaryCalculationService {
 	 * @param salary
 	 */
 	private void setBaseSalaryInfo(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
-		logger.info("员工薪资计算:基础薪资信息");
+		logger.info("薪资计算========>员工薪资计算:基础薪资信息");
 		salaryDerail.setBaseSalary(BASE64Util.getStringTowDecimal(baseFields.getBaseSalary()));// 基本薪资
 		salaryDerail.setFixedOvertimeSalary(BASE64Util.getStringTowDecimal(baseFields.getFixedOverTimeSalary()));// 固定加班费
 		salaryDerail.setCompanySalary(BASE64Util.getStringTowDecimal(baseFields.getCompanySalary()));// 司龄工资
@@ -530,7 +562,7 @@ public class SalaryCalculationService {
 	 * @param employee
 	 */
 	private void setBaseInfo(SalaryDetailEntity salaryDerail, Map<String, Object> employee) {
-		logger.info("员工薪资计算:基础信息部分");
+		logger.info("薪资计算========>员工薪资计算:基础信息部分");
 		salaryDerail.setCompanyCode(employee.get("companyCode") + "");// 公司编号
 		salaryDerail.setCompanyName(employee.get("companyName") + "");// 公司名称
 		salaryDerail.setOrganizationCode(employee.get("organizationCode") + "");// 组织机构编号
@@ -551,7 +583,7 @@ public class SalaryCalculationService {
 	 * @throws Exception
 	 */
 	public Map<String, String> getFormula() throws Exception {
-		logger.info("薪资计算，查询所有计算公式");
+		logger.info("薪资计算========>薪资计算，查询所有计算公式");
 		List<Map<String, Object>> formulaList = calculationFormulaDao.findListFormulas();
 		if(formulaList == null || formulaList.size() <= 0){
 			throw new Exception("数据异常");
@@ -611,7 +643,7 @@ public class SalaryCalculationService {
 	 * @throws Exception 
 	 */
 	private String replaceStr(String formula,Map<String, String> formulaListMap, SalaryDetailEntity salaryDerail) throws Exception {
-		logger.info("员工薪资计算:替换表达式");
+		logger.info("薪资计算========>员工薪资计算:替换表达式");
 		Set<String> keys = formulaListMap.keySet();
 		for(String key:keys){
 			if(formula.indexOf(key) > -1){
@@ -632,183 +664,186 @@ public class SalaryCalculationService {
 	 * @throws Exception
 	 */
 	private String replaceBaseFields(String formula,BaseFieldsEntity baseFields) throws Exception {
-		logger.info("员工薪资计算:替换基础字敦");
+		logger.info("薪资计算========>员工薪资计算:替换基础字敦");
 		if(UtilString.isEmpty(formula) || baseFields == null){
 			throw new Exception("数据异常");
 		}
 		if(formula.indexOf("baseSalary") > -1){
-			formula = formula.replace("baseSalary", "(" + baseFields.getBaseSalary() + ")");
+			formula = formula.replaceAll("baseSalary", "(" + baseFields.getBaseSalary() + ")");
 		}
 		if(formula.indexOf("fixedOverTimeSalary") > -1){
-			formula = formula.replace("fixedOverTimeSalary", "(" + baseFields.getFixedOverTimeSalary() + ")");
+			formula = formula.replaceAll("fixedOverTimeSalary", "(" + baseFields.getFixedOverTimeSalary() + ")");
 		}
 		if(formula.indexOf("companySalary") > -1){
-			formula = formula.replace("companySalary", "(" + baseFields.getCompanySalary() + ")");
+			formula = formula.replaceAll("companySalary", "(" + baseFields.getCompanySalary() + ")");
 		}
 		if(formula.indexOf("postSalary") > -1){
-			formula = formula.replace("postSalary", "(" + baseFields.getPostSalary() + ")");
+			formula = formula.replaceAll("postSalary", "(" + baseFields.getPostSalary() + ")");
 		}
 		if(formula.indexOf("attendanceHours") > -1){
-			formula = formula.replace("attendanceHours", "(" + baseFields.getAttendanceHours() + ")");
+			formula = formula.replaceAll("attendanceHours", "(" + baseFields.getAttendanceHours() + ")");
 		}
 		if(formula.indexOf("absenceHours") > -1){
-			formula = formula.replace("absenceHours", "(" + baseFields.getAbsenceHours() + ")");
+			formula = formula.replaceAll("absenceHours", "(" + baseFields.getAbsenceHours() + ")");
 		}
 		if(formula.indexOf("singelMeal") > -1){
-			formula = formula.replace("singelMeal", "(" + baseFields.getSingelMeal() + ")");
+			formula = formula.replaceAll("singelMeal", "(" + baseFields.getSingelMeal() + ")");
 		}
 		if(formula.indexOf("mealnum") > -1){
-			formula = formula.replace("mealnum", "(" + baseFields.getMealnum() + ")");
+			formula = formula.replaceAll("mealnum", "(" + baseFields.getMealnum() + ")");
 		}
 		if(formula.indexOf("morningShift") > -1){
-			formula = formula.replace("morningShift", "(" + baseFields.getMorningShift() + ")");
+			formula = formula.replaceAll("morningShift", "(" + baseFields.getMorningShift() + ")");
 		}
 		if(formula.indexOf("nightShift") > -1){
-			formula = formula.replace("nightShift", "(" + baseFields.getNightShift() + ")");
+			formula = formula.replaceAll("nightShift", "(" + baseFields.getNightShift() + ")");
 		}
 		if(formula.indexOf("stay") > -1){
-			formula = formula.replace("stay", "(" + baseFields.getStay() + ")");
+			formula = formula.replaceAll("stay", "(" + baseFields.getStay() + ")");
 		}
 		if(formula.indexOf("otherAllowance") > -1){
-			formula = formula.replace("otherAllowance", "(" + baseFields.getOtherAllowance() + ")");
+			formula = formula.replaceAll("otherAllowance", "(" + baseFields.getOtherAllowance() + ")");
 		}
 		if(formula.indexOf("performanceScore") > -1){
-			formula = formula.replace("performanceScore", "(" + baseFields.getPerformanceScore() + ")");
+			formula = formula.replaceAll("performanceScore", "(" + baseFields.getPerformanceScore() + ")");
 		}
 		if(formula.indexOf("performanceSalary") > -1){
-			formula = formula.replace("performanceSalary", "(" + baseFields.getPerformanceSalary() + ")");
+			formula = formula.replaceAll("performanceSalary", "(" + baseFields.getPerformanceSalary() + ")");
+		}
+		if(formula.indexOf("pSalary") > -1){
+			formula = formula.replaceAll("pSalary", "(" + baseFields.getPSalary() + ")");
 		}
 		if(formula.indexOf("security") > -1){
-			formula = formula.replace("security", "(" + baseFields.getSecurity() + ")");
+			formula = formula.replaceAll("security", "(" + baseFields.getSecurity() + ")");
 		}
 		if(formula.indexOf("otherBonus") > -1){
-			formula = formula.replace("otherBonus", "(" + baseFields.getOtherBonus() + ")");
+			formula = formula.replaceAll("otherBonus", "(" + baseFields.getOtherBonus() + ")");
 		}
 		if(formula.indexOf("beforeDeduction") > -1){
-			formula = formula.replace("beforeDeduction", "(" + baseFields.getBeforeDeduction() + ")");
+			formula = formula.replaceAll("beforeDeduction", "(" + baseFields.getBeforeDeduction() + ")");
 		}
 		if(formula.indexOf("addOther") > -1){
-			formula = formula.replace("addOther", "(" + baseFields.getAddOther() + ")");
+			formula = formula.replaceAll("addOther", "(" + baseFields.getAddOther() + ")");
 		}
 		if(formula.indexOf("companyAge") > -1){
-			formula = formula.replace("companyAge", "(" + baseFields.getCompanyAge() + ")");
+			formula = formula.replaceAll("companyAge", "(" + baseFields.getCompanyAge() + ")");
 		}
 		if(formula.indexOf("sickGrandHours") > -1){
-			formula = formula.replace("sickGrandHours", "(" + baseFields.getSickGrandHours() + ")");
+			formula = formula.replaceAll("sickGrandHours", "(" + baseFields.getSickGrandHours() + ")");
 		}
 		if(formula.indexOf("mealDeduction") > -1){
-			formula = formula.replace("mealDeduction", "(" + baseFields.getMealDeduction() + ")");
+			formula = formula.replaceAll("mealDeduction", "(" + baseFields.getMealDeduction() + ")");
 		}
 		if(formula.indexOf("dormDeduction") > -1){
-			formula = formula.replace("dormDeduction", "(" + baseFields.getDormDeduction() + ")");
+			formula = formula.replaceAll("dormDeduction", "(" + baseFields.getDormDeduction() + ")");
 		}
 		if(formula.indexOf("insurance") > -1){
-			formula = formula.replace("insurance", "(" + baseFields.getInsurance() + ")");
+			formula = formula.replaceAll("insurance", "(" + baseFields.getInsurance() + ")");
 		}
 		if(formula.indexOf("providentFund") > -1){
-			formula = formula.replace("providentFund", "(" + baseFields.getProvidentFund() + ")");
+			formula = formula.replaceAll("providentFund", "(" + baseFields.getProvidentFund() + ")");
 		}
 		if(formula.indexOf("sickHours") > -1){
-			formula = formula.replace("sickHours", "(" + baseFields.getSickHours() + ")");
+			formula = formula.replaceAll("sickHours", "(" + baseFields.getSickHours() + ")");
 		}
 		if(formula.indexOf("parentalHours") > -1){
-			formula = formula.replace("parentalHours", "(" + baseFields.getParentalHours() + ")");
+			formula = formula.replaceAll("parentalHours", "(" + baseFields.getParentalHours() + ")");
 		}
 		if(formula.indexOf("completionHours") > -1){
-			formula = formula.replace("completionHours", "(" + baseFields.getCompletionHours() + ")");
+			formula = formula.replaceAll("completionHours", "(" + baseFields.getCompletionHours() + ")");
 		}
 		if(formula.indexOf("onboardingHours") > -1){
-			formula = formula.replace("onboardingHours", "(" + baseFields.getOnboardingHours() + ")");
+			formula = formula.replaceAll("onboardingHours", "(" + baseFields.getOnboardingHours() + ")");
 		}
 		if(formula.indexOf("overSalary") > -1){
-			formula = formula.replace("overSalary", "(" + baseFields.getOverSalary() + ")");
+			formula = formula.replaceAll("overSalary", "(" + baseFields.getOverSalary() + ")");
 		}
 		if(formula.indexOf("thingHours") > -1){
-			formula = formula.replace("thingHours", "(" + baseFields.getThingHours() + ")");
+			formula = formula.replaceAll("thingHours", "(" + baseFields.getThingHours() + ")");
 		}
 		if(formula.indexOf("afterDeduction") > -1){
-			formula = formula.replace("afterDeduction", "(" + baseFields.getAfterDeduction() + ")");
+			formula = formula.replaceAll("afterDeduction", "(" + baseFields.getAfterDeduction() + ")");
 		}
 		if(formula.indexOf("lateTime") > -1){
-			formula = formula.replace("lateTime", "(" + baseFields.getLateTime() + ")");
+			formula = formula.replaceAll("lateTime", "(" + baseFields.getLateTime() + ")");
 		}
 		if(formula.indexOf("leaveTime") > -1){
-			formula = formula.replace("leaveTime", "(" + baseFields.getLeaveTime() + ")");
+			formula = formula.replaceAll("leaveTime", "(" + baseFields.getLeaveTime() + ")");
 		}
 		if(formula.indexOf("compensatory") > -1){
-			formula = formula.replace("compensatory", "(" + baseFields.getCompensatory() + ")");
+			formula = formula.replaceAll("compensatory", "(" + baseFields.getCompensatory() + ")");
 		}
 		if(formula.indexOf("highTem") > -1){
-			formula = formula.replace("highTem", "(" + baseFields.getHighTem() + ")");
+			formula = formula.replaceAll("highTem", "(" + baseFields.getHighTem() + ")");
 		}
 		if(formula.indexOf("lowTem") > -1){
-			formula = formula.replace("lowTem", "(" + baseFields.getLowTem() + ")");
+			formula = formula.replaceAll("lowTem", "(" + baseFields.getLowTem() + ")");
 		}
 		if(formula.indexOf("workType") > -1){
-			formula = formula.replace("workType", "(" + baseFields.getWorkType() + ")");
+			formula = formula.replaceAll("workType", "(" + baseFields.getWorkType() + ")");
 		}
 		if(formula.indexOf("workPlace") > -1){
-			formula = formula.replace("workPlace", "(" + baseFields.getWorkPlace() + ")");
+			formula = formula.replaceAll("workPlace", "(" + baseFields.getWorkPlace() + ")");
 		}
 		if(formula.indexOf("property") > -1){
-			formula = formula.replace("property", "(" + baseFields.getProperty() + ")");
+			formula = formula.replaceAll("property", "(" + baseFields.getProperty() + ")");
 		}
 		if(formula.indexOf("nationality") > -1){
-			formula = formula.replace("nationality", "(" + baseFields.getNationality() + ")");
+			formula = formula.replaceAll("nationality", "(" + baseFields.getNationality() + ")");
 		}
 		if(formula.indexOf("partTime") > -1){
-			formula = formula.replace("partTime", "(" + baseFields.getPartTime() + ")");
+			formula = formula.replaceAll("partTime", "(" + baseFields.getPartTime() + ")");
 		}
 		if(formula.indexOf("callSubsidies") > -1){
-			formula = formula.replace("callSubsidies", "(" + baseFields.getCallSubsidies() + ")");
+			formula = formula.replaceAll("callSubsidies", "(" + baseFields.getCallSubsidies() + ")");
 		}
 		if(formula.indexOf("reserved1") > -1){
-			formula = formula.replace("reserved1", "(" + baseFields.getReserved1() + ")");
+			formula = formula.replaceAll("reserved1", "(" + baseFields.getReserved1() + ")");
 		}
 		if(formula.indexOf("reserved2") > -1){
-			formula = formula.replace("reserved2", "(" + baseFields.getReserved2() + ")");
+			formula = formula.replaceAll("reserved2", "(" + baseFields.getReserved2() + ")");
 		}
 		if(formula.indexOf("reserved3") > -1){
-			formula = formula.replace("reserved3", "(" + baseFields.getReserved3() + ")");
+			formula = formula.replaceAll("reserved3", "(" + baseFields.getReserved3() + ")");
 		}
 		if(formula.indexOf("reserved4") > -1){
-			formula = formula.replace("reserved4", "(" + baseFields.getReserved4() + ")");
+			formula = formula.replaceAll("reserved4", "(" + baseFields.getReserved4() + ")");
 		}
 		if(formula.indexOf("reserved5") > -1){
-			formula = formula.replace("reserved5", "(" + baseFields.getReserved5() + ")");
+			formula = formula.replaceAll("reserved5", "(" + baseFields.getReserved5() + ")");
 		}
 		if(formula.indexOf("reserved6") > -1){
-			formula = formula.replace("reserved6", "(" + baseFields.getReserved6() + ")");
+			formula = formula.replaceAll("reserved6", "(" + baseFields.getReserved6() + ")");
 		}
 		if(formula.indexOf("reserved7") > -1){
-			formula = formula.replace("reserved7", "(" + baseFields.getReserved7() + ")");
+			formula = formula.replaceAll("reserved7", "(" + baseFields.getReserved7() + ")");
 		}
 		if(formula.indexOf("reserved8") > -1){
-			formula = formula.replace("reserved8", "(" + baseFields.getReserved8() + ")");
+			formula = formula.replaceAll("reserved8", "(" + baseFields.getReserved8() + ")");
 		}
 		if(formula.indexOf("reserved9") > -1){
-			formula = formula.replace("reserved9", "(" + baseFields.getReserved9() + ")");
+			formula = formula.replaceAll("reserved9", "(" + baseFields.getReserved9() + ")");
 		}
 		if(formula.indexOf("reserved10") > -1){
-			formula = formula.replace("reserved10", "(" + baseFields.getReserved10() + ")");
+			formula = formula.replaceAll("reserved10", "(" + baseFields.getReserved10() + ")");
 		}
 		if(formula.indexOf("partTime") > -1){
-			formula = formula.replace("partTime", "0");
+			formula = formula.replaceAll("partTime", "0");
 		}
 		if(formula.indexOf("fullTime") > -1){
-			formula = formula.replace("fullTime", "1");
+			formula = formula.replaceAll("fullTime", "1");
 		}
 		if(formula.indexOf("mainLand") > -1){
-			formula = formula.replace("mainLand", "1");
+			formula = formula.replaceAll("mainLand", "1");
 		}
 		if(formula.indexOf("nonContinent") > -1){
-			formula = formula.replace("nonContinent", "2");
+			formula = formula.replaceAll("nonContinent", "2");
 		}
 		if(formula.indexOf("piece") > -1){
-			formula = formula.replace("piece", "1");
+			formula = formula.replaceAll("piece", "1");
 		}
 		if(formula.indexOf("piming") > -1){
-			formula = formula.replace("piming", "0");
+			formula = formula.replaceAll("piming", "0");
 		}
 		return formula;
 	}
@@ -823,7 +858,7 @@ public class SalaryCalculationService {
 	 * @throws Exception
 	 */
 	private String replaceFormulaValue(String formula, SalaryDetailEntity salaryDerail) throws Exception {
-		logger.info("员工薪资计算:替换已计算项");
+		logger.info("薪资计算========>员工薪资计算:替换已计算项");
 		if (UtilString.isEmpty(formula) || salaryDerail == null) {
 			return formula;
 		}

@@ -11,7 +11,7 @@ public interface HolidayDao {
 	
 	public int updateHoliday(HolidayEntity holidayEntity);
 
-	public Integer findHolidayNumByDate(String date);
+//	public Integer findHolidayNumByDate(String date);
 
 	public Map<String, Object> findHolidayById(Integer id);
 

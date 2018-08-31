@@ -286,24 +286,16 @@ public final class UtilDateTime {
 	 * @param pattern
 	 * @return
 	 */
-	public static boolean isLaterThanCurrentMonth(String time,String pattern) {
+	public static boolean isLaterThanCurrentTime(String time,String pattern) {
+		Boolean flag = false;
 		try {
-			Calendar calendar = Calendar.getInstance();
-			int currentYear = calendar.get(Calendar.YEAR);
-			int currentMonth = calendar.get(Calendar.MONTH);
 			Date date = getDate(time, pattern);
-			calendar.setTime(date);
-			int year = calendar.get(Calendar.YEAR);
-			int month = calendar.get(Calendar.MONTH);
-			if(currentYear > year){
-				return false;
-			} else if ((currentYear == year) && currentMonth >= month) {
-				return false;
+			if(date.getTime() > new Date().getTime()){
+				flag = true;
 			}
-			return true;
 		} catch (Exception e) {
-			return false;
 		}
+		return flag;
 	}
 	
 	/**

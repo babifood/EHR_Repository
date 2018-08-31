@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.dao.PerformanceDao;
 import com.babifood.service.PerformanceService;
+import com.babifood.utils.BASE64Util;
 import com.babifood.utils.ExcelUtil;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
@@ -53,7 +54,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 	public Map<String, Object> exportPerformances(OutputStream ouputStream, String type, String year, String month) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> row1Name = getRow1Name();
-		String[] sort = new String[]{"year", "month", "pNumber", "pName", "organzationName", "deptName", "officeName", "performanceScore", "performanceSalary"};
+		String[] sort = new String[]{"year", "month", "pNumber", "pName", "organzationName", "deptName", "officeName", "performanceScore", "pSalary"};
 		List<Map<String, Object>> performanceList = null;
 		try {
 			if("1".equals(type)){
@@ -83,7 +84,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 		row1Name.put("deptName", "部门名称");
 		row1Name.put("officeName", "科室名称");
 		row1Name.put("performanceScore", "绩效分值");
-		row1Name.put("performanceSalary", "绩效工资");
+		row1Name.put("pSalary", "绩效工资");
 		return row1Name;
 	}
 
@@ -121,26 +122,26 @@ public class PerformanceServiceImpl implements PerformanceService{
 		row1Name.put("部门名称", "deptName");
 		row1Name.put("科室名称", "officeName");
 		row1Name.put("绩效分值", "performanceScore");
-		row1Name.put("绩效工资", "performanceSalary");
+		row1Name.put("绩效工资", "pSalary");
 		return row1Name;
 	}
 
 	private List<Object[]> getPerformanceParam(List<Map<String, Object>> values) {
 		List<Object[]> performanceParam = new ArrayList<Object[]>();
-		for(Map<String, Object> map : values){
+		for (Map<String, Object> map : values) {
 			Object[] obj = new Object[] { map.get("year"),
 					(map.get("month") + "").length() == 1 ? "0" + map.get("month") : map.get("month"),
-					map.get("pNumber"), map.get("performanceScore") };
+					map.get("pNumber"), map.get("performanceScore"), BASE64Util.getDecodeStringTowDecimal(map.get("pSalary") + "") };
 			performanceParam.add(obj);
 		}
 		return performanceParam;
 	}
 
 	@Override
-	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score) {
+	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score, String salary) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			performanceDao.updatePerformanceScore(year, month, pNumber, score);
+			performanceDao.updatePerformanceScore(year, month, pNumber, score, salary);
 			result.put("code", "1");
 			result.put("msg", "修改绩效分值成功");
 		} catch (Exception e) {

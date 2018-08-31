@@ -23,6 +23,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	/**
+	 * 新增宿舍信息
+	 */
 	@Override
 	public void addDormitory(DormitoryEntity dormitory) {
 		String sql = "INSERT INTO `ehr_dormitory` (`floor`, `room_no`, `Bed_No`, `sex`, `remark`, `is_delete`) VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,6 +38,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 	}
 
+	/**
+	 * 修改宿舍信息
+	 */
 	@Override
 	public void updateDormitory(Map<String, Object> dormitory) {
 		String sql = "UPDATE `ehr_dormitory` SET `floor`=?, `room_no`=?, `Bed_No`=?, `sex`=?, `remark`=?, `is_delete`=? WHERE `ID`=?";
@@ -47,9 +53,11 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 	}
 
+	/**
+	 * 根据id查询宿舍信息
+	 */
 	@Override
 	public Map<String, Object> findDormitoryById(String id) {
-//		String sql = "SELECT id, floor, room_no as roomNo, Bed_No as bedNo, sex, remark,is_delete as isDelete from ehr_dormitory WHERE ID = ? and is_delete = '0'";
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id as id, a.floor as floor, a.room_no as roomNo, a.Bed_No as bedNo,");
 		sql.append("a.sex as sex, a.remark as remark,");
@@ -105,6 +113,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return dormitorys;
 	}
 
+	/**
+	 * 查询入住信息
+	 */
 	@Override
 	public List<Map<String, Object>> getStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -141,6 +152,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return dormitorys;
 	}
 
+	/**
+	 * 查询员工入住信息
+	 */
 	@Override
 	public Map<String, Object> findCheakingDormitory(String pnumber) {
 		StringBuffer sql = new StringBuffer();
@@ -161,6 +175,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return dormitory;
 	}
 
+	/**
+	 * 日住
+	 */
 	@Override
 	public void insertCheakingDormitory(String dormitoryId, String pnumber,String stayTime) {
 		String sql = "INSERT INTO `ehr_dormitory_stay` (`p_number`, `stay_time`, `out_time`, `dormitory_id`, "
@@ -173,6 +190,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 	}
 
+	/**
+	 * 搬出宿舍
+	 */
 	@Override
 	public int cheakoutDormitory(String dormitoryId, String pnumber) {
 		String sql = "update `ehr_dormitory_stay` set `is_delete` = '1' where p_number = ? and dormitory_id = ?";
@@ -186,6 +206,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return count;
 	}
 
+	/**
+	 * 查询宿舍信息
+	 */
 	@Override
 	public Map<String, Object> findDormitoryInfo(String floor, String roomNo, String bedNo) {
 		StringBuffer sql = new StringBuffer();
@@ -206,6 +229,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		
 	}
 
+	/**
+	 * 查询未入住数量信息
+	 */
 	@Override
 	public int getCountOfUnStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -237,6 +263,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return count;
 	}
 
+	/**
+	 * 查询入住数量信息
+	 */
 	@Override
 	public int getCountOfStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -270,6 +299,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return count;
 	}
 
+	/**
+	 * 查询宿舍费用数量
+	 */
 	@Override
 	public int queryDormitoryCostCount(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -300,6 +332,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return count;
 	}
 
+	/**
+	 * 查询宿舍费用信息
+	 */
 	@Override
 	public List<Map<String, Object>> queryDormitoryCostList(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -337,6 +372,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		return costList;
 	}
 
+	/**
+	 * 保存宿舍费用信息
+	 */
 	@Override
 	public void saveCost(DormitoryCostEntity dormitoryCost) {
 		StringBuffer sql = new StringBuffer();
@@ -351,6 +389,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 	}
 
+	/**
+	 * 删除宿舍费用信息
+	 */
 	@Override
 	public void removeCost(Integer id) {
 		String sql = "DELETE FROM EHR_DORMITORY_ALLOWANCES WHERE id = ?";
@@ -362,6 +403,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 	}
 
+	/**
+	 * 办理搬出宿舍手续
+	 */
 	@Override
 	public void moveOutProcedure(String dormitoryId, String pnumber, String outTime) {
 		String sql = "update `ehr_dormitory_stay` set `out_time` = ? where p_number = ? and dormitory_id = ?";
@@ -373,6 +417,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 	}
 
+	/**
+	 * 批量保存宿舍费用 信息
+	 */
 	@Override
 	public void saveDormitoryCosts(List<Object[]> performanceParam) {
 		StringBuffer sql = new StringBuffer();

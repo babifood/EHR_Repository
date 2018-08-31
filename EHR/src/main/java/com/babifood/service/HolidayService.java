@@ -8,7 +8,7 @@ public interface HolidayService {
 
 	public Map<String, Object> addOrUpdateHoliday(HolidayEntity holidayEntity);
 	
-	public Map<String, Object> findHolidayEntity(String date);
+//	public Map<String, Object> findHolidayEntity(String date);
 
 	public Map<String, Object> deleteHolidayById(Integer id);
 
