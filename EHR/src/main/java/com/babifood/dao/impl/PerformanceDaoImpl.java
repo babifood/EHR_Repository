@@ -20,6 +20,9 @@ public class PerformanceDaoImpl implements PerformanceDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	/**
+	 * 查询绩效薪资信息数量
+	 */
 	@Override
 	public Integer getPerformancesCount(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -53,6 +56,9 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return count;
 	}
 
+	/**
+	 * 查询绩效薪资信息列表
+	 */
 	@Override
 	public List<Map<String, Object>> queryPerformanceList(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
@@ -109,6 +115,9 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return performanceList;
 	}
 
+	/**
+	 * 批量保存绩效薪资信息
+	 */
 	@Override
 	public void savePerformance(List<Object[]> performanceParam) {
 		String sql = "REPLACE INTO `ehr_performance` (`YEAR`, `MONTH`, `P_NUMBER`, `performance_score`, `performance_salary`) VALUES (?, ?, ?, ?, ?)";
@@ -120,6 +129,9 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		}
 	}
 
+	/**
+	 * 查询员工对应月份的绩效薪资信息
+	 */
 	@Override
 	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber) {
 		StringBuffer sql = new StringBuffer();
@@ -141,6 +153,9 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return performanceInfo;
 	}
 
+	/**
+	 * 修改绩效薪资信息
+	 */
 	@Override
 	public void updatePerformanceScore(String year, String month, String pNumber, String score, String salary) {
 		String sql = "update ehr_performance set performance_score = ? ,performance_salary = ? where P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?";

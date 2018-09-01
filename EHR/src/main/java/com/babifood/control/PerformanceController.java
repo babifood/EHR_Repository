@@ -24,12 +24,32 @@ public class PerformanceController {
 	@Autowired
 	private PerformanceService performanceService;
 	
+	/**
+	 * 分页查询绩效薪资信息
+	 * @param page
+	 * @param rows
+	 * @param pNumber
+	 * @param pName
+	 * @param organzationName
+	 * @param deptName
+	 * @param officeName
+	 * @return
+	 */
 	@RequestMapping("page")
 	@ResponseBody
 	public Map<String, Object> getPagePerformances(Integer page, Integer rows, String pNumber, String pName, String organzationName, String deptName, String officeName) {
 		return performanceService.getPagePerformances(page, rows, pNumber, pName, organzationName, deptName, officeName);
 	}
 
+	/**
+	 * 导出绩效薪资列表
+	 * @param response
+	 * @param type
+	 * @param year
+	 * @param month
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping("export")
 	@ResponseBody
 	public Map<String, Object> exportPerformances(HttpServletResponse response, String type, String year, String month) throws IOException{
@@ -43,12 +63,27 @@ public class PerformanceController {
 		return performanceService.exportPerformances(ouputStream, type, year, month);
 	}
 	
+	/**
+	 * 导入绩效薪资信息
+	 * @param file
+	 * @param type
+	 * @return
+	 */
 	@RequestMapping(value = "importExcel", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> importExcel(@RequestParam(value="file",required = false) MultipartFile file, String type){
 		return performanceService.importExcel(file, type);
 	}
 	
+	/**
+	 * 修改绩效分值或绩效工资
+	 * @param year
+	 * @param month
+	 * @param pNumber
+	 * @param score
+	 * @param salary
+	 * @return
+	 */
 	@RequestMapping("save")
 	@ResponseBody
 	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score, String salary) {
