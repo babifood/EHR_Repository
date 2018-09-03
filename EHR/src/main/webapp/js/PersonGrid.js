@@ -21,7 +21,16 @@ $(function(){
 	loadAccordion();
 	loadLevelComboBox();
 	loadPostComboBox();
-	
+	//初始加载公司
+	loadCompanyComboBox();
+	//初始加载机构
+	loadOrganizationCombotree(null);
+	//初始加载部门
+	loadDepartmentCombotree(null);
+	//初始加载科室
+	loadSectionCombotree(null);
+	//初始加载班组
+	loadGroupCombotree(null);
 	//计算公司司龄（按月计算）
 	inDateChange();
 });
@@ -263,11 +272,34 @@ function checkForm(tRf){
 	for(var i=0;i<box.length;i++){
 		notNullvalidate(box[i],tRf);
 	}
+	idcardValidate("p_id_num",tRf);
+	idcardValidate("p_kinsfolk_id_nub",false);
+	mobileValidate("p_phone",false);
+	mobileValidate("p_urgency_phone",false);
+}
+//检查身份证格式
+function checkIdNumFormat(){
+	if($('#p_id_num').validatebox('isValid')){
+		var idNum = $('#p_id_num').val();
+		var year = idNum.substring(6,10);
+		var month = idNum.substring(10,12);
+		var day = idNum.substring(12,14);	
+		var birthday = year+'-'+month+'-'+day;
+		var age = jsGetAge(birthday);
+		var sex = idNum.substring(16,17);
+		$('#p_birthday').val(birthday);
+		$('#p_age').val(age);
+		if(sex%2==0){
+			$('#p_sex').val("女");
+		}else{
+			$('#p_sex').val("男");
+		}
+	}
 }
 //表单提交验证
 function checkFormData(){
 	var check = true;
-	var box =["p_number","p_name","p_title"]
+	var box =["p_number","p_name","p_title","p_id_num"]
 	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age","p_company_name","p_organization","p_department"]
 	for(var i=0;i<box.length;i++){
 		if(!$('#'+box[i]).validatebox('isValid')){
@@ -289,6 +321,24 @@ function notNullvalidate(id,trueOrfalse){
 	$('#'+id).validatebox({
 		required : trueOrfalse,
 		missingMessage :'该输入项为必输项!',
+	});
+}
+//验证身份证
+function idcardValidate(id,required){
+	$('#'+id).validatebox({
+		required : required,
+		validType :'idcard',
+		missingMessage :'身份证不能为空!',
+		invalidMessage :'身份证格式错误!',
+	});
+}
+//验证电话号码格式
+function mobileValidate(id,required){
+	$('#'+id).validatebox({
+		required : required,
+		validType :'mobile',
+		missingMessage :'电话号码不能为空!',
+		invalidMessage :'电话号码格式错误!',
 	});
 }
 //加载人员档案列表
@@ -336,13 +386,6 @@ function loadPersonGrid(search_p_number,search_p_name){
 				field:"p_sex",
 				title:"性别",
 				width:100,
-				formatter:function(value){
-					if(value=="0"){
-						return "男";
-					}else if(value=="1"){
-						return "女";
-					}
-				},
 			},
 			{
 				field:"p_department",
@@ -406,16 +449,16 @@ function loadPersonGrid(search_p_number,search_p_name){
 
 //添加人员信息
 function addPersonInFo(){
-	//初始加载公司
-	loadCompanyComboBox();
-	//初始加载机构
-	loadOrganizationCombotree(null);
-	//初始加载部门
-	loadDepartmentCombotree(null);
-	//初始加载科室
-	loadSectionCombotree(null);
-	//初始加载班组
-	loadGroupCombotree(null);
+//	//初始加载公司
+//	loadCompanyComboBox();
+//	//初始加载机构
+//	loadOrganizationCombotree(null);
+//	//初始加载部门
+//	loadDepartmentCombotree(null);
+//	//初始加载科室
+//	loadSectionCombotree(null);
+//	//初始加载班组
+//	loadGroupCombotree(null);
 	$("#person_win").window("open").window("setTitle","添加人员");
 	$("#person_form").form('clear');
 	var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
@@ -450,16 +493,16 @@ function editPersonInFo(){
 		p_id=row.p_id;
 		$.post(prefix+"/getPersonFoPid",{p_id:row.p_id},function(data){
 			if(data){
-				//初始加载公司
-				loadCompanyComboBox();
-				//初始加载机构
-				loadOrganizationCombotree(data.p_company_id);
-				//初始加载部门
-				loadDepartmentCombotree(data.p_organization_id);
-				//初始加载科室
-				loadSectionCombotree(data.p_department_id);
-				//初始加载班组
-				loadGroupCombotree(data.p_section_office_id);
+//				//初始加载公司
+//				loadCompanyComboBox();
+//				//初始加载机构
+//				loadOrganizationCombotree(data.p_company_id);
+//				//初始加载部门
+//				loadDepartmentCombotree(data.p_organization_id);
+//				//初始加载科室
+//				loadSectionCombotree(data.p_department_id);
+//				//初始加载班组
+//				loadGroupCombotree(data.p_section_office_id);
 				$("#person_win").window("open").window("setTitle","修改人员");
 				editFromSetValues(data);
 				var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
@@ -493,13 +536,15 @@ function editPersonInFo(){
 }
 //编辑时给页面内容赋值
 function editFromSetValues(data){
-	console.log(data);
+	//console.log(data);
 	$("#p_id").val(data.p_id);//人员ID
 	$("#p_number").val(data.p_number);//编号
 	$("#p_name").val(data.p_name);//名称
-	$("#p_sex").combobox('setValue',data.p_sex);//性别
-	$("#p_age").spinner('setValue',data.p_age);//年龄
-	$("#p_title").val(data.p_title);//职称
+	$("#p_id_num").val(data.p_id_num);//身份证号码
+	$("#p_birthday").val(data.p_birthday);//出生年月日
+	$("#p_sex").val(data.p_sex);//性别
+	$("#p_age").val(data.p_age);//年龄
+	$("#p_title").combobox('setValue',data.p_title);//职称
 	$("#p_post_id").val(data.p_post_id);//岗位编号
 	$("#p_post").combobox('setValue',data.p_post);//岗位名称
 	$("#p_level_id").val(data.p_level_id);//职级编号
@@ -527,7 +572,7 @@ function editFromSetValues(data){
 	$("#p_out_date").datebox('setValue',data.p_out_date);//离职日期
 	$("#p_out_describe").val(data.p_out_describe);//离职原因
 	$("#p_checking_in").combobox('setValue',data.p_checking_in);//考勤方式
-	$("#p_contract_begin_date").datebox('setValue',data.p_contract_begin_date);//劳动合同开始日期
+	$("#p_contract_begin_date").val(data.p_contract_begin_date);//劳动合同开始日期
 	$("#p_contract_end_date").datebox('setValue',data.p_contract_end_date);//劳动合同结束日期
 	$("#p_shebao_begin_month").datebox('setValue',data.p_shebao_begin_month);//社保购买起始月
 	$("#p_shebao_end_month").datebox('setValue',data.p_shebao_end_month);//社保购买终止月
@@ -544,14 +589,17 @@ function editFromSetValues(data){
 	$("#p_huji_add").val(data.p_huji_add);//户籍地址
 	$("#p_changzhu_add").val(data.p_changzhu_add);//常住联系地址
 	$("#p_urgency_name").val(data.p_urgency_name);//紧急联系人名称
-	$("#p_urgency_relation").val(data.p_urgency_relation);//紧急联系人关系
+	$("#p_urgency_relation").combobox('setValue',data.p_urgency_relation);//紧急联系人关系
 	$("#p_urgency_phone").val(data.p_urgency_phone);//紧急联系人电话
 	$("#p_kinsfolk_y_n").combobox('setValue',data.p_kinsfolk_y_n);//是否有亲属同在公司
-	$("#p_kinsfolk_relation").val(data.p_kinsfolk_relation);//亲属关系
+	$("#p_kinsfolk_relation").combobox('setValue',data.p_kinsfolk_relation);//亲属关系
 	$("#p_kinsfolk_name").val(data.p_kinsfolk_name);//亲属姓名
 	$("#p_kinsfolk_id_nub").val(data.p_kinsfolk_id_nub);//亲属身份证号码
-	$("#p_kinsfolk_xueli").val(data.p_kinsfolk_xueli);//亲属最高学历
+	$("#p_kinsfolk_xueli").combobox('setValue',data.p_kinsfolk_xueli);//亲属最高学历
 	//$("#p_company_age").spinner('setValue',data.p_company_age);//司龄
+	
+	$("#p_use_work_form").combobox('setValue',data.p_use_work_form),//用工形式
+	$("#p_contract_count").spinner('setValue',data.p_contract_count),//合同签订次数
 	
 	setFromCheckbox("p_c_yingpin_table",data.p_c_yingpin_table);//应聘申请表
 	setFromCheckbox("p_c_interview_tab",data.p_c_interview_tab);//面谈记录表
@@ -634,8 +682,8 @@ function inDateChange(){
 				var startDate = new Date();
 				var endDate = new Date(Date.parse(date));
 			    var intervalMonth = (startDate.getFullYear()*12+startDate.getMonth()) - (endDate.getFullYear()*12+endDate.getMonth());
-			    $("#p_company_age").spinner('setValue',intervalMonth<0?0:intervalMonth);//司龄
-			    
+			    $("#p_company_age").val(intervalMonth<0?0:intervalMonth);//司龄
+			    $("#p_contract_begin_date").val(date);
 			}
 		}
 	})
@@ -797,6 +845,9 @@ function setData(){
 			p_id:$("#p_id").val(),//人员ID
 			p_number:$("#p_number").val(),//编号
 			p_name:$("#p_name").val(),//名称
+			p_id_num:$("#p_id_num").val(),//身份证号
+			p_birthday:$("#p_birthday").val(),//出生年月日
+			p_name:$("#p_name").val(),//名称
 			p_sex:$("#p_sex").val(),//性别
 			p_age:$("#p_age").val(),//年龄
 			p_title:$("#p_title").val(),//职称
@@ -850,6 +901,9 @@ function setData(){
 			p_kinsfolk_id_nub:$("#p_kinsfolk_id_nub").val(),//亲属身份证号码
 			p_kinsfolk_xueli:$("#p_kinsfolk_xueli").val(),//亲属最高学历
 			p_company_age:$("#p_company_age").val(),//司龄
+			
+			p_use_work_form:$("#p_use_work_form").val(),//用工形式
+			p_contract_count:$("#p_contract_count").val(),//合同签订次数
 			
 			p_c_yingpin_table:getCheckBoxValue("p_c_yingpin_table"),//应聘申请表
 			p_c_interview_tab:getCheckBoxValue("p_c_interview_tab"),//面谈记录表
@@ -1055,16 +1109,69 @@ function loadEducation(){
 				title:"学历",
 				width:100,
 				editor:{
-					type:'validatebox',
+					type:'combobox',
 					options:{
+						data:[
+							{e_xueli:'1',e_xueli_name:'初中'},
+							{e_xueli:'2',e_xueli_name:'高中'},
+							{e_xueli:'3',e_xueli_name:'中专'},
+							{e_xueli:'4',e_xueli_name:'大专'},
+							{e_xueli:'5',e_xueli_name:'本科'},
+							{e_xueli:'6',e_xueli_name:'研究生'},
+							{e_xueli:'7',e_xueli_name:'硕士'},
+							{e_xueli:'8',e_xueli_name:'博士'}],
+						valueField:'e_xueli',
+						textField:'e_xueli_name',
+						editable: false,
 						required:true
 					},
+				},
+				formatter:function(value,row){
+					if(value==1||row.e_property==1){
+						return "初中";
+					}else if(value==2||row.e_property==2){
+						return "高中";
+					}else if(value==3||row.e_property==3){
+						return "中专";
+					}else if(value==4||row.e_property==4){
+						return "大专";
+					}else if(value==5||row.e_property==5){
+						return "本科";
+					}else if(value==6||row.e_property==6){
+						return "研究生";
+					}else if(value==7||row.e_property==7){
+						return "硕士";
+					}else if(value==8||row.e_property==8){
+						return "博士";
+					}
 				},
 			},
 			{
 				field:"e_xuewei",
 				title:"学位",
 				width:100,
+				editor:{
+					type:'combobox',
+					options:{
+						data:[
+							{e_xuewei:'1',e_xuewei_name:'学士学位'},
+							{e_xuewei:'2',e_xuewei_name:'硕士学位'},
+							{e_xuewei:'3',e_xuewei_name:'博士学位'}],
+						valueField:'e_xuewei',
+						textField:'e_xuewei_name',
+						editable: false,
+						required:true
+					},
+				},
+				formatter:function(value,row){
+					if(value==1||row.e_xuewei==1){
+						return "学士学位";
+					}else if(value==2||row.e_xuewei==2){
+						return "硕士学位";
+					}else if(value==3||row.e_xuewei==3){
+						return "博士学位";
+					}
+				},
 			},
 			{
 				field:"e_desc",

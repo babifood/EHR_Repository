@@ -45,5 +45,6 @@
 		</div>
 	</div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/Certificaten.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/validatebox.js"></script>
 </body>
 </html>

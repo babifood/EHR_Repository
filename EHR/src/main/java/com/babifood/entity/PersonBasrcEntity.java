@@ -92,6 +92,11 @@ public class PersonBasrcEntity {
 	private String p_c_probation;//试用期考核表
 	private String p_create_date;//创建时间
 	private String p_this_dept_code;//当前末及部门
+	private String p_id_num;//身份证号码
+	private String p_birthday;//出生年月日
+	
+	private String p_use_work_form;//用工形式
+	private String p_contract_count;//劳动合同签订次数
 	
 	private List<PersonEducationEntity> education;//教育背景
 	private List<PersonCultivateFront> cultivateFront;//培训经历_入职前
@@ -681,6 +686,38 @@ public class PersonBasrcEntity {
 
 	public void setP_this_dept_code(String p_this_dept_code) {
 		this.p_this_dept_code = p_this_dept_code;
+	}
+
+	public String getP_id_num() {
+		return p_id_num;
+	}
+
+	public void setP_id_num(String p_id_num) {
+		this.p_id_num = p_id_num;
+	}
+
+	public String getP_birthday() {
+		return p_birthday;
+	}
+
+	public void setP_birthday(String p_birthday) {
+		this.p_birthday = p_birthday;
+	}
+
+	public String getP_use_work_form() {
+		return p_use_work_form;
+	}
+
+	public void setP_use_work_form(String p_use_work_form) {
+		this.p_use_work_form = p_use_work_form;
+	}
+
+	public String getP_contract_count() {
+		return p_contract_count;
+	}
+
+	public void setP_contract_count(String p_contract_count) {
+		this.p_contract_count = p_contract_count;
 	}
 	
 	

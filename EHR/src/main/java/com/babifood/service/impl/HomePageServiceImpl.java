@@ -24,5 +24,20 @@ public class HomePageServiceImpl implements HomePageService {
 		}
 		return terrMenuList;
 	}
+	@Override
+	public List<Map<String, Object>> loadBirthday() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<Map<String, Object>> loadZhuanZheng() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<Map<String, Object>> loadCertificateExpire() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

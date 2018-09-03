@@ -118,21 +118,23 @@ function loadRole(data){
 }
 //加载下拉树
 function loadCombotree(){
-	$('#role_organization').combotree({    
-	    url: prefix+"/loadCombotreeDeptData",
+	$('#role_organization').combobox({    
+	    url: prefix+"/loadComboboxOrga",
 	    editable:false,
+	    valueField:'dept_code',    
+	    textField:'dept_name',
 		onHidePanel:function(none){
 			$("#role_organization_span").html("");
 		},
-	});  
+	});
 }
 //添加角色
 function addRole(){
 	$("#role_dog").dialog("open").dialog("center").dialog("setTitle","添加角色");
 	$("#role_name").val("");
 	$("#role_desc").val("");
-	$("#role_organization").combotree("setValue",""),
-	$("#role_organization").combotree("setText","")
+	$("#role_organization").combobox("setValue",""),
+	$("#role_organization").combobox("setText","")
 	$("#role_radio_yes").prop("checked", "checked");
 	$('#role_name').focus();
 }
@@ -144,8 +146,8 @@ function editRole(){
 		$("#role_dog").dialog("open").dialog("center").dialog("setTitle","修改角色");
 		$("#role_name").val(row.role_name);
 		$("#role_desc").val(row.role_desc);
-		$("#role_organization").combotree("setValue",row.organization_code),
-		$("#role_organization").combotree("setText",row.organization_name)
+		$("#role_organization").combobox("setValue",row.organization_code),
+		$("#role_organization").combobox("setText",row.organization_name)
 		if(row.state=='0'){
 			$("#role_radio_no").prop("checked", "checked");
 		}else if(row.state=='1'){

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.dao.NewUsersDao;
-import com.babifood.dao.impl.LoginDaoImpl;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.RoleAuthorityEntity;
 import com.babifood.entity.RoleMenuEntity;
@@ -349,13 +348,32 @@ public class NewUsersServiceImpl implements NewUsersService {
 		// TODO Auto-generated method stub
 		String strId = id==null||id.equals("")?"0":id;
 		List<Map<String, Object>> list = null;
+		if(!"0".equals(strId)){
+			try {
+				list = newUsersDao.loadCombotreeDeptData(strId);
+				LogManager.putContectOfLogInfo("参数:"+strId);
+			} catch (Exception e) {
+				// TODO: handle exception
+				LogManager.putContectOfLogInfo(e.getMessage());
+				log.error("loadCombotreeDeptData:"+e.getMessage());
+			}
+		}
+		return list;
+	}
+	@LogMethod(module = ModuleConstant.USER)
+	@Override
+	public List<Map<String, Object>> loadComboboxOrgaData() {
+		// TODO Auto-generated method stub
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+		List<Map<String, Object>> list = null;
 		try {
-			list = newUsersDao.loadCombotreeDeptData(strId);
-			LogManager.putContectOfLogInfo("参数:"+strId);
+			list = newUsersDao.loadComboboxOrgaData();
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadCombotreeDeptData:"+e.getMessage());
+			log.error("loadComboboxOrgaData:"+e.getMessage());
 		}
 		return list;
 	}

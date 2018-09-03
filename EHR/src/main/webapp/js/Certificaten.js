@@ -1,5 +1,4 @@
 var editIndex = undefined;   
-
 //初始化
 $(function(){
 	//重写Text
@@ -140,7 +139,8 @@ function loadCertificaten(c_p_number,c_p_name){
 				editor:{
 					type:'validatebox',
 					options:{
-						required:true
+						required:true,
+						//validType:'idcard'
 					},
 				},
 			},
@@ -152,7 +152,20 @@ function loadCertificaten(c_p_number,c_p_name){
 					type:'datebox',
 					options:{
 						editable: false,
-						required:true
+						required:true,
+						onSelect:function(date){
+							var editors = $("#certificaten_grid").datagrid('getEditors',editIndex);
+							var enddate = editors[7];
+							var enddateValue = enddate.target.datebox('getValue');
+							if(enddateValue!=null&&enddateValue!=""){
+								var beginDate = new Date(date);
+							    var endDate = new Date(enddateValue);
+							    if(beginDate.getTime()>endDate.getTime()){
+							    	$.messager.alert("消息提示！","颁发日期不能大于失效日期!","warning");
+							    	editors[6].target.datebox().clear();
+							    }
+							}
+					    }
 					},
 				},
 			},
@@ -164,7 +177,21 @@ function loadCertificaten(c_p_number,c_p_name){
 					type:'datebox',
 					options:{
 						editable: false,
-						required:true
+						required:true,
+						onSelect:function(date){
+							var editors = $("#certificaten_grid").datagrid('getEditors',editIndex);
+							var begdate = editors[6];
+							var begdateValue = begdate.target.datebox('getValue');
+							if(begdateValue!=null&&begdateValue!=""){
+								var beginDate = new Date(begdateValue);
+							    var endDate = new Date(date);
+							    if(endDate.getTime()<beginDate.getTime()){
+							    	$.messager.alert("消息提示！","失效日期不能小于或等于颁发日期!","warning");
+							    	editors[7].target.datebox().clear();
+							    }
+							}
+					    }
+
 					},
 				},
 			},
@@ -278,6 +305,7 @@ function removeCertificaten(){
 							.datagrid('deleteRow', index).datagrid('clearSelections',node);
 							$('#certificaten_grid').datagrid('acceptChanges');
 							editIndex = undefined;
+							loadCertificaten(null,null);
 						}else{
 							$.messager.alert("消息提示！","删除失败!","warning");
 						}

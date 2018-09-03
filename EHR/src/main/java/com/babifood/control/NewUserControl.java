@@ -38,6 +38,16 @@ public class NewUserControl {
 		return map;
 	}
 	/**
+	 * 查询机构信息
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/loadComboboxOrga")
+	public List<Map<String,Object>> loadComboboxOrgaData(){
+		return newUsersService.loadComboboxOrgaData();
+	}
+	/**
 	 * 加载部门信息Combotree
 	 * @param id
 	 * @return
