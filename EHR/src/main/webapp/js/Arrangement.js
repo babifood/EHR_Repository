@@ -3,6 +3,7 @@ prefix = "http://" + prefix +"/EHR";
 var firstadd; 
 $(function(){
 	loadArrangementTabs();
+	console.log(111111111111111);
 });
 
 //加载Tabs

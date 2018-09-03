@@ -17,6 +17,11 @@ import com.babifood.entity.DeptEntity;
 import com.babifood.service.DeptPageService;
 import com.babifood.utils.UtilDateTime;
 
+/**
+ * 部门信息相关
+ * @author wangguocheng
+ *
+ */
 @Controller
 @RequestMapping("dept")
 public class DeptPageController {
@@ -105,6 +110,12 @@ public class DeptPageController {
 		return deptService.deleteDept(deptCode);
 	}
 	
+	/**
+	 * 导出部门信息 
+	 * @param response
+	 * @param type
+	 * @throws Exception
+	 */
 	@ResponseBody
 	@RequestMapping("export")
 	public void exportExcel(HttpServletResponse response,String type) throws Exception {

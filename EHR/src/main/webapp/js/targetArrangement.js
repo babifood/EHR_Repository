@@ -310,6 +310,7 @@ function targetDrawCld(SY, SM) {
         async:false,
         dataType:'json',
         success:function(data) {
+        	console.log("222222222222222");
             if (data.code === "1") {
             	rows = data.arrangementList;
             	if(data.arrangementType){

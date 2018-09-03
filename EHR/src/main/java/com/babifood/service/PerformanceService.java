@@ -14,7 +14,7 @@ public interface PerformanceService {
 
 	public Map<String, Object> importExcel(MultipartFile file, String type);
 
-	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score);
+	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score, String salary);
 
 
 }

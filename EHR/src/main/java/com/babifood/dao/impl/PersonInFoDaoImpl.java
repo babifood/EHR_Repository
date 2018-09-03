@@ -397,7 +397,7 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		sql.append("select a.p_id as pId,a.p_number as pNumber,a.p_name as pName,b.dept_name as companyName,");
 		sql.append("b.dept_code as companyCode,c.dept_name deptName,c.dept_code as deptCode,d.dept_name organizationName,");
 		sql.append("d.dept_code as organizationCode,e.dept_name as officeName,e.dept_code as officeCode,f.POST_NAME as postName,");
-		sql.append("a.p_company_age as companyAge,a.p_nationality as nationality, P_property as property, ");
+		sql.append("a.p_in_date as inDate,a.p_nationality as nationality, P_property as property, ");
 		sql.append("f.POSITION_ID as positionId from ehr_person_basic_info a ");
 		sql.append(" LEFT JOIN ehr_dept b on a.p_company_id = b.dept_code ");
 		sql.append(" LEFT JOIN ehr_dept c on a.p_department_id = c.dept_code ");

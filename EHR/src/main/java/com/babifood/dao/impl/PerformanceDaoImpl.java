@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.PerformanceDao;
+import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilString;
 
 @Repository
@@ -19,11 +20,14 @@ public class PerformanceDaoImpl implements PerformanceDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	/**
+	 * 查询绩效薪资信息数量
+	 */
 	@Override
 	public Integer getPerformancesCount(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT COUNT(*) FROM ehr_performance a ");
-		sql.append("LEFT JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
+		sql.append("INNER JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");
@@ -52,15 +56,18 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return count;
 	}
 
+	/**
+	 * 查询绩效薪资信息列表
+	 */
 	@Override
 	public List<Map<String, Object>> queryPerformanceList(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT a.`YEAR` AS `year`, a.`MONTH` AS `month`, b.P_NUMBER AS pNumber, ");
 		sql.append("a.performance_score AS performanceScore, b.p_name AS pName, ");
 		sql.append("c.DEPT_NAME AS organzationName, d.DEPT_NAME AS deptName, e.DEPT_NAME AS officeName, ");
-		sql.append("(a.performance_score * from_base64(f.performance_salary)/100) AS performanceSalary ");
+		sql.append("a.performance_salary AS pSalary ");
 		sql.append("FROM ehr_person_basic_info b ");
-		sql.append("LEFT JOIN ehr_performance a ON a.p_number = b.p_number ");
+		sql.append("INNER JOIN ehr_performance a ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE ");
@@ -100,6 +107,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 			} else {
 				performanceList = jdbcTemplate.queryForList(sql.toString(), params.get("start"), params.get("pageSize"));
 			}
+			BASE64Util.Base64DecodeMap(performanceList);
 		} catch (Exception e) {
 			log.error("分页查询绩效信息列表失败", e);
 			throw e;
@@ -107,9 +115,12 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return performanceList;
 	}
 
+	/**
+	 * 批量保存绩效薪资信息
+	 */
 	@Override
 	public void savePerformance(List<Object[]> performanceParam) {
-		String sql = "REPLACE INTO `ehr_performance` (`YEAR`, `MONTH`, `P_NUMBER`, `performance_score`) VALUES (?, ?, ?, ?)";
+		String sql = "REPLACE INTO `ehr_performance` (`YEAR`, `MONTH`, `P_NUMBER`, `performance_score`, `performance_salary`) VALUES (?, ?, ?, ?, ?)";
 		try {
 			jdbcTemplate.batchUpdate(sql, performanceParam);
 		} catch (Exception e) {
@@ -118,15 +129,20 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		}
 	}
 
+	/**
+	 * 查询员工对应月份的绩效薪资信息
+	 */
 	@Override
 	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT `YEAR` AS `year`, `MONTH` AS `month`, P_NUMBER AS pNumber, performance_score AS performanceScore ");
+		sql.append("SELECT `YEAR` AS `year`, `MONTH` AS `month`, P_NUMBER AS pNumber, ");
+		sql.append("performance_score AS performanceScore, performance_salary AS pSalary ");
 		sql.append("FROM ehr_performance WHERE P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?");
 		List<Map<String, Object>> performanceList = null;
 		Map<String, Object> performanceInfo = null;
 		try {
 			performanceList = jdbcTemplate.queryForList(sql.toString(), pNumber, month, year);
+			BASE64Util.Base64DecodeMap(performanceList);
 		} catch (Exception e) {
 			log.error("查询员工绩效薪资信息失败", e);
 			throw e;
@@ -137,11 +153,14 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		return performanceInfo;
 	}
 
+	/**
+	 * 修改绩效薪资信息
+	 */
 	@Override
-	public void updatePerformanceScore(String year, String month, String pNumber, String score) {
-		String sql = "update ehr_performance set performance_score = ? where P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?";
+	public void updatePerformanceScore(String year, String month, String pNumber, String score, String salary) {
+		String sql = "update ehr_performance set performance_score = ? ,performance_salary = ? where P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?";
 		try {
-			jdbcTemplate.update(sql, score, pNumber, month, year);
+			jdbcTemplate.update(sql, score, BASE64Util.getDecodeStringTowDecimal(salary), pNumber, month, year);
 		} catch (Exception e) {
 			log.error("修改绩效分值失败", e);
 			throw e;

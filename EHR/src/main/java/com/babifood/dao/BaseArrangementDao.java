@@ -28,7 +28,7 @@ public interface BaseArrangementDao {
 
 	public List<Map<String, Object>> findArrangementByTargetId(List<String> targetIds);
 
-	public int bindArrangement(String targetId, String type, String arrangementId);
+	public void bindArrangement(String targetId, String type, String arrangementId);
 
 	public void deleteSettedArrangement(String targetId);
 

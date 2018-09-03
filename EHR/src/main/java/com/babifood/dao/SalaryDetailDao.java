@@ -17,4 +17,6 @@ public interface SalaryDetailDao {
 
 	public List<Map<String, Object>> getPageSalaryDetails(Map<String, Object> params);
 
+	public void saveSalaryDetailEntityList(List<SalaryDetailEntity> salaryDetails);
+
 }

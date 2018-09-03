@@ -24,18 +24,40 @@ public class SalaryDetailController {
 	@Autowired
 	private SalaryCalculationService salaryCalculationService;
 	
+	/**
+	 * 分页查询薪资明细
+	 * @param page
+	 * @param rows
+	 * @param pNumber
+	 * @param pName
+	 * @param organzationName
+	 * @param deptName
+	 * @param officeName
+	 * @param groupName
+	 * @return
+	 */
 	@RequestMapping("page")
 	@ResponseBody
 	public Map<String, Object> getPageSalaryDetails(Integer page, Integer rows, String pNumber, String pName, String organzationName, String deptName, String officeName, String groupName){
 		return salaryDetailService.getPageSalaryDetails(page, rows, pNumber, pName, organzationName, deptName, officeName, groupName);
 	}
 	
+	/**
+	 * 薪资计算
+	 * @param type
+	 * @return
+	 */
 	@RequestMapping("calculation")
 	@ResponseBody
 	public Map<String, Object> salaryCalculation(Integer type){
 		return salaryCalculationService.salaryCalculation(type);
 	}
 	
+	/**
+	 * 薪资明细导出
+	 * @param response
+	 * @throws Exception
+	 */
 	@ResponseBody
 	@RequestMapping("export")
 	public void exportExcel(HttpServletResponse response) throws Exception {

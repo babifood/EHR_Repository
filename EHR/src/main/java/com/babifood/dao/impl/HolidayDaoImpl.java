@@ -19,6 +19,9 @@ public class HolidayDaoImpl implements HolidayDao {
 	@Autowired
 	private JdbcTemplate jdbctemplate;
 
+	/**
+	 * 新增节假日信息
+	 */
 	@Override
 	public int addHoliday(HolidayEntity holidayEntity) {
 		StringBuffer sql = new StringBuffer();
@@ -33,6 +36,9 @@ public class HolidayDaoImpl implements HolidayDao {
 		return count;
 	}
 
+	/**
+	 * 修改节假日信息
+	 */
 	@Override
 	public int updateHoliday(HolidayEntity holidayEntity) {
 		StringBuffer sql = new StringBuffer();
@@ -47,19 +53,25 @@ public class HolidayDaoImpl implements HolidayDao {
 		return count;
 	}
 
-	@Override
-	public Integer findHolidayNumByDate(String date) {
-		StringBuffer sql = new StringBuffer();
-		sql.append("select count(*) from ehr_holiday where start_date <= ? and end_date >= ?");
-		return jdbctemplate.queryForInt(sql.toString(), date, date);
-	}
+//	@Override
+//	public Integer findHolidayNumByDate(String date) {
+//		StringBuffer sql = new StringBuffer();
+//		sql.append("select count(*) from ehr_holiday where start_date <= ? and end_date >= ?");
+//		return jdbctemplate.queryForInt(sql.toString(), date, date);
+//	}
 
+	/**
+	 * 根据id 查询节假日信息
+	 */
 	@Override
 	public Map<String, Object> findHolidayById(Integer id) {
 		String sql = "select id as id ,holiday_name as holidayName ,start_date as startDate,end_date as endDate,remark as remark from ehr_holiday where id = ? ";
 		return jdbctemplate.queryForMap(sql, id);
 	}
 
+	/**
+	 * 删除节假日信息
+	 */
 	@Override
 	public int deleteHolidayById(Integer id) {
 		String sql = "delete from ehr_holiday where id = ? ";
@@ -72,6 +84,9 @@ public class HolidayDaoImpl implements HolidayDao {
 		return count;
 	}
 
+	/**
+	 * 查询对应年月的节假日
+	 */
 	@Override
 	public List<Map<String, Object>> findHolidayListByDate(String startDay, String endDay) {
 		StringBuffer sql = new StringBuffer();

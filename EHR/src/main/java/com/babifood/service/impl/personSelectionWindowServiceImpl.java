@@ -22,12 +22,7 @@ public class personSelectionWindowServiceImpl implements personSelectionWindowSe
 	@Override
 	public List<Map<String, Object>> loadunSelectPersonByDeptID(String dept_id) {
 		// TODO Auto-generated method stub
-		int length = 0;
-		int codeLength = dept_id==null||dept_id.equals("")?0:dept_id.length();
-		if(codeLength>0){
-			length = codeLength/4;
-		}
-		return personSelectionWindowDao.loadunSelectPersonByDeptID(dept_id,length);
+		return personSelectionWindowDao.loadunSelectPersonByDeptID(dept_id);
 	}
 	//未选人员by人员姓名
 	@Override

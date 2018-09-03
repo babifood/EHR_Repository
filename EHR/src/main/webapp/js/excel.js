@@ -68,6 +68,7 @@ $(function() {
 	function getImportExcelForm(id){
 		var div1 = document.createElement("div");
 		div1.style = "text-align: center;";
+		div1.setAttribute("style","text-align: center;");
 		var form = document.createElement("form");
 		form.id="uploadExcel_"+id;
 		form.method="post";
@@ -84,6 +85,7 @@ $(function() {
 		input1.type="file";
 		input1.name="file";
 		input1.style="width:0px;height:0px;";
+		input1.setAttribute("style","width:0px;height:0px;");
 		input1.id="uploadEventFile_"+id;
 		form.appendChild(input1);
 		var input2 = document.createElement("input");
@@ -99,6 +101,7 @@ $(function() {
 	function getImportExcelButton(id){
 		var div2 = document.createElement("div");
 		div2.style="text-align: center; padding: 5px 0;";
+		div2.setAttribute("style","text-align: center; padding: 5px 0;");
 		div2.id="dialog_buttons_"+id;
 		var a1 = document.createElement("a");
 		a1.href="#";
@@ -108,6 +111,7 @@ $(function() {
 			uploadBtn(id);
 		};
 		a1.style="width: 90px;";
+		a1.setAttribute("style","width: 90px;");
 		a1.id="booten_"+id;
 		a1.appendChild(document.createTextNode("导入"));
 		div2.appendChild(a1);
@@ -119,6 +123,7 @@ $(function() {
 			$("#"+id).dialog('close');
 		};
 		a2.style="width: 90px;";
+		a2.setAttribute("style","width: 90px;");
 		a2.appendChild(document.createTextNode("取消"));
 		div2.appendChild(a2);
 		return div2

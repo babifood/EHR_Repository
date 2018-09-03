@@ -6,14 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.babifood.constant.ModuleConstant;
+import com.babifood.constant.OperationConstant;
 import com.babifood.dao.SalaryDetailDao;
+import com.babifood.entity.LoginEntity;
 import com.babifood.entity.SalaryDetailEntity;
 import com.babifood.service.SalaryDetailService;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.ExcelUtil;
+import com.cn.babifood.operation.LogManager;
+import com.cn.babifood.operation.annotation.LogMethod;
 
 /**
  * 薪资数据操作类
@@ -32,6 +38,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 	 * 保存薪资明细数据
 	 */
 	@Override
+	@LogMethod(module = ModuleConstant.SALARYDETAIL)
 	public Map<String, Object> saveCurrentMonthSalary(SalaryDetailEntity salaryDerail) {
 		logger.info("员工薪资计算:保存计算数据");
 		try {
@@ -52,6 +59,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 	 * 分页查询薪资信息
 	 */
 	@Override
+	@LogMethod(module = ModuleConstant.SALARYDETAIL)
 	public Map<String, Object> getPageSalaryDetails(Integer page, Integer row, String pNumber, String pName,
 			String organzationName, String deptName, String officeName, String groupName) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -67,13 +75,18 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		params.put("officeName", officeName);
 		params.put("groupName", groupName);
 		try {
+			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			LogManager.putUserIdOfLogInfo(login.getUser_id());
+			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 			Integer count = salaryDetailDao.getSalaryDetailsCount(params);
 			List<Map<String, Object>> salaryDetailList = salaryDetailDao.getPageSalaryDetails(params);
 			BASE64Util.Base64DecodeMap(salaryDetailList);
 			result.put("total", count);
 			result.put("rows", salaryDetailList);
+			LogManager.putContectOfLogInfo("分页查询薪资信息");
 		} catch (Exception e) {
 			logger.error("分页查询薪资数据失败",e);
+			LogManager.putContectOfLogInfo("分页查询薪资信息失败,错误信息：" + e.getMessage());
 		}
 		return result;
 	}
@@ -82,6 +95,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 	 * 导出薪资明细数据
 	 */
 	@Override
+	@LogMethod(module = ModuleConstant.SALARYDETAIL)
 	public void exportExcel(OutputStream ouputStream) throws Exception {
 		Map<String, String> row1Name = getRow1Names();
 		String[] sort = new String[]{"year", "month", "pNumber", "pName", "companyName", "organizationName",
@@ -94,11 +108,16 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 				"relaxation", "trainDeduction", "marriageDeduction", "companionParentalDeduction", "funeralDeduction", 
 				"mealDeduction", "dormDeduction", "insurance", "providentFund", "beforeDeduction", "afterDeduction",};
 		try {
+			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			LogManager.putUserIdOfLogInfo(login.getUser_id());
+			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EXPORT);
 			List<Map<String, Object>> dataSource = salaryDetailDao.getPageSalaryDetails(new HashMap<String, Object>());;
 			BASE64Util.Base64DecodeMap(dataSource);
 			ExcelUtil.exportExcel("薪资详情列表", row1Name, dataSource, ouputStream, sort);
+			LogManager.putContectOfLogInfo("导出薪资明细数据");
 		} catch (Exception e) {
 			logger.error("导出薪资数据失败",e);
+			LogManager.putContectOfLogInfo("导出薪资明细数据失败,错误信息：" + e.getMessage());
 		}
 	}
 
@@ -161,6 +180,32 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		row1Name.put("realWages", "实发工资");
 		row1Name.put("personalTax", "代缴税金");
 		return row1Name;
+	}
+
+	/**
+	 * 批量保存薪资明细
+	 */
+	@Override
+	@LogMethod(module = ModuleConstant.SALARYDETAIL)
+	public String saveSalaryDetailEntityList(List<SalaryDetailEntity> salaryDetails) {
+		if(salaryDetails == null || salaryDetails.size() <= 0){
+			return "薪资明细数量为0";
+		}
+		String message = "";
+		try {
+			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			LogManager.putUserIdOfLogInfo(login.getUser_id());
+			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_ADD);
+			salaryDetailDao.saveSalaryDetailEntityList(salaryDetails);
+			LogManager.putContectOfLogInfo("批量保存薪资明细");
+			message = "批量保存薪资明细成功";
+			logger.info("薪资计算========>批量保存薪资明细");
+		} catch (Exception e) {
+			logger.error("薪资计算========>批量保存薪资明细失败",e);
+			LogManager.putContectOfLogInfo("薪资计算========>批量保存薪资明细失败,错误信息：" + e.getMessage());
+			message = "批量保存薪资明细失败，错误信息：" + e.getMessage();
+		}
+		return message;
 	}
 
 }

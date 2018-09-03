@@ -34,29 +34,11 @@ public class personSelectionWindowDaoImpl implements personSelectionWindowDao {
 	}
 	//未选人员by部门id
 	@Override
-	public List<Map<String, Object>> loadunSelectPersonByDeptID(String dept_id,int length) {
+	public List<Map<String, Object>> loadunSelectPersonByDeptID(String dept_id) {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
 		sql.append("select p_id,p_number, p_name from ehr_person_basic_info where 1=1");
-		if(dept_id!=null&&!dept_id.equals("")){
-			if(length==3){
-				//公司
-				sql.append(" and p_company_id="+dept_id);
-			}else if(length==4){
-				//机构
-				sql.append(" and p_organization_id="+dept_id);
-			}else if(length==5){
-				//部门
-				sql.append(" and p_department_id="+dept_id);
-			}else if(length==6){
-				//科室
-				sql.append(" and p_section_office_id="+dept_id);
-			}else if(length==7){
-				//班组
-				sql.append(" and p_group_id="+dept_id);
-			}
-			
-		}
+		sql.append(" and p_this_dept_code="+dept_id);
 		List<Map<String,Object>> list = null;
 		try {
 			list = jdbctemplate.queryForList(sql.toString());
