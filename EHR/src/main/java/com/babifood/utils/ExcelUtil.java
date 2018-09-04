@@ -65,6 +65,11 @@ public class ExcelUtil {
 		HSSFRow row1 = sheet.createRow(1);
 		row1.setHeight((short) 400);// 设置行高
 
+		if(sort == null || sort.length == 0){
+			sort = new String[rowName.size()];
+			rowName.keySet().toArray(sort);
+		}
+		
 		for (int i = 0; i < sort.length; i++) {// 列名称信息
 			String value = rowName.get(sort[i]);
 			sheet.setColumnWidth((short) i, (short) 3500);// 设置列宽
