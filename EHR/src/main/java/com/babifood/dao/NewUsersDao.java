@@ -41,4 +41,6 @@ public interface NewUsersDao {
 	public List<Map<String, Object>> loadRoleAuthority(String orle_id);
 
 	public List<Map<String, Object>> loadCombotreeDeptData(String id);
+	
+	public List<Map<String, Object>> loadComboboxOrgaData();
 }

@@ -31,7 +31,7 @@
         data-options="iconCls:'icon-save',modal:true,fit:true,collapsible:false,minimizable:false,maximizable:false">   
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'center',split:true" style="width:60%">
-				<form id="person_form" action="javascript:void(0)">
+				<form id="person_form" action="javascript:void(0)" style="width: 100%">
 					<table id="person_tab" style="width: 100%;">
 						<colgroup>
 							<col width="20%">
@@ -62,70 +62,81 @@
 								<td>
 									<input type="text" id="p_name" name="p_name" class="textbox"/>
 								</td>
+								<td>职称:</td>
+								<td>
+									<select id="p_title" class="easyui-combobox" editable="false" style="width:100%" required="required">
+										<option value="0">无职称</option>
+										<option value="1">初级职称</option>
+										<option value="2">中级职称</option>
+										<option value="3">高级职称</option>
+									</select> 
+								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>员工身份证号码:</td>
+								<td>
+									<input type="text" id="p_id_num" name="p_id_num" class="textbox" onblur="checkIdNumFormat()"/>
+								</td>
 								<td>性别:</td>
 								<td>
-									<select id="p_sex" class="easyui-combobox" editable="false" style="width:236px" required="required">
-										<option value="0">男</option>
-										<option value="1">女</option>
-									</select>
+									<input type="text" id="p_sex" name="p_sex" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>年龄:</td>
 								<td>
-									<input type="text" id="p_age" name="p_age" class="easyui-numberspinner" style="width:236px"
-									data-options="min:18,max:100" required="required"/>
+									<input type="text" id="p_age" name="p_age" class="textbox" disabled="disabled"/>
 								</td>
-								<td>职称:</td>
+								<td>员工出生年月日:</td>
 								<td>
-									<input type="text" id="p_title" name="p_title" class="textbox"/>
+									<input type="text" id="p_birthday" name="p_birthday" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>岗位名称:</td>
 								<td>
 									<input type="hidden" id="p_post_id" name="p_post_id"/>
-									<input type="text" id="p_post" name="p_post" style="width:236px"/>
+									<input type="text" id="p_post" name="p_post" style="width:100%"/>
 								</td>
 								<td>职级名称:</td>
 								<td>
 									<input type="hidden" id="p_level_id" name="p_level_id"/>
-									<input type="text" id="p_level_name" name="p_level_name" style="width:236px"/>
+									<input type="text" id="p_level_name" name="p_level_name" style="width:100%"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>公司名称:</td>
 								<td>
 									<input type="hidden" id="p_company_id" name="p_company_id"/>
-									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:236px" required="required"/>
+									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:100%" required="required"/>
 								</td>
 								<td>单位机构:</td>
 								<td>
 									<input type="hidden" id="p_organization_id" name="p_organization_id"/>
-									<input type="text" id="p_organization" name="p_organization" editable="false" style="width:236px" required="required"/>
+									<input type="text" id="p_organization" name="p_organization" editable="false" style="width:100%" required="required"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>所属部门:</td>
 								<td>
 									<input type="hidden" id="p_department_id" name="p_department_id"/>
-									<input type="text" id="p_department" name="p_department" editable="false" style="width:236px" required="required"/>
+									<input type="text" id="p_department" name="p_department" editable="false" style="width:100%" required="required"/>
 								</td>
 								<td>科室:</td>
 								<td>
 									<input type="hidden" id="p_section_office_id" name="p_section_office_id"/>
-									<input type="text" id="p_section_office" name="p_section_office" style="width:236px"/>
+									<input type="text" id="p_section_office" name="p_section_office" style="width:100%"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>班组:</td>
 								<td>
 									<input type="hidden" id="p_group_id" name="p_group_id"/>
-									<input type="text" id="p_group" name="p_group" style="width:236px"/>
+									<input type="text" id="p_group" name="p_group" style="width:100%"/>
 								</td>
 								<td>员工状态:</td>
 								<td>
-									<select id="p_state" class="easyui-combobox" editable="false" style="width:236px" required="required">
+									<select id="p_state" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">在职</option>
 										<option value="1">离职</option>
 									</select>
@@ -134,14 +145,14 @@
 							<tr class="text_tr">
 								<td>员工性质:</td>
 								<td>
-									<select id="p_property" class="easyui-combobox" editable="false" style="width:236px" required="required">
+									<select id="p_property" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">全职</option>
 										<option value="1">兼职</option>
 									</select> 
 								</td>
 								<td>岗位性质:</td>
 								<td>
-									<select id="p_post_property" class="easyui-combobox" editable="false" style="width:236px" required="required">
+									<select id="p_post_property" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">管理者</option>
 										<option value="1">员工</option>
 									</select> 
@@ -150,24 +161,23 @@
 							<tr class="text_tr">
 								<td>入职日期:</td>
 								<td>
-									<input type="text" id="p_in_date" name="p_in_date" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_in_date" name="p_in_date" class="easyui-datebox" style="width:100%"
 									 	data-options="editable:false" required="required"/>
 								</td>
 								<td>转正日期:</td>
 								<td>
-									<input type="text" id="p_turn_date" name="p_turn_date" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_turn_date" name="p_turn_date" class="easyui-datebox" style="width:100%"
 									 	data-options="editable:false" required="required"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>离职日期:</td>
+								<td>联系电话:</td>
 								<td>
-									<input type="text" id="p_out_date" name="p_out_date" class="easyui-datebox" style="width:236px"
-										data-options="editable:false"/>
+									<input type="text" id="p_phone" name="p_phone" class="textbox"/>
 								</td>
 								<td>考勤方式:</td>
 								<td>
-									<select id="p_checking_in" class="easyui-combobox" editable="false" style="width:236px" required="required">
+									<select id="p_checking_in" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">行政考勤</option>
 										<option value="1">移动考勤</option>
 										<option value="2">不考勤</option>
@@ -175,44 +185,51 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>离职原因:</td>
-								<td colspan="3">
-									<input type="text" id="p_out_describe" name="p_out_describe" class="textbox"/>
+								<td>用工形式:</td>
+								<td>
+									<select id="p_use_work_form" class="easyui-combobox" editable="false" style="width:100%" required="required">
+										<option value="0">劳动合同制</option>
+										<option value="1">劳务派遣制</option>
+										<option value="2">其他</option>
+									</select> 
+								</td>
+								<td>劳动合同签订次数:</td>
+								<td>
+									<input type="text" id="p_contract_count" name="" class="easyui-numberspinner" style="width:100%" required="required"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>劳动合同开始日期:</td>
 								<td>
-									<input type="text" id="p_contract_begin_date" name="p_contract_begin_date" class="easyui-datebox" style="width:236px"
-										data-options="editable:false"/>
+									<input type="text" id="p_contract_begin_date" name="p_contract_begin_date" class="textbox" disabled="disabled"/>
 								</td>
 								<td>劳动合同结束日期:</td>
 								<td>
-									<input type="text" id="p_contract_end_date" name="p_contract_end_date" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_contract_end_date" name="p_contract_end_date" class="easyui-datebox" style="width:100%"
 										data-options="editable:false"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>社保购买起始日期:</td>
 								<td>
-									<input type="text" id="p_shebao_begin_month" name="p_shebao_begin_month" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_shebao_begin_month" name="p_shebao_begin_month" class="easyui-datebox" style="width:100%"
 										data-options="editable:false"/>
 								</td>
 								<td>社保购买终止日期:</td>
 								<td>
-									<input type="text" id="p_shebao_end_month" name="p_shebao_end_month" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_shebao_end_month" name="p_shebao_end_month" class="easyui-datebox" style="width:100%"
 										data-options="editable:false"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td>公积金购买起始日期:</td>
 								<td>
-									<input type="text" id="p_gjj_begin_month" name="p_gjj_begin_month" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_gjj_begin_month" name="p_gjj_begin_month" class="easyui-datebox" style="width:100%"
 										data-options="editable:false"/>
 								</td>
 								<td>公积金购买终止日期:</td>
 								<td>
-									<input type="text" id="p_gjj_end_month" name="p_gjj_end_month" class="easyui-datebox" style="width:236px"
+									<input type="text" id="p_gjj_end_month" name="p_gjj_end_month" class="easyui-datebox" style="width:100%"
 										data-options="editable:false"/>
 								</td>
 							</tr>
@@ -229,29 +246,19 @@
 							<tr class="text_tr">
 								<td>婚否:</td>
 								<td>
-									<select id="p_marriage" class="easyui-combobox" editable="false" style="width:236px" required="required">
+									<select id="p_marriage" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">已婚</option>
 										<option value="1">未婚</option>
 									</select>
 								</td>
 								<td>政治面貌:</td>
 								<td>
-									<select id="p_politics" class="easyui-combobox" editable="false" style="width:236px" required="required">
+									<select id="p_politics" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">党员</option>
 										<option value="1">团员</option>
 										<option value="2">群众</option>
 										<option value="3">其他</option>
 									</select>
-								</td>
-							</tr>
-							<tr class="text_tr">
-								<td>联系电话:</td>
-								<td>
-									<input type="text" id="p_phone" name="p_phone" class="textbox"/>
-								</td>
-								<td>银行卡号:</td>
-								<td>
-									<input type="text" id="p_bank_nub" name="p_bank_nub" class="textbox"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -262,6 +269,23 @@
 								<td>户籍地址:</td>
 								<td>
 									<input type="text" id="p_huji_add" name="p_huji_add" class="textbox"/>
+								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>银行卡号:</td>
+								<td>
+									<input type="text" id="p_bank_nub" name="p_bank_nub" class="textbox"/>
+								</td>
+								<td>离职日期:</td>
+								<td>
+									<input type="text" id="p_out_date" name="p_out_date" class="easyui-datebox" style="width:100%"
+										data-options="editable:false"/>
+								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>离职原因:</td>
+								<td colspan="3">
+									<input type="text" id="p_out_describe" name="p_out_describe" class="textbox"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -277,7 +301,16 @@
 							<tr class="text_tr">
 								<td>紧急联系人关系:</td>
 								<td>
-									<input type="text" id="p_urgency_relation" name="p_urgency_relation" class="textbox"/>
+									<select id="p_urgency_relation" class="easyui-combobox" editable="false" style="width:100%">
+										<option value="1">父亲</option>
+										<option value="2">母亲</option>
+										<option value="3">朋友</option>
+										<option value="4">妻子</option>
+										<option value="5">子女</option>
+										<option value="6">亲戚</option>
+										<option value="7">兄弟</option>
+										<option value="8">姐妹</option>
+									</select> 
 								</td>
 								<td>紧急联系人电话:</td>
 								<td>
@@ -287,14 +320,22 @@
 							<tr class="text_tr">
 								<td>是否有亲属同在公司:</td>
 								<td>
-									<select id="p_kinsfolk_y_n" class="easyui-combobox" editable="false" style="width:236px">
+									<select id="p_kinsfolk_y_n" class="easyui-combobox" editable="false" style="width:100%">
 										<option value="0">是</option>
 										<option value="1">否</option>
 									</select>
 								</td>
 								<td>亲属关系:</td>
 								<td>
-									<input type="text" id="p_kinsfolk_relation" name="p_kinsfolk_relation" class="textbox"/>
+									<select id="p_kinsfolk_relation" class="easyui-combobox" editable="false" style="width:100%">
+										<option value="1">父亲</option>
+										<option value="2">母亲</option>
+										<option value="3">妻子</option>
+										<option value="4">子女</option>
+										<option value="5">亲戚</option>
+										<option value="6">兄弟</option>
+										<option value="7">姐妹</option>
+									</select> 
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -310,39 +351,65 @@
 							<tr class="text_tr">
 								<td>亲属最高学历:</td>
 								<td>
-									<input type="text" id="p_kinsfolk_xueli" name="p_kinsfolk_xueli" class="textbox"/>
+									<select id="p_kinsfolk_xueli" class="easyui-combobox" editable="false" style="width:100%">
+										<option value="1">初中</option>
+										<option value="2">高中</option>
+										<option value="3">中专</option>
+										<option value="4">大专</option>
+										<option value="5">本科</option>
+										<option value="6">研究生</option>
+										<option value="7">硕士</option>
+										<option value="7">博士</option>
+									</select> 
 								</td>
 								<td>司龄:</td>
 								<td>
-									<input type="text" id="p_company_age" name="p_company_age" class="easyui-numberspinner" style="width:236px"
-									data-options="min:1,max:50" required="required"/>
+									<input type="text" id="p_company_age" name="p_company_age" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
 								<td colspan="4" style="text-align: center"><span style="color: red">注:以下资料是否已经提交给人事部</span></td>
 							</tr>
 							<tr>
-								<td colspan="4">
-									<input type="checkbox" id="p_c_yingpin_table" name="p_c_yingpin_table"/>应聘申请表
-									<input type="checkbox" id="p_c_interview_tab" name="p_c_interview_tab"/>面谈记录表
-									<input type="checkbox" id="p_c_id_copies" name="p_c_id_copies"/>身份证复印件
-									<input type="checkbox" id="p_c_xueli" name="p_c_xueli"/>学历证书
-									<input type="checkbox" id="p_c_xuewei" name="p_c_xuewei"/>学位证书
-									<input type="checkbox" id="p_c_bank_nub" name="p_c_bank_nub"/>银行卡号
-									<input type="checkbox" id="p_c_tijian_tab" name="p_c_tijian_tab"/>体检表
-									<input type="checkbox" id="p_c_health" name="p_c_health"/>健康证
-									<input type="checkbox" id="p_c_img" name="p_c_img"/>照片
-									<input type="checkbox" id="p_c_welcome" name="p_c_welcome"/>欢迎词
-									<input type="checkbox" id="p_c_staff" name="p_c_staff"/>员工手册回执
-									<input type="checkbox" id="p_c_admin" name="p_c_admin"/>管理者回执
-									<input type="checkbox" id="p_c_shebao" name="p_c_shebao"/>社保同意书
-									<input type="checkbox" id="p_c_shangbao" name="p_c_shangbao"/>商保申请书
-									<input type="checkbox" id="p_c_secrecy" name="p_c_secrecy"/>保密协议
-									<input type="checkbox" id="p_c_prohibida" name="p_c_prohibida"/>禁业限制协议
-									<input type="checkbox" id="p_c_contract" name="p_c_contract"/>劳动合同
-									<input type="checkbox" id="p_c_post" name="p_c_post"/>岗位说明书
-									<input type="checkbox" id="p_c_corruption" name="p_c_corruption"/>反贪腐承诺书
-									<input type="checkbox" id="p_c_probation" name="p_c_probation"/>试用期考核表
+								<td colspan="4" rowspan="3">
+									<table style="padding: 0px;margin: 0px;width: 100%;border-collapse: collapse;">
+										<colgroup>
+											<col width="14%">
+											<col width="14%">
+											<col width="14%">
+											<col width="14%">
+											<col width="14%">
+											<col width="15%">
+											<col width="15%">
+										</colgroup>
+										<tr>
+											<td><input type="checkbox" id="p_c_yingpin_table" name="p_c_yingpin_table"/>应聘申请表</td>
+											<td><input type="checkbox" id="p_c_interview_tab" name="p_c_interview_tab"/>面谈记录表</td>
+											<td><input type="checkbox" id="p_c_id_copies" name="p_c_id_copies"/>身份证复印件</td>
+											<td><input type="checkbox" id="p_c_xueli" name="p_c_xueli"/>学历证书</td>
+											<td><input type="checkbox" id="p_c_xuewei" name="p_c_xuewei"/>学位证书</td>
+											<td><input type="checkbox" id="p_c_bank_nub" name="p_c_bank_nub"/>银行卡号</td>
+											<td><input type="checkbox" id="p_c_tijian_tab" name="p_c_tijian_tab"/>体检表</td>
+										</tr>
+										<tr>
+											<td><input type="checkbox" id="p_c_health" name="p_c_health"/>健康证</td>
+											<td><input type="checkbox" id="p_c_img" name="p_c_img"/>照片</td>
+											<td><input type="checkbox" id="p_c_welcome" name="p_c_welcome"/>欢迎词</td>
+											<td><input type="checkbox" id="p_c_staff" name="p_c_staff"/>员工手册回执</td>
+											<td><input type="checkbox" id="p_c_admin" name="p_c_admin"/>管理者回执</td>
+											<td><input type="checkbox" id="p_c_shebao" name="p_c_shebao"/>社保同意书</td>
+											<td><input type="checkbox" id="p_c_shangbao" name="p_c_shangbao"/>商保申请书</td>
+										</tr>
+										<tr>
+											<td><input type="checkbox" id="p_c_secrecy" name="p_c_secrecy"/>保密协议</td>
+											<td><input type="checkbox" id="p_c_prohibida" name="p_c_prohibida"/>竞业限制协议</td>
+											<td><input type="checkbox" id="p_c_contract" name="p_c_contract"/>劳动合同</td>
+											<td><input type="checkbox" id="p_c_post" name="p_c_post"/>岗位说明书</td>
+											<td><input type="checkbox" id="p_c_corruption" name="p_c_corruption"/>反贪腐承诺书</td>
+											<td><input type="checkbox" id="p_c_probation" name="p_c_probation"/>试用期考核表</td>
+											<td></td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 						</tbody>
@@ -450,3 +517,5 @@
 		</div>
 	</div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/PersonGrid.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/validatebox.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/utrls.js"></script>

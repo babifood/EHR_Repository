@@ -4,8 +4,10 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import com.babifood.entity.DeptEntity;
+import org.springframework.stereotype.Service;
 
+import com.babifood.entity.DeptEntity;
+@Service
 public interface DeptPageService {
 
 	public List<Map<String,Object>> findOrganization(String id);

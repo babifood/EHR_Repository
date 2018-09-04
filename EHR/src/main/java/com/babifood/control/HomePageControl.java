@@ -2,6 +2,7 @@ package com.babifood.control;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,5 +62,36 @@ public class HomePageControl {
 		model.addAttribute("activeUser", activeUser);
 		
 		return "/HomePage";
+	}
+	//
+	//生日提醒
+	@ResponseBody
+	@RequestMapping("/loadBirthday")
+	public Map<String,Object> loadBirthday(){
+		Map<String,Object> map =new HashMap<String,Object>();
+		List<Map<String, Object>> list = homePageService.loadBirthday();
+		map.put("total", list.size());
+		map.put("rows", list);
+		return map;
+	}
+	//转正提醒
+	@ResponseBody
+	@RequestMapping("/loadZhuanZheng")
+	public Map<String,Object> loadZhuanZheng(){
+		Map<String,Object> map =new HashMap<String,Object>();
+		List<Map<String, Object>> list = homePageService.loadZhuanZheng();
+		map.put("total", list.size());
+		map.put("rows", list);
+		return map;
+	}
+	//证件到期提醒
+	@ResponseBody
+	@RequestMapping("/loadCertificateExpire")
+	public Map<String,Object> loadCertificateExpire(){
+		Map<String,Object> map =new HashMap<String,Object>();
+		List<Map<String, Object>> list = homePageService.loadCertificateExpire();
+		map.put("total", list.size());
+		map.put("rows", list);
+		return map;
 	}	
 }

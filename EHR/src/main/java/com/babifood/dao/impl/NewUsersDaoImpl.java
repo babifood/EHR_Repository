@@ -264,4 +264,12 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		sql.append(" where pCode =?");
 		return jdbctemplate.queryForList(sql.toString(),id);
 	}
+	@Override
+	public List<Map<String, Object>> loadComboboxOrgaData() throws DataAccessException{
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("select dept_code,dept_name from ehr_dept");
+		sql.append(" where type in('1','2') ORDER BY DEPT_CODE");
+		return jdbctemplate.queryForList(sql.toString());
+	}
 }

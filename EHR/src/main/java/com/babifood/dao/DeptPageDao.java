@@ -3,8 +3,10 @@ package com.babifood.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.babifood.entity.DeptEntity;
+import org.springframework.stereotype.Repository;
 
+import com.babifood.entity.DeptEntity;
+@Repository
 public interface DeptPageDao {
 	
 	public List<Map<String,Object>> findOrganizeList(String deptCode);

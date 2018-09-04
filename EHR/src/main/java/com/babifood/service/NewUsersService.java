@@ -41,4 +41,6 @@ public interface NewUsersService {
 	public List<RoleAuthorityEntity> loadRoleAuthority(String orle_id);
 
 	public List<Map<String, Object>> loadCombotreeDeptData(String id);
+	
+	public List<Map<String, Object>> loadComboboxOrgaData();
 }

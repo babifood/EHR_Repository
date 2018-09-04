@@ -17,7 +17,7 @@
 </head>
 <body class="easyui-layout">
 	<div data-options="region:'north',split:false,noheader:true" style="height:60px;background-color:#ECF5FF;">
-		<div id="logo"><span>中饮EHR系统</span></div>
+		<div id="logo"><span>企业人力资源系统</span></div>
 		<div id="logoout">您好：${activeUser.show_name}/<a href="#" onclick="logoout()">安全退出</a></div>
 	</div>   
     <div data-options="region:'south',split:false,noheader:true" style="height:30px;line-height: 30px;text-align: center;background-color:#ECF5FF;">
@@ -28,9 +28,21 @@
     </div>   
     <div data-options="region:'center'" style="overflow: hidden;">
 	    <div id="tabs">
-	    	<div title="起始页" style="padding: 0 10px;display: block;">
-			    <div id="center_left" style="float: left;width: 50%;height: 100%;"></div>
-			    <div id="center_right" style="float: right;width: 50%;height: 100%;"></div>
+	    	<div title="起始页" style="display: block;">
+			    <div id="beginPage" class="easyui-layout" data-options="fit:true">   
+				    <div data-options="region:'west',split:true,noheader:true,border:false," style="width:50%;">
+				    	<div id="left_layout" class="easyui-layout" data-options="fit:true">   
+						    <div data-options="region:'north',title:'员工生日提醒',split:true,collapsible:false," style="height:50%;"></div>   
+						    <div data-options="region:'center',title:'员工转正提醒',split:true," style="height:50%;"></div>   
+						</div>  
+				    </div>   
+				    <div data-options="region:'center',split:true,noheader:true,border:false," style="width:50%;">
+				    	<div id="right_layout" class="easyui-layout" data-options="fit:true">   
+						    <div data-options="region:'north',title:'证件到期提醒',split:true,collapsible:false," style="height:50%;"></div>   
+						    <div data-options="region:'center',title:'员工入离职统计',split:true," style="height:50%;"></div>   
+						</div>  
+				    </div>   
+				</div>  
 		    </div>
 	    </div>
     </div>  
