@@ -126,10 +126,10 @@
 	<div style="margin : 5px;width: 300px">
 		请选择搬出时间：<input class="easyui-datebox" id="dormitory_moveout_time" style="width: 200px"/>
 	</div>
-	<div id="dormitory_outtime_buttons" style="text-align: center;">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="selectDormitoryCost(0)" style="width: 90px;">保存</a> 
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_outtime_dialog').dialog('close')" style="width: 90px;">取消</a>
-	</div>
+</div>
+<div id="dormitory_outtime_buttons" style="text-align: center;">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="selectDormitoryCost(0)" style="width: 90px;">保存</a> 
+	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_outtime_dialog').dialog('close')" style="width: 90px;">取消</a>
 </div>
 <div class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" id="dormitory_cost_dialog" closed="true" buttons="#dormitory_cost_dialog_buttons">
 <!-- 	<div style="text-align: center;"> -->

@@ -562,7 +562,7 @@ function searchCheckingEmployeeList(type,value){
 function moveOutDormitoryFormalities(){
 	var rowData = $("#dormitory_list").datagrid("getSelected");
 	if(!rowData || !rowData.pNumber){
-		$.messager.alert("消息提示！","请选择已入组员工","warning");
+		$.messager.alert("消息提示！","请选择已入住员工","warning");
 	} else {
 		$("#dormitory_outtime_dialog").dialog("open");
 		$("#dormitory_moveout_time").datebox('setValue', '');
@@ -573,7 +573,7 @@ function moveOutDormitoryFormalities(){
 function moveOutDormitory(){
 	var rowData = $("#dormitory_list").datagrid("getSelected");
 	if(!rowData || !rowData.pNumber){
-		$.messager.alert("消息提示！","请选择已入组员工","warning");
+		$.messager.alert("消息提示！","请选择已入住员工","warning");
 	} else if (rowData.outTime == null || rowData.outTime == "") {
 		$.messager.alert("消息提示！","请选先办理搬出手续","warning");
 	}else {
