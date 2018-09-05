@@ -1,5 +1,6 @@
 package com.babifood.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,15 @@ public class CertificatenDaoImpl implements CertificatenDao {
 		params[8]=certificaten.getC_desc();
 		jdbctemplate.update(sql_del.toString(),certificaten.getC_id()==null?"":certificaten.getC_id());
 		jdbctemplate.update(sql.toString(), params);
+	}
+
+	@Override
+	public void saveimportExcelCertificaten(List<Object[]> certificatenParam) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("insert into ehr_certificate (c_p_number,c_p_name,c_certificate_name,c_organization,c_certificate_number,c_begin_date,c_end_date,c_desc) ");
+		sql.append(" values(?,?,?,?,?,?,?,?)");
+		jdbctemplate.batchUpdate(sql.toString(),certificatenParam);
 	}
 
 }

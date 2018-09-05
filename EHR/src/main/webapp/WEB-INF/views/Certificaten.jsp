@@ -12,18 +12,28 @@
 		<table id="certificaten_grid"></table>
 		<div id="certificaten_tbar">
 			<div style="margin-bottom: 5px;">
-			<shiro:hasPermission name="certificate:add">
-	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addCertificaten()">添加</a>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="certificate:remove">
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeCertificaten()">删除</a>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="certificate:save">
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="acceptCertificaten()">保存</a>
-			</shiro:hasPermission>
-			<shiro:hasPermission name="certificate:undo">	
-				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="rejectCertificaten()">取消</a>        		
-	        </shiro:hasPermission>
+				<shiro:hasPermission name="certificate:add">
+		        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addCertificaten()">添加</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="certificate:remove">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeCertificaten()">删除</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="certificate:save">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="acceptCertificaten()">保存</a>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="certificate:undo">	
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="rejectCertificaten()">取消</a>        		
+		        </shiro:hasPermission>
+		        	<a href="javascript:void(0)" id="certificaten_btn" class="easyui-menubutton"data-options="menu:'#certificaten_menu',iconCls:'icon-edit'">导入/导出</a>
+					<div id="certificaten_menu" style="width:150px;">
+						<!--<shiro:hasPermission name="performance:import">-->
+						    <div data-options="iconCls:'icon-load'" onclick="exportCertificaten(0)">下载模板</div>   
+						    <div data-options="iconCls:'icon-redo'" onclick="certificatenImport()">导入</div>
+					    <!--</shiro:hasPermission>-->
+					    <!--<shiro:hasPermission name="performance:export">-->
+						    <div data-options="iconCls:'icon-remove'" onclick="exportCertificaten(1)">导出</div>
+					    <!--</shiro:hasPermission>-->  
+					</div> 
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>
@@ -44,7 +54,9 @@
 			</table>
 		</div>
 	</div>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/Certificaten.js"></script>
+	<div id="certificaten_dlg" class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" closed="true" buttons="#certificaten_dialog_buttons"></div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/validatebox.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/Certificaten.js"></script>
 </body>
 </html>

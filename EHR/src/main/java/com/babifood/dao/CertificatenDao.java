@@ -15,5 +15,7 @@ public interface CertificatenDao {
 	Integer removeCertificaten(String c_id);
 
 	void saveCertificaten(Certificaten certificaten);
+
+	void saveimportExcelCertificaten(List<Object[]> certificatenParam);
 	
 }

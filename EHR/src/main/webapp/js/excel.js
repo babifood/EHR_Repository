@@ -73,14 +73,9 @@ $(function() {
 		form.id="uploadExcel_"+id;
 		form.method="post";
 		form.enctype="multipart/form-data";
-//		form.style="margin-top: 5px";
+		form.style="margin-top: 5px";
 		div1.appendChild(form);
-		var button = document.createElement("button");
-		button.className = "easyui-linkbutton";
-		button.id="uploadEventBtn_"+id;
-		button.type="button";
-		form.appendChild(button);
-		button.appendChild(document.createTextNode("选择文件"));
+		
 		var input1 = document.createElement("input");
 		input1.type="file";
 		input1.name="file";
@@ -88,13 +83,22 @@ $(function() {
 		input1.setAttribute("style","width:0px;height:0px;");
 		input1.id="uploadEventFile_"+id;
 		form.appendChild(input1);
+		
 		var input2 = document.createElement("input");
 		input2.id="uploadEventPath_"+id;
 		input2.className="textbox";
 		input2.disabled="disabled";
 		input2.type="text";
 		input2.placeholder="请择excel表";
+		input2.setAttribute("style","width:220px;height:22px;");
 		form.appendChild(input2);
+		
+		var button = document.createElement("button");
+		button.className = "easyui-linkbutton";
+		button.id="uploadEventBtn_"+id;
+		button.type="button";
+		form.appendChild(button);
+		button.appendChild(document.createTextNode("选择文件"));
 		return div1;
 	}
 	

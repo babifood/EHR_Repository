@@ -5,6 +5,8 @@ $(function(){
 	overrideGridEditText();
 	//加载列表
 	loadCertificaten(null,null);
+	//初始化导出导出功能
+	initImportExcel();
 });
 //重写Text
 function overrideGridEditText(){
@@ -388,4 +390,35 @@ function onDblClickRowCertificaten(index){
 			$('#certificaten_grid').datagrid('selectRow', editIndex);
 		}
 	}
+}
+//----------------------------------导入导出方法---------------------------------------/
+function initImportExcel(){
+	$("#certificaten_dlg").importExcel1({
+		url:prefix + "/CertificatenImportExcel",
+		success:function(result){
+			if (result.code == "1") {
+				$.messager.alert('提示!', '导入成功', 'info', function() {
+					$("#certificaten_dlg").dialog('close');
+					$("#certificaten_grid").datagrid("reload");
+				});
+			} else {
+				$.messager.confirm('提示', "导入失败!");
+			}
+		}
+	});
+}
+/**
+ * 导出和下载啊模板
+ * type=0,下载模板
+ * type=1,导出数据
+ */
+function exportCertificaten(type){
+	window.location.href = prefix + "/CertificatenExport?type=" + type;
+}
+/**
+ * 导入弹框选择文件
+ * @returns
+ */
+function certificatenImport(){
+	$("#certificaten_dlg").importExcel1.dialog();
 }

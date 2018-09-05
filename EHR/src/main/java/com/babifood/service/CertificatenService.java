@@ -1,9 +1,11 @@
 package com.babifood.service;
 
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.entity.Certificaten;
 
@@ -15,5 +17,9 @@ public interface CertificatenService {
 	Integer removeCertificaten(String c_id);
 
 	Integer saveCertificaten(Certificaten certificaten);
+
+	Map<String, Object> importExcel(MultipartFile file, String type);
+
+	Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type);
 
 }
