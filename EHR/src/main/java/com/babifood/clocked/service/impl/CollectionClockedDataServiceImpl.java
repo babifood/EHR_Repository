@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +26,15 @@ import com.babifood.clocked.rule.OfficeCalcRule;
 import com.babifood.clocked.rule.OfficeDaKaRule;
 import com.babifood.clocked.service.CollectionClockedDataService;
 import com.babifood.clocked.service.LoadClockedResultService;
+import com.babifood.constant.ModuleConstant;
+import com.babifood.constant.OperationConstant;
+import com.babifood.entity.LoginEntity;
+import com.babifood.service.impl.HomePageServiceImpl;
+import com.cn.babifood.operation.LogManager;
+import com.cn.babifood.operation.annotation.LogMethod;
 @Service
 public class CollectionClockedDataServiceImpl implements CollectionClockedDataService {
+	public static final Logger log = Logger.getLogger(CollectionClockedDataServiceImpl.class);
 	private int year = 0;
 	private int month = 0;
 	private List<OfficeDaKaRecord> officeDaKaList;
@@ -43,12 +52,31 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 	@Autowired
 	ClockedResultBaseDao clockedResultBaseDao;
 	@Override
-	public void loadData() throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public void loadData(){
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_COLLECTION);
 		// TODO Auto-generated method stub
 		//1读取行政考勤打卡记录
-		officeDaKaList = officeDaKaDao.loadOfficeDaKaData(year, month);
+		try {
+			officeDaKaList = officeDaKaDao.loadOfficeDaKaData(year, month);
+			LogManager.putContectOfLogInfo("loadData方法读取行政考勤打卡记录");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadData():"+e.getMessage());
+		}
 		//2读取移动考勤打卡记录
-		List<MobileDaKaLog> mobileDaKaLog = moveDaKaDao.loadMobileDaKaDate(year, month);
+		List<MobileDaKaLog> mobileDaKaLog = null;
+		try {
+			mobileDaKaLog = moveDaKaDao.loadMobileDaKaDate(year, month);
+			LogManager.putContectOfLogInfo("loadData方法读取移动考勤打卡记录");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadData():"+e.getMessage());
+		}
 		int size = mobileDaKaLog == null ? 0 : mobileDaKaLog.size();
 		MoveDaKaRecord moveDaKaRecord = null;
 		MobileDaKaLog tmpLog = null;
@@ -67,8 +95,23 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 			}
 		}
 		//3读取考勤事件业务信息
-		clockedResultList = loadClockedResultService.loadClockedResultDataList(year, month);
-		List<ClockedBizData> clockedBizDataList = coleckEventResultDao.loadColeckEventResultData(year, month);
+		try {
+			clockedResultList = loadClockedResultService.loadClockedResultDataList(year, month);
+			LogManager.putContectOfLogInfo("loadData读取考勤事件业务信息");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadData():"+e.getMessage());
+		}
+		List<ClockedBizData> clockedBizDataList = null;
+		try {
+			clockedBizDataList = coleckEventResultDao.loadColeckEventResultData(year, month);
+			LogManager.putContectOfLogInfo("loadData读取考勤事件业务信息");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadData():"+e.getMessage());
+		}
 		clockedBizDataMap = new HashMap<String, List<ClockedBizData>>(300);
 
 		if (clockedBizDataList != null && clockedBizDataList.isEmpty() == false) {
@@ -92,7 +135,8 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 	}
 
 	@Override
-	public void attachWithDaKa() throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public void attachWithDaKa(){
 		// TODO Auto-generated method stub
 		//1根据打卡记录计算相关数据
 		ClockedResultBases tmpClockedResult = null;
@@ -103,15 +147,30 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 			//0行政考勤,1移动考勤,2不考勤
 			daKaType = tmpClockedResult.getCheckingType() == null ? "" : tmpClockedResult.getCheckingType();
 			if (daKaType.equals("1")) {
-				MobileDaKaRule.attachWithDaKa(tmpClockedResult, mobileDaKaMap);
+				try {
+					MobileDaKaRule.attachWithDaKa(tmpClockedResult, mobileDaKaMap);
+					LogManager.putContectOfLogInfo("根据打卡记录计算移动考勤的数据");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("attachWithDaKa()移动考勤:"+e.getMessage());
+				}
 			} else if(daKaType.equals("0")){
-				OfficeDaKaRule.attachWithDaKa(tmpClockedResult, officeDaKaList);
+				try {
+					OfficeDaKaRule.attachWithDaKa(tmpClockedResult, officeDaKaList);
+					LogManager.putContectOfLogInfo("根据打卡记录计算行政的数据");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("attachWithDaKa()行政考勤:"+e.getMessage());
+				}
 			}
 		}
 	}
 
 	@Override
-	public void attachWithBizData() throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public void attachWithBizData(){
 		// TODO Auto-generated method stub
 		//1根据考勤业务计算相关数据
 		ClockedResultBases tmpClockedResult = null;
@@ -127,11 +186,25 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 			if (daKaType.equals("1")) {
 				mobileCalcRule =  new MobileCalcRule();
 				// 按规则进行计算
-				mobileCalcRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
+				try {
+					mobileCalcRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
+					LogManager.putContectOfLogInfo("计算移动考勤业务数据");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("attachWithBizData移动考勤业务:"+e.getMessage());
+				}
 			} else if(daKaType.equals("0")){
 				officeCalcRule = new OfficeCalcRule();
 				// 按规则进行计算
-				officeCalcRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
+				try {
+					officeCalcRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
+					LogManager.putContectOfLogInfo("计算行政考勤业务数据");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("attachWithBizData行政业务:"+e.getMessage());
+				}
 
 			}
 
@@ -139,10 +212,20 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 	}
 
 	@Override
-	public int[] saveDate() throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public int[] saveDate(){
 		// TODO Auto-generated method stub
 		//1保存数据
-		return clockedResultBaseDao.updateClockedResultBase(clockedResultList);
+		int [] rows = null;
+		try {
+			rows =  clockedResultBaseDao.updateClockedResultBase(clockedResultList);
+			LogManager.putContectOfLogInfo("保存数据");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("保存数据:"+e.getMessage());
+		}
+		return rows;
 	}
 
 	@Override
@@ -152,7 +235,7 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 	}
 
 	@Override
-	public int[] execute(int year,int month) throws Exception {
+	public int[] execute(int year,int month){
 		// TODO Auto-generated method stub
 		int [] rows=null;
 		this.year = year;

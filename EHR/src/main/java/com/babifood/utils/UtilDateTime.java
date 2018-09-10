@@ -405,7 +405,6 @@ public final class UtilDateTime {
 	
 	//获取系统当前日期的前一天
 	public static Date getSystemFrontDate(){
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
         Date date=new Date();  
         Calendar calendar = Calendar.getInstance();  
         calendar.setTime(date);  
@@ -413,17 +412,58 @@ public final class UtilDateTime {
         date = calendar.getTime();  
         return date;
 	}
+	//获取系统当前日期的前一天
+	public static Date getSystemFrontDate(int day){
+        Date date=new Date();  
+        Calendar calendar = Calendar.getInstance();  
+        calendar.setTime(date);  
+        calendar.add(Calendar.DAY_OF_MONTH, day);  
+        date = calendar.getTime();  
+        return date;
+	}	
+	/**
+     * 
+     * @param date1 <String>
+     * @param date2 <String>
+     * @return int
+     * @throws ParseException
+     */
+    public static int getDaySpace(String begin, String end)
+            throws ParseException {
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	long nd = 1000 * 24 * 60 * 60;
+	
+		// long ns = 1000;
+		// 获得两个时间的毫秒时间差异
+		long diff = sdf.parse(end).getTime() - sdf.parse(begin).getTime();
+		// 计算差多少天
+		long day = diff / nd;
+		
+		return (int)day;
 
+    }
 	public static void main(String args[]) {
 //		System.out.println(isWorkDay("2018-06-25", "yyyy-MM-dd"));
 //		System.out.println(getWeekDay("2018-06-25"));
-		System.out.println(getCurrentMonth());
-		System.out.println(getCurrentYear());
-		System.out.println(getPreMonth());
-		System.out.println(getYearOfPreMonth());
+//		System.out.println(getCurrentMonth());
+//		System.out.println(getCurrentYear());
+//		System.out.println(getPreMonth());
+//		System.out.println(getYearOfPreMonth());
 //		System.out.println(getDaysOfCurrentMonth(2018, Integer.valueOf("02")));
 //		System.out.println(getHours("09:00", "16:20"));
 //		System.out.println(getDayEndByMonth(java.sql.Date.valueOf("2015-01-01"),7));
+//		System.out.println(getSystemFrontDate(15));
+//		int month = 0;
+//		try {
+//			month = getDaySpace("2018-10-01","2018-12-30");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(month);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy");//设置日期格式
+		String beginDate = df.format(new Date());
+		System.out.println(beginDate);
 	}
 
 }

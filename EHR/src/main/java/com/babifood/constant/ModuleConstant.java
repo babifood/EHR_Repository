@@ -22,5 +22,6 @@ public class ModuleConstant {
 	public static final String CLOCK = "奖惩";
 	public static final String CALCULATIONSALARY = "奖惩";
 	public static final String SALARYDETAIL = "薪资明细";
+	public static final String CLOCKED = "考勤";
 	
 }

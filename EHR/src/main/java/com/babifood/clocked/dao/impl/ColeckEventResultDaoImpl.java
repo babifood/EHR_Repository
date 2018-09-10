@@ -35,12 +35,7 @@ public class ColeckEventResultDaoImpl implements ColeckEventResultDao {
 		params[0]=year;
 		params[1]=month;
 		List<Map<String,Object>> list=null;
-		try {
-			list = jdbctemplate.queryForList(sql.toString(), params);
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("读取OA数据失败："+e.getMessage());
-		}
+		list = jdbctemplate.queryForList(sql.toString(), params);
 		if(list.size()>0){
 			clockedBizList = new ArrayList<ClockedBizData>();
 			for (Map<String, Object> map : list) {

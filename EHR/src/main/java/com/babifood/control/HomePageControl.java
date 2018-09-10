@@ -2,6 +2,7 @@ package com.babifood.control;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,5 +94,24 @@ public class HomePageControl {
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;
-	}	
+	}
+	//员工入离职报表统计
+	@ResponseBody
+	@RequestMapping("/loadWorkInOutFormsData")
+	public List<Map<String, Object>> loadWorkInOutForms(){
+		//模拟数据
+//		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+//		for(int i=1;i<=12;i++){
+//			Map<String, Object> map = new HashMap<String, Object>();
+//			map.put("work_month", i+"月");
+//			map.put("inWork", i+5);
+//			map.put("outWork", i+3);
+//			list.add(map);
+//		}
+//		return list;
+		//真实数据
+		List<Map<String, Object>> list = null;
+		list = homePageService.loadWorkInOutForms();
+		return list;
+	}		
 }

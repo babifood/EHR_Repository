@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,15 @@ import com.babifood.clocked.entrty.Person;
 import com.babifood.clocked.rule.ClockedYesNoRule;
 import com.babifood.clocked.service.ClockedService;
 import com.babifood.clocked.util.ClockedUtil;
+import com.babifood.constant.ModuleConstant;
+import com.babifood.constant.OperationConstant;
+import com.babifood.entity.LoginEntity;
 import com.babifood.utils.UtilDateTime;
+import com.cn.babifood.operation.LogManager;
+import com.cn.babifood.operation.annotation.LogMethod;
 @Service
 public class ClockedServiceImpl implements ClockedService {
+	public static final Logger log = Logger.getLogger(ClockedServiceImpl.class);
 	@Autowired
 	PersonDao personDao;
 	@Autowired
@@ -27,28 +35,11 @@ public class ClockedServiceImpl implements ClockedService {
 	@Autowired
 	ClockedYesNoRule clockedYesNoRule;
 	@Override
-	public int[] init(int year,int month) throws Exception {
-		//初始化系统当前日期的上一天
-//		List<ClockedResultBases> dataList  = new ArrayList<ClockedResultBases>();
-//		Calendar tempCal = Calendar.getInstance();
-//		int year = tempCal.get(Calendar.YEAR);
-//		int month = tempCal.get(Calendar.MONTH)+1;
-//		// TODO Auto-generated method stub
-//		//获取当前系统时间的前一天
-//		Date systemFrontDate =  UtilDateTime.getSystemFrontDate();
-//		//根据员工档案获取考勤人员信息
-//		List<Person> personList = personDao.loadPeraonClockedInfo();
-//		int persronSize = personList == null ? 0 : personList.size();
-//		if (persronSize > 0) {
-//			clockedYesNoRule.init(year, month);
-//		}
-//		Person tmpPerson = null;
-//		for (int k = 0; k < persronSize; k++) {
-//			tmpPerson = personList.get(k);
-//			dataList.add(ClockedUtil.markClockedYesNo(tmpPerson,systemFrontDate,clockedYesNoRule));
-//		}
-//		//保存数据
-//		clockedResult.saveClockedResultBase(dataList);
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public int[] init(int year,int month){
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATING_TYPE_INITIALIZE);
 		//初始化当前系统日期的整月信息
 		List<ClockedResultBases> dataList  = null; 
 		Calendar tempCal = Calendar.getInstance();
@@ -68,35 +59,25 @@ public class ClockedServiceImpl implements ClockedService {
 		for(int day = 1; day <= daySize; day++){
 			for (int k = 0; k < persronSize; k++) {
 				tmpPerson = personList.get(k);
-				dataList.add(ClockedUtil.markClockedYesNo(tmpPerson,ClockedUtil.getDate(sysYear, sysMonth, day),clockedYesNoRule));
+				try {
+					dataList.add(ClockedUtil.markClockedYesNo(tmpPerson,ClockedUtil.getDate(sysYear, sysMonth, day),clockedYesNoRule));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("init():"+e.getMessage());
+				}
 			}
 		}
 		
 		//保存数据
-		return clockedResult.saveClockedResultBase(dataList,sysYear,sysMonth);
-		
+		int [] rows =null;
+		try {
+			rows = clockedResult.saveClockedResultBase(dataList,sysYear,sysMonth);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("init():"+e.getMessage());
+		}
+		return rows;
 	}
-
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		//1加载数据
-		//2根据打卡记录计算相关数据
-		//3根据考勤业务计算相关数据
-		//4保存数据
-		//5推送OA考勤结果
-	}
-
-	@Override
-	public void destory() {
-		// TODO Auto-generated method stub
-
-	}
-//	public static void main(String[] args) {
-//		Calendar tempCal = Calendar.getInstance();
-//		int year = tempCal.get(Calendar.YEAR);
-//		int month = tempCal.get(Calendar.MONTH)+1;
-//		System.out.println(year);
-//		System.out.println(month);
-//	}
 }

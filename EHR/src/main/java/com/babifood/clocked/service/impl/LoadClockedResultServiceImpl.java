@@ -1,5 +1,6 @@
 package com.babifood.clocked.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,25 +18,56 @@ import com.babifood.clocked.dao.ClockedResultBaseDao;
 import com.babifood.clocked.entrty.ClockedResultBases;
 import com.babifood.clocked.service.ClockedService;
 import com.babifood.clocked.service.LoadClockedResultService;
+import com.babifood.constant.ModuleConstant;
+import com.babifood.constant.OperationConstant;
+import com.babifood.entity.LoginEntity;
 import com.babifood.utils.UtilDateTime;
+import com.cn.babifood.operation.LogManager;
+import com.cn.babifood.operation.annotation.LogMethod;
 @Service
 public class LoadClockedResultServiceImpl implements LoadClockedResultService {
+	public static final Logger log = Logger.getLogger(LoadClockedResultServiceImpl.class);
 	@Autowired
 	ClockedResultBaseDao clockedResultBaseDao;
 	@Autowired
 	ClockedService clockedServiceImpl;
 	@Override
-	public List<Map<String, Object>> loadClockedResultData(int year,int month,String workNum,String periodEndDate) throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public List<Map<String, Object>> loadClockedResultData(int year,int month,String workNum,String periodEndDate){
 		// TODO Auto-generated method stub
-		return clockedResultBaseDao.loadClockedResultData(year,month,workNum,periodEndDate);
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+		List<Map<String, Object>> list =null;
+		try {
+			clockedResultBaseDao.loadClockedResultData(year,month,workNum,periodEndDate);
+			LogManager.putContectOfLogInfo("考勤明细查询");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadClockedResultData:"+e.getMessage());
+		}
+		return list;
 	}
 	@Override
-	public List<ClockedResultBases> loadClockedResultDataList(int year, int month) throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public List<ClockedResultBases> loadClockedResultDataList(int year, int month){
 		// TODO Auto-generated method stub
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat dftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<ClockedResultBases> clockedResultList = null;
-		List<Map<String, Object>> list = clockedResultBaseDao.loadClockedResultDataList(year,month);
+		List<Map<String, Object>> list = null;
+		try {
+			list = clockedResultBaseDao.loadClockedResultDataList(year,month);
+			LogManager.putContectOfLogInfo("查询考勤业务表信息");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadClockedResultDataList:"+e.getMessage());
+		}
 		if(list.size()>0){
 			clockedResultList = new ArrayList<ClockedResultBases>();
 			for (Map<String, Object> map : list) {
@@ -56,37 +90,18 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 				c.setPost(map.get("Post")==null?"":map.get("Post").toString());
 				c.setCheckingType(map.get("CheckingType")==null?"":map.get("CheckingType").toString());
 				c.setPaiBanType(map.get("PaiBanType")==null?"":map.get("PaiBanType").toString());
-				c.setCheckingDate(map.get("checkingDate")==null?null:df.parse(map.get("checkingDate").toString()));
+				try {
+					c.setCheckingDate(map.get("checkingDate")==null?null:df.parse(map.get("checkingDate").toString()));
+					LogManager.putContectOfLogInfo("日期类型转换错误");
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("日期类型转换错误:"+e.getMessage());
+				}
 				c.setWeek(map.get("Week")==null?"":map.get("Week").toString());
 				c.setBeginTime(map.get("beginTime")==null?"":map.get("beginTime").toString());
 				c.setEndTime(map.get("endTime")==null?"":map.get("endTime").toString());
 				c.setStandWorkLength(map.get("standardWorkLength")==null?0d:Double.parseDouble(map.get("standardWorkLength").toString()));
-				
-//				c.setCheckingBeginTime(map.get("checkingBeginTime")==null?null:dftime.parse(map.get("checkingBeginTime").toString()));
-//				c.setCheckingEndTime(map.get("checkingEndTime")==null?null:dftime.parse(map.get("checkingEndTime").toString()));
-//				c.setOriginalCheckingLength(map.get("originalCheckingLength")==null?0d:Double.parseDouble(map.get("originalCheckingLength").toString()));
-//				c.setActualWorkLength(map.get("actualWorkLength")==null?0d:Double.parseDouble(map.get("actualWorkLength").toString()));
-//				c.setChiDao(map.get("chiDao")==null?0:Integer.parseInt(map.get("chiDao").toString()));
-//				c.setZaoTui(map.get("zaoTui")==null?0:Integer.parseInt(map.get("zaoTui").toString()));
-//				c.setKuangGong(map.get("kuangGong")==null?0d:Double.parseDouble(map.get("kuangGong").toString()));
-//				c.setNianJia(map.get("nianJia")==null?0d:Double.parseDouble(map.get("nianJia").toString()));
-//				c.setTiaoXiu(map.get("tiaoXiu")==null?0d:Double.parseDouble(map.get("tiaoXiu").toString()));
-//				c.setShiJia(map.get("shiJia")==null?0d:Double.parseDouble(map.get("shiJia").toString()));
-//				c.setBingJia(map.get("bingJia")==null?0d:Double.parseDouble(map.get("bingJia").toString()));
-//				c.setPeiXunJia(map.get("peixunJia")==null?0d:Double.parseDouble(map.get("peixunJia").toString()));
-//				c.setHunJia(map.get("hunJia")==null?0d:Double.parseDouble(map.get("hunJia").toString()));
-//				c.setChanJia(map.get("chanJia")==null?0d:Double.parseDouble(map.get("chanJia").toString()));
-//				c.setPeiChanJia(map.get("PeiChanJia")==null?0d:Double.parseDouble(map.get("PeiChanJia").toString()));
-//				c.setSangJia(map.get("SangJia")==null?0d:Double.parseDouble(map.get("SangJia").toString()));
-//				c.setOtherQingJia(map.get("Qita")==null?0d:Double.parseDouble(map.get("Qita").toString()));
-//				c.setQueQin(map.get("Queqin")==null?0d:Double.parseDouble(map.get("Queqin").toString()));
-//				c.setQingJia(map.get("Qingjia")==null?0d:Double.parseDouble(map.get("Qingjia").toString()));
-//				c.setYiDong(map.get("Yidong")==null?0d:Double.parseDouble(map.get("Yidong").toString()));
-//				c.setJiaBan(map.get("Jiaban")==null?0d:Double.parseDouble(map.get("Jiaban").toString()));
-//				c.setChuCha(map.get("Chuchai")==null?0d:Double.parseDouble(map.get("Chuchai").toString()));
-//				c.setCanBu(map.get("Canbu")==null?0:Integer.parseInt(map.get("Canbu").toString()));
-//				c.setEventBeginTime(map.get("EventBeginTime")==null?null:dftime.parse(map.get("EventBeginTime").toString()));
-//				c.setEventEndTime(map.get("EventEndTime")==null?null:dftime.parse(map.get("EventEndTime").toString()));
 				
 				c.setCheckingBeginTime(null);
 				c.setCheckingEndTime(null);
@@ -121,7 +136,11 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 		return clockedResultList;
 	}
 	@Override
-	public List<Map<String, Object>> loadSumClockedResultData(String workNum, String userName) throws Exception {
+	@LogMethod(module = ModuleConstant.CLOCKED)
+	public List<Map<String, Object>> loadSumClockedResultData(String workNum, String userName){
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		// TODO Auto-generated method stub
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String periodEndDate = "";
@@ -129,7 +148,15 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 		Calendar tempCal = Calendar.getInstance();
 		int sysYear = tempCal.get(Calendar.YEAR);
 		int sysMonth = tempCal.get(Calendar.MONTH)+1;	
-		List<Map<String, Object>> sumList = clockedResultBaseDao.loadSumClockedResultData(workNum, userName);
+		List<Map<String, Object>> sumList =null;
+		try {
+			sumList = clockedResultBaseDao.loadSumClockedResultData(workNum, userName);
+			LogManager.putContectOfLogInfo("查询考勤汇总信息");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadSumClockedResultData:"+e.getMessage());
+		}
 		for(int i=0;i<sumList.size();i++){
 			Map<String, Object> newMap = sumList.get(i);
 			int year = Integer.parseInt(newMap.get("Year").toString());

@@ -14,5 +14,7 @@ public interface HomePageService {
 	public List<Map<String, Object>> loadZhuanZheng();
 
 	public List<Map<String, Object>> loadCertificateExpire();
+
+	public List<Map<String, Object>> loadWorkInOutForms();
 	
 }

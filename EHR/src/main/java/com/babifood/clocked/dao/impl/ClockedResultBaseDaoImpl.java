@@ -71,13 +71,10 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		params[0]=year;
 		params[1]=month;
 		int[] rwso = null;
-		try {
-			jdbctemplate.update(sql_delete.toString(), params);
-			rwso = jdbctemplate.batchUpdate(strSql,paramsList);
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("插入数据失败："+e.getMessage());
-		}
+		
+		jdbctemplate.update(sql_delete.toString(), params);
+		rwso = jdbctemplate.batchUpdate(strSql,paramsList);
+		
 		return rwso;
 	}
 	@Override
@@ -105,14 +102,8 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		params[1]=month;
 		params[2]=workNum;
 		params[3]=periodEndDate;
-		List<Map<String, Object>> list =null;
-		try {
-			list = jdbctemplate.queryForList(sql.toString(), params);
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询数据出错："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString(), params);
+		
 	}
 	@Override
 	public List<Map<String, Object>> loadClockedResultDataList(int year,int month) throws Exception {
@@ -137,14 +128,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		Object[] params=new Object[2];
 		params[0]=year;
 		params[1]=month;
-		List<Map<String, Object>> list =null;
-		try {
-			list = jdbctemplate.queryForList(sql.toString(), params);
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询数据出错："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString(), params);
 	}
 	@Override
 	public int[] updateClockedResultBase(List<ClockedResultBases> saveDataList) throws Exception {
@@ -181,14 +165,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 					saveDataList.get(i).getCheckingDate()
 					});
 		}
-		int[] rows = null;
-		try {
-			rows = jdbctemplate.batchUpdate(strSql, paramsList);
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("更新数据失败："+e.getMessage());
-		}
-		return rows;
+		return jdbctemplate.batchUpdate(strSql, paramsList);
 	}
 	/**
 	 * 查询考勤结果汇总数据
@@ -219,14 +196,6 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append(" GROUP BY Year,Month,WorkNum,UserName,CompanyCode,Company,OrganCode,Organ,");
 		sql.append("DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,PostCode,Post,CheckingType,PaiBanType");
 		sql.append(" ORDER BY Year,Month desc");
-	
-		List<Map<String, Object>> list = null;
-		try {
-			list = jdbctemplate.queryForList(sql.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-			log.error("查询数据失败："+e.getMessage());
-		}
-		return list;
+		return jdbctemplate.queryForList(sql.toString());
 	}
 }
