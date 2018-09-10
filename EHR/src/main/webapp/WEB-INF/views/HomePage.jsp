@@ -19,7 +19,7 @@
 <body class="easyui-layout">
 	<div data-options="region:'north',split:false,noheader:true" style="height:60px;background-color:#ECF5FF;">
 		<div id="logo"><span>企业人力资源系统</span></div>
-		<div id="logoout">您好：${activeUser.show_name}/<a href="#" onclick="logoout()">安全退出</a></div>
+		<div id="logoout">您好：${activeUser.show_name}/<a href="javascript:void(0)" onclick="logoout()">安全退出</a></div>
 	</div>   
     <div data-options="region:'south',split:false,noheader:true" style="height:32px;line-height: 30px;text-align: center;background-color:#ECF5FF;">
     	版权所有 &copy 2018 中饮食品科技股份有限公司
