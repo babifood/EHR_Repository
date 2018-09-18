@@ -98,6 +98,8 @@ public class PersonBasrcEntity {
 	private String p_use_work_form;//用工形式
 	private String p_contract_count;//劳动合同签订次数
 	
+	private String p_oa_and_ehr;//区分那个系统创建的员工号段
+	
 	private List<PersonEducationEntity> education;//教育背景
 	private List<PersonCultivateFront> cultivateFront;//培训经历_入职前
 	private List<PersonCultivateLater> cultivateLater;//培训经历_入职后
@@ -718,6 +720,14 @@ public class PersonBasrcEntity {
 
 	public void setP_contract_count(String p_contract_count) {
 		this.p_contract_count = p_contract_count;
+	}
+
+	public String getP_oa_and_ehr() {
+		return p_oa_and_ehr;
+	}
+
+	public void setP_oa_and_ehr(String p_oa_and_ehr) {
+		this.p_oa_and_ehr = p_oa_and_ehr;
 	}
 	
 	

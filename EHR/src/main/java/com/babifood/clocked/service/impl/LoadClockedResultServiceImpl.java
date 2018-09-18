@@ -40,7 +40,7 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		List<Map<String, Object>> list =null;
 		try {
-			clockedResultBaseDao.loadClockedResultData(year,month,workNum,periodEndDate);
+			list = clockedResultBaseDao.loadClockedResultData(year,month,workNum,periodEndDate);
 			LogManager.putContectOfLogInfo("考勤明细查询");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

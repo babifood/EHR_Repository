@@ -32,7 +32,7 @@ public class PersonDaoImpl implements PersonDao {
 		sql.append("p_section_office as office,p_group_id as groupCode,p_group as groupName,p_post_id as postCode, ");
 		sql.append("p_post as post,p_checking_in as daKaType,p_in_date as inDate,p_turn_date as turnDate, ");
 		sql.append("p_out_date as outDate");
-		sql.append(" from ehr_person_basic_info where p_in_date<=?");
+		sql.append(" from ehr_person_basic_info where p_in_date<=? and p_oa_and_ehr = 'OA'");
 		Object[] params=new Object[1];
 		params[0]=sdfWhere.format(UtilDateTime.getMonthEndSqlDate(year,month));
 		try {
@@ -40,7 +40,7 @@ public class PersonDaoImpl implements PersonDao {
 			if(list.size()>0){
 				personList = new ArrayList<Person>();
 				for (Map<String, Object> map : list) {
-					if(!"YX".equals(map.get("workNum").toString().substring(0, 2))){
+//					if(!"YX".equals(map.get("workNum").toString().substring(0, 2))){
 						if(map.get("outDate")!=null&&!map.get("outDate").equals("")){
 							Date outDate = sdfWhere.parse(map.get("outDate").toString());
 							Date sysStartDate = UtilDateTime.getMonthStartSqlDate(year,month);
@@ -69,8 +69,8 @@ public class PersonDaoImpl implements PersonDao {
 						temp.setTurnDate(map.get("turnDate")==null?"":map.get("turnDate").toString());
 						temp.setOutDate(map.get("outDate")==null?"":map.get("outDate").toString());
 						personList.add(temp);
-					}
-					continue;
+//					}
+//					continue;
 				}
 			}
 		} catch (Exception e) {

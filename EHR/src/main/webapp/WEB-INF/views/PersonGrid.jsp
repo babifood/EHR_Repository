@@ -48,6 +48,7 @@
 							<tr class="text_tr">
 								<td>工号:</td>
 								<td>
+									<input type="hidden" id="p_oa_and_ehr" name="p_oa_and_ehr"/>
 									<input type="hidden" id="p_id" name="p_id"/>
 									<input type="text" id="p_number" name="p_number" class="textbox"/>
 								</td>

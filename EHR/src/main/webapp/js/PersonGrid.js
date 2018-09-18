@@ -129,6 +129,7 @@ function loadOaWorkNumInFo(){
 			console.log(rowData);
 			$("#p_number").val(rowData.CODE);//编号
 			$("#p_name").val(rowData.NAME);//名称
+			$("#p_oa_and_ehr").val("OA");//区分那个系统创建的员工号段
 			$('#dlg').dialog('close');
 			checkForm(true);
 		}
@@ -139,6 +140,7 @@ function ehrAotuWorkNum(){
 	$.get(prefix+"/getEhrWorkNum",function(data,status){
 		$("#p_number").val(data);//编号
 		$("#p_name").val("");//名称
+		$("#p_oa_and_ehr").val("EHR");//区分那个系统创建的员工号段
 		checkForm(true);
 	});
 }
@@ -526,8 +528,8 @@ function editPersonInFo(){
 				}
 			}			
 		  });
-		$("#p_number").attr("disabled","disabled");
-		$("#p_name").attr("disabled","disabled");
+//		$("#p_number").attr("disabled","disabled");
+//		$("#p_name").attr("disabled","disabled");
 		$("#oaSync").linkbutton('disable');
 		$("#ehrAot").linkbutton('disable');
 	}else{
@@ -600,6 +602,9 @@ function editFromSetValues(data){
 	
 	$("#p_use_work_form").combobox('setValue',data.p_use_work_form),//用工形式
 	$("#p_contract_count").spinner('setValue',data.p_contract_count),//合同签订次数
+	
+	$("#p_oa_and_ehr").val(data.p_oa_and_ehr);//区分OA或者EHR创建的员工号段
+	
 	
 	setFromCheckbox("p_c_yingpin_table",data.p_c_yingpin_table);//应聘申请表
 	setFromCheckbox("p_c_interview_tab",data.p_c_interview_tab);//面谈记录表
@@ -905,6 +910,8 @@ function setData(){
 			p_use_work_form:$("#p_use_work_form").val(),//用工形式
 			p_contract_count:$("#p_contract_count").val(),//合同签订次数
 			
+			p_oa_and_ehr:$("#p_oa_and_ehr").val(),//区分OA或者EHR创建的员工号段
+			
 			p_c_yingpin_table:getCheckBoxValue("p_c_yingpin_table"),//应聘申请表
 			p_c_interview_tab:getCheckBoxValue("p_c_interview_tab"),//面谈记录表
 			p_c_id_copies:getCheckBoxValue("p_c_id_copies"),//身份证复印件
@@ -925,6 +932,7 @@ function setData(){
 			p_c_post:getCheckBoxValue("p_c_post"),//岗位说明书
 			p_c_corruption:getCheckBoxValue("p_c_corruption"),//反贪腐承诺书
 			p_c_probation:getCheckBoxValue("p_c_probation"),//试用期考核表
+			
 			//列表信息
 			education:getEducationGridToArr(),//教育背景
 			cultivateFront:getCultivateFrontGridToArr(),//培训经历_入职前

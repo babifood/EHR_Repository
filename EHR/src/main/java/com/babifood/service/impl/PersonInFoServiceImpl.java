@@ -339,8 +339,8 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_ADD);
-	   	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
-	   	String newWorkNum = "YX"+random;
+//	   	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
+	   	String newWorkNum = "200000";
 	   	List<Map<String, Object>> list = null;
 		try {
 			list = personInFoDao.loadEHRWorkNumInFo();
@@ -349,14 +349,19 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 			LogManager.putContectOfLogInfo(e.getMessage());
 			log.error("getRandomYxWorkNum:"+e.getMessage());
 		}
-	   	int size = list==null?0:list.size();
-	   	for(int i=0;i<size;i++){
-	   		if(newWorkNum.equals(list.get(i).get("p_number").toString())){
-	   			i=0;
-	   			random=random+1;
-	   			newWorkNum = "YX"+random;
-	   		}
-	   	}
+		if(list.size()>0&&list.get(0).get("p_number")!=null){
+			Integer maxNum = Integer.parseInt(list.get(0).get("p_number").toString());
+			Integer newNum = maxNum+1;
+			newWorkNum = newNum.toString();
+		}
+//	   	int size = list==null?0:list.size();
+//	   	for(int i=0;i<size;i++){
+//	   		if(newWorkNum.equals(list.get(i).get("p_number").toString())){
+//	   			i=0;
+//	   			random=random+1;
+//	   			newWorkNum = "YX"+random;
+//	   		}
+//	   	}
 		return newWorkNum;
 	}
 	
