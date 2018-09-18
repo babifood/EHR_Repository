@@ -227,6 +227,30 @@ public class HolidayServiceImpl implements HolidayService {
 		}
 		return resultMap;
 	}
+
+	@Override
+	public Map<String, Object> syncHoliday() {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			LogManager.putUserIdOfLogInfo(login.getUser_id());
+			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_IMPORT);
+			String year = UtilDateTime.getCurrentYear();
+			List<Map<String, Object>> holidays = holidayDao.findOAHolidays(year);
+			if(holidays != null && holidays.size() > 0){
+				holidayDao.saveBacthHolidays(holidays);
+			}
+			resultMap.put("code", "1");
+			resultMap.put("msg", "同步节假日数据成功");
+			LogManager.putContectOfLogInfo("同步节假日数据");
+		} catch (Exception e) {
+			resultMap.put("code", "0");
+			resultMap.put("msg", "同步节假日数据异常");
+			logger.error("同步节假日数据失败", e);
+			LogManager.putContectOfLogInfo("同步节假日数据失败,错误信息：" + e.getMessage());
+		}
+		return resultMap;
+	}
 	
 
 }

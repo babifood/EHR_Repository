@@ -95,7 +95,7 @@ function loadTissueArchitectureTree(datasource){
 		$('#chart-container').html("");
 		$('#chart-container').orgchart({
 	      'data' : datasource,
-	      'nodeContent': 'deptCode',
+//	      'nodeContent': 'deptCode',
 	      'nodeTitle': 'deptName',
 	      'draggable': true,
 	      'dropCriteria': function($draggedNode, $dragZone, $dropZone) {

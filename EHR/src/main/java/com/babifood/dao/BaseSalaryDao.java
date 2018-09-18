@@ -19,4 +19,6 @@ public interface BaseSalaryDao {
 
 	public void deleteBaseSalaryById(Integer id);
 
+	public List<Map<String, Object>> getBaseSalaryRecord(String pNumber);
+
 }

@@ -15,5 +15,7 @@ public interface HolidayService {
 	public Map<String, Object> findHolidayListByDate(String year,String month);
 
 	public Map<String, Object> findHolidayEntityById(Integer id);
+
+	public Map<String, Object> syncHoliday();
 	
 }

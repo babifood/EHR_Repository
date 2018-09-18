@@ -522,117 +522,6 @@ function holidayDrawCld(SY, SM) {
 }
 
 
-function addHoliday(){
-	$("#holiday_type").innerHtml="新增节假日";
-	$("#holiday_dog").dialog("open").dialog("center").dialog("setTitle","添加节日");
-	$("#holiday_id").val("");
-	$("#start_date").val("");
-	$("#holiday_name").val("");
-	$("#end_date").val("");
-	$("#holiday_remark").val("");
-	if(holidayNode){
-		var year = holidayGlobal.currYear;
-		var month = holidayGlobal.currMonth;
-		var day = holidayNode.firstChild.innerHTML;
-		var data = year+"-"+((month+1)>=10?(month+1):"0"+(month+1))+"-"+(day>=10?day:"0"+day);
-		console.log(data);
-		$("input[name='start_date']").val(data);
-		$("#start_date").parent().find(".textbox-text").val(data);
-		$("#start_date").val(data);
-		$("input[name='end_date']").val(data)
-		$("#end_date").parent().find(".textbox-text").val(data);
-		$("#end_date").val(data);
-	}
-}
-
-function editHoliday(){
-	if(!holidayNode){
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择节假日",
-			timeout:5000,
-			showType:'slide'
-		});
-		return ;
-	}
-	var id = holidayNode.getAttribute("data_id");
-	if(id){
-		$.ajax({
-			url:"holiday/findById?id="+id,
-			success:function(data){
-				if(data.code=="1"){
-					$("#holiday_type").innerHtml="修改节假日";
-					$("#holiday_dog").dialog("open").dialog("center").dialog("setTitle","修改节假日信息");
-					$("#holiday_id").val(data.holiday.id);
-					$("#holiday_name").val(data.holiday.holidayName);
-					$("input[name='start_date']").val(data.holiday.startDate);
-					$("#start_date").parent().find(".textbox-text").val(data.holiday.startDate);
-					$("#start_date").val(data.holiday.startDate);
-					$("input[name='end_date']").val(data.holiday.endDate)
-					$("#end_date").val(data.holiday.endDate);
-					$("#end_date").parent().find(".textbox-text").val(data.holiday.endDate);
-					$("#holiday_remark").val(data.holiday.remark);
-				} else {
-					$.messager.show({
-						title:"提示消息",
-						msg:data.msg,
-						timeout:5000,
-						showType:'slide'
-					});
-
-				}
-			}
-		});
-	} else {
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择节假日",
-			timeout:5000,
-			showType:'slide'
-		});
-	}
-	
-}
-
-function removeHoliday(){
-	console.log(holidayNode);
-	if(!holidayNode){
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择节假日",
-			timeout:5000,
-			showType:'slide'
-		});
-		return ;
-	}
-	var id = holidayNode.getAttribute("data_id");
-	console.log(id);
-	if(id){
-		$.messager.confirm('确认对话框', '确定删除节假日吗？', function(b){
-			if(b){
-				$.ajax({
-					url:"holiday/delete?id="+id,
-					success:function(data){
-						$.messager.show({
-							title:"提示消息",
-							msg:data.msg,
-							timeout:5000,
-							showType:'slide'
-						});
-						holidayDrawCld(holidayGlobal.currYear, holidayGlobal.currMonth);
-					}
-				});
-			}
-		});
-	} else {
-		$.messager.show({
-			title:"提示消息",
-			msg:"请选择节假日",
-			timeout:5000,
-			showType:'slide'
-		});
-	}
-}
 
 /*清除数据*/
 function holidayClear() {
@@ -1076,7 +965,7 @@ $(function() {
 
     });
     holidayDrawCld(tY, tM);
-    timeFormat();//时间插件
+//    timeFormat();//时间插件
 });
 
 function timeFormat(){
@@ -1134,4 +1023,135 @@ function saveHoliday(){
 			}
 		}
 	})
+}
+
+function addHoliday(){
+	$("#holiday_type").innerHtml="新增节假日";
+	$("#holiday_dog").dialog("open").dialog("center").dialog("setTitle","添加节日");
+	$("#holiday_id").val("");
+	$("#start_date").val("");
+	$("#holiday_name").val("");
+	$("#end_date").val("");
+	$("#holiday_remark").val("");
+	if(holidayNode){
+		var year = holidayGlobal.currYear;
+		var month = holidayGlobal.currMonth;
+		var day = holidayNode.firstChild.innerHTML;
+		var data = year+"-"+((month+1)>=10?(month+1):"0"+(month+1))+"-"+(day>=10?day:"0"+day);
+		console.log(data);
+		$("input[name='start_date']").val(data);
+		$("#start_date").parent().find(".textbox-text").val(data);
+		$("#start_date").val(data);
+		$("input[name='end_date']").val(data)
+		$("#end_date").parent().find(".textbox-text").val(data);
+		$("#end_date").val(data);
+	}
+}
+
+function editHoliday(){
+	if(!holidayNode){
+		$.messager.show({
+			title:"提示消息",
+			msg:"请选择节假日",
+			timeout:5000,
+			showType:'slide'
+		});
+		return ;
+	}
+	var id = holidayNode.getAttribute("data_id");
+	if(id){
+		$.ajax({
+			url:"holiday/findById?id="+id,
+			success:function(data){
+				if(data.code=="1"){
+					$("#holiday_type").innerHtml="修改节假日";
+					$("#holiday_dog").dialog("open").dialog("center").dialog("setTitle","修改节假日信息");
+					$("#holiday_id").val(data.holiday.id);
+					$("#holiday_name").val(data.holiday.holidayName);
+					$("input[name='start_date']").val(data.holiday.startDate);
+					$("#start_date").parent().find(".textbox-text").val(data.holiday.startDate);
+					$("#start_date").val(data.holiday.startDate);
+					$("input[name='end_date']").val(data.holiday.endDate)
+					$("#end_date").val(data.holiday.endDate);
+					$("#end_date").parent().find(".textbox-text").val(data.holiday.endDate);
+					$("#holiday_remark").val(data.holiday.remark);
+				} else {
+					$.messager.show({
+						title:"提示消息",
+						msg:data.msg,
+						timeout:5000,
+						showType:'slide'
+					});
+
+				}
+			}
+		});
+	} else {
+		$.messager.show({
+			title:"提示消息",
+			msg:"请选择节假日",
+			timeout:5000,
+			showType:'slide'
+		});
+	}
+	
+}
+
+function removeHoliday(){
+	console.log(holidayNode);
+	if(!holidayNode){
+		$.messager.show({
+			title:"提示消息",
+			msg:"请选择节假日",
+			timeout:5000,
+			showType:'slide'
+		});
+		return ;
+	}
+	var id = holidayNode.getAttribute("data_id");
+	console.log(id);
+	if(id){
+		$.messager.confirm('确认对话框', '确定删除节假日吗？', function(b){
+			if(b){
+				$.ajax({
+					url:"holiday/delete?id="+id,
+					success:function(data){
+						$.messager.show({
+							title:"提示消息",
+							msg:data.msg,
+							timeout:5000,
+							showType:'slide'
+						});
+						holidayDrawCld(holidayGlobal.currYear, holidayGlobal.currMonth);
+					}
+				});
+			}
+		});
+	} else {
+		$.messager.show({
+			title:"提示消息",
+			msg:"请选择节假日",
+			timeout:5000,
+			showType:'slide'
+		});
+	}
+}
+
+function syncHoliday() {
+	$.ajax({
+		url:"holiday/sync",
+		success:function(result){
+			if(result.code == 1){
+				holidayDrawCld(holidayGlobal.currYear, holidayGlobal.currMonth);
+			} else {
+				$.messager.show({
+					title:"提示消息",
+					msg:"同步OA节假日信息失败",
+					timeout:5000,
+					showType:'slide'
+				});
+			}
+		}
+	})
+	
 }

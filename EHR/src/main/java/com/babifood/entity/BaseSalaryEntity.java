@@ -142,4 +142,13 @@ public class BaseSalaryEntity {
 		this.isDelete = isDelete;
 	}
 
+	@Override
+	public String toString() {
+		return "BaseSalaryEntity [id=" + id + ", pNumber=" + pNumber + ", baseSalary=" + baseSalary
+				+ ", fixedOverTimeSalary=" + fixedOverTimeSalary + ", postSalary=" + postSalary + ", callSubsidies="
+				+ callSubsidies + ", companySalary=" + companySalary + ", singelMeal=" + singelMeal
+				+ ", performanceSalary=" + performanceSalary + ", stay=" + stay + ", workType=" + workType
+				+ ", createTime=" + createTime + ", useTime=" + useTime + ", isDelete=" + isDelete + "]";
+	}
+
 }

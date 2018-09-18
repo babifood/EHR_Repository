@@ -6,9 +6,10 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/holiday.css" />
 <div class="easyui-panel" data-options="fit:true,tools:'#hoilday_tools'" id="holiday_panel" title="节假日">
 	<div id="hoilday_tools">
-		<a href="#" class="icon-add" style="width: 70px;text-align: right;" onclick="addHoliday()"><div>添加</div></a>
-		<a href="#" class="icon-edit" style="width: 70px;text-align: right;" onclick="editHoliday()">修改</a>
-		<a href="#" class="icon-remove" style="width: 70px;text-align: right;" onclick="removeHoliday()">删除</a>
+<!-- 		<a href="#" class="icon-add" style="width: 70px;text-align: right;" onclick="addHoliday()"><div>添加</div></a> -->
+<!-- 		<a href="#" class="icon-edit" style="width: 70px;text-align: right;" onclick="editHoliday()">修改</a> -->
+<!-- 		<a href="#" class="icon-remove" style="width: 70px;text-align: right;" onclick="removeHoliday()">删除</a> -->
+		<a href="#" class="icon-add" style="width: 180px;text-align: right;" onclick="syncHoliday()"><div>同步OA节假日</div></a>
 	</div>
 	<div class="main" style="height: 98%">
 		<div id="myrl"

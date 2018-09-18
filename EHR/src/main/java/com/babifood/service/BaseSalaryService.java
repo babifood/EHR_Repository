@@ -12,4 +12,6 @@ public interface BaseSalaryService {
 
 	public Map<String, Object> removeBaseSalary(Integer id, String pNumber);
 
+	public Map<String, Object> getBaseSalaryRecord(Integer page, Integer rows, String pNumber);
+
 }

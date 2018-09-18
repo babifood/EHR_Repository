@@ -442,7 +442,27 @@ public final class UtilDateTime {
 		return (int)day;
 
     }
-	public static void main(String args[]) {
+    
+    public static boolean isBeforeThanCurrentMonth(String time,String pattern) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		Date date = sdf.parse(time);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		Calendar current = Calendar.getInstance();
+		current.add(Calendar.MONTH, -1);
+		current.set(Calendar.DAY_OF_MONTH, 1);
+		current.set(Calendar.HOUR_OF_DAY, 0);
+		current.set(Calendar.MINUTE, 0);
+		current.set(Calendar.SECOND, 0);
+		current.set(Calendar.MILLISECOND, 0);;
+		int than = current.compareTo(calendar);
+		if(than <= 0){
+			return true;
+		}
+		return false;
+	}
+    
+	public static void main(String args[]) throws ParseException {
 //		System.out.println(isWorkDay("2018-06-25", "yyyy-MM-dd"));
 //		System.out.println(getWeekDay("2018-06-25"));
 //		System.out.println(getCurrentMonth());
@@ -461,9 +481,10 @@ public final class UtilDateTime {
 //			e.printStackTrace();
 //		}
 //		System.out.println(month);
-		SimpleDateFormat df = new SimpleDateFormat("yyyy");//设置日期格式
-		String beginDate = df.format(new Date());
-		System.out.println(beginDate);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm:ss");//设置日期格式
+//		String beginDate = df.format(getDate("2018-09", "yyyy-MM"));
+		System.out.println(isBeforeThanCurrentMonth("2018-09", "yyyy-MM"));
+		
 	}
 
 }

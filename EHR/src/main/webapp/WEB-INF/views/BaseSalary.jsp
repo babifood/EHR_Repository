@@ -8,6 +8,9 @@
 			<shiro:hasPermission name="baseSalary:add">
 				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addBaseSalaryInfo()">添加</a>
 			</shiro:hasPermission>
+			<shiro:hasPermission name="baseSalary:edit">
+				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateEmployeeBaseSalary()">修改</a>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="baseSalary:remove">
 				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeBaseSalaryInfo()">删除</a>
 			</shiro:hasPermission>
@@ -22,8 +25,8 @@
       	</div>
       </div>
 </div>
-<!-- <div id="base_salary_member_bar" class="datagrid-toolbar"> -->
-<!-- 	工号：<input type="text" class="textbox" id="base_salary_p_number" style="width: 110px;" oninput="searchBaseSalaryPerson()"/> -->
-<!-- 	姓名：<input type="text" class="textbox" id="base_salary_p_name" style="width: 110px;" oninput="searchBaseSalaryPerson()"/> -->
-<!-- </div> -->
+<div id="base_salary_more" class="easyui-dialog" closed="true" title="薪资调整记录" style="width:100%;height:100%;"   
+        data-options="iconCls:'icon-more',resizable:true,modal:true">   
+    <table id="base_salary_record" style="width: 100%"></table>  
+</div> 
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/baseSalary.js"></script>

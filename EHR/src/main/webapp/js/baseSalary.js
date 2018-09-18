@@ -176,9 +176,98 @@ function loadBaseSalary() {
 					},
 				},
 			}
-		]]
-		
+		]],
+		onDblClickRow:loadBaseSalaryRecord
 	})
+}
+
+//加载员工调薪记录
+function loadBaseSalaryRecord(rowIndex, rowData) {
+	$("#base_salary_record").datagrid({
+		url:prefix + "/baseSalary/record",
+		type : 'post',
+		fit : true,
+//		fitColumns : true,
+		striped : true,
+		border : false,
+		singleSelect : true,
+		queryParams:{
+			pNumber: rowData.pNumber,
+		},
+		rownumbers : true,
+		pagination : true,
+		pageSize : 10,
+		pageList : [ 10, 20, 30 ],
+		pageNumber : 1,
+		columns : [[
+			{
+				field : "pNumber",
+				title : "员工工号",
+				width : 100,
+			}, {
+				field : "pName",
+				title : "员工姓名",
+				width : 100,
+			},
+			{
+				field : "baseSalary",
+				title : "基本工资",
+				width : 100,
+			},
+			{
+				field : "fixedOverTimeSalary",
+				title : "固定加班工资",
+				width : 100,
+			},
+			{
+				field : "postSalary",
+				title : "岗位工资",
+				width : 100,
+			},
+			{
+				field : "companySalary",
+				title : "司龄工资",
+				width : 100,
+			},
+			{
+				field : "callSubsidies",
+				title : "话费补贴",
+				width : 100,
+			},
+			{
+				field : "singelMeal",
+				title : "单个餐补",
+				width : 100,
+			},
+			{
+				field : "performanceSalary",
+				title : "绩效工资",
+				width : 100,
+			},{
+				field : "workType",
+				title : "工作类型",
+				width : 100,
+				formatter:function(value,row,index){
+					if(row.workType == "0"){
+						return "计时";
+					} else if(row.workType == "1"){
+						return "计件";
+					}
+				}
+			},
+			{
+				field : "stay",
+				title : "外住补贴",
+				width : 100,
+			},
+			{
+				field : "useTime",
+				title : "启用时间",
+				width : 100,
+			}
+		]]
+	})
+	$("#base_salary_more").dialog("open");
 }
 
 function getBaseSalaryTools(){
@@ -243,8 +332,12 @@ function addBaseSalaryInfo() {
 }
 
 //编辑
-function updateEmployeeBaseSalary(index) {
-	if (editBaseSalaryIndex != index) {
+function updateEmployeeBaseSalary() {
+	var row = $("#base_salary_list").datagrid("getSelected");
+	if(!row){
+		$.messager.alert("消息提示！", "请选择一条数据", "warning");
+	} else {
+		var index = $('#base_salary_list').datagrid("getRowIndex", row);
 		if (editBaseSalaryIndex == undefined) {
 			$('#base_salary_list').datagrid('selectRow', index).datagrid(
 					'beginEdit', index);
@@ -315,49 +408,51 @@ function removeBaseSalaryInfo(){
 
 //保存基础设置信息
 function saveBaseSalaryInfo() {
-	var rowData = $('#base_salary_list').datagrid('getSelected');
-	if ($('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)) {
-		$('#base_salary_list').datagrid('endEdit', editBaseSalaryIndex);
-		editBaseSalaryIndex = undefined;
-		$.ajax({
-			url : prefix + '/baseSalary/save',
-			type : 'post',
-			data : {
-				id:rowData.id,
-				pNumber : rowData.pNumber,
-				baseSalary : rowData.baseSalary,
-				fixedOverTimeSalary : rowData.fixedOverTimeSalary,
-				postSalary : rowData.postSalary,
-				companySalary : rowData.companySalary,
-				callSubsidies : rowData.callSubsidies,
-				singelMeal : rowData.singelMeal,
-				performanceSalary : rowData.performanceSalary,
-				stay : rowData.stay,
-				workType : rowData.workType,
-				useTime : rowData.useTime,
-			},
-			contentType : "application/x-www-form-urlencoded",
-			beforeSend : function() {
-				$.messager.progress({
-					text : '保存中......',
-				});
-			},
-			success : function(data) {
-				$.messager.progress('close');
-				if (data.code == "1") {
-					$.messager.show({
-						title : '消息提醒',
-						msg : '保存成功!',
-						timeout : 3000,
-						showType : 'slide'
+	if(editBaseSalaryIndex >= 0 && $('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)){
+		var rowData = $('#base_salary_list').datagrid('getSelected');
+		if ($('#base_salary_list').datagrid('validateRow', editBaseSalaryIndex)) {
+			$('#base_salary_list').datagrid('endEdit', editBaseSalaryIndex);
+			editBaseSalaryIndex = undefined;
+			$.ajax({
+				url : prefix + '/baseSalary/save',
+				type : 'post',
+				data : {
+					id:rowData.id,
+					pNumber : rowData.pNumber,
+					baseSalary : rowData.baseSalary,
+					fixedOverTimeSalary : rowData.fixedOverTimeSalary,
+					postSalary : rowData.postSalary,
+					companySalary : rowData.companySalary,
+					callSubsidies : rowData.callSubsidies,
+					singelMeal : rowData.singelMeal,
+					performanceSalary : rowData.performanceSalary,
+					stay : rowData.stay,
+					workType : rowData.workType,
+					useTime : rowData.useTime,
+				},
+				contentType : "application/x-www-form-urlencoded",
+				beforeSend : function() {
+					$.messager.progress({
+						text : '保存中......',
 					});
-					$('#base_salary_list').datagrid('acceptChanges');
-					loadBaseSalary();
-				} else {
-					$.messager.alert("消息提示！", data.msg, "warning");
+				},
+				success : function(data) {
+					$.messager.progress('close');
+					if (data.code == "1") {
+						$.messager.show({
+							title : '消息提醒',
+							msg : '保存成功!',
+							timeout : 3000,
+							showType : 'slide'
+						});
+						$('#base_salary_list').datagrid('acceptChanges');
+						loadBaseSalary();
+					} else {
+						$.messager.alert("消息提示！", data.msg, "warning");
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 }
 

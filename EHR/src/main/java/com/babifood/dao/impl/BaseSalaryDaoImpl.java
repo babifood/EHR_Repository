@@ -99,7 +99,8 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 					BASE64Util.getDecodeStringTowDecimal(baseSalary.getCompanySalary()),
 					BASE64Util.getDecodeStringTowDecimal(baseSalary.getSingelMeal()),
 					BASE64Util.getDecodeStringTowDecimal(baseSalary.getPerformanceSalary()), 
-					BASE64Util.getDecodeStringTowDecimal(baseSalary.getStay()), baseSalary.getUseTime());
+					BASE64Util.getDecodeStringTowDecimal(baseSalary.getStay()), baseSalary.getUseTime(),
+					baseSalary.getId());
 		} catch (Exception e) {
 			log.error("修改基础薪资信息失败", e);
 			throw e;
@@ -117,7 +118,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		sql.append("a.performance_salary AS performanceSalary, a.post_salary AS postSalary, a.P_NUMBER AS pNumber, ");
 		sql.append("a.singel_meal AS singelMeal, a.use_time AS useTime, b.p_name AS pName, a.WORK_TYPE as workType ");
 		sql.append("FROM (SELECT * FROM ehr_base_salary t WHERE t.use_time = ");
-		sql.append("(SELECT MAX(use_time) FROM ehr_base_salary WHERE P_NUMBER = t.p_number)) a ");
+		sql.append("(SELECT MAX(use_time) FROM ehr_base_salary WHERE P_NUMBER = t.p_number) or t.use_time >= '" + params.get("lastMonth") + "') a ");
 		sql.append("INNER JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
 		sql.append("WHERE a.is_delete = '0' ");
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
@@ -126,10 +127,34 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		if (!UtilString.isEmpty(params.get("pName") + "")) {
 			sql.append(" AND b.p_name like '%" + params.get("pName") + "%'");
 		}
+		sql.append(" order by b.p_number");
 		sql.append(" limit ?, ?");
 		List<Map<String, Object>> baseSalaryList = null;
 		try {
 			baseSalaryList = jdbcTemplate.queryForList(sql.toString(), params.get("start"), params.get("pageSize"));
+		} catch (Exception e) {
+			log.error("分页查询基础薪资信息失败", e);
+			throw e;
+		}
+		return baseSalaryList;
+	}
+	
+	/**
+	 * 分页查询基础薪资信息
+	 */
+	@Override
+	public List<Map<String, Object>> getBaseSalaryRecord(String pNumber) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT a.ID AS id, a.base_salary AS baseSalary, a.Call_subsidies AS callSubsidies, a.stay_subsidy AS stay, ");
+		sql.append("a.company_salary AS companySalary, a.fixed_overtime_salary AS fixedOverTimeSalary, ");
+		sql.append("a.performance_salary AS performanceSalary, a.post_salary AS postSalary, a.P_NUMBER AS pNumber, ");
+		sql.append("a.singel_meal AS singelMeal, a.use_time AS useTime, b.p_name AS pName, a.WORK_TYPE as workType ");
+		sql.append("FROM ehr_base_salary a ");
+		sql.append("INNER JOIN ehr_person_basic_info b ON a.P_NUMBER = b.p_number ");
+		sql.append("WHERE a.is_delete = '0' AND a.P_NUMBER = ?");
+		List<Map<String, Object>> baseSalaryList = null;
+		try {
+			baseSalaryList = jdbcTemplate.queryForList(sql.toString(), pNumber);
 		} catch (Exception e) {
 			log.error("分页查询基础薪资信息失败", e);
 			throw e;

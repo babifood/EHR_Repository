@@ -1,5 +1,6 @@
 package com.babifood.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.HolidayDao;
 import com.babifood.entity.HolidayEntity;
+import com.babifood.utils.CustomerContextHolder;
 
 @Repository
 public class HolidayDaoImpl implements HolidayDao {
@@ -94,6 +96,42 @@ public class HolidayDaoImpl implements HolidayDao {
 				"select id as id ,holiday_name as holidayName ,start_date as startDate,end_date as endDate,remark as remark from ehr_holiday");
 		sql.append(" where start_date <= ? and end_date >= ?");
 		return jdbctemplate.queryForList(sql.toString(), endDay, startDay);
+	}
+
+	@Override
+	public List<Map<String, Object>> findOAHolidays(String year) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
+		StringBuffer sql = new StringBuffer();
+		sql.append("select id, typeName,year,begindate,enddate,days,remark from a8xholiday where year = ? ");
+		List<Map<String,Object>> list = null;
+		try {
+			list = jdbctemplate.queryForList(sql.toString(),year);
+		} catch (Exception e) {
+			logger.error("同步OA节假日数据失败",e);
+			throw e;
+		}
+		return list;
+	}
+
+	@Override
+	public void saveBacthHolidays(List<Map<String, Object>> holidays) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
+		List<Object[]> params = new ArrayList<Object[]>();
+		for(Map<String, Object> map : holidays){
+			Object[] obj= new Object[]{
+				map.get("id"),map.get("typeName"),map.get("begindate"),map.get("enddate"),map.get("remark")
+			};
+			params.add(obj);
+		}
+		StringBuffer sql = new StringBuffer();
+		sql.append("replace into ehr_holiday (oa_id,holiday_name,start_date,end_date,remark) values(?,?,?,?,?)");
+		try {
+			jdbctemplate.batchUpdate(sql.toString(),params);
+		} catch (Exception e) {
+			logger.error("保存OA节假日数据失败",e);
+			throw e;
+		}
+		
 	}
 
 }

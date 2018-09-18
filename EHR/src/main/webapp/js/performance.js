@@ -199,7 +199,6 @@ function cancelPerformanceSocre(){
 
 //保存绩效分数
 function savePerformanceSocre() {
-	console.log(2222222222222);
 	if (performanceIndex >= 0 && $('#performance_list_datagrid').datagrid('validateRow', performanceIndex)){
 		$('#performance_list_datagrid').datagrid('endEdit', performanceIndex);
 		var rows = $('#performance_list_datagrid').datagrid("getRows");

@@ -73,4 +73,16 @@ public class HolidayController {
 		return holidayService.findHolidayListByDate(year,month);
 	}
 	
+	/**
+	 * 查询对应年月的节假日
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	@RequestMapping("sync")
+	@ResponseBody
+	public Map<String, Object> syncHoliday(){
+		return holidayService.syncHoliday();
+	}
+	
 }

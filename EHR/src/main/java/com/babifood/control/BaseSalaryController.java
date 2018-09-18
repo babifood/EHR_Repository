@@ -37,6 +37,20 @@ public class BaseSalaryController {
 	}
 	
 	/**
+	 * 分页查询基础薪资
+	 * @param page
+	 * @param rows
+	 * @param pNumber
+	 * @param pName
+	 * @return
+	 */
+	@RequestMapping("record")
+	@ResponseBody
+	public Map<String, Object> getBaseSalaryRecord(Integer page, Integer rows, String pNumber){
+		return baseSalaryService.getBaseSalaryRecord(page, rows, pNumber);
+	}
+	
+	/**
 	 * 保存基础薪资
 	 * @param baseSalary
 	 * @return

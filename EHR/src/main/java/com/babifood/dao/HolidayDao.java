@@ -18,5 +18,9 @@ public interface HolidayDao {
 	public int deleteHolidayById(Integer id);
 
 	public List<Map<String, Object>> findHolidayListByDate(String startDay, String endDay);
+
+	public List<Map<String, Object>> findOAHolidays(String year);
+
+	public void saveBacthHolidays(List<Map<String, Object>> holidays);
 	
 }
