@@ -1143,13 +1143,14 @@ function syncHoliday() {
 		success:function(result){
 			if(result.code == 1){
 				holidayDrawCld(holidayGlobal.currYear, holidayGlobal.currMonth);
-			} else {
 				$.messager.show({
 					title:"提示消息",
-					msg:"同步OA节假日信息失败",
+					msg:"同步成功",
 					timeout:5000,
 					showType:'slide'
 				});
+			} else {
+				$.messager.alert("消息提示！",result.msg,"warning");
 			}
 		}
 	})

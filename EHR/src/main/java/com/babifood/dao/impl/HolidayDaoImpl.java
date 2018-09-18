@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.babifood.dao.HolidayDao;
 import com.babifood.entity.HolidayEntity;
 import com.babifood.utils.CustomerContextHolder;
+import com.babifood.utils.UtilString;
 
 @Repository
 public class HolidayDaoImpl implements HolidayDao {
@@ -118,9 +119,8 @@ public class HolidayDaoImpl implements HolidayDao {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		List<Object[]> params = new ArrayList<Object[]>();
 		for(Map<String, Object> map : holidays){
-			Object[] obj= new Object[]{
-				map.get("id"),map.get("typeName"),map.get("begindate"),map.get("enddate"),map.get("remark")
-			};
+			Object[] obj = new Object[] { map.get("id"), map.get("typeName"), getDate(map.get("begindate") + ""),
+					getDate(map.get("enddate") + ""), map.get("remark") };
 			params.add(obj);
 		}
 		StringBuffer sql = new StringBuffer();
@@ -134,4 +134,11 @@ public class HolidayDaoImpl implements HolidayDao {
 		
 	}
 
+	
+	public String getDate(String date) {
+		if(!UtilString.isEmpty(date)){
+			date = date.substring(0, 10);
+		}
+		return date;
+	}
 }
