@@ -160,7 +160,8 @@ public class PerformanceDaoImpl implements PerformanceDao {
 	public void updatePerformanceScore(String year, String month, String pNumber, String score, String salary) {
 		String sql = "update ehr_performance set performance_score = ? ,performance_salary = ? where P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?";
 		try {
-			jdbcTemplate.update(sql, score, BASE64Util.getDecodeStringTowDecimal(salary), pNumber, month, year);
+			String sal = UtilString.isEmpty(salary) ? null : BASE64Util.getDecodeStringTowDecimal(salary);
+			jdbcTemplate.update(sql, score, sal, pNumber, month, year);
 		} catch (Exception e) {
 			log.error("修改绩效分值失败", e);
 			throw e;
