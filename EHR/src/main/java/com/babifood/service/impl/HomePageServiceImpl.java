@@ -142,5 +142,27 @@ public class HomePageServiceImpl implements HomePageService {
 		}
 		return list;
 	}
+	//劳动合同到期提醒
+	@Override
+	@LogMethod(module = ModuleConstant.HOMEPAGE)
+	public List<Map<String, Object>> loadContractExpire() {
+		// TODO Auto-generated method stub
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+		String beginDate = df.format(new Date());
+		String endDate = df.format(UtilDateTime.getSystemFrontDate(15));
+		List<Map<String, Object>> list = null;
+		try {
+			list = homePageDao.loadContractExpire(beginDate, endDate);
+			LogManager.putContectOfLogInfo("执行loadContractExpire方法,查询合同到期信息");
+		} catch (Exception e) {
+			// TODO: handle exception
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadContractExpire:"+e.getMessage());
+		}
+		return list;
+	}
 
 }

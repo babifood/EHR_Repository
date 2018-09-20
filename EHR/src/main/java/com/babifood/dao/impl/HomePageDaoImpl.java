@@ -76,5 +76,17 @@ public class HomePageDaoImpl implements HomePageDao {
 		}
 		return jdbctemplate.queryForList(sql.toString());
 	}
+	@Override
+	public List<Map<String, Object>> loadContractExpire(String beginDate, String endDate) {
+		// TODO Auto-generated method stub
+		StringBuffer sql=new StringBuffer();
+		sql.append("SELECT p_number,p_name,p_company_name,p_organization,p_department,p_contract_begin_date,p_contract_end_date,p_contract_count ");
+		sql.append("FROM ehr_person_basic_info ");
+		sql.append("where p_contract_end_date between ? and ? and p_state='0'");
+		Object[] params=new Object[2];
+		params[0]= beginDate;
+		params[1]= endDate;
+		return jdbctemplate.queryForList(sql.toString(),params);
+	}
 
 }

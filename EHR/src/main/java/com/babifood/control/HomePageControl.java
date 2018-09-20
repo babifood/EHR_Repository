@@ -95,6 +95,16 @@ public class HomePageControl {
 		map.put("rows", list);
 		return map;
 	}
+	//劳动合同到期提醒
+	@ResponseBody
+	@RequestMapping("/loadContractExpire")
+	public Map<String,Object> loadContractExpire(){
+		Map<String,Object> map =new HashMap<String,Object>();
+		List<Map<String, Object>> list = homePageService.loadContractExpire();
+		map.put("total", list.size());
+		map.put("rows", list);
+		return map;
+	}	
 	//员工入离职报表统计
 	@ResponseBody
 	@RequestMapping("/loadWorkInOutFormsData")

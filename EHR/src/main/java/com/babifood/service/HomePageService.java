@@ -16,5 +16,7 @@ public interface HomePageService {
 	public List<Map<String, Object>> loadCertificateExpire();
 
 	public List<Map<String, Object>> loadWorkInOutForms();
+
+	public List<Map<String, Object>> loadContractExpire();
 	
 }

@@ -12,7 +12,7 @@
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/jquery.easyui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/easyui-js/locale/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/echarts.common.min.js"></script>
+<!--<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/echarts.common.min.js"></script> -->
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/HomePage.js"></script>
 <title>首页</title>
 </head>
@@ -25,7 +25,7 @@
     	版权所有 &copy 2018 中饮食品科技股份有限公司
     </div>   
     <div data-options="region:'west',title:'导航菜单',split:true" style="width:250px;">
-    	<ul id="menu"></ul>
+		<div id="RightAccordion" class="easyui-accordion" ></div>
     </div>   
     <div data-options="region:'center'" style="overflow: hidden;">
 	    <div id="tabs">
@@ -58,8 +58,8 @@
 						    <div data-options="region:'north',title:'证件到期提醒',split:true,collapsible:false," style="height:50%;">
 						    	<table id="certificatenRemind_grid"></table>
 						    </div>   
-						    <div id="workInOutFrom" data-options="region:'center',title:'员工入离职统计',split:true," style="height:50%;">
-						    	
+						    <div data-options="region:'center',title:'合同到期续签提醒',split:true," style="height:50%;">
+						    	<table id="contractRemind_grid"></table>
 						    </div>   
 						</div>  
 				    </div>   

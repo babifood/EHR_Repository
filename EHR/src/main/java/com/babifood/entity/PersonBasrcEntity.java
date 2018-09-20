@@ -62,14 +62,12 @@ public class PersonBasrcEntity {
 	private String p_kinsfolk_relation;//亲属关系
 	private String p_kinsfolk_name;//亲属姓名
 	private String p_kinsfolk_id_nub;//亲属身份证号码
-	private String p_kinsfolk_xueli;//亲属最高学历
-  //private String p_health_end_date;//健康证有效期
 	private Integer p_company_age;//司龄
-//	private Double p_base_salary;//基本工资
-//	private Double p_overtime_salary;//固定加班工资
-//	private Double p_subsidy;//岗位津贴
-//	private Double p_length_salary;//工龄工资
-//	private Double p_month_performance;//月度绩效基数
+	private String p_huji;//户籍
+	private String p_hukou_xingzhi;//户口性质
+	private String p_age_qujian;//年龄区间
+	private String p_zuigao_xueli;//最高学历
+	private String p_recommend_person;//推荐人名称
 	private String p_c_yingpin_table;//应聘申请表
 	private String p_c_interview_tab;//面谈记录表
 	private String p_c_id_copies;//身份证复印件
@@ -94,10 +92,8 @@ public class PersonBasrcEntity {
 	private String p_this_dept_code;//当前末及部门
 	private String p_id_num;//身份证号码
 	private String p_birthday;//出生年月日
-	
 	private String p_use_work_form;//用工形式
 	private String p_contract_count;//劳动合同签订次数
-	
 	private String p_oa_and_ehr;//区分那个系统创建的员工号段
 	
 	private List<PersonEducationEntity> education;//教育背景
@@ -327,12 +323,6 @@ public class PersonBasrcEntity {
 	public void setP_nation(String p_nation) {
 		this.p_nation = p_nation;
 	}
-//	public String getP_huji() {
-//		return p_huji;
-//	}
-//	public void setP_huji(String p_huji) {
-//		this.p_huji = p_huji;
-//	}
 	public String getP_huko_state() {
 		return p_huko_state;
 	}
@@ -351,18 +341,6 @@ public class PersonBasrcEntity {
 	public void setP_politics(String p_politics) {
 		this.p_politics = p_politics;
 	}
-//	public String getP_identity_nub() {
-//		return p_identity_nub;
-//	}
-//	public void setP_identity_nub(String p_identity_nub) {
-//		this.p_identity_nub = p_identity_nub;
-//	}
-//	public String getP_identity_end_date() {
-//		return p_identity_end_date;
-//	}
-//	public void setP_identity_end_date(String p_identity_end_date) {
-//		this.p_identity_end_date = p_identity_end_date;
-//	}
 	public String getP_phone() {
 		return p_phone;
 	}
@@ -435,54 +413,12 @@ public class PersonBasrcEntity {
 	public void setP_kinsfolk_id_nub(String p_kinsfolk_id_nub) {
 		this.p_kinsfolk_id_nub = p_kinsfolk_id_nub;
 	}
-	public String getP_kinsfolk_xueli() {
-		return p_kinsfolk_xueli;
-	}
-	public void setP_kinsfolk_xueli(String p_kinsfolk_xueli) {
-		this.p_kinsfolk_xueli = p_kinsfolk_xueli;
-	}
-//	public String getP_health_end_date() {
-//		return p_health_end_date;
-//	}
-//	public void setP_health_end_date(String p_health_end_date) {
-//		this.p_health_end_date = p_health_end_date;
-//	}
 	public Integer getP_company_age() {
 		return p_company_age;
 	}
 	public void setP_company_age(Integer p_company_age) {
 		this.p_company_age = p_company_age;
 	}
-//	public Double getP_base_salary() {
-//		return p_base_salary;
-//	}
-//	public void setP_base_salary(Double p_base_salary) {
-//		this.p_base_salary = p_base_salary;
-//	}
-//	public Double getP_overtime_salary() {
-//		return p_overtime_salary;
-//	}
-//	public void setP_overtime_salary(Double p_overtime_salary) {
-//		this.p_overtime_salary = p_overtime_salary;
-//	}
-//	public Double getP_subsidy() {
-//		return p_subsidy;
-//	}
-//	public void setP_subsidy(Double p_subsidy) {
-//		this.p_subsidy = p_subsidy;
-//	}
-//	public Double getP_length_salary() {
-//		return p_length_salary;
-//	}
-//	public void setP_length_salary(Double p_length_salary) {
-//		this.p_length_salary = p_length_salary;
-//	}
-//	public Double getP_month_performance() {
-//		return p_month_performance;
-//	}
-//	public void setP_month_performance(Double p_month_performance) {
-//		this.p_month_performance = p_month_performance;
-//	}
 	public String getP_c_yingpin_table() {
 		return p_c_yingpin_table;
 	}
@@ -729,7 +665,44 @@ public class PersonBasrcEntity {
 	public void setP_oa_and_ehr(String p_oa_and_ehr) {
 		this.p_oa_and_ehr = p_oa_and_ehr;
 	}
-	
-	
 
+	public String getP_huji() {
+		return p_huji;
+	}
+
+	public void setP_huji(String p_huji) {
+		this.p_huji = p_huji;
+	}
+
+	public String getP_hukou_xingzhi() {
+		return p_hukou_xingzhi;
+	}
+
+	public void setP_hukou_xingzhi(String p_hukou_xingzhi) {
+		this.p_hukou_xingzhi = p_hukou_xingzhi;
+	}
+
+	public String getP_age_qujian() {
+		return p_age_qujian;
+	}
+
+	public void setP_age_qujian(String p_age_qujian) {
+		this.p_age_qujian = p_age_qujian;
+	}
+
+	public String getP_zuigao_xueli() {
+		return p_zuigao_xueli;
+	}
+
+	public void setP_zuigao_xueli(String p_zuigao_xueli) {
+		this.p_zuigao_xueli = p_zuigao_xueli;
+	}
+
+	public String getP_recommend_person() {
+		return p_recommend_person;
+	}
+
+	public void setP_recommend_person(String p_recommend_person) {
+		this.p_recommend_person = p_recommend_person;
+	}
 }

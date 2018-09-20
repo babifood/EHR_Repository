@@ -16,5 +16,7 @@ public interface HomePageDao {
 
 	public List<Map<String, Object>> loadWorkInOutForms(String thisYear);
 
+	public List<Map<String, Object>> loadContractExpire(String beginDate, String endDate);
+
 	
 }

@@ -111,7 +111,7 @@
 									<input type="hidden" id="p_company_id" name="p_company_id"/>
 									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:100%" required="required"/>
 								</td>
-								<td>单位机构:</td>
+								<td>中心机构:</td>
 								<td>
 									<input type="hidden" id="p_organization_id" name="p_organization_id"/>
 									<input type="text" id="p_organization" name="p_organization" editable="false" style="width:100%" required="required"/>
@@ -244,8 +244,22 @@
 									<input type="text" id="p_nation" name="p_nation" class="textbox"/>
 								</td>
 							</tr>
+							<!-- 2018-9-19号添加 -->
 							<tr class="text_tr">
-								<td>婚否:</td>
+								<td>户籍:</td>
+								<td>
+									<input type="text" id="p_huji" name="p_huji" class="textbox"/>
+								</td>
+								<td>户口性质:</td>
+								<td>
+									<select id="p_hukou_xingzhi" class="easyui-combobox" editable="false" style="width:100%" required="required">
+										<option value="0">农业户口</option>
+										<option value="1">城镇户口</option>
+									</select>
+								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>婚姻状况:</td>
 								<td>
 									<select id="p_marriage" class="easyui-combobox" editable="false" style="width:100%" required="required">
 										<option value="0">已婚</option>
@@ -260,6 +274,32 @@
 										<option value="2">群众</option>
 										<option value="3">其他</option>
 									</select>
+								</td>
+							</tr>
+							<!-- 2018-9-19号添加 -->
+							<tr class="text_tr">
+								<td>年龄区间:</td>
+								<td>
+									<select id="p_age_qujian" class="easyui-combobox" editable="false" style="width:100%" required="required">
+										<option value="0">18至30</option>
+										<option value="1">30至40</option>
+										<option value="2">40至50</option>
+										<option value="3">50至65</option>
+									</select>
+								</td>
+								<td>最高学历:</td>
+								<td>
+									<!-- p_kinsfolk_xueli -->
+									<select id="p_zuigao_xueli" class="easyui-combobox" editable="false" style="width:100%">
+										<option value="1">初中</option>
+										<option value="2">高中</option>
+										<option value="3">中专</option>
+										<option value="4">大专</option>
+										<option value="5">本科</option>
+										<option value="6">研究生</option>
+										<option value="7">硕士</option>
+										<option value="7">博士</option>
+									</select> 
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -350,18 +390,9 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>亲属最高学历:</td>
+								<td>推荐人姓名:</td>
 								<td>
-									<select id="p_kinsfolk_xueli" class="easyui-combobox" editable="false" style="width:100%">
-										<option value="1">初中</option>
-										<option value="2">高中</option>
-										<option value="3">中专</option>
-										<option value="4">大专</option>
-										<option value="5">本科</option>
-										<option value="6">研究生</option>
-										<option value="7">硕士</option>
-										<option value="7">博士</option>
-									</select> 
+									<input type="text" id="p_recommend_person" name="p_recommend_person" class="textbox"/>
 								</td>
 								<td>司龄:</td>
 								<td>

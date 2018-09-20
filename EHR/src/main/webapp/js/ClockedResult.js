@@ -65,7 +65,7 @@ function loadSumClockedResult(){
 			},
 			{
 				field:"Organ",
-				title:"单位机构",
+				title:"中心机构名称",
 				
 			},
 			{
@@ -328,7 +328,7 @@ function loadClockedResult(year,month,workNum,periodEndDate){
 			},
 			{
 				field:"Organ",
-				title:"单位机构",
+				title:"中心机构名称",
 				
 			},
 			{
