@@ -106,7 +106,7 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>公司名称:</td>
+								<td>所属公司:</td>
 								<td>
 									<input type="hidden" id="p_company_id" name="p_company_id"/>
 									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:100%" required="required"/>
@@ -123,14 +123,14 @@
 									<input type="hidden" id="p_department_id" name="p_department_id"/>
 									<input type="text" id="p_department" name="p_department" editable="false" style="width:100%" required="required"/>
 								</td>
-								<td>科室:</td>
+								<td>所属科室:</td>
 								<td>
 									<input type="hidden" id="p_section_office_id" name="p_section_office_id"/>
 									<input type="text" id="p_section_office" name="p_section_office" style="width:100%"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>班组:</td>
+								<td>所属班组:</td>
 								<td>
 									<input type="hidden" id="p_group_id" name="p_group_id"/>
 									<input type="text" id="p_group" name="p_group" style="width:100%"/>
@@ -196,7 +196,7 @@
 								</td>
 								<td>劳动合同签订次数:</td>
 								<td>
-									<input type="text" id="p_contract_count" name="" class="easyui-numberspinner" style="width:100%" required="required"/>
+									<input type="text" id="p_contract_count" name="" class="easyui-numberspinner" data-options="min:0,editable:false" style="width:100%" required="required"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -280,7 +280,7 @@
 							<tr class="text_tr">
 								<td>年龄区间:</td>
 								<td>
-									<select id="p_age_qujian" class="easyui-combobox" editable="false" style="width:100%" required="required">
+									<select id="p_age_qujian" class="easyui-combobox" editable="false" style="width:100%">
 										<option value="0">18至30</option>
 										<option value="1">30至40</option>
 										<option value="2">40至50</option>
@@ -298,7 +298,7 @@
 										<option value="5">本科</option>
 										<option value="6">研究生</option>
 										<option value="7">硕士</option>
-										<option value="7">博士</option>
+										<option value="8">博士</option>
 									</select> 
 								</td>
 							</tr>

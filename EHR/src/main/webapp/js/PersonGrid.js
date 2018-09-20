@@ -302,7 +302,7 @@ function checkIdNumFormat(){
 function checkFormData(){
 	var check = true;
 	var box =["p_number","p_name","p_title","p_id_num"]
-	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age","p_company_name","p_organization","p_department"]
+	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age","p_company_name","p_organization","p_department","p_hukou_xingzhi"]
 	for(var i=0;i<box.length;i++){
 		if(!$('#'+box[i]).validatebox('isValid')){
 			check = false;
@@ -368,51 +368,170 @@ function loadPersonGrid(search_p_number,search_p_name){
 		toolbar:"#person_tbar",
 		singleSelect:true,
 		rownumbers:true,
-		columns:[[
+		frozenColumns:[[
 			{
 				field:"p_number",
 				title:"工号",
-				width:100,
 			},
 			{
 				field:"p_name",
 				title:"姓名",
-				width:100,
 			},
 			{
-				field:"p_age",
-				title:"年龄",
-				width:100,
+				field:"p_company_name",
+				title:"所属公司",
 			},
 			{
-				field:"p_sex",
-				title:"性别",
-				width:100,
+				field:"p_organization",
+				title:"中心机构",
 			},
 			{
 				field:"p_department",
 				title:"所属部门",
-				width:100,
+			},
+			{
+				field:"p_section_office",
+				title:"所属科室",
+			},
+			{
+				field:"p_group",
+				title:"所属班组",
+			},
+		]],
+		columns:[[
+			{
+				field:"p_sex",
+				title:"性别",
+			},
+			{
+				field:"p_age",
+				title:"年龄",
+			},
+			{
+				field:"p_id_num",
+				title:"身份证号",
 			},
 			{
 				field:"p_post",
 				title:"岗位名称",
-				width:100,
+			},
+			{
+				field:"p_level_name",
+				title:"职级名称",
+			},
+			{
+				field:"p_in_date",
+				title:"入职日期",
+			},
+			{
+				field:"p_turn_date",
+				title:"转正日期",
 			},
 			{
 				field:"p_phone",
 				title:"联系电话",
-				width:100,
 			},
 			{
+				field:"p_nationality",
+				title:"国籍",
+			},
+			{
+				field:"p_huji",
+				title:"户籍",
+			},
+			{
+				field:"p_nation",
+				title:"民族",
+			},
+			{
+				field:"p_hukou_xingzhi",
+				title:"户口性质",
+				formatter:function(value){
+					if(value=="0"){
+						return "农业户口";
+					}else if(value=="1"){
+						return "城镇户口";
+					}
+				},
+			},
+			{
+				field:"p_marriage",
+				title:"婚姻状况",
+				formatter:function(value){
+					if(value=="0"){
+						return "已婚";
+					}else if(value=="1"){
+						return "未婚";
+					}
+				},
+			},
+			{
+				field:"p_politics",
+				title:"政治面貌",
+				formatter:function(value){
+					if(value=="0"){
+						return "党员";
+					}else if(value=="1"){
+						return "团员";
+					}else if(value=="2"){
+						return "群众";
+					}else if(value=="3"){
+						return "其他";
+					}
+				},
+			},
+			{
+				field:"p_zuigao_xueli",
+				title:"最高学历",
+				formatter:function(value){
+					if(value=="1"){
+						return "初中";
+					}else if(value=="2"){
+						return "高中";
+					}else if(value=="3"){
+						return "中专";
+					}else if(value=="4"){
+						return "大专";
+					}else if(value=="5"){
+						return "本科";
+					}else if(value=="6"){
+						return "研究生";
+					}else if(value=="7"){
+						return "硕士";
+					}else if(value=="8"){
+						return "博士";
+					}
+				},
+			},{
 				field:"p_state",
 				title:"员工状态",
-				width:100,
 				formatter:function(value){
 					if(value=="0"){
 						return "在职";
 					}else if(value=="1"){
 						return "离职";
+					}
+				},
+			},
+			{
+				field:"p_property",
+				title:"员工性质",
+				formatter:function(value){
+					if(value=="0"){
+						return "全职";
+					}else if(value=="1"){
+						return "兼职";
+					}
+				},
+			},
+			{
+				field:"p_post_property",
+				title:"岗位性质",
+				formatter:function(value){
+					if(value=="0"){
+						return "管理者";
+					}else if(value=="1"){
+						return "员工";
 					}
 				},
 			}
