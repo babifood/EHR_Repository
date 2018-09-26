@@ -10,6 +10,9 @@
 					<shiro:hasPermission name="dormitory:add">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addDormitoryInfo()">添加</a>
 					</shiro:hasPermission>
+<%-- 					<shiro:hasPermission name="dormitory:edit"> --%>
+<!-- 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="outPersonChecking()">修改</a> -->
+<%-- 					</shiro:hasPermission> --%>
 					<shiro:hasPermission name="dormitory:delete">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeDormitoryInfo()">删除</a>
 					</shiro:hasPermission>
@@ -18,20 +21,25 @@
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="cancelDormitoryInfo()">取消</a>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="dormitory:checking">
-						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="checkingDormitory()">入住</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="outPersonChecking()">入住</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitoryFormalities()">办理手续</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitory()">搬出</a>
 					</shiro:hasPermission>
 				</div>
 	        	<div style="margin-left: 10px">
-	        		楼层：<input type="text" class="easyui-combobox" id="dormitory_floor" data-options="valueField: 'value',textField: 'text', 
-						data: [{value: '1',text: '一楼'}, {value: '2',text: '二楼'}, {value: '3',text: '三楼'}, {value: '4',text: '四楼'}, 
-						{value: '5',text: '五楼'}, {value: '6',text: '六楼'}],editable:false,onSelect:function(rec){searchEmployeeList(1,rec.value)}"> &nbsp;&nbsp;&nbsp;
-	        		房间号：<input type="text" class="textbox" id="dormitory_roomNo" oninput="searchEmployeeList()"> &nbsp;&nbsp;&nbsp;
 	        		宿舍类型：<input type="text" class="easyui-combobox" id="dormitory_sex" data-options="valueField: 'value',textField: 'text', 
 						data: [{value: '0',text: '男宿舍'}, {value: '1',text: '女宿舍'}],editable:false,onSelect:function(rec){searchEmployeeList(2,rec.value)}"> &nbsp;&nbsp;&nbsp;
+	        		房 间 号：<input type="text" class="textbox" id="dormitory_roomNo" oninput="searchEmployeeList()"> &nbsp;&nbsp;&nbsp;
+	        		楼层：<input type="text" class="easyui-combobox" id="dormitory_floor" data-options="valueField: 'value',textField: 'text', 
+						data: [{value: '1',text: '一楼'}, {value: '2',text: '二楼'}, {value: '3',text: '三楼'}, {value: '4',text: '四楼'}, 
+						{value: '5',text: '五楼'}, {value: '6',text: '六楼'}],editable:false,onSelect:function(rec){searchEmployeeList(1,rec.value)}">
+	        	</div>
+	        	<div style="margin-left: 10px">
 	        		是否入住：<input type="text" class="easyui-combobox" id="dormitory_stay" data-options="valueField: 'value',textField: 'text', 
-						data: [{value: '0',text: '未入住'}, {value: '1',text: '已入住'}],editable:false,onSelect:function(rec){searchEmployeeList(3,rec.value)}">
+						data: [{value: '0',text: '未入住'}, {value: '1',text: '已入住'}],editable:false,onSelect:function(rec){searchEmployeeList(3,rec.value)}"> &nbsp;&nbsp;&nbsp;
+	        		住宿类型：<input type="text" class="easyui-combobox" id="dormitory_type" data-options="valueField: 'value',textField: 'text', 
+						data: [{value: '1',text: '员工入住'}, {value: '2',text: '加盟商入住'}, {value: '3',text: '营运入住'}, {value: '4',text: '其他'}],
+						editable:false,onSelect:function(rec){searchEmployeeList(4,rec.value)}"> &nbsp;&nbsp;&nbsp;
 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clearSearchEmployee()">重置</a>
 	        	</div>
 	        </div>
@@ -44,18 +52,21 @@
 <!-- 				<div> -->
 <!-- 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="moveOutDormitory()">搬出</a> -->
 <!-- 				</div> -->
-	        	<div style="margin-left: 10px">
+	        	<div style="margin-left: 10px ;margin-top: 5px">
 	        		<div>
 	        			工号：<input type="text" class="textbox" id="checking_dormitory_pnumber" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
-		       			姓名：<input type="text" class="textbox" id="checking_dormitory_pname" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
+		        		宿舍类型：<input type="text" class="easyui-combobox" id="checking_dormitory_sex" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
+						data: [{value: '0',text: '男宿舍'}, {value: '1',text: '女宿舍'}],editable:false,onSelect:function(rec){searchCheckingEmployeeList(2,rec.value)}"> &nbsp;&nbsp;&nbsp;
 		        		房间号：<input type="text" class="textbox" id="checking_dormitory_roomNo" oninput="searchCheckingEmployeeList()">
 	        		</div>
 	        		<div style="margin-top: 5px">
+		       			姓名：<input type="text" class="textbox" id="checking_dormitory_pname" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
+						住宿类型：<input type="text" class="easyui-combobox" id="checking_dormitory_type" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
+						data: [{value: '1',text: '员工入住'}, {value: '2',text: '加盟商入住'}, {value: '3',text: '营运入住'}, {value: '4',text: '其他'}],
+						editable:false,onSelect:function(rec){searchCheckingEmployeeList(3,rec.value)}"> &nbsp;&nbsp;&nbsp;
 		        		楼层：<input type="text" class="easyui-combobox" id="checking_dormitory_floor" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
 							data: [{value: '1',text: '一楼'}, {value: '2',text: '二楼'}, {value: '3',text: '三楼'}, {value: '4',text: '四楼'}, 
 							{value: '5',text: '五楼'}, {value: '6',text: '六楼'}],editable:false,onSelect:function(rec){searchCheckingEmployeeList(1,rec.value)}"> &nbsp;&nbsp;&nbsp;
-		        		宿舍类型：<input type="text" class="easyui-combobox" id="checking_dormitory_sex" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
-						data: [{value: '0',text: '男宿舍'}, {value: '1',text: '女宿舍'}],editable:false,onSelect:function(rec){searchCheckingEmployeeList(2,rec.value)}">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clearSearchCheckingEmployee()">重置</a>
 	        		</div>
 	        	</div>

@@ -5,7 +5,6 @@ prefix = "http://" + prefix +"/EHR";
 $(function() {
 	loadDate();
 	initDormitoryImportExcel();
-	console.log("11111111111111");
 });
 
 function loadDate(){
@@ -120,7 +119,8 @@ function loadDormitoryInfo(){
 						textField: 'value',
 						data:[{label:"0",value:"男宿舍"},{label:"1",value:"女宿舍"}]
 					},
-				},formatter:function(value,row,index){
+				},
+				formatter:function(value,row,index){
 					if(row.sex == "1"){
 						return "女宿舍";
 					} else if (row.sex == "0") {
@@ -129,22 +129,101 @@ function loadDormitoryInfo(){
 				}
 			},
 			{
-				field : "pNumber",
-				title : "员工工号",
-				width : 100,
-			}, {
 				field : "pName",
 				title : "员工姓名",
 				width : 100,
+				editor:{
+					type:'text',
+					options:{
+						required:true,
+					},
+				},
+			}, {
+				field : "pNumber",
+				title : "员工工号",
+				width : 100,
+				editor:{
+//					type:'text',
+					type:'combogrid',
+					options:{
+						panelWidth:400,
+						idField:'p_number',
+						textField:'p_number',
+						toolbar:getDormitoryTools(),
+						url:prefix+'/loadPersonInFo',
+						columns:[[
+							{field:'p_number',title:'员工编号',width:100},
+							{field:'p_name',title:'员工名称',width:100},
+							{field:"p_age",title:"年龄",width:100,},
+							{field:"p_sex",title:"性别",width:100,
+								formatter:function(value){
+									if(value=="0"){
+										return "男";
+									}else if(value=="1"){
+										return "女";
+									}
+								},
+							},
+							{field:"p_department",title:"所属部门",width:100,}
+						]],
+//						required:true,
+						editable:true,
+						onSelect:function (index, row){
+							var editors = $("#dormitory_list").datagrid('getSelected');
+							var pNumber = $('#dormitory_list').datagrid('getEditor', {index:editDormitoryIndex,field:'pNumber'});
+							if(editors.sex == row.p_sex){
+								var pName = $('#dormitory_list').datagrid('getEditor', {index:editDormitoryIndex,field:'pName'});
+								$(pNumber.target).val(row.p_number); 
+								$(pName.target).val(row.p_name);
+							} else {
+								var message;
+								if(row.sex == 0){
+									message = "男员工不能入住女宿舍"
+								} else {
+									message = "女员工不能入住男宿舍";
+								}
+								$(pNumber.target).combogrid("setValue",""); 
+								$.messager.alert("消息提示！", message, "warning");
+							}
+						}
+					},
+				},
+			},{
+				field : "type",
+				title : "入住类型",
+				width : 100,
+				editor:{
+					type:'combobox',
+					options:{
+						valueField: 'value',
+						required:true,
+						editable:false,
+						textField: 'label',
+						data:[{label:"员工入住",value:"1"},{label:"加盟商入住",value:"2"},{label:"营运入住",value:"3"},
+							{label:"其他",value:"4"}]
+					},
+				},
+				formatter:function(value,row,index){
+					if(row.type == "1"){
+						return "员工入住";
+					} else if (row.type == "2") {
+						return "加盟商入住";
+					} else if (row.type == "3") {
+						return "营运入住";
+					} else if (row.type == "4") {
+						return "其他";
+					}
+				}
 			},
 			{
 				field:"stayTime",
 				title:"入住时间",
 				width:100,
 				editor:{
-					type:'text',
+					type:'datebox',
 					options:{
-						
+						required:true,
+						editable:false,
 					},
 				},
 			},
@@ -153,14 +232,51 @@ function loadDormitoryInfo(){
 				title:"搬出时间",
 				width:100,
 				editor:{
+					type:'datebox',
+					options:{
+						required:true,
+						editable:false,
+					},
+				},
+			},
+			{
+				field:"remark",
+				title:"备注",
+				width:100,
+				editor:{
 					type:'text',
 					options:{
-						
 					},
 				},
 			}
 		]]
 	})
+}
+
+//根据条件查询员工信息
+function getDormitoryTools(){
+	var tools = document.createElement("div");
+	tools.id = "base_salary_member_bar";
+	tools.appendChild(document.createTextNode("工号："));
+	var input = document.createElement("input");
+	input.type="text";input.classList.add("textbox");input.id="stay_dormitory_pnumber";
+	input.style="width: 110px;";
+	input.value="";
+	input.oninput=function(){
+		searchDormitory();
+	};
+	tools.appendChild(input);
+	tools.appendChild(document.createTextNode(" "));
+	tools.appendChild(document.createTextNode("姓名："));
+	var input1 = document.createElement("input");
+	input1.type="text";input1.classList.add("textbox");input1.id="stay_dormitory_pname";
+	input1.style="width: 110px;";
+	input.value="";
+	input1.oninput=function(){
+		searchDormitory();
+	};
+	tools.appendChild(input1);
+	return tools;
 }
 
 var editDormitoryIndex;
@@ -172,10 +288,65 @@ function addDormitoryInfo(){
 		editDormitoryIndex= $('#dormitory_list').datagrid('getRows').length-1;
 		$('#dormitory_list').datagrid('selectRow', editDormitoryIndex).datagrid('beginEdit', editDormitoryIndex);
 		var editors = $("#dormitory_list").datagrid('getEditors',editDormitoryIndex);  
+		//设置sum字段为只读属性 
 		var sumEditor = editors[5];  
-		//设置sum字段为只读属性  
 		$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
 		$(sumEditor.target).css('background','#DCDCDC'); 
+		var sumEditor = editors[6];  
+		$(sumEditor.target).combobox({
+			disabled:true
+		})
+		var sumEditor = editors[7];  
+		$(sumEditor.target).combogrid({
+			disabled:true
+		})
+		var sumEditor = editors[8];  
+		$(sumEditor.target).datebox({
+			disabled:true
+		})
+		var sumEditor = editors[9];  
+		$(sumEditor.target).datebox({
+			disabled:true
+		})
+		var sumEditor = editors[10]; 
+		$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+		$(sumEditor.target).css('background','#DCDCDC'); 
+	}
+}
+
+//人员入住
+function outPersonChecking(){
+	var row = $("#dormitory_list").datagrid("getSelected");
+	if(!row){
+		$.messager.alert("消息提示！", "请选择一条数据", "warning");
+	} else if(row.pNumber != null && row.pNumber != ""){
+		$.messager.alert("消息提示！", "该床位已有人员入住，不能重复入住", "warning");
+	} else {
+		var index = $('#dormitory_list').datagrid("getRowIndex", row);
+		if (editDormitoryIndex == undefined) {
+			editDormitoryIndex = index;
+			$('#dormitory_list').datagrid('selectRow', editDormitoryIndex).datagrid('beginEdit', editDormitoryIndex);
+			var editors = $("#dormitory_list").datagrid('getEditors',editDormitoryIndex);
+			//设置sum字段为只读属性  
+			var sumEditor = editors[1];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[2];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+			var sumEditor = editors[3];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+			var sumEditor = editors[4];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[9];  
+			$(sumEditor.target).datebox({
+				disabled:true
+			}) 
+		}
 	}
 }
 
@@ -183,7 +354,7 @@ function addDormitoryInfo(){
 function removeDormitoryInfo(){
 	if(!editDormitoryIndex){
 		var rowData =$('#dormitory_list').datagrid('getSelected');
-		var node = $("#dormitory_list").datagrid("getChecked");
+		var index = $('#dormitory_list').datagrid("getRowIndex", rowData);
 		if(index>=0){
 			$.messager.confirm("提示","确定要删除此数据？",function(r){
 				if(r){
@@ -193,7 +364,6 @@ function removeDormitoryInfo(){
 						data:{
 							id:rowData.id
 						},
-//					contentType:"application/x-www-form-urlencoded",
 						beforeSend:function(){
 							$.messager.progress({
 								text:'删除中......',
@@ -224,42 +394,77 @@ function removeDormitoryInfo(){
 
 //保存宿舍信息
 function saveDormitoryInfo(){
-	var rowData =$('#dormitory_list').datagrid('getSelected');
-	if ($('#dormitory_list').datagrid('validateRow', editDormitoryIndex)){
+	console.log("1111111111");
+	if (editDormitoryIndex >=0 && $('#dormitory_list').datagrid('validateRow', editDormitoryIndex)){
 		$('#dormitory_list').datagrid('endEdit', editDormitoryIndex);
-		$.ajax({
-			url:prefix+'/dormitory/save',
-			type:'post',
-			data:{
-				floor:rowData.floor,
-				roomNo:rowData.roomNo,
-				bedNo:rowData.bedNo,
-				sex:rowData.sex,
-				remark:rowData.remark
-			},
-			contentType:"application/x-www-form-urlencoded",
-			beforeSend:function(){
-				$.messager.progress({
-					text:'保存中......',
-				});
-			},
-			success:function(data){
-				$.messager.progress('close');
-				if(data.code=="1"){
-					$.messager.show({
-						title:'消息提醒',
-						msg:'保存成功!',
-						timeout:3000,
-						showType:'slide'
+		var rowData =$('#dormitory_list').datagrid('getSelected');
+		if(rowData.type != '' && rowData.pName == '' && rowData.pNumber == ''){
+			$.messager.alert("消息提示！","请添加入住人员","warning");
+			$('#dormitory_list').datagrid('beginEdit', editDormitoryIndex);
+			var editors = $("#dormitory_list").datagrid('getEditors',editDormitoryIndex);
+			var sumEditor = editors[1];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[2];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+			var sumEditor = editors[3];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+			var sumEditor = editors[4];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[9];  
+			$(sumEditor.target).datebox({
+				disabled:true
+			}) 
+		} else {
+			$.ajax({
+				url:prefix+'/dormitory/save',
+				type:'post',
+				data:{
+					id:rowData.id,
+					dormitoryId:rowData.id,
+					floor:rowData.floor,
+					roomNo:rowData.roomNo,
+					bedNo:rowData.bedNo,
+					sex:rowData.sex,
+					remark:rowData.remark,
+					pNumber:rowData.pNumber,
+					personName:rowData.pName,
+					dormType:rowData.type,
+					stayTime:rowData.stayTime,
+					outTime:rowData.outTime,
+				},
+				contentType:"application/x-www-form-urlencoded",
+				beforeSend:function(){
+					$.messager.progress({
+						text:'保存中......',
 					});
-					$('#dormitory_list').datagrid('acceptChanges');
-					loadDormitoryInfo();
-				}else{
-					$.messager.alert("消息提示！",data.msg,"warning");
+				},
+				success:function(data){
+					$.messager.progress('close');
+					if(data.code=="1"){
+						$.messager.show({
+							title:'消息提醒',
+							msg:'保存成功!',
+							timeout:3000,
+							showType:'slide'
+						});
+						$('#dormitory_list').datagrid('acceptChanges');
+						loadDormitoryInfo();
+					}else{
+						$.messager.alert("消息提示！",data.msg,"warning");
+					}
+					editDormitoryIndex = undefined;
+					$('#dormitory_list').datagrid('load',{});
 				}
-				editDormitoryIndex = undefined;
-			}
-		});
+			});
+		}
+	} else {
+		$.messager.alert("消息提示！","请检查必填项","warning");
 	}
 }
 
@@ -270,31 +475,34 @@ function cancelDormitoryInfo(){
 }
 
 //入住
-function checkingDormitory() {
-	if (!editDormitoryIndex){
-		var rowDate = $('#dormitory_list').datagrid('getSelected');
-		if(!rowDate){
-			$.messager.alert("消息提示！","请选择一条数据","warning");
-		} else if (rowDate.pNumber != null && rowDate.pNumber != "") {
-			$.messager.alert("消息提示！","该床位已有员工入住","warning");
-		} else {
-			$("#stay_dormitory_pnumber").val("");
-			$("#stay_dormitory_pname").val("");
-			loadPersonList();
-			$("#dormitory_dialog").dialog("open").dialog("center");
-		}
-	}
-}
+//function checkingDormitory() {
+//	if (!editDormitoryIndex){
+//		var rowDate = $('#dormitory_list').datagrid('getSelected');
+//		if(!rowDate){
+//			$.messager.alert("消息提示！","请选择一条数据","warning");
+//		} else if (rowDate.pNumber != null && rowDate.pNumber != "") {
+//			$.messager.alert("消息提示！","该床位已有员工入住","warning");
+//		} else {
+//			$("#stay_dormitory_pnumber").val("");
+//			$("#stay_dormitory_pname").val("");
+//			loadPersonList();
+//			$("#dormitory_dialog").dialog("open").dialog("center");
+//		}
+//	}
+//}
 
 //条件查询员工信息
 function searchDormitory(){
-	var pnumber = $("#stay_dormitory_pnumber").val();
-	var pname = $("#stay_dormitory_pname").val();
-	var data = {
-		search_p_number:pnumber,
-		search_p_name:pname
-	}
-	$("#emp_stay_dormitory_list").datagrid("load",data);
+//	var pnumber = $("#stay_dormitory_pnumber").val();
+//	var pname = $("#stay_dormitory_pname").val();
+//	var data = {
+//		search_p_number:pnumber,
+//		search_p_name:pname
+//	}
+//	$("#emp_stay_dormitory_list").datagrid("load",data);
+	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_number = $("#stay_dormitory_pnumber").val();
+	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_name = $("#stay_dormitory_pname").val();
+	$('.combogrid-f').combogrid('grid').datagrid('reload');
 }
 
 //条件查询宿舍信息
@@ -303,18 +511,22 @@ function searchEmployeeList(type,value){
 	var roomNo = $("#dormitory_roomNo").val();
 	var sex = $("#dormitory_sex").val();
 	var stay = $("#dormitory_stay").val();
+	var dormType = $("#dormitory_type").val();
 	if(type == "1"){
 		floor = value;
 	} else if (type == "2") {
 		sex = value;
 	} else if (type == "3") {
 		stay = value;
+	} else if (type == "4") {
+		dormType = value;
 	}
 	var data = {
 			floor:floor,
 			roomNo:roomNo,
 			sex:sex,
-			stay:stay
+			stay:stay,
+			dormType:dormType
 	}
 	$("#dormitory_list").datagrid("load",data);
 }
@@ -325,6 +537,7 @@ function clearSearchEmployee(){
 	$("#dormitory_roomNo").val("");
 	$("#dormitory_sex").combobox("clear");
 	$("#dormitory_stay").combobox("clear");
+	$("#dormitory_type").combobox("clear");
 	$("#dormitory_list").datagrid("load",{});
 }
 
@@ -515,6 +728,21 @@ function loadStayDormitoryInfo(){
 						return "男宿舍";
 					}
 				}
+			},{
+				field : "type",
+				title : "入住类型",
+				width : 100,
+				formatter:function(value,row,index){
+					if(row.type == "1"){
+						return "员工入住";
+					} else if (row.type == "2") {
+						return "加盟商入住";
+					} else if (row.type == "3") {
+						return "营运入住";
+					} else if (row.type == "4") {
+						return "其他";
+					}
+				}
 			},
 			{
 				field:"stayTime",
@@ -531,6 +759,16 @@ function loadStayDormitoryInfo(){
 				editor:{
 					type:'text',
 				},
+			},
+			{
+				field:"remark",
+				title:"备注",
+				width:100,
+				editor:{
+					type:'text',
+					options:{
+					},
+				},
 			}
 		]]
 	})	
@@ -543,17 +781,21 @@ function searchCheckingEmployeeList(type,value){
 	var floor = $("#checking_dormitory_floor").val();
 	var roomNo = $("#checking_dormitory_roomNo").val();
 	var sex = $("#checking_dormitory_sex").val();
+	var dormType = $("#checking_dormitory_type").val();
 	if(type == "1"){
 		floor = value;
 	} else if (type == "2") {
 		sex = value;
+	} else if (type == "3") {
+		dormType = value;
 	}
 	var data = {
 		pNumber:pNumber,
 		pName:pName,
 		floor:floor,
 		roomNo:roomNo,
-		sex:sex
+		sex:sex,
+		dormType:dormType
 	}
 	$("#stay_dormitory_list").datagrid("load",data);
 }
@@ -561,11 +803,56 @@ function searchCheckingEmployeeList(type,value){
 //搬出手续办理
 function moveOutDormitoryFormalities(){
 	var rowData = $("#dormitory_list").datagrid("getSelected");
+//	if(!rowData || !rowData.pNumber){
+//		$.messager.alert("消息提示！","请选择已入住员工","warning");
+//	} else {
+//		$("#dormitory_outtime_dialog").dialog("open");
+//		$("#dormitory_moveout_time").datebox('setValue', '');
+//	}
 	if(!rowData || !rowData.pNumber){
 		$.messager.alert("消息提示！","请选择已入住员工","warning");
+	} else if(rowData.outTime){
+		$.messager.alert("消息提示！","已办理搬出手续，无需重复办理","warning");
 	} else {
-		$("#dormitory_outtime_dialog").dialog("open");
-		$("#dormitory_moveout_time").datebox('setValue', '');
+		var index = $('#dormitory_list').datagrid("getRowIndex", rowData);
+		if (editDormitoryIndex == undefined) {
+			editDormitoryIndex = index;
+			$('#dormitory_list').datagrid('selectRow', editDormitoryIndex).datagrid('beginEdit', editDormitoryIndex);
+			var editors = $("#dormitory_list").datagrid('getEditors',editDormitoryIndex);
+			//设置sum字段为只读属性  
+			var sumEditor = editors[1];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[2];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+			var sumEditor = editors[3];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+			var sumEditor = editors[4];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[5];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC');
+			var sumEditor = editors[6];  
+			$(sumEditor.target).combobox({
+				disabled:true
+			})
+			var sumEditor = editors[7];  
+			$(sumEditor.target).combogrid({
+				disabled:true
+			})
+			var sumEditor = editors[8];  
+			$(sumEditor.target).datebox({
+				disabled:true
+			})
+			var sumEditor = editors[10];  
+			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
+			$(sumEditor.target).css('background','#DCDCDC'); 
+		}
 	}
 }
 
@@ -582,13 +869,13 @@ function moveOutDormitory(){
 }
 
 function selectDormitoryCost(type){
-	var outTime = $("#dormitory_moveout_time").val();
+	var rowData = $("#dormitory_list").datagrid("getSelected");
+	var outTime = rowData.outTime;
 	if(!outTime){
 		$.messager.alert("消息提示！","请选择搬出时间","warning");
 	} else {
 		$.messager.confirm("提示","确定搬出宿舍吗？",function(r){
 			if(r){
-				var rowData = $("#dormitory_list").datagrid("getSelected");
 				$.ajax({
 					url:prefix + "/dormitory/checkout",
 					type:"post",
@@ -619,6 +906,7 @@ function clearSearchCheckingEmployee(){
 	$("#checking_dormitory_roomNo").val("");
 	$("#checking_dormitory_sex").combobox("clear");
 	$("#checking_dormitory_floor").combobox("clear");
+	$("#checking_dormitory_type").combobox("clear");
 	$("#stay_dormitory_list").datagrid("load",{});
 }
 
@@ -710,7 +998,6 @@ function loadDormitoryCostList() {
 						onSelect:function (index, row){
 							var pNumber = $('#dormitory_cost_list').datagrid('getEditor', {index:editDormitoryCostIndex,field:'pNumber'});
 							var pName = $('#dormitory_cost_list').datagrid('getEditor', {index:editDormitoryCostIndex,field:'pName'});
-							console.log(row.p_number);
 							$(pNumber.target).val(row.p_number); 
 							$(pName.target).val(row.p_name); 
 						}
@@ -754,6 +1041,20 @@ function loadDormitoryCostList() {
 				width:100,
 				editor:{
 					type:'text',
+				},
+			},{
+				field:"dormFee",
+				title:"住宿费用",
+				width:100,
+				editor:{
+					type:'numberbox',options:{precision:2,required:true}
+				},
+			},{
+				field:"electricityFee",
+				title:"电费",
+				width:100,
+				editor:{
+					type:'numberbox',options:{precision:2,required:true}
 				},
 			},
 			{
@@ -877,7 +1178,9 @@ function saveDormitoryCost(){
 					month:rowData.month,
 					pNumber:rowData.pNumber,
 					dormBonus:rowData.dormBonus,
-					dormDeduction:rowData.dormDeduction
+					dormDeduction:rowData.dormDeduction,
+					dormFee:rowData.dormFee,
+					electricityFee:rowData.electricityFee
 				},
 				contentType:"application/x-www-form-urlencoded",
 				beforeSend:function(){
@@ -1002,39 +1305,3 @@ function dormitoryCostImport(){
 //	$("#dormitory_cost_booten").linkbutton('enable');
 }
 
-//导入Excel
-//function importPerformanceInfos(){
-//	$("#dormitory_cost_uploadExcel").form({
-//		type : 'post',
-//		url : prefix + "/dormitory/importExcel",
-//		dataType : "json",
-//		onSubmit: function() {
-//			var fileName= $('#dormitory_cost_file').filebox('getValue'); 
-//			//对文件格式进行校验  
-//            var d1=/\.[^\.]+$/.exec(fileName);
-//			if (fileName == "") {  
-//			      $.messager.alert('Excel批量绩效导入', '请选择将要上传的文件!'); 
-//			      return false;  
-//			 }else if(d1!=".xls"){
-//				 $.messager.alert('提示','请选择xls格式文件！','info');  
-//				 return false; 
-//			 }
-//			 $("#dormitory_cost_booten").linkbutton('disable');
-//            return true;  
-//        }, 
-//		success : function(result) {
-//			var obj = JSON.parse(result);
-//			if (obj.code == "1") {
-//				$.messager.alert('提示!', '导入成功','info',
-//					function() {
-//						$('#dormitory_cost_dialog').dialog('close');
-//						$("#dormitory_cost_list").datagrid("reload");
-//				    });
-//			} else {
-//				$.messager.confirm('提示',"导入失败!");
-//			}
-//			$("#dormitory_cost_booten").linkbutton('enable');
-//		}
-//	})
-//	$('#dormitory_cost_uploadExcel').submit();
-//}

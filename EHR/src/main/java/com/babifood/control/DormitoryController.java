@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
+import com.babifood.entity.DormitoryStayEntiry;
 import com.babifood.service.DormitoryService;
 import com.babifood.utils.UtilDateTime;
 
@@ -38,8 +39,8 @@ public class DormitoryController {
 	 */
 	@RequestMapping("save")
 	@ResponseBody
-	public Map<String, Object> saveDormitory(DormitoryEntity dormitory) {
-		return dormitoryService.saveDormitory(dormitory);
+	public Map<String, Object> saveDormitory(DormitoryEntity dorm,DormitoryStayEntiry dormStay) {
+		return dormitoryService.operateDormitory(dorm, dormStay);
 	}
 	
 	/**
@@ -65,10 +66,11 @@ public class DormitoryController {
 	 */
 	@RequestMapping("all")
 	@ResponseBody
-	public Map<String, Object> getUnStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String stay) {
-		return dormitoryService.getUnStayDormitory(page, rows, floor,  roomNo,  sex,  stay);
+	public Map<String, Object> getUnStayDormitory(Integer page, Integer rows, String floor, String roomNo, String sex,
+			String stay, String dormType) {
+		return dormitoryService.getUnStayDormitory(page, rows, floor, roomNo, sex, stay, dormType);
 	}
-	
+
 	/**
 	 * 入住信息列表
 	 * @param page
@@ -82,22 +84,22 @@ public class DormitoryController {
 	 */
 	@RequestMapping("stay")
 	@ResponseBody
-	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName) {
-		return dormitoryService.getStayDormitory(page, rows, floor, roomNo, sex,pNumber,pName);
+	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName ,String dormType) {
+		return dormitoryService.getStayDormitory(page, rows, floor, roomNo, sex, pNumber, pName, dormType);
 	}
 	
-	/**
-	 * 入住
-	 * @param dormitoryId
-	 * @param pNumber
-	 * @param stayTime
-	 * @return
-	 */
-	@RequestMapping("checking")
-	@ResponseBody
-	public Map<String, Object> cheakingDormitory(String dormitoryId, String pNumber, String stayTime) {
-		return dormitoryService.cheakingDormitory(dormitoryId, pNumber, stayTime);
-	}
+//	/**
+//	 * 入住
+//	 * @param dormitoryId
+//	 * @param pNumber
+//	 * @param stayTime
+//	 * @return
+//	 */
+//	@RequestMapping("checking")
+//	@ResponseBody
+//	public Map<String, Object> cheakingDormitory(String dormitoryId, String pNumber, String stayTime) {
+//		return dormitoryService.cheakingDormitory(dormitoryId, pNumber, stayTime);
+//	}
 	
 	/**
 	 * 搬出
@@ -109,8 +111,8 @@ public class DormitoryController {
 	 */
 	@RequestMapping("checkout")
 	@ResponseBody
-	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pNumber, String outTime, String type) {
-		return dormitoryService.cheakoutDormitory(dormitoryId, pNumber, outTime, type);
+	public Map<String, Object> cheakoutDormitory(DormitoryStayEntiry dormStay, String type) {
+		return dormitoryService.cheakoutDormitory(dormStay, type);
 	}
 	
 	/**

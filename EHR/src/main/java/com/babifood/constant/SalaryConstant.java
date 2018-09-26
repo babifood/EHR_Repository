@@ -124,4 +124,5 @@ public class SalaryConstant {
 	public static final String PERSONAL_TAX_FORMULA = "";//个税公式
 	public static final String REAL_WAGES_FORMULA = "";//实发工资公式
 	public static final String PERFORMANCE_FORMULA = "performanceSalary * performanceScore";//绩效工资公式
+	public static final String DORM_FORMULA = null;//宿舍费用
 }

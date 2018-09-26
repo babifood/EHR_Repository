@@ -431,6 +431,12 @@ public class BASE64Util {
 			if(!UtilString.isEmpty(map.get("dormDeduction")+"")){
 				map.put("dormDeduction", BASE64Util.decode(map.get("dormDeduction")+""));
 			}
+			if(!UtilString.isEmpty(map.get("dormFee")+"")){
+				map.put("dormFee", BASE64Util.decode(map.get("dormFee")+""));
+			}
+			if(!UtilString.isEmpty(map.get("electricityFee")+"")){
+				map.put("electricityFee", BASE64Util.decode(map.get("electricityFee")+""));
+			}
 			if(!UtilString.isEmpty(map.get("insurance")+"")){
 				map.put("insurance", BASE64Util.decode(map.get("insurance")+""));
 			}

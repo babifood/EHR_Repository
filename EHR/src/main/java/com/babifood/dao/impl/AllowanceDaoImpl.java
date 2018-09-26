@@ -32,10 +32,11 @@ public class AllowanceDaoImpl implements AllowanceDao {
 		sql.append("a.reserved1, a.reserved2, a.reserved3, a.reserved4, a.reserved5, a.reserved6, a.reserved7, ");
 		sql.append("a.reserved8, a.reserved9, a.reserved10, a.year, a.month, a.P_NUMBER AS pNumber, ");
 		sql.append("b.p_name as pName, c.DEPT_NAME AS organzationName, d.DEPT_NAME AS deptName, ");
-		sql.append("e.DEPT_NAME AS officeName FROM EHR_ALLOWANCES a ");
+		sql.append("e.DEPT_NAME AS officeName, f.DEPT_NAME AS companyName FROM EHR_ALLOWANCES a ");
 		sql.append("INNER JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept f on b.p_company_id = f.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");
 		if(!UtilString.isEmpty(param.get("pNumber") + "")){
 			sql.append(" AND a.P_NUMBER = '" + param.get("pNumber") + "'");

@@ -17,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.dao.DormitoryDao;
+import com.babifood.dao.SysParamDao;
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
+import com.babifood.entity.DormitoryStayEntiry;
 import com.babifood.entity.LoginEntity;
 import com.babifood.service.DormitoryService;
 import com.babifood.utils.BASE64Util;
@@ -36,6 +38,24 @@ public class DormitoryServiceImpl implements DormitoryService {
 	@Autowired
 	private DormitoryDao dormitoryDao;
 	
+	@Autowired
+	private SysParamDao sysParamDao;
+	
+	@Override
+	public Map<String, Object> operateDormitory(DormitoryEntity dorm,DormitoryStayEntiry dormStay) {
+		if(UtilString.isEmpty(dormStay.getPersonName()) && UtilString.isEmpty(dormStay.getpNumber())){
+			return saveDormitory(dorm);
+		} else if(UtilString.isEmpty(dormStay.getOutTime())){
+			if(UtilString.isEmpty(dormStay.getpNumber())){
+				dormStay.setpNumber("ls" + sysParamDao.getLastNumber("dorm_ls_checking_number"));
+			}
+			return cheakingDormitory(dormStay);
+		} else {
+			return cheakoutDormitory(dormStay, "0");
+		}
+	}
+	
+
 	/**
 	 * 保存宿舍信息
 	 */
@@ -142,7 +162,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 	 */
 	@Override
 	@LogMethod(module = ModuleConstant.DORMITORY)
-	public Map<String, Object> getUnStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String stay) {
+	public Map<String, Object> getUnStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String stay, String dormType) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer pageNum = page == null? 1 : page <= 0 ? 1 : page;
@@ -153,6 +173,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 		params.put("roomNo", roomNo);
 		params.put("sex", sex);
 		params.put("stay", stay);
+		params.put("dormType", dormType);
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -178,7 +199,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 	 */
 	@Override
 	@LogMethod(module = ModuleConstant.DORMITORY)
-	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName) {
+	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName, String dormType) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer pageNum = page == null? 1 : page <= 0 ? 1 : page;
@@ -190,6 +211,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 		params.put("sex", sex);
 		params.put("pNumber", pNumber);
 		params.put("pName", pName);
+		params.put("dormType", dormType);
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -213,21 +235,20 @@ public class DormitoryServiceImpl implements DormitoryService {
 	/**
 	 * 员工入住
 	 */
-	@Override
 	@LogMethod(module = ModuleConstant.DORMITORY)
-	public Map<String, Object> cheakingDormitory(String dormitoryId, String pnumber, String stayTime) {
+	public Map<String, Object> cheakingDormitory(DormitoryStayEntiry dormStay) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_CHECKING);
-			Map<String, Object> dormitory = dormitoryDao.findCheakingDormitory(pnumber);
+			Map<String, Object> dormitory = dormitoryDao.findCheakingDormitory(dormStay.getpNumber());
 			if (dormitory != null && dormitory.size() > 0) {
 				result.put("code", "0");
 				result.put("msg", "该员工已入住宿舍，不能重新入住");
 				LogManager.putContectOfLogInfo("员工入住失败，错误信息：该员工已入住宿舍，不能重新入住");
 			} else {
-				dormitoryDao.insertCheakingDormitory(dormitoryId, pnumber, stayTime);
+				dormitoryDao.insertCheakingDormitory(dormStay);
 				result.put("code", "1");
 				result.put("msg", "办理入住成功");
 				LogManager.putContectOfLogInfo("员工入住");
@@ -246,17 +267,17 @@ public class DormitoryServiceImpl implements DormitoryService {
 	 */
 	@Override
 	@LogMethod(module = ModuleConstant.DORMITORY)
-	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pnumber, String outTime, String type) {
+	public Map<String, Object> cheakoutDormitory(DormitoryStayEntiry dormStay, String type) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_CHECKOUT);
 			if("1".equals(type)){
-				dormitoryDao.cheakoutDormitory(dormitoryId, pnumber);
+				dormitoryDao.cheakoutDormitory(dormStay.getDormitoryId() + "", dormStay.getpNumber());
 				LogManager.putContectOfLogInfo("员工搬出宿舍--实际搬出");
 			} else {
-				dormitoryDao.moveOutProcedure(dormitoryId, pnumber, outTime);
+				dormitoryDao.moveOutProcedure(dormStay.getDormitoryId() + "", dormStay.getpNumber(), dormStay.getOutTime());
 				LogManager.putContectOfLogInfo("员工入住--办理手续");
 			}
 			result.put("code", "1");
@@ -366,7 +387,8 @@ public class DormitoryServiceImpl implements DormitoryService {
 	public Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type, String year, String month) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> row1Name = getRow1Name();
-		String[] sort = new String[]{"year", "month", "pNumber", "pName", "floor", "roomNo", "bedNo", "dormBonus", "dormDeduction"};
+		String[] sort = new String[] { "year", "month", "pNumber", "pName", "floor", "roomNo", "bedNo", "dormBonus",
+				"dormFee", "electricityFee", "dormDeduction" };
 		List<Map<String, Object>> dormitoryCosts = null;
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -402,8 +424,10 @@ public class DormitoryServiceImpl implements DormitoryService {
 		row1Name.put("floor", "楼层");
 		row1Name.put("roomNo", "房间号");
 		row1Name.put("bedNo", "床位号");
+		row1Name.put("dormFee", "住宿费用");
+		row1Name.put("electricityFee", "宿舍电费");
 		row1Name.put("dormBonus", "宿舍奖励");
-		row1Name.put("dormDeduction", "住宿扣款");
+		row1Name.put("dormDeduction", "宿舍扣款");
 		return row1Name;
 	}
 	
@@ -448,6 +472,8 @@ public class DormitoryServiceImpl implements DormitoryService {
 		if (values != null && values.size() > 0) {
 			for (Map<String, Object> map : values) {
 				Object[] obj = new Object[] { map.get("year"), map.get("month"), map.get("pNumber"),
+						BASE64Util.getDecodeStringTowDecimal(map.get("dormFee")),
+						BASE64Util.getDecodeStringTowDecimal(map.get("electricityFee")),
 						BASE64Util.getDecodeStringTowDecimal(map.get("dormBonus")),
 						BASE64Util.getDecodeStringTowDecimal(map.get("dormDeduction")) };
 				objList.add(obj);
@@ -465,9 +491,11 @@ public class DormitoryServiceImpl implements DormitoryService {
 		row1Name.put("楼层", "floor");
 		row1Name.put("房间号", "roomNo");
 		row1Name.put("床位号", "bedNo");
+		row1Name.put("住宿费用", "dormFee");
+		row1Name.put("宿舍电费", "electricityFee");
 		row1Name.put("宿舍奖励", "dormBonus");
-		row1Name.put("住宿扣款", "dormDeduction");
+		row1Name.put("宿舍扣款", "dormDeduction");
 		return row1Name;
 	}
-	
+
 }

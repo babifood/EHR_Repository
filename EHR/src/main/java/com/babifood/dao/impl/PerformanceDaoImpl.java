@@ -65,12 +65,13 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		sql.append("SELECT a.`YEAR` AS `year`, a.`MONTH` AS `month`, b.P_NUMBER AS pNumber, ");
 		sql.append("a.performance_score AS performanceScore, b.p_name AS pName, ");
 		sql.append("c.DEPT_NAME AS organzationName, d.DEPT_NAME AS deptName, e.DEPT_NAME AS officeName, ");
-		sql.append("a.performance_salary AS pSalary ");
+		sql.append("h.DEPT_NAME AS companyName, a.performance_salary AS pSalary ");
 		sql.append("FROM ehr_person_basic_info b ");
 		sql.append("INNER JOIN ehr_performance a ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept h on b.p_company_id = h.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_base_salary f ON a.P_NUMBER = f.P_NUMBER ");
 		sql.append("AND f.use_time = (SELECT MAX(use_time) FROM ehr_base_salary WHERE ");
 		sql.append("use_time <= LAST_DAY(str_to_date(CONCAT(a.`YEAR`,'-',a.`MONTH`),'%Y-%m')) ");

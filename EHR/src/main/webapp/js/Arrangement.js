@@ -190,11 +190,20 @@ function removeArrangementBaseTime(){
 function saveArrangementBaseTime(){
 	if (editIndex1 >= 0 && $('#arrangement_base_time').datagrid('validateRow', editIndex1)){
 		$('#arrangement_base_time').datagrid('endEdit', editIndex1);
+		var rows = $('#arrangement_base_time').datagrid("getRows");
+		var rowData = rows[editIndex1];
 		$.ajax({
 			url:prefix+'/arrangement/base/save',
 			type:'post',
-			data:JSON.stringify(setData()),
-			contentType:"application/json",
+			data:{
+				id:rowData.id,
+				arrangementName:rowData.arrangementName,
+				arrangementType:rowData.arrangementType,
+				startTime:rowData.startTime,
+				endTime:rowData.endTime,
+				remark:rowData.remark
+			},
+			contentType : "application/x-www-form-urlencoded",
 			beforeSend:function(){
 				$.messager.progress({
 					text:'保存中......',
@@ -221,18 +230,19 @@ function saveArrangementBaseTime(){
 }
 
 //设置参数
-function setData(){
-	var rowData =$('#arrangement_base_time').datagrid('getSelected');
-	var data={
-		id:rowData.id,
-		arrangementName:rowData.arrangementName,
-		arrangementType:rowData.arrangementType,
-		startTime:rowData.startTime,
-		endTime:rowData.endTime,
-		remark:rowData.remark
-	}
-	return data;
-}
+//function setData(){
+////	$('#arrangement_base_time').datagrid('endEdit', editIndex1);
+//	var rowData =$('#arrangement_base_time').datagrid('getSelected');
+//	var data={
+//		id:rowData.id,
+//		arrangementName:rowData.arrangementName,
+//		arrangementType:rowData.arrangementType,
+//		startTime:rowData.startTime,
+//		endTime:rowData.endTime,
+//		remark:rowData.remark
+//	}
+//	return data;
+//}
 
 //取消
 function cancelArrangementBaseTime(){

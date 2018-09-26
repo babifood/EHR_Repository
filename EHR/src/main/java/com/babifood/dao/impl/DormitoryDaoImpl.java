@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.babifood.dao.DormitoryDao;
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
+import com.babifood.entity.DormitoryStayEntiry;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
@@ -82,8 +83,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	public List<Map<String, Object>> getUnStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.id as id, a.floor as floor, a.room_no as roomNo, a.Bed_No as bedNo, b.stay_time as stayTime, ");
-		sql.append("a.sex as sex, a.remark as remark,c.p_number AS pNumber, c.p_name AS pName, b.out_time as outTime, ");
-		sql.append("IF(b.p_number IS NOT NULL,'已入住', '未入住') as stay  from ehr_dormitory a ");
+		sql.append("a.sex as sex, a.remark as remark,b.p_number AS pNumber, if(c.p_name IS NULL,b.person_name,c.p_name) AS pName, ");
+		sql.append("IF(b.p_number IS NOT NULL,'已入住', '未入住') as stay, b.out_time as outTime, b.remark as remark, ");
+		sql.append("b.DORM_TYPE AS type from ehr_dormitory a ");
 		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay where is_delete = '0') b on a.id = b.dormitory_id ");
 		sql.append("LEFT JOIN ehr_person_basic_info c ON b.p_number = c.p_number ");
 		sql.append(" where a.is_delete = '0'");
@@ -102,6 +104,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		if(!UtilString.isEmpty(params.get("roomNo") + "")){
 			sql.append(" AND a.room_no like '%" + params.get("roomNo") + "%'");
 		}
+		if(!UtilString.isEmpty(params.get("dormType") + "")){
+			sql.append(" AND b.DORM_TYPE = " + params.get("dormType"));
+		}
 		sql.append(" Limit ?,?");
 		List<Map<String, Object>> dormitorys = null;
 		try {
@@ -119,10 +124,10 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Override
 	public List<Map<String, Object>> getStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT a.p_number AS pNumber, c.p_name AS pName, b.floor AS floor, ");
+		sql.append("SELECT a.p_number AS pNumber, if(c.p_name IS NULL,a.person_name,c.p_name) AS pName, ");
 		sql.append("b.room_no AS roomNo, b.Bed_No AS bedNo, b.sex AS sex, a.stay_time AS stayTime, ");
-		sql.append("a.out_time AS outTime ");
-		sql.append("FROM ehr_dormitory_stay a ");
+		sql.append("b.floor AS floor, a.dorm_type as type, a.out_time AS outTime, a.remark as remark, ");
+		sql.append("a.dorm_type as type FROM ehr_dormitory_stay a ");
 		sql.append("LEFT JOIN ehr_dormitory b ON a.dormitory_id = b.ID ");
 		sql.append("LEFT JOIN ehr_person_basic_info c ON a.p_number = c.p_number");
 		sql.append(" where 1=1 ");
@@ -140,6 +145,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 		if(!UtilString.isEmpty(params.get("roomNo") + "")){
 			sql.append(" AND b.room_no like '%" + params.get("roomNo") + "%'");
+		}
+		if(!UtilString.isEmpty(params.get("dormType") + "")){
+			sql.append(" AND a.dorm_type = " + params.get("dormType"));
 		}
 		sql.append(" ORDER BY create_time DESC Limit ?,?");
 		List<Map<String, Object>> dormitorys = null;
@@ -176,16 +184,18 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	}
 
 	/**
-	 * 日住
+	 * 入住
 	 */
 	@Override
-	public void insertCheakingDormitory(String dormitoryId, String pnumber,String stayTime) {
-		String sql = "INSERT INTO `ehr_dormitory_stay` (`p_number`, `stay_time`, `out_time`, `dormitory_id`, "
-				+ "`create_time`, `is_delete`) VALUES ( ?, ?, ?, ?, ?, ?)";
+	public void insertCheakingDormitory(DormitoryStayEntiry dormStay) {
+		String sql = "INSERT INTO `ehr_dormitory_stay` (`p_number`, `stay_time`, `PERSON_NAME`, `out_time`, `dormitory_id`,"
+				+ " `dorm_type`, `create_time`, `remark`, `is_delete`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
-			jdbcTemplate.update(sql, pnumber, stayTime, "", dormitoryId, UtilDateTime.getCurrentTime("yyyy-MM-dd HH:mm:ss"), "0");
+			jdbcTemplate.update(sql, dormStay.getpNumber(), dormStay.getStayTime(), dormStay.getPersonName(),
+					dormStay.getOutTime(), dormStay.getDormitoryId(), dormStay.getDormType(),
+					UtilDateTime.getCurrentTime("yyyy-MM-dd HH:mm:ss"), dormStay.getRemark(), "0");
 		} catch (Exception e) {
-			log.error("新增入住信息失败",e);
+			log.error("新增入住信息失败", e);
 			throw e;
 		}
 	}
@@ -253,6 +263,9 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		if(!UtilString.isEmpty(params.get("roomNo") + "")){
 			sql.append(" AND a.room_no like '%" + params.get("roomNo") + "%'");
 		}
+		if(!UtilString.isEmpty(params.get("dormType") + "")){
+			sql.append(" AND b.DORM_TYPE = " + params.get("dormType"));
+		}
 		int count = 0;
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
@@ -269,25 +282,27 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Override
 	public int getCountOfStayDormitory(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select count(*) ");
-		sql.append("from ehr_dormitory a ");
-		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay where is_delete = '0') b on a.id = b.dormitory_id ");
-		sql.append("LEFT JOIN ehr_person_basic_info c on b.p_number = c.p_number");
-		sql.append(" where a.is_delete = '0' and b.p_number is not null");
+		sql.append("SELECT COUNT(*) FROM ehr_dormitory_stay a ");
+		sql.append("LEFT JOIN ehr_dormitory b ON a.dormitory_id = b.ID ");
+		sql.append("LEFT JOIN ehr_person_basic_info c ON a.p_number = c.p_number");
+		sql.append(" where 1=1 ");
 		if(!UtilString.isEmpty(params.get("floor") + "")){
-			sql.append(" AND a.floor = " + params.get("floor"));
+			sql.append(" AND b.floor = " + params.get("floor"));
 		}
 		if(!UtilString.isEmpty(params.get("sex") + "")){
-			sql.append(" AND a.sex = " + params.get("sex"));
+			sql.append(" AND b.sex = " + params.get("sex"));
 		}
 		if(!UtilString.isEmpty(params.get("pNumber") + "")){
-			sql.append(" AND b.p_number like '%" + params.get("pNumber") + "%'");
+			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
 		}
 		if(!UtilString.isEmpty(params.get("pName") + "")){
 			sql.append(" AND c.p_name like '%" + params.get("pName") + "%'");
 		}
 		if(!UtilString.isEmpty(params.get("roomNo") + "")){
-			sql.append(" AND a.room_no like '%" + params.get("roomNo") + "%'");
+			sql.append(" AND b.room_no like '%" + params.get("roomNo") + "%'");
+		}
+		if(!UtilString.isEmpty(params.get("dormType") + "")){
+			sql.append(" AND a.dorm_type = " + params.get("dormType"));
 		}
 		int count = 0;
 		try {
@@ -305,7 +320,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Override
 	public int queryDormitoryCostCount(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT COUNT(*) FROM EHR_DORMITORY_ALLOWANCES a ");
+		sql.append("SELECT COUNT(*) FROM EHR_DORMITORY_FEE a ");
 		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay WHERE IS_DELETE = '0') b ON a.P_NUMBER = b.p_number ");
 		sql.append("LEFT JOIN ehr_dormitory c ON c.ID = b.dormitory_id ");
 		sql.append("LEFT JOIN ehr_person_basic_info d ON a.P_NUMBER = d.p_number ");
@@ -340,7 +355,8 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT a.ID AS id, a.DORM_DEDUCTION AS dormDeduction, a.DORM_BONUS AS dormBonus, ");
 		sql.append("a.`YEAR` AS `year`, a.`MONTH` AS `month`, a.P_NUMBER AS pNumber, d.p_name AS pName, ");
-		sql.append("c.FLOOR AS floor, c.ROOM_NO AS roomNo, c.BED_NO AS bedNo FROM EHR_DORMITORY_ALLOWANCES a ");
+		sql.append("c.FLOOR AS floor, c.ROOM_NO AS roomNo, c.BED_NO AS bedNo, a.DORM_FEE AS dormFee,");
+		sql.append("a.ELECTRICITY_FEE AS electricityFee FROM EHR_DORMITORY_FEE a ");
 		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay WHERE IS_DELETE = '0') b ON a.P_NUMBER = b.p_number ");
 		sql.append("LEFT JOIN ehr_dormitory c ON c.ID = b.dormitory_id ");
 		sql.append("LEFT JOIN ehr_person_basic_info d ON a.P_NUMBER = d.p_number ");
@@ -378,13 +394,16 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Override
 	public void saveCost(DormitoryCostEntity dormitoryCost) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("REPLACE INTO `ehr_dormitory_allowances` (`YEAR`, `MONTH`, `P_NUMBER`, `DORM_BONUS`, `DORM_DEDUCTION`)");
-		sql.append(" VALUES (?, ?, ?, ?, ?)");
+		sql.append("REPLACE INTO `ehr_dormitory_fee` (`YEAR`, `MONTH`, `P_NUMBER`, `DORM_FEE`, ");
+		sql.append("`ELECTRICITY_FEE`, `DORM_BONUS`, `DORM_DEDUCTION`) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		try {
-			jdbcTemplate.update(sql.toString(), dormitoryCost.getYear(), dormitoryCost.getMonth(), dormitoryCost.getpNumber(), 
-					BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormBonus()), BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormDeduction()));
+			jdbcTemplate.update(sql.toString(), dormitoryCost.getYear(), dormitoryCost.getMonth(),
+					dormitoryCost.getpNumber(), BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormFee()),
+					BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getElectricityFee()),
+					BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormBonus()),
+					BASE64Util.getDecodeStringTowDecimal(dormitoryCost.getDormDeduction()));
 		} catch (Exception e) {
-			log.error("保存住宿费用信息失败",e);
+			log.error("保存住宿费用信息失败", e);
 			throw e;
 		}
 	}
@@ -394,7 +413,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	 */
 	@Override
 	public void removeCost(Integer id) {
-		String sql = "DELETE FROM EHR_DORMITORY_ALLOWANCES WHERE id = ?";
+		String sql = "DELETE FROM EHR_DORMITORY_Fee WHERE id = ?";
 		try {
 			jdbcTemplate.update(sql, id);
 		} catch (Exception e) {
@@ -423,8 +442,8 @@ public class DormitoryDaoImpl implements DormitoryDao {
 	@Override
 	public void saveDormitoryCosts(List<Object[]> performanceParam) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("REPLACE INTO `ehr_dormitory_allowances` (`YEAR`, `MONTH`, `P_NUMBER`, `DORM_BONUS`, `DORM_DEDUCTION`)");
-		sql.append(" VALUES (?, ?, ?, ?, ?)");
+		sql.append("REPLACE INTO `ehr_dormitory_fee` (`YEAR`, `MONTH`, `P_NUMBER`, `DORM_FEE`, ");
+		sql.append("`ELECTRICITY_FEE`, `DORM_BONUS`, `DORM_DEDUCTION`) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		try {
 			jdbcTemplate.batchUpdate(sql.toString(),performanceParam);
 		} catch (Exception e) {

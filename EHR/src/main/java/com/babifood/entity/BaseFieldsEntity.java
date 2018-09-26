@@ -53,6 +53,12 @@ public class BaseFieldsEntity {
 	private String sickGrandHours;//病假累计时间
 	
 	private String mealDeduction;//餐补扣除
+	
+	private String dormFee;//住宿费用
+	
+	private String dormBonus;//宿舍奖励
+	
+	private String electricityFee;//宿舍奖励
 
 	private String dormDeduction;//宿舍扣款
 	
@@ -324,6 +330,30 @@ public class BaseFieldsEntity {
 
 	public void setMealDeduction(String mealDeduction) {
 		this.mealDeduction = mealDeduction;
+	}
+
+	public String getDormFee() {
+		return dormFee;
+	}
+
+	public void setDormFee(String dormFee) {
+		this.dormFee = dormFee;
+	}
+
+	public String getDormBonus() {
+		return dormBonus;
+	}
+
+	public void setDormBonus(String dormBonus) {
+		this.dormBonus = dormBonus;
+	}
+
+	public String getElectricityFee() {
+		return electricityFee;
+	}
+
+	public void setElectricityFee(String electricityFee) {
+		this.electricityFee = electricityFee;
 	}
 
 	public String getDormDeduction() {

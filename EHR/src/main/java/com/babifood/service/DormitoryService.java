@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
+import com.babifood.entity.DormitoryStayEntiry;
 
 public interface DormitoryService {
 	
@@ -14,13 +15,13 @@ public interface DormitoryService {
 	
 	public Map<String, Object> removeDormitory(String id);
 
-	public Map<String, Object> getUnStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String stay);
+	public Map<String, Object> getUnStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String stay, String type);
 
-	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName);
+	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName, String dormType);
 
-	public Map<String, Object> cheakingDormitory(String dormitoryId, String pnumber,String stayTime);
+//	public Map<String, Object> cheakingDormitory(String dormitoryId, String pnumber,String stayTime);
 
-	public Map<String, Object> cheakoutDormitory(String dormitoryId, String pnumber, String outTime, String type);
+	public Map<String, Object> cheakoutDormitory(DormitoryStayEntiry dormStay, String type);
 
 	public Map<String, Object> queryDormitoryCostList(Integer page, Integer rows, String floor, String roomNo,
 			String pNumber, String pName);
@@ -32,5 +33,7 @@ public interface DormitoryService {
 	public Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type, String year, String month);
 
 	public Map<String, Object> importDormitoryCost(MultipartFile file, String type);
+
+	public Map<String, Object> operateDormitory(DormitoryEntity dorm,DormitoryStayEntiry dormStay);
 
 }

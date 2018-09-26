@@ -214,15 +214,19 @@ public class SalaryCalculationService {
 		if (salary == null || salary.size() <= 0) {
 			throw new Exception("基本薪资信息异常");
 		}
-		Map<String, Object> allowances = allowanceService.findEmployAllowance(year, month, pNumber);
-		if (allowances == null || allowances.size() <= 0) {
-			allowances = new HashMap<String, Object>();
+		Map<String, Object> fees = salaryCalculationDao.findPersonFee(year, month, pNumber);
+		if (fees == null || fees.size() <= 0) {
+			throw new Exception("费项数据异常，请检查数据");
 		}
-		Map<String, Object> performanceInfo = performanceDao.getPerformanceInfo(year, month, pNumber);
-		if(performanceInfo == null){
-			performanceInfo = new HashMap<String, Object>();
-		}
-		BaseFieldsEntity baseFields = getBaseFields(employee, arrangementSummary, salary, allowances, performanceInfo);
+//		Map<String, Object> allowances = allowanceService.findEmployAllowance(year, month, pNumber);
+//		if (allowances == null || allowances.size() <= 0) {
+//			allowances = new HashMap<String, Object>();
+//		}
+//		Map<String, Object> performanceInfo = performanceDao.getPerformanceInfo(year, month, pNumber);
+//		if(performanceInfo == null){
+//			performanceInfo = new HashMap<String, Object>();
+//		}
+		BaseFieldsEntity baseFields = getBaseFields(employee, arrangementSummary, salary, fees);
 		
 		SalaryDetailEntity salaryDerail = new SalaryDetailEntity();
 
@@ -261,17 +265,17 @@ public class SalaryCalculationService {
 	 * @return
 	 */
 	private BaseFieldsEntity getBaseFields(Map<String, Object> employee, Map<String, Object> arrangementSummary, Map<String, Object> salary,
-			Map<String, Object> allowances, Map<String, Object> performanceInfo) {
+			Map<String, Object> fees) {
 		logger.info("薪资计算========>员工薪资计算:获取计算因子");
 		String pNumber = employee.get("pNumber") + "";// 员工编号
 		BaseFieldsEntity baseFields = new BaseFieldsEntity();
 		Double sickGrandHours = initAttendanceService.findYearSickHours(year, month, pNumber);
 		baseFields.setAbsenceHours(UtilString.isEmpty(arrangementSummary.get("queqin") + "") ? "0.0"
 				: arrangementSummary.get("queqin") + "");
-		baseFields.setAddOther(UtilString.isEmpty(allowances.get("addOther") + "") ? "0.0"
-				: allowances.get("addOther") + "");
-		baseFields.setAfterDeduction(UtilString.isEmpty(allowances.get("afterDeduction") + "") ? "0.0"
-				: allowances.get("afterDeduction") + "");
+		baseFields.setAddOther(UtilString.isEmpty(fees.get("addOther") + "") ? "0.0"
+				: fees.get("addOther") + "");
+		baseFields.setAfterDeduction(UtilString.isEmpty(fees.get("afterDeduction") + "") ? "0.0"
+				: fees.get("afterDeduction") + "");
 		baseFields.setAttendanceHours(UtilString.isEmpty(arrangementSummary.get("standardWorkLength") + "") ? "1.0"
 				: arrangementSummary.get("standardWorkLength") + "");
 		baseFields.setBaseSalary(UtilString.isEmpty(salary.get("baseSalary") + "") ? "0.0"
@@ -285,89 +289,95 @@ public class SalaryCalculationService {
 		} catch (Exception e) {
 		}
 		baseFields.setCompanyAge(companyday + "");
-		baseFields.setBeforeDeduction(UtilString.isEmpty(allowances.get("beforeDeduction") + "") ? "0.0"
-				: allowances.get("beforeDeduction") + "");
+		baseFields.setBeforeDeduction(UtilString.isEmpty(fees.get("beforeDeduction") + "") ? "0.0"
+				: fees.get("beforeDeduction") + "");
 		baseFields.setCallSubsidies(UtilString.isEmpty(salary.get("callSubsidies") + "") ? "0.0"
 				: salary.get("callSubsidies") + "");
 		baseFields.setCompanySalary(UtilString.isEmpty(salary.get("companySalary") + "") ? "0.0"
 				: salary.get("companySalary") + "");
-		baseFields.setCompensatory(UtilString.isEmpty(allowances.get("compensatory") + "") ? "0.0"
-				: allowances.get("compensatory") + "");
+		baseFields.setCompensatory(UtilString.isEmpty(fees.get("compensatory") + "") ? "0.0"
+				: fees.get("compensatory") + "");
 		baseFields.setCompletionHours(UtilString.isEmpty(arrangementSummary.get("kuangGong") + "") ? "0.0"
 				: arrangementSummary.get("kuangGong") + "");
-		baseFields.setDormDeduction(UtilString.isEmpty(allowances.get("dorm") + "") ? "0.0"
-				: allowances.get("dorm") + "");
+		baseFields.setDormDeduction(UtilString.isEmpty(fees.get("dormDeduction") + "") ? "0.0"
+				: fees.get("dormDeduction") + "");
+		baseFields.setDormFee(UtilString.isEmpty(fees.get("dormFee") + "") ? "0.0"
+				: fees.get("dormFee") + "");
+		baseFields.setDormBonus(UtilString.isEmpty(fees.get("dormBonus") + "") ? "0.0"
+				: fees.get("dormBonus") + "");
+		baseFields.setElectricityFee(UtilString.isEmpty(fees.get("electricityFee") + "") ? "0.0"
+				: fees.get("electricityFee") + "");
 		baseFields.setFixedOverTimeSalary(UtilString.isEmpty(salary.get("fixedOverTimeSalary") + "") ? "0.0"
 				: salary.get("fixedOverTimeSalary") + "");
-		baseFields.setOverSalary(UtilString.isEmpty(allowances.get("overSalary") + "") ? "0.0"
-				: allowances.get("overSalary") + "");
+		baseFields.setOverSalary(UtilString.isEmpty(fees.get("overSalary") + "") ? "0.0"
+				: fees.get("overSalary") + "");
 		baseFields.setFullTime("1");
-		baseFields.setHighTem(UtilString.isEmpty(allowances.get("highTem") + "") ? "0.0"
-				: allowances.get("highTem") + "");
-		baseFields.setInsurance(UtilString.isEmpty(allowances.get("insurance") + "") ? "0.0"
-				: allowances.get("insurance") + "");
+		baseFields.setHighTem(UtilString.isEmpty(fees.get("highTem") + "") ? "0.0"
+				: fees.get("highTem") + "");
+		baseFields.setInsurance(UtilString.isEmpty(fees.get("insurance") + "") ? "0.0"
+				: fees.get("insurance") + "");
 		baseFields.setLateTime(UtilString.isEmpty(arrangementSummary.get("chiDao") + "") ? "0"
 				: arrangementSummary.get("chiDao") + "");
 		baseFields.setLeaveTime(UtilString.isEmpty(arrangementSummary.get("zaoTui") + "") ? "0"
 				: arrangementSummary.get("zaoTui") + "");
-		baseFields.setLowTem(UtilString.isEmpty(allowances.get("lowTem") + "") ? "0.0"
-				: allowances.get("lowTem") + "");
+		baseFields.setLowTem(UtilString.isEmpty(fees.get("lowTem") + "") ? "0.0"
+				: fees.get("lowTem") + "");
 		baseFields.setMainLand("1");
-		baseFields.setMealDeduction(UtilString.isEmpty(allowances.get("meal") + "") ? "0.0"
-				: allowances.get("meal") + "");
+		baseFields.setMealDeduction(UtilString.isEmpty(fees.get("meal") + "") ? "0.0"
+				: fees.get("meal") + "");
 		baseFields.setMealnum(UtilString.isEmpty(arrangementSummary.get("canbu") + "") ? "0.0"
 				: arrangementSummary.get("canbu") + "");
-		baseFields.setMorningShift(UtilString.isEmpty(allowances.get("morningShift") + "") ? "0.0"
-				: allowances.get("morningShift") + "");
+		baseFields.setMorningShift(UtilString.isEmpty(fees.get("morningShift") + "") ? "0.0"
+				: fees.get("morningShift") + "");
 		baseFields.setNationality(UtilString.isEmpty(employee.get("nationality") + "")?"1":employee.get("nationality") + "");
-		baseFields.setNightShift(UtilString.isEmpty(allowances.get("nightShift") + "") ? "0.0"
-				: allowances.get("nightShift") + "");
+		baseFields.setNightShift(UtilString.isEmpty(fees.get("nightShift") + "") ? "0.0"
+				: fees.get("nightShift") + "");
 		baseFields.setNonContinent("2");
 		baseFields.setOnboardingHours(UtilString.isEmpty(arrangementSummary.get("onboarding") + "") ? "0.0"
 				: arrangementSummary.get("onboarding") + "");
-		baseFields.setOtherAllowance(UtilString.isEmpty(allowances.get("otherAllowance") + "") ? "0.0"
-				: allowances.get("otherAllowance") + "");
-		baseFields.setOtherBonus(UtilString.isEmpty(allowances.get("otherBonus") + "") ? "0.0"
-				: allowances.get("otherBonus") + "");
+		baseFields.setOtherAllowance(UtilString.isEmpty(fees.get("otherAllowance") + "") ? "0.0"
+				: fees.get("otherAllowance") + "");
+		baseFields.setOtherBonus(UtilString.isEmpty(fees.get("otherBonus") + "") ? "0.0"
+				: fees.get("otherBonus") + "");
 //		baseFields.setOverTimeSalary(overTimeSalary);
 		baseFields.setParentalHours(UtilString.isEmpty(arrangementSummary.get("chanJia") + "") ? "0.0"
 				: arrangementSummary.get("chanJia") + "");
 		baseFields.setPartTime("0");
-		baseFields.setPerformanceScore(UtilString.isEmpty(performanceInfo.get("performanceScore") + "") ? "0.0"
-				: performanceInfo.get("performanceScore") + "");
+		baseFields.setPerformanceScore(UtilString.isEmpty(fees.get("performanceScore") + "") ? "0.0"
+				: fees.get("performanceScore") + "");
 		baseFields.setPerformanceSalary(UtilString.isEmpty(salary.get("performanceSalary") + "") ? "0.0"
 				: salary.get("performanceSalary") + "");
-		baseFields.setPSalary(UtilString.isEmpty(performanceInfo.get("pSalary") + "") ? "-1"
-				: performanceInfo.get("pSalary") + "");
+		baseFields.setPSalary(UtilString.isEmpty(fees.get("pSalary") + "") ? "-1"
+				: fees.get("pSalary") + "");
 		baseFields.setPiece("1");
 		baseFields.setPiming("0");
 		baseFields.setPostSalary(UtilString.isEmpty(salary.get("postSalary") + "") ? "0.0"
 				: salary.get("postSalary") + "");
 		baseFields.setProperty(employee.get("property") + "");
-		baseFields.setProvidentFund(UtilString.isEmpty(allowances.get("providentFund") + "") ? "0.0"
-				: allowances.get("providentFund") + "");
-		baseFields.setReserved1(UtilString.isEmpty(allowances.get("reserved1") + "") ? "0.0"
-				: allowances.get("reserved1") + "");
-		baseFields.setReserved2(UtilString.isEmpty(allowances.get("reserved2") + "") ? "0.0"
-				: allowances.get("reserved2") + "");
-		baseFields.setReserved3(UtilString.isEmpty(allowances.get("reserved3") + "") ? "0.0"
-				: allowances.get("reserved3") + "");
-		baseFields.setReserved4(UtilString.isEmpty(allowances.get("reserved4") + "") ? "0.0"
-				: allowances.get("reserved4") + "");
-		baseFields.setReserved5(UtilString.isEmpty(allowances.get("reserved5") + "") ? "0.0"
-				: allowances.get("reserved5") + "");
-		baseFields.setReserved6(UtilString.isEmpty(allowances.get("reserved6") + "") ? "0.0"
-				: allowances.get("reserved6") + "");
-		baseFields.setReserved7(UtilString.isEmpty(allowances.get("reserved7") + "") ? "0.0"
-				: allowances.get("reserved7") + "");
-		baseFields.setReserved8(UtilString.isEmpty(allowances.get("reserved8") + "") ? "0.0"
-				: allowances.get("reserved8") + "");
-		baseFields.setReserved9(UtilString.isEmpty(allowances.get("reserved9") + "") ? "0.0"
-				: allowances.get("reserved9") + "");
-		baseFields.setReserved10(UtilString.isEmpty(allowances.get("reserved10") + "") ? "0.0"
-				: allowances.get("reserved10") + "");
-		baseFields.setSecurity(UtilString.isEmpty(allowances.get("security") + "") ? "0.0"
-				: allowances.get("security") + "");
+		baseFields.setProvidentFund(UtilString.isEmpty(fees.get("providentFund") + "") ? "0.0"
+				: fees.get("providentFund") + "");
+		baseFields.setReserved1(UtilString.isEmpty(fees.get("reserved1") + "") ? "0.0"
+				: fees.get("reserved1") + "");
+		baseFields.setReserved2(UtilString.isEmpty(fees.get("reserved2") + "") ? "0.0"
+				: fees.get("reserved2") + "");
+		baseFields.setReserved3(UtilString.isEmpty(fees.get("reserved3") + "") ? "0.0"
+				: fees.get("reserved3") + "");
+		baseFields.setReserved4(UtilString.isEmpty(fees.get("reserved4") + "") ? "0.0"
+				: fees.get("reserved4") + "");
+		baseFields.setReserved5(UtilString.isEmpty(fees.get("reserved5") + "") ? "0.0"
+				: fees.get("reserved5") + "");
+		baseFields.setReserved6(UtilString.isEmpty(fees.get("reserved6") + "") ? "0.0"
+				: fees.get("reserved6") + "");
+		baseFields.setReserved7(UtilString.isEmpty(fees.get("reserved7") + "") ? "0.0"
+				: fees.get("reserved7") + "");
+		baseFields.setReserved8(UtilString.isEmpty(fees.get("reserved8") + "") ? "0.0"
+				: fees.get("reserved8") + "");
+		baseFields.setReserved9(UtilString.isEmpty(fees.get("reserved9") + "") ? "0.0"
+				: fees.get("reserved9") + "");
+		baseFields.setReserved10(UtilString.isEmpty(fees.get("reserved10") + "") ? "0.0"
+				: fees.get("reserved10") + "");
+		baseFields.setSecurity(UtilString.isEmpty(fees.get("security") + "") ? "0.0"
+				: fees.get("security") + "");
 		baseFields.setSickGrandHours(sickGrandHours + "");
 		baseFields.setSickHours(UtilString.isEmpty(arrangementSummary.get("bingJia") + "") ? "0.0"
 				: arrangementSummary.get("bingJia") + "");
@@ -416,11 +426,17 @@ public class SalaryCalculationService {
 	 * 
 	 * @param salaryDerail
 	 * @param allowances
+	 * @throws Exception 
+	 * @throws ScriptException 
 	 */
-	private void calculationDeduction(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) {
+	private void calculationDeduction(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		logger.info("薪资计算========>员工薪资计算:扣款数据计算");
 		salaryDerail.setMealDeduction(BASE64Util.getStringTowDecimal(baseFields.getMealDeduction()));// 餐费扣款
-		salaryDerail.setDormDeduction(BASE64Util.getStringTowDecimal(baseFields.getDormDeduction()));// 住宿扣款
+		String dormFormula = formulaList.get("dormFormula");
+		if(UtilString.isEmpty(dormFormula)){
+			dormFormula = SalaryConstant.DORM_FORMULA;
+		}
+		salaryDerail.setDormDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(dormFormula, salaryDerail, baseFields, formulaList))+""));// 住宿扣款
 		salaryDerail.setBeforeDeduction(BASE64Util.getStringTowDecimal(baseFields.getBeforeDeduction()));// 税前其它扣款
 		salaryDerail.setInsurance(BASE64Util.getStringTowDecimal(baseFields.getInsurance()));// 社保扣款
 		salaryDerail.setProvidentFund(BASE64Util.getStringTowDecimal(baseFields.getProvidentFund()));// 公积金扣款
@@ -622,14 +638,6 @@ public class SalaryCalculationService {
 				logger.info("薪资计算公式:key="+key+",formula="+formula);
 			}
 		}
-//		if(formulaListMap.size() > 0){
-//			Set<String> keys = formulaListMap.keySet();
-//			for(String key:keys){
-//				String value = formulaListMap.get(key);
-//				value = replaceStr(value, formulaListMap);
-//				formulaListMap.put(key, value);
-//			}
-//		}
 		return formulaListMap;
 	}
 	
@@ -906,6 +914,9 @@ public class SalaryCalculationService {
 		}
 		if (formula.indexOf("performanceFormula") > -1 && salaryDerail.getPerformanceBonus() != null) {
 			formula.replaceAll("performanceFormula", "(" + salaryDerail.getPerformanceBonus() + ")");
+		}
+		if (formula.indexOf("dormFormula") > -1 && salaryDerail.getDormDeduction() != null) {
+			formula.replaceAll("dormFormula", "(" + salaryDerail.getDormDeduction() + ")");
 		}
 		return formula;
 	}

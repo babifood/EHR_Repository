@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.babifood.entity.DormitoryCostEntity;
 import com.babifood.entity.DormitoryEntity;
+import com.babifood.entity.DormitoryStayEntiry;
 
 public interface DormitoryDao {
 
@@ -20,7 +21,7 @@ public interface DormitoryDao {
 
 	public Map<String, Object> findCheakingDormitory(String dormitoryId);
 
-	public void insertCheakingDormitory(String dormitoryId, String pnumber, String stayTime);
+	public void insertCheakingDormitory(DormitoryStayEntiry dormStay);
 
 	public int cheakoutDormitory(String bedNo, String pnumber);
 

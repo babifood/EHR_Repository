@@ -38,7 +38,7 @@ public class BaseArrangementController {
 	 */
 	@RequestMapping("base/save")
 	@ResponseBody
-	public Map<String, Object> saveBaseArrangement(@RequestBody BaseArrangementEntity arrangement){
+	public Map<String, Object> saveBaseArrangement(BaseArrangementEntity arrangement){
 		return baseArrangementService.saveBaseArrangement(arrangement);
 	}
 	

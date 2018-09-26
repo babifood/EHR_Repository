@@ -114,7 +114,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 		row1Name.put("month", "月");
 		row1Name.put("pNumber", "员工工号");
 		row1Name.put("pName", "员工姓名");
-		row1Name.put("organzationName", "组织机构名称");
+		row1Name.put("organzationName", "中心机构");
 		row1Name.put("deptName", "部门名称");
 		row1Name.put("officeName", "科室名称");
 		row1Name.put("performanceScore", "绩效分值");
@@ -168,7 +168,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 		row1Name.put("月", "month");
 		row1Name.put("员工工号", "pNumber");
 		row1Name.put("员工姓名", "pName");
-		row1Name.put("组织机构名称", "organzationName");
+		row1Name.put("中心机构", "organzationName");
 		row1Name.put("部门名称", "deptName");
 		row1Name.put("科室名称", "officeName");
 		row1Name.put("绩效分值", "performanceScore");

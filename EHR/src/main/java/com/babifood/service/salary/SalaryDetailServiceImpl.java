@@ -132,7 +132,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		row1Name.put("pName", "员工姓名");
 		row1Name.put("pNumber", "员工工号");
 		row1Name.put("companyName", "公司名称");
-		row1Name.put("organizationName", "单位机构名称");
+		row1Name.put("organizationName", "中心机构");
 		row1Name.put("deptName", "部门名称");
 		row1Name.put("officeName", "科室名称");
 		row1Name.put("groupName", "班组名称");

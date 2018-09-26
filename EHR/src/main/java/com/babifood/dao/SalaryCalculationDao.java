@@ -10,4 +10,6 @@ public interface SalaryCalculationDao {
 
 	public void updateSalaryCalculationStatus(String year, String month, Integer type);
 
+	public Map<String, Object> findPersonFee(String year, String month, String pNumber);
+
 }

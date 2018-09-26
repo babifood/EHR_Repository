@@ -29,7 +29,7 @@ function loadSalaryDetails() {
 		columns : [[
 			{field : "id",title : "",hidden : "true",width : 100, }, 
 			{field : "companyName",title : "公司名称",width : 100,},
-			{field : "organizationName",title : "单位机构名称",	width : 100,},
+			{field : "organizationName",title : "中心机构",	width : 100,},
 			{field : "deptName",title : "部门信息",width : 100,},
 			{field : "officeName",title : "科室名称",	width : 100,},
 			{field : "groupName",title : "班组名称",width : 100,},

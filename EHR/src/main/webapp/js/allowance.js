@@ -29,8 +29,12 @@ function loadAllowanceList() {
 			]],
 		columns : [ [
 		{
+			field : "companyName",
+			title : "公司名称",
+			width : 100,
+		}, {
 			field : "organzationName",
-			title : "组织机构名称",
+			title : "中心机构",
 			width : 100,
 		}, {
 			field : "deptName",

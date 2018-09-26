@@ -10,6 +10,10 @@ public class DormitoryCostEntity {
 	
 	private String pNumber;//员工工号
 	
+	private String dormFee;//住宿费用
+	
+	private String electricityFee;//电费
+	
 	private String dormBonus;//宿舍奖励
 	
 	private String dormDeduction;//住宿扣款
@@ -44,6 +48,22 @@ public class DormitoryCostEntity {
 
 	public void setpNumber(String pNumber) {
 		this.pNumber = pNumber;
+	}
+
+	public String getDormFee() {
+		return dormFee;
+	}
+
+	public void setDormFee(String dormFee) {
+		this.dormFee = dormFee;
+	}
+
+	public String getElectricityFee() {
+		return electricityFee;
+	}
+
+	public void setElectricityFee(String electricityFee) {
+		this.electricityFee = electricityFee;
 	}
 
 	public String getDormBonus() {
