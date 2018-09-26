@@ -275,7 +275,7 @@ function checkForm(tRf){
 		notNullvalidate(box[i],tRf);
 	}
 	idcardValidate("p_id_num",tRf);
-	idcardValidate("p_kinsfolk_id_nub",false);
+	idcardValidate("p_urgency_id_nub",false);
 	mobileValidate("p_phone",false);
 	mobileValidate("p_urgency_phone",false);
 }
@@ -675,7 +675,6 @@ function editFromSetValues(data){
 	$("#p_gjj_end_month").datebox('setValue',data.p_gjj_end_month);//公积金购买终止月
     $("#p_nationality").val(data.p_nationality);//国籍
 	$("#p_nation").val(data.p_nation);//民族
-	//$("#p_huko_state").val(data.p_huko_state);//户口性质
 	$("#p_marriage").combobox('setValue',data.p_marriage);//婚否
 	$("#p_politics").combobox('setValue',data.p_politics);//政治面貌
 	$("#p_phone").val(data.p_phone);//联系电话
@@ -686,22 +685,17 @@ function editFromSetValues(data){
 	$("#p_urgency_name").val(data.p_urgency_name);//紧急联系人名称
 	$("#p_urgency_relation").combobox('setValue',data.p_urgency_relation);//紧急联系人关系
 	$("#p_urgency_phone").val(data.p_urgency_phone);//紧急联系人电话
-	$("#p_kinsfolk_y_n").combobox('setValue',data.p_kinsfolk_y_n);//是否有亲属同在公司
-	$("#p_kinsfolk_relation").combobox('setValue',data.p_kinsfolk_relation);//亲属关系
-	$("#p_kinsfolk_name").val(data.p_kinsfolk_name);//亲属姓名
-	$("#p_kinsfolk_id_nub").val(data.p_kinsfolk_id_nub);//亲属身份证号码
-//	$("#p_kinsfolk_xueli").combobox('setValue',data.p_kinsfolk_xueli);//亲属最高学历
-	//$("#p_company_age").spinner('setValue',data.p_company_age);//司龄
+	$("#p_urgency_id_nub").val(data.p_urgency_id_nub);//紧急联系人身份证号码（改）
+	$("#p_urgency_add").val(data.p_urgency_add);//紧急联系人地址（加）
 	$("#p_use_work_form").combobox('setValue',data.p_use_work_form),//用工形式
 	$("#p_contract_count").spinner('setValue',data.p_contract_count),//合同签订次数
 	$("#p_oa_and_ehr").val(data.p_oa_and_ehr);//区分OA或者EHR创建的员工号段
-	
 	$("#p_huji").val(data.p_huji);//户籍
 	$("#p_hukou_xingzhi").combobox('setValue',data.p_hukou_xingzhi);//户口性质
 	$("#p_age_qujian").combobox('setValue',data.p_age_qujian);//年龄区间
 	$("#p_zuigao_xueli").combobox('setValue',data.p_zuigao_xueli);//最高学历
 	$("#p_recommend_person").val(data.p_recommend_person);//推荐人名称
-	
+	$("#p_recommend_relation").combobox('setValue',data.p_recommend_relation);//推荐人关系
 	
 	setFromCheckbox("p_c_yingpin_table",data.p_c_yingpin_table);//应聘申请表
 	setFromCheckbox("p_c_interview_tab",data.p_c_interview_tab);//面谈记录表
@@ -993,10 +987,8 @@ function setData(){
 			p_urgency_name:$("#p_urgency_name").val(),//紧急联系人名称
 			p_urgency_relation:$("#p_urgency_relation").val(),//紧急联系人关系
 			p_urgency_phone:$("#p_urgency_phone").val(),//紧急联系人电话
-			p_kinsfolk_y_n:$("#p_kinsfolk_y_n").val(),//是否有亲属同在公司
-			p_kinsfolk_relation:$("#p_kinsfolk_relation").val(),//亲属关系
-			p_kinsfolk_name:$("#p_kinsfolk_name").val(),//亲属姓名
-			p_kinsfolk_id_nub:$("#p_kinsfolk_id_nub").val(),//亲属身份证号码
+			p_urgency_id_nub:$("#p_urgency_id_nub").val(),//紧急联系人身份证号码
+			p_urgency_add:$("#p_urgency_add").val(),//紧急联系人住址
 			p_company_age:$("#p_company_age").val(),//司龄
 			p_use_work_form:$("#p_use_work_form").val(),//用工形式
 			p_contract_count:$("#p_contract_count").val(),//合同签订次数
@@ -1007,6 +999,7 @@ function setData(){
 			p_age_qujian:$("#p_age_qujian").val(),//年龄区间
 			p_zuigao_xueli:$("#p_zuigao_xueli").val(),//最高学历
 			p_recommend_person:$("#p_recommend_person").val(),//推荐人名称
+			p_recommend_relation:$("#p_recommend_relation").val(),//推荐人关系
 			
 			p_c_yingpin_table:getCheckBoxValue("p_c_yingpin_table"),//应聘申请表
 			p_c_interview_tab:getCheckBoxValue("p_c_interview_tab"),//面谈记录表

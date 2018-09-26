@@ -58,16 +58,20 @@ public class PersonBasrcEntity {
 	private String p_urgency_name;//紧急联系人名称
 	private String p_urgency_relation;//紧急联系人关系
 	private String p_urgency_phone;//紧急联系人电话
-	private String p_kinsfolk_y_n;//是否有亲属同在公司
-	private String p_kinsfolk_relation;//亲属关系
-	private String p_kinsfolk_name;//亲属姓名
-	private String p_kinsfolk_id_nub;//亲属身份证号码
+	private String p_urgency_id_nub;//紧急联系人身份证号码
+	private String p_urgency_add;//紧急联系人住址
+//	private String p_kinsfolk_y_n;//是否有亲属同在公司
+//	private String p_kinsfolk_relation;//亲属关系
+//	private String p_kinsfolk_name;//亲属姓名
+//	private String p_kinsfolk_id_nub;//亲属身份证号码
 	private Integer p_company_age;//司龄
 	private String p_huji;//户籍
 	private String p_hukou_xingzhi;//户口性质
 	private String p_age_qujian;//年龄区间
 	private String p_zuigao_xueli;//最高学历
 	private String p_recommend_person;//推荐人名称
+	private String p_recommend_relation;//推荐人关系
+	
 	private String p_c_yingpin_table;//应聘申请表
 	private String p_c_interview_tab;//面谈记录表
 	private String p_c_id_copies;//身份证复印件
@@ -389,33 +393,58 @@ public class PersonBasrcEntity {
 	public void setP_urgency_phone(String p_urgency_phone) {
 		this.p_urgency_phone = p_urgency_phone;
 	}
-	public String getP_kinsfolk_y_n() {
-		return p_kinsfolk_y_n;
-	}
-	public void setP_kinsfolk_y_n(String p_kinsfolk_y_n) {
-		this.p_kinsfolk_y_n = p_kinsfolk_y_n;
-	}
-	public String getP_kinsfolk_relation() {
-		return p_kinsfolk_relation;
-	}
-	public void setP_kinsfolk_relation(String p_kinsfolk_relation) {
-		this.p_kinsfolk_relation = p_kinsfolk_relation;
-	}
-	public String getP_kinsfolk_name() {
-		return p_kinsfolk_name;
-	}
-	public void setP_kinsfolk_name(String p_kinsfolk_name) {
-		this.p_kinsfolk_name = p_kinsfolk_name;
-	}
-	public String getP_kinsfolk_id_nub() {
-		return p_kinsfolk_id_nub;
-	}
-	public void setP_kinsfolk_id_nub(String p_kinsfolk_id_nub) {
-		this.p_kinsfolk_id_nub = p_kinsfolk_id_nub;
-	}
+//	public String getP_kinsfolk_y_n() {
+//		return p_kinsfolk_y_n;
+//	}
+//	public void setP_kinsfolk_y_n(String p_kinsfolk_y_n) {
+//		this.p_kinsfolk_y_n = p_kinsfolk_y_n;
+//	}
+//	public String getP_kinsfolk_relation() {
+//		return p_kinsfolk_relation;
+//	}
+//	public void setP_kinsfolk_relation(String p_kinsfolk_relation) {
+//		this.p_kinsfolk_relation = p_kinsfolk_relation;
+//	}
+//	public String getP_kinsfolk_name() {
+//		return p_kinsfolk_name;
+//	}
+//	public void setP_kinsfolk_name(String p_kinsfolk_name) {
+//		this.p_kinsfolk_name = p_kinsfolk_name;
+//	}
+//	public String getP_kinsfolk_id_nub() {
+//		return p_kinsfolk_id_nub;
+//	}
+//	public void setP_kinsfolk_id_nub(String p_kinsfolk_id_nub) {
+//		this.p_kinsfolk_id_nub = p_kinsfolk_id_nub;
+//	}
+	
 	public Integer getP_company_age() {
 		return p_company_age;
 	}
+	public String getP_urgency_id_nub() {
+		return p_urgency_id_nub;
+	}
+
+	public void setP_urgency_id_nub(String p_urgency_id_nub) {
+		this.p_urgency_id_nub = p_urgency_id_nub;
+	}
+
+	public String getP_urgency_add() {
+		return p_urgency_add;
+	}
+
+	public void setP_urgency_add(String p_urgency_add) {
+		this.p_urgency_add = p_urgency_add;
+	}
+
+	public String getP_recommend_relation() {
+		return p_recommend_relation;
+	}
+
+	public void setP_recommend_relation(String p_recommend_relation) {
+		this.p_recommend_relation = p_recommend_relation;
+	}
+
 	public void setP_company_age(Integer p_company_age) {
 		this.p_company_age = p_company_age;
 	}

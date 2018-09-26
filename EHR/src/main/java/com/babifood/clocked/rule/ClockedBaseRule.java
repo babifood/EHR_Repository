@@ -17,15 +17,15 @@ public class ClockedBaseRule {
 	 * 计算餐补
 	 */
 	public static void calcCanBu(ClockedResultBases theResult) {
-//		if (theResult.getClockFlag() < 1) {
-//			theResult.setCanBu(0);
-//			if (theResult.getJiaBan() >= 4.5) {
+		if (theResult.getClockFlag() == 0) {
+			theResult.setCanBu(0);
+			if (theResult.getJiaBan() >= 4.5) {
 //				String organ = ClockedUtil.getOrgan(theResult.getOrgan()).getName();
 //				if (organ.indexOf("集团") != -1 || organ.indexOf("营运") != -1) {
-//					theResult.setCanBu(1);
+					theResult.setCanBu(1);
 //				}
-//			}
-//		} else {
+			}
+		} else {
 			// 餐补个数
 			if (theResult.getStandWorkLength() == 8 && theResult.getOriginalCheckingLength() >= 4.5d) {
 				theResult.setCanBu(1);
@@ -34,7 +34,7 @@ public class ClockedBaseRule {
 			} else {
 				theResult.setCanBu(0);
 			}
-//		}
+		}
 
 	}
 	/*

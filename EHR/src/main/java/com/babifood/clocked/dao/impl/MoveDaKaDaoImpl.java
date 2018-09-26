@@ -36,7 +36,7 @@ public class MoveDaKaDaoImpl implements MoveDaKaDao {
 		sql.append("from a8xmobile_clocked_record_final a ");
 		sql.append("inner join org_member m on a.memberid = m.id ");
 		sql.append("where to_char(clocktime, 'yyyy-mm')=? ");
-		sql.append("and m.code='100024' ");
+		//sql.append("and m.code='100024' ");
 		sql.append("order by m.code,a.clocktime");
 		List<Map<String,Object>> list=null;
 		try {

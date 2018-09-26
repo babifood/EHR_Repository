@@ -359,16 +359,24 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>是否有亲属同在公司:</td>
+								<td>紧急联系人身份证号码:</td>
 								<td>
-									<select id="p_kinsfolk_y_n" class="easyui-combobox" editable="false" style="width:100%">
-										<option value="0">是</option>
-										<option value="1">否</option>
-									</select>
+									<input type="text" id="p_urgency_id_nub" name="p_urgency_id_nub" class="textbox"/>
 								</td>
-								<td>亲属关系:</td>
+								<!-- 2018-9-25添加紧急联系人住址 -->
+								<td>紧急联系人住址:</td>
 								<td>
-									<select id="p_kinsfolk_relation" class="easyui-combobox" editable="false" style="width:100%">
+									<input type="text" id="p_urgency_add" name="" class="textbox"/>
+								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>推荐人姓名:</td>
+								<td>
+									<input type="text" id="p_recommend_person" name="p_recommend_person" class="textbox"/>
+								</td>
+								<td>推荐人关系:</td>
+								<td>
+									<select id="p_recommend_relation" class="easyui-combobox" editable="false" style="width:100%">
 										<option value="1">父亲</option>
 										<option value="2">母亲</option>
 										<option value="3">妻子</option>
@@ -380,24 +388,12 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>亲属姓名:</td>
-								<td>
-									<input type="text" id="p_kinsfolk_name" name="p_kinsfolk_name" class="textbox"/>
-								</td>
-								<td>亲属身份证号码:</td>
-								<td>
-									<input type="text" id="p_kinsfolk_id_nub" name="p_kinsfolk_id_nub" class="textbox"/>
-								</td>
-							</tr>
-							<tr class="text_tr">
-								<td>推荐人姓名:</td>
-								<td>
-									<input type="text" id="p_recommend_person" name="p_recommend_person" class="textbox"/>
-								</td>
 								<td>司龄:</td>
 								<td>
 									<input type="text" id="p_company_age" name="p_company_age" class="textbox" disabled="disabled"/>
 								</td>
+								<td></td>
+								<td></td>
 							</tr>
 							<tr class="text_tr">
 								<td colspan="4" style="text-align: center"><span style="color: red">注:以下资料是否已经提交给人事部</span></td>
