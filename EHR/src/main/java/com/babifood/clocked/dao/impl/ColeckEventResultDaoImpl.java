@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.babifood.clocked.dao.ColeckEventResultDao;
 import com.babifood.clocked.entrty.ClockedBizData;
 import com.babifood.utils.CustomerContextHolder;
+import com.babifood.utils.UtilDateTime;
 @Repository
 public class ColeckEventResultDaoImpl implements ColeckEventResultDao {
 	public static final Logger log = Logger.getLogger(ColeckEventResultDaoImpl.class);
@@ -30,10 +31,10 @@ public class ColeckEventResultDaoImpl implements ColeckEventResultDao {
 		sql.append("select ");
 		sql.append("year,month,m.code as worknum,createtime,billdate,billnum,billtype,timelength,begintime,endtime,validflag,bizflag1 ");
 		sql.append("from a8xclockedbizdata a inner join org_member m on a.memberid=m.id ");
-		sql.append("where year =? and month=?");
+		sql.append("where to_char(begintime,'yyyy-mm-dd') >=? and to_char(endtime,'yyyy-mm-dd')<=?");
 		Object[] params=new Object[2];
-		params[0]=year;
-		params[1]=month;
+		params[0]=df.format(UtilDateTime.getMonthStartSqlDate(year,month));
+		params[1]=df.format(UtilDateTime.getMonthEndSqlDate(year,month));
 		List<Map<String,Object>> list=null;
 		list = jdbctemplate.queryForList(sql.toString(), params);
 		if(list.size()>0){

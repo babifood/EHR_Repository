@@ -157,15 +157,14 @@ public class OfficeCalcRule {
 		billType = billType == null ? "" : billType.trim();
 		if (billType.equals("加班申请单")) {
 			attachOneJiaBan(theResult, theClockedBizData);
-		}
-		if (billType.equals("考勤异动单")) {
+		} else if (billType.equals("考勤异动单")) {
 			attachOneYiDong(theResult, theClockedBizData);
 		} else if (billType.equals("请假申请单")) {
 			attachOneQingJia(theResult, theClockedBizData);
 		} else if (billType.equals("出差申请单")) {
 			attachOneChuChai(theResult, theClockedBizData);
 		} else {
-			// do nothing
+			return;
 		}
 	}
 	/*
@@ -178,11 +177,11 @@ public class OfficeCalcRule {
 		}
 
 		Date[] temp = ClockedBaseRule.calcActualTime(theResult, theClockedBizData);
-		// 如果异动开始时间 》 下班时间
+		// 如果异动开始时间 > 下班时间
 		if (temp[0].getTime() > theResult.getStandEndTime().getTime()) {
 			return;
 		}
-		// 如果异动结束时间 《 上班时间
+		// 如果异动结束时间 < 上班时间
 		if (temp[1].getTime() < theResult.getStandBeginTime().getTime()) {
 			return;
 		}

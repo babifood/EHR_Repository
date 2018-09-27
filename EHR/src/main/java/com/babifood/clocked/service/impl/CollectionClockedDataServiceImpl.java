@@ -1,5 +1,6 @@
 package com.babifood.clocked.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.entity.LoginEntity;
 import com.babifood.service.impl.HomePageServiceImpl;
+import com.babifood.utils.UtilDateTime;
 import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
 @Service
@@ -261,18 +263,11 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 //			}
 //		}
 //		System.out.println(a);
-		int[] codes = new int[5];
-		codes[0] = 7;
-		codes[1] = 8;
-		codes[2] = 9;
-		codes[3] = 10;
-		codes[4] = 1;
-		int p_this_dept_code = codes[0];
-		for(int i=0;i<codes.length;i++){
-			if(p_this_dept_code<codes[i]){
-				p_this_dept_code=codes[i];
-			}
-		}
-		System.out.println(p_this_dept_code);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Object[] params=new Object[2];
+		params[0]=df.format(UtilDateTime.getMonthStartSqlDate(2018,7));
+		params[1]=df.format(UtilDateTime.getMonthEndSqlDate(2018,7));
+		System.out.println(params[0]);
+		System.out.println(params[1]);
 	}
 }

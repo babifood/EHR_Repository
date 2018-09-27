@@ -225,7 +225,7 @@ public class ClockedYesNoRule {
 			if(year==inYear&&month==inMonth){
 				if(tmpResult.getCheckingDate().getTime()<inDate.getTime()){
 					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
-					tmpResult.setInOutJob(Clock_Flag_IN_OUT_JOB);
+					tmpResult.setInOutJob(tmpResult.getStandWorkLength());
 				}
 			}
 		}
@@ -236,7 +236,7 @@ public class ClockedYesNoRule {
 			if(year==outYear&&month==outMonth){
 				if(tmpResult.getCheckingDate().getTime()>=outDate.getTime()){
 					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
-					tmpResult.setInOutJob(Clock_Flag_IN_OUT_JOB);
+					tmpResult.setInOutJob(tmpResult.getStandWorkLength());
 				}
 			}
 		}

@@ -109,8 +109,8 @@ public class ClockedResultBases {
 	// 考勤标志
 	private Integer clockFlag;
 	
-	//入离职标志
-	private Integer inOutJob;
+	//因入离职导致的缺勤时长
+	private Double inOutJob;
 	// 打卡地点
 	private String daKaLocation;
 	
@@ -476,10 +476,10 @@ public class ClockedResultBases {
 		}
 		return UtilDateTime.getDaysBetween(getStandBeginTime(), getStandEndTime()) == 1;
 	}
-	public Integer getInOutJob() {
+	public Double getInOutJob() {
 		return inOutJob;
 	}
-	public void setInOutJob(Integer inOutJob) {
+	public void setInOutJob(Double inOutJob) {
 		this.inOutJob = inOutJob;
 	}
 	
