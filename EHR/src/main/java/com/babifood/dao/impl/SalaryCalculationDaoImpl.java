@@ -83,16 +83,17 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 		sql.append("b.RESERVED7 AS reserved7, b.RESERVED8 AS reserved8, b.RESERVED9  AS reserved9, b.RESERVED10 AS reserved10, ");
 		sql.append("b.SECURITY_BONUS AS `security`, b.DORM_BONUS AS dormBonus, ");
 		sql.append("b.STAY_ALLOWANCE AS stay, c.DORM_BONUS AS dormBonus, c.DORM_DEDUCTION AS dormDeduction, c.DORM_FEE AS dormFee, ");
-		sql.append("c.ELECTRICITY_FEE AS electricityFee,d.PERFORMANCE_SALARY AS pSalary,d.PERFORMANCE_SCORE AS performanceScore");
+		sql.append("c.ELECTRICITY_FEE AS electricityFee,d.PERFORMANCE_SALARY AS pSalary,d.PERFORMANCE_SCORE AS performanceScore ");
 		sql.append("FROM ehr_person_basic_info a ");
-		sql.append("LEFT JOIN ehr_allowances b ON a.p_number = b.P_NUMBER AND b.`YEAR` = ? AND b.`YEAR` = ? ");
-		sql.append("LEFT JOIN ehr_dormitory_fee c ON a.p_number = c.P_NUMBER AND c.`YEAR` = ? AND c.`YEAR` = ? ");
-		sql.append("LEFT JOIN ehr_performance d ON a.p_number = d.P_NUMBER AND d.`YEAR` = ? AND d.`YEAR` = ? ");
+		sql.append("LEFT JOIN ehr_allowances b ON a.p_number = b.P_NUMBER AND b.`YEAR` = ? AND b.`MONTH` = ? ");
+		sql.append("LEFT JOIN ehr_dormitory_fee c ON a.p_number = c.P_NUMBER AND c.`YEAR` = ? AND c.`MONTH` = ? ");
+		sql.append("LEFT JOIN ehr_performance d ON a.p_number = d.P_NUMBER AND d.`YEAR` = ? AND d.`MONTH` = ? ");
 		sql.append("WHERE a.p_number = ?");
 		List<Map<String, Object>> feelist = null;
 		Map<String, Object> fees = null;
 		try {
 			feelist = jdbcTemplate.queryForList(sql.toString(), year, month, year, month, year, month, pNumber);
+			BASE64Util.Base64DecodeMap(feelist);
 		} catch (Exception e) {
 			log.error("查询薪资计算费项数据失败", e);
 			throw e;

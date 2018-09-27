@@ -39,6 +39,7 @@
 					机构名称：<input type="text" class="textbox" id="performance_salary_organzationName" oninput="loadConditionPerformance()"> &nbsp;&nbsp;&nbsp;
 		      		部门名称：<input type="text" class="textbox" id="performancee_salary_deptName" oninput="loadConditionPerformance()"> &nbsp;&nbsp;&nbsp;
 		      		科室名称：<input type="text" class="textbox" id="performancee_salary_officeName" oninput="loadConditionPerformance()">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clearSearchPerformance()">重置</a>
 				</div>
 			</div>
 		</div>

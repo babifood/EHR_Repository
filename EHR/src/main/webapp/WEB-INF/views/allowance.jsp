@@ -34,6 +34,7 @@
 					机构名称：<input type="text" class="textbox" id="allowance_organzationName" oninput="loadConditionAllowance()"> &nbsp;&nbsp;&nbsp;
 		      		部门名称：<input type="text" class="textbox" id="allowancee_deptName" oninput="loadConditionAllowance()"> &nbsp;&nbsp;&nbsp;
 		      		科室名称：<input type="text" class="textbox" id="allowancee_officeName" oninput="loadConditionAllowance()">
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clearSearchAllowance()">重置</a>
 				</div>
 			</div>
 		</div>

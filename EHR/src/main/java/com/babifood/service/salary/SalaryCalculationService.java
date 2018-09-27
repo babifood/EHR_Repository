@@ -79,23 +79,29 @@ public class SalaryCalculationService {
 	
 	private ScriptEngine scriptEngine;
 	
-	private void init() throws Exception{
+	private void init(String cyear, String cmonth) throws Exception{
 		formulaList = getFormula();
-		year = UtilDateTime.getCurrentYear();
-//			UtilDateTime.getYearOfPreMonth();// 当前年
-		month = UtilDateTime.getCurrentMonth(); 
-//			UtilDateTime.getPreMonth();// 当前月
+		if(UtilString.isEmpty(cyear)){
+			year = UtilDateTime.getYearOfPreMonth();// 当前年
+		} else {
+			year = cyear;
+		}
+		if(UtilString.isEmpty(cyear)){
+			month = UtilDateTime.getPreMonth();// 当前月
+		} else {
+			month = cmonth;
+		}
 		days = UtilDateTime.getDaysOfCurrentMonth(Integer.valueOf(year), Integer.valueOf(month));
 		scriptEngine = new ScriptEngineManager().getEngineByName("JavaScript");
 		logger.info("薪资计算========>薪资计算年份："+year+",月份："+month);
 	}
 
 	@LogMethod(module = ModuleConstant.CALCULATIONSALARY)
-	public Map<String, Object> salaryCalculation(Integer type){
+	public Map<String, Object> salaryCalculation(Integer type, String cyear, String cmonth){
 		Map<String, Object> result = new HashMap<String, Object>();
 		String calculationType = type == 1 ? "薪资试算" : type == 2 ? "薪资核算" : "薪资归档";
 		try {
-			init();
+			init(cyear, cmonth);
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_CALCULATION);
@@ -744,6 +750,15 @@ public class SalaryCalculationService {
 		}
 		if(formula.indexOf("dormDeduction") > -1){
 			formula = formula.replaceAll("dormDeduction", "(" + baseFields.getDormDeduction() + ")");
+		}
+		if(formula.indexOf("dormFee") > -1){
+			formula = formula.replaceAll("dormFee", "(" + baseFields.getDormFee() + ")");
+		}
+		if(formula.indexOf("electricityFee") > -1){
+			formula = formula.replaceAll("electricityFee", "(" + baseFields.getElectricityFee() + ")");
+		}
+		if(formula.indexOf("dormBonus") > -1){
+			formula = formula.replaceAll("dormBonus", "(" + baseFields.getDormBonus() + ")");
 		}
 		if(formula.indexOf("insurance") > -1){
 			formula = formula.replaceAll("insurance", "(" + baseFields.getInsurance() + ")");

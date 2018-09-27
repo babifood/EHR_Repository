@@ -12,6 +12,11 @@
 		<table class="easyui-datagrid" id="salaryDetail_datagrid"></table>
 		<div id="salaryDetail_datagrid_tools">
 			<div>
+				<div style="margin-left: 10px">
+					<span style="color: #95B8E7;font-size: 15px">薪资计算年、月：</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					年份：<input type="text" class="easyui-numberspinner" id="salary_calculation_year" data-options="min:2018,editable:false"> &nbsp;&nbsp;&nbsp;
+	      			月份：<input type="text" class="easyui-combobox" id="salary_calculation_month"> &nbsp;&nbsp;&nbsp;
+				</div>
 				<div >
 					<shiro:hasPermission name="salaryDetail:export">
 						<a href="javascript:void(0)" class="easyui-menubutton"data-options="menu:'#salary_detail_menubutton',iconCls:'icon-edit'">导出</a>
@@ -38,7 +43,8 @@
 				<div style="margin: 5px">
 					机构名称：<input type="text" class="textbox" id="salary_detail_organzationName" oninput="loadConditionSalaryDetail()"> &nbsp;&nbsp;&nbsp;
 		      		部门名称：<input type="text" class="textbox" id="salary_detail_deptName" oninput="loadConditionSalaryDetail()"> &nbsp;&nbsp;&nbsp;
-		      		科室名称：<input type="text" class="textbox" id="salary_detail_officeName" oninput="loadConditionSalaryDetail()">
+		      		科室名称：<input type="text" class="textbox" id="salary_detail_officeName" oninput="loadConditionSalaryDetail()"> &nbsp;&nbsp;&nbsp;
+		      		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clearSearchSalaryDetail()">重置</a>
 				</div>
 			</div>
 		</div>

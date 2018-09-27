@@ -3,6 +3,13 @@ prefix = "http://" + prefix + "/EHR";
 
 $(function() {
 	loadSalaryDetails();
+	$('#salary_calculation_month').combobox({    
+	    valueField:'id',    
+	    textField:'text' ,
+	    data:[{id:"01",text:"01"},{id:"02",text:"02"},{id:"03",text:"03"},{id:"044",text:"04"},{id:"05",text:"05"},{id:"06",text:"06"}
+	    ,{id:"07",text:"07"},{id:"08",text:"08"},{id:"09",text:"09"},{id:"10",text:"10"},{id:"11",text:"11"},{id:"12",text:"12"}]
+	}); 
+	
 })
 
 //加载薪资明细数据
@@ -114,7 +121,6 @@ function salaryCalculation(type){
 		calculationSalary(type, value);
 	} else if(type == 3){
 		value = "归档";
-		console.log("11111111111111");
 		$.messager.confirm("提示","归档后不能再次修改，确定归档吗？",function(r){
 			if(r){
 				calculationSalary(type, value);
@@ -130,7 +136,9 @@ function calculationSalary(type, value){
 	$.ajax({
 		url : prefix + "/salaryDetail/calculation",
 		data : {
-			type:type
+			type:type,
+			year:$("#salary_calculation_year").val(),
+			month:$('#salary_calculation_month').val()
 		},
 		beforeSend:function(){
 			$.messager.progress({
@@ -152,4 +160,13 @@ function calculationSalary(type, value){
 			$("#salaryDetail_datagrid").datagrid("reload");
 		}
 	})
+}
+
+function clearSearchSalaryDetail(){
+	$("#salary_detail_number").val("");
+	$("#salary_detail_name").val("");
+	$("#salary_detail_organzationName").val("");
+	$("#salary_detail_deptName").val("");
+	$("#salary_detail_officeName").val("");
+	$("#salaryDetail_datagrid").datagrid("load",{});
 }

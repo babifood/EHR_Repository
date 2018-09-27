@@ -246,12 +246,12 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName, h.post_name as postName ");
 		sql.append("FROM ehr_salary_details a ");
 		sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number ");
-		sql.append("LEFT JOIN ehr_dept c on a.DEPT_CODE = c.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_dept d on a.OFFICE_CODE = d.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_dept e on a.GROUP_CODE = e.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_dept g on a.COMPANY_CODE = g.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_post h on a.post = h.post_id ");
-		sql.append("LEFT JOIN ehr_dept b on a.ORGANIZATION_CODE = b.DEPT_CODE WHERE 1=1 ");
+		sql.append("LEFT JOIN ehr_dept c on f.P_DEPARTMENT_ID = c.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept d on f.P_SECTION_OFFICE_ID = d.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept e on f.P_GROUP_ID = e.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
+		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE WHERE 1=1 ");
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
 		}

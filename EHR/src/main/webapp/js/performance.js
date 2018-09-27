@@ -250,3 +250,13 @@ function savePerformanceSocre() {
 	}
 }
 
+function clearSearchPerformance() {
+	$("#performance_salary_pNumber").val("");
+	$("#performance_salary_pName").val("");
+	$("#performance_salary_organzationName").val("");
+	$("#performancee_salary_deptName").val("");
+	$("#performancee_salary_officeName").val("");
+	$("#performance_list_datagrid").datagrid("load",{});
+}
+
+

@@ -316,3 +316,12 @@ function importAllowanceInfos11111() {
 	})
 	$('#allowance_uploadExcel').submit();
 }
+
+function clearSearchAllowance() {
+	$("#allowance_pNumber").val("");
+	$("#allowance_pName").val("");
+	$("#allowance_organzationName").val("");
+	$("#allowancee_deptName").val("");
+	$("#allowancee_officeName").val("");
+	$("#allowance_list_datagrid").datagrid("load",{});
+}

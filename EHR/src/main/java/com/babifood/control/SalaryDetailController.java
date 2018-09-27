@@ -49,8 +49,8 @@ public class SalaryDetailController {
 	 */
 	@RequestMapping("calculation")
 	@ResponseBody
-	public Map<String, Object> salaryCalculation(Integer type){
-		return salaryCalculationService.salaryCalculation(type);
+	public Map<String, Object> salaryCalculation(Integer type ,String year, String month){
+		return salaryCalculationService.salaryCalculation(type, year, month);
 	}
 	
 	/**
