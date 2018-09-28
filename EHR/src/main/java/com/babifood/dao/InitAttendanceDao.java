@@ -13,6 +13,8 @@ public interface InitAttendanceDao {
 
 	public Map<String, Object> summaryArrangementInfo(String year, String month, String pNumber);
 
-	public Double findYearSickHours(String year, String month, String pNumber);
+	public Double findYearSickHours(String year, String month, String pNumber, String endDate);
+
+	public List<Map<String, Object>> findCurrentMonthSick(String year, String month, String pNumber);
 
 }

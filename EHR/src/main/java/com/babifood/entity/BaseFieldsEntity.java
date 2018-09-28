@@ -2,6 +2,8 @@ package com.babifood.entity;
 
 public class BaseFieldsEntity {
 
+	private String pNumber;//员工工号
+	
 	private String baseSalary;//基本工资
 	
 	private String fixedOverTimeSalary;//固定加班工资
@@ -102,6 +104,8 @@ public class BaseFieldsEntity {
 	
 	private String nationality;//国籍
 	
+	private String inDate;//入职时间
+	
 	private String property;//工作类型（兼职、全职）
 	
 	private String reserved1;//预留字段1
@@ -123,6 +127,14 @@ public class BaseFieldsEntity {
 	private String reserved9;//预留字段9
 
 	private String reserved10;//预留字段10
+
+	public String getpNumber() {
+		return pNumber;
+	}
+
+	public void setpNumber(String pNumber) {
+		this.pNumber = pNumber;
+	}
 
 	public String getBaseSalary() {
 		return baseSalary;
@@ -522,6 +534,14 @@ public class BaseFieldsEntity {
 
 	public void setNationality(String nationality) {
 		this.nationality = nationality;
+	}
+
+	public String getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(String inDate) {
+		this.inDate = inDate;
 	}
 
 	public String getProperty() {

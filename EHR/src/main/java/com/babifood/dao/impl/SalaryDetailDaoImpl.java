@@ -349,7 +349,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 			sql.append("'" + BASE64Util.encode(salaryDetail.getLaterAndLeaveDeduction()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getCompletionDeduction()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getYearDeduction()) + "',");
-			sql.append("'" + BASE64Util.encode(salaryDetail.getRealWages()) + "',");
+			sql.append("'" + BASE64Util.encode(salaryDetail.getRelaxation()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getThingDeduction()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getSickDeduction()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getTrainDeduction()) + "',");

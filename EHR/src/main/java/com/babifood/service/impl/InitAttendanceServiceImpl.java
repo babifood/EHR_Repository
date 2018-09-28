@@ -36,8 +36,13 @@ public class InitAttendanceServiceImpl implements InitAttendanceService {
 	}
 
 	@Override
-	public Double findYearSickHours(String year, String month, String pNumber) {
-		return initAttendanceDao.findYearSickHours(year, month, pNumber);
+	public Double findYearSickHours(String year, String month, String pNumber, String endDate) {
+		return initAttendanceDao.findYearSickHours(year, month, pNumber,endDate);
+	}
+
+	@Override
+	public List<Map<String, Object>> findCurrentMonthSick(String year, String month, String pNumber) {
+		return initAttendanceDao.findCurrentMonthSick(year, month, pNumber);
 	}
 
 }
