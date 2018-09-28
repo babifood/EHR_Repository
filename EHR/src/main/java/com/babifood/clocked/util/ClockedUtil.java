@@ -37,6 +37,7 @@ public class ClockedUtil {
 		//根据考勤标志判断当天是否显示标准上班时间和下班时间及工作时长
 		if(clockedResult.getClockFlag()==0){
 			clockedResult.setStandWorkLength(0d);
+			clockedResult.setInOutJob(0d);
 		}
 		return clockedResult;
 	}

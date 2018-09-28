@@ -84,9 +84,6 @@ public class OfficeCalcRule {
 			double finalHours = 0;
 			if (theResult.getFinalBeginTime() != null && theResult.getFinalEndTime() != null) {
 				finalHours = WorkHourRule.getOfficeWorkHoursBySameDay(dftime.format(theResult.getFinalBeginTime()), dftime.format(theResult.getFinalEndTime()), theResult);
-				// if(theResult.getNianJia() > finalHours){
-				// finalHours = theResult.getNianJia();
-				// }
 			}
 			// 缺勤时长
 			theResult.setQueQin(theResult.getStandWorkLength() - finalHours);
