@@ -88,17 +88,44 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 	}
 
 	@Override
-	public Double findYearSickHours(String year, String month, String pNumber) {
-		String sql = "SELECT SUM(SICK_VACATION) as sick from ehr_init_attendance where `YEAR` = ? and `MONTH` = ? and P_NUMBER = ?";
+	public Double findYearSickHours(String year, String month, String pNumber, String endDate) {
+		String sql = "SELECT SUM(bingJia) as sick from ehr_checking_result where year = ? and month = ? and WorkNum = ? and checkingDate <= ?";
 		Double sickHours = 0.0;
 		try {
-			int ser = jdbcTemplate.queryForInt(sql, year, month, pNumber);
+			int ser = jdbcTemplate.queryForInt(sql, year, month, pNumber, endDate);
 			sickHours = Double.valueOf(ser);
 		} catch (Exception e) {
 			log.error("统计员工年度病假统计信息失败",e);
 			throw e;
 		}
 		return sickHours;
+	}
+
+	@Override
+	public List<Map<String, Object>> findCurrentMonthSick(String year, String month, String pNumber) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select ");
+		sql.append("Year,Month,WorkNum,UserName,");
+		sql.append("CompanyCode,Company,OrganCode,Organ,DeptCode, ");
+		sql.append("Dept,OfficeCode,Office,GroupCode,GroupName, ");
+		sql.append("PostCode,Post,CheckingType,PaiBanType,checkingDate, ");
+		sql.append("Week,beginTime,endTime,standardWorkLength, ");
+		sql.append("checkingBeginTime,checkingEndTime,originalCheckingLength, ");
+		sql.append("actualWorkLength,chiDao,zaoTui,kuangGong,nianJia, ");
+		sql.append("tiaoXiu,shiJia,bingJia,peixunJia,hunJia, ");
+		sql.append("chanJia,PeiChanJia,SangJia,Qita,Queqin, ");
+		sql.append("Qingjia,Yidong,Jiaban,Chuchai,Canbu, ");
+		sql.append("EventBeginTime,EventEndTime,Clockflag ");
+		sql.append("from ehr_checking_result ");
+		sql.append("where bingJia > 0 and Year=? and Month = ? and WorkNum=?");
+		List<Map<String, Object>> sickList = null;
+		try {
+			sickList = jdbcTemplate.queryForList(sql.toString(), year, month, pNumber);
+		} catch (Exception e) {
+			log.error("查询员工当月病假失败",e);
+			throw e;
+		}
+		return sickList;
 	}
 
 }
