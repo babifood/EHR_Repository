@@ -1,8 +1,11 @@
 package com.babifood.clocked.rule;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,87 +67,87 @@ public class ClockedYesNoRule {
 	public void setStandWorkTime(Person person,ClockedResultBases tmpResult,Date systemFrontDate) throws Exception{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String sysFrontDate = sdf.format(systemFrontDate);
-		int size = specialworkTimeList == null ? 0 : specialworkTimeList.size();
-		//特殊排班
-		for(int i = 0;i<size;i++){
-			if(person.getCompanyCode().equals(specialworkTimeList.get(i).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(i).getDate())){
-				tmpResult.setBeginTime(specialworkTimeList.get(i).getStart_time());
-				tmpResult.setEndTime(specialworkTimeList.get(i).getEnd_time());
+		List<SpecialWorkCalendar> special=filtrateSpecialWorkCalendarData(person,sysFrontDate);
+		for(int i=0;i<special.size();i++){
+			//特殊排班
+			if(person.getCompanyCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
+				tmpResult.setBeginTime(special.get(i).getStart_time());
+				tmpResult.setEndTime(special.get(i).getEnd_time());
 				//排班类型
-				tmpResult.setPaiBanType(specialworkTimeList.get(i).getArrangement_type());
+				tmpResult.setPaiBanType(special.get(i).getArrangement_type());
 				break;
-			}else if(person.getOrganCode().equals(specialworkTimeList.get(i).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(i).getDate())){
-				tmpResult.setBeginTime(specialworkTimeList.get(i).getStart_time());
-				tmpResult.setEndTime(specialworkTimeList.get(i).getEnd_time());
+			}else if(person.getOrganCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
+				tmpResult.setBeginTime(special.get(i).getStart_time());
+				tmpResult.setEndTime(special.get(i).getEnd_time());
 				//排班类型
-				tmpResult.setPaiBanType(specialworkTimeList.get(i).getArrangement_type());
+				tmpResult.setPaiBanType(special.get(i).getArrangement_type());
 				break;
-			}else if(person.getDeptCode().equals(specialworkTimeList.get(i).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(i).getDate())){
-				tmpResult.setBeginTime(specialworkTimeList.get(i).getStart_time());
-				tmpResult.setEndTime(specialworkTimeList.get(i).getEnd_time());
+			}else if(person.getDeptCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
+				tmpResult.setBeginTime(special.get(i).getStart_time());
+				tmpResult.setEndTime(special.get(i).getEnd_time());
 				//排班类型
-				tmpResult.setPaiBanType(specialworkTimeList.get(i).getArrangement_type());
+				tmpResult.setPaiBanType(special.get(i).getArrangement_type());
 				break;
-			}else if(person.getOfficeCode().equals(specialworkTimeList.get(i).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(i).getDate())){
-				tmpResult.setBeginTime(specialworkTimeList.get(i).getStart_time());
-				tmpResult.setEndTime(specialworkTimeList.get(i).getEnd_time());
+			}else if(person.getOfficeCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
+				tmpResult.setBeginTime(special.get(i).getStart_time());
+				tmpResult.setEndTime(special.get(i).getEnd_time());
 				//排班类型
-				tmpResult.setPaiBanType(specialworkTimeList.get(i).getArrangement_type());
+				tmpResult.setPaiBanType(special.get(i).getArrangement_type());
 				break;
-			}else if(person.getGroupCode().equals(specialworkTimeList.get(i).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(i).getDate())){
-				tmpResult.setBeginTime(specialworkTimeList.get(i).getStart_time());
-				tmpResult.setEndTime(specialworkTimeList.get(i).getEnd_time());
+			}else if(person.getGroupCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
+				tmpResult.setBeginTime(special.get(i).getStart_time());
+				tmpResult.setEndTime(special.get(i).getEnd_time());
 				//排班类型
-				tmpResult.setPaiBanType(specialworkTimeList.get(i).getArrangement_type());
+				tmpResult.setPaiBanType(special.get(i).getArrangement_type());
 				break;
-			}else if(person.getWorkNum().equals(specialworkTimeList.get(i).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(i).getDate())){
-				tmpResult.setBeginTime(specialworkTimeList.get(i).getStart_time());
-				tmpResult.setEndTime(specialworkTimeList.get(i).getEnd_time());
+			}else if(person.getWorkNum().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
+				tmpResult.setBeginTime(special.get(i).getStart_time());
+				tmpResult.setEndTime(special.get(i).getEnd_time());
 				//排班类型
-				tmpResult.setPaiBanType(specialworkTimeList.get(i).getArrangement_type());
+				tmpResult.setPaiBanType(special.get(i).getArrangement_type());
 				break;
 			}
 		}
 		//基本排班
 		if(tmpResult.getBeginTime()==null&&tmpResult.getEndTime()==null){
-			size = basicworkTimeList == null ? 0 : basicworkTimeList.size();
-			for(int i = 0;i<basicworkTimeList.size();i++){
+			int size = basicworkTimeList == null ? 0 : basicworkTimeList.size();
+			for(int i = 0;i<size;i++){
 				if(person.getCompanyCode().equals(basicworkTimeList.get(i).getTarget_id())){
 					tmpResult.setBeginTime(basicworkTimeList.get(i).getStart_time());
 					tmpResult.setEndTime(basicworkTimeList.get(i).getEnd_time());
 					//排班类型
 					tmpResult.setPaiBanType(basicworkTimeList.get(i).getArrangement_type());
-					break;
+					continue;
 				}else if(person.getOrganCode().equals(basicworkTimeList.get(i).getTarget_id())){
 					tmpResult.setBeginTime(basicworkTimeList.get(i).getStart_time());
 					tmpResult.setEndTime(basicworkTimeList.get(i).getEnd_time());
 					//排班类型
 					tmpResult.setPaiBanType(basicworkTimeList.get(i).getArrangement_type());
-					break;
+					continue;
 				}else if(person.getDeptCode().equals(basicworkTimeList.get(i).getTarget_id())){
 					tmpResult.setBeginTime(basicworkTimeList.get(i).getStart_time());
 					tmpResult.setEndTime(basicworkTimeList.get(i).getEnd_time());
 					//排班类型
 					tmpResult.setPaiBanType(basicworkTimeList.get(i).getArrangement_type());
-					break;
+					continue;
 				}else if(person.getOfficeCode().equals(basicworkTimeList.get(i).getTarget_id())){
 					tmpResult.setBeginTime(basicworkTimeList.get(i).getStart_time());
 					tmpResult.setEndTime(basicworkTimeList.get(i).getEnd_time());
 					//排班类型
 					tmpResult.setPaiBanType(basicworkTimeList.get(i).getArrangement_type());
-					break;
+					continue;
 				}else if(person.getGroupCode().equals(basicworkTimeList.get(i).getTarget_id())){
 					tmpResult.setBeginTime(basicworkTimeList.get(i).getStart_time());
 					tmpResult.setEndTime(basicworkTimeList.get(i).getEnd_time());
 					//排班类型
 					tmpResult.setPaiBanType(basicworkTimeList.get(i).getArrangement_type());
-					break;
+					continue;
 				}else if(person.getWorkNum().equals(basicworkTimeList.get(i).getTarget_id())){
 					tmpResult.setBeginTime(basicworkTimeList.get(i).getStart_time());
 					tmpResult.setEndTime(basicworkTimeList.get(i).getEnd_time());
 					//排班类型
 					tmpResult.setPaiBanType(basicworkTimeList.get(i).getArrangement_type());
-					break;
+					continue;
 				}
 			}
 		}
@@ -188,29 +191,30 @@ public class ClockedYesNoRule {
 			}
 		}
 		//3根据特殊排班设置考勤标志
-		size = specialworkTimeList == null ? 0 : specialworkTimeList.size();
 		String sysFrontDate = sdf.format(systemFrontDate);
-		for(int j=0;j<size;j++){
-			if(person.getCompanyCode().equals(specialworkTimeList.get(j).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(j).getDate())){
+		List<SpecialWorkCalendar> special=filtrateSpecialWorkCalendarData(person,sysFrontDate);
+		for(int i = 0;i<special.size();i++){
+			if(person.getCompanyCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				break;
-			}else if(person.getOrganCode().equals(specialworkTimeList.get(j).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(j).getDate())){
+			}else if(person.getOrganCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				break;
-			}else if(person.getDeptCode().equals(specialworkTimeList.get(j).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(j).getDate())){
+			}else if(person.getDeptCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				break;
-			}else if(person.getOfficeCode().equals(specialworkTimeList.get(j).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(j).getDate())){
+			}else if(person.getOfficeCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				break;
-			}else if(person.getGroupCode().equals(specialworkTimeList.get(j).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(j).getDate())){
+			}else if(person.getGroupCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				break;
-			}else if(person.getWorkNum().equals(specialworkTimeList.get(j).getTarget_id())&&sysFrontDate.equals(specialworkTimeList.get(j).getDate())){
+			}else if(person.getWorkNum().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				break;
 			}
 		}
+		//4更具员工入离职日期判断考勤标志
 		Date inDate = null;
 		Date outDate= null;
 		int year = 0;
@@ -224,8 +228,12 @@ public class ClockedYesNoRule {
 			int inMonth = Integer.parseInt(person.getInDate().substring(6,7));
 			if(year==inYear&&month==inMonth){
 				if(tmpResult.getCheckingDate().getTime()<inDate.getTime()){
+					if(tmpResult.getClockFlag()==Clock_Flag_WORK_NORMAL){
+						tmpResult.setInOutJob(tmpResult.getStandWorkLength());
+					}else if(tmpResult.getClockFlag()==Clock_Flag_NOT_WORK){
+						tmpResult.setInOutJob(0d);
+					}
 					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
-					tmpResult.setInOutJob(tmpResult.getStandWorkLength());
 				}
 			}
 		}
@@ -235,15 +243,32 @@ public class ClockedYesNoRule {
 			int outMonth = Integer.parseInt(person.getOutDate().substring(6,7));
 			if(year==outYear&&month==outMonth){
 				if(tmpResult.getCheckingDate().getTime()>=outDate.getTime()){
+					if(tmpResult.getClockFlag()==Clock_Flag_WORK_NORMAL){
+						tmpResult.setInOutJob(tmpResult.getStandWorkLength());
+					}else if(tmpResult.getClockFlag()==Clock_Flag_NOT_WORK){
+						tmpResult.setInOutJob(0d);
+					}
 					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
-					tmpResult.setInOutJob(tmpResult.getStandWorkLength());
 				}
 			}
 		}
 		 
 	}
-	public static void main(String[] args)  {
-		
-		
+	private List<SpecialWorkCalendar> filtrateSpecialWorkCalendarData(Person person,String sysFrontDate){
+		List<SpecialWorkCalendar> specialList = new ArrayList<SpecialWorkCalendar>();
+		String[] strArr = {person.getWorkNum(),person.getGroupCode(),person.getOfficeCode(),person.getDeptCode(),person.getOrganCode(),person.getCompanyCode()};
+		int size = specialworkTimeList == null ? 0 : specialworkTimeList.size();
+		//特殊排班
+		for (int arr = 0;arr<strArr.length;arr++){
+			for(int i = 0;i<size;i++){
+				if(strArr[arr].equals(specialworkTimeList.get(i).getTarget_id())){
+					specialList.add(specialworkTimeList.get(i));
+				}
+			}
+			if(specialList.size()>0){
+				break;
+			}
+		}
+		return specialList;
 	}
 }

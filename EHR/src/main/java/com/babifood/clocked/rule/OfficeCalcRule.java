@@ -77,7 +77,7 @@ public class OfficeCalcRule {
 		} else if(theResult.getClockFlag() ==1){
 			// 计算异动时间
 			if (yiDongBegin != null && yiDongEnd != null) {
-				double yiDongHours = WorkHourRule.getOfficeWorkHoursBySameDay(yiDongBegin.toString(), yiDongEnd.toString(), theResult);
+				double yiDongHours = WorkHourRule.getOfficeWorkHoursBySameDay(dftime.format(yiDongBegin), dftime.format(yiDongEnd), theResult);
 				theResult.setYiDong(yiDongHours);
 			}
 			// 计算最终有效时长
@@ -115,12 +115,23 @@ public class OfficeCalcRule {
 					if (chiDaoValue > 15 || zaoTuiValue > 15) {
 						double kuangGong = 0d;
 						//如果员工迟到早退大于15分钟着算4个小时，如果大于4小时着算8小时
-						if(theResult.getQueQin()<=4){
-							kuangGong = 4;
-						}else if(theResult.getQueQin()>4){
-							kuangGong = 8;
-						}else{
-							kuangGong = theResult.getQueQin();
+						if(theResult.getStandWorkLength()==8){
+							if(theResult.getQueQin()<=4){
+								kuangGong = 4;
+							}else if(theResult.getQueQin()>4){
+								kuangGong = 8;
+							}else{
+								kuangGong = theResult.getQueQin();
+							}
+						//如果周六员工迟到早退大于15分钟着算3个小时，如果大于3小时着算6小时	
+						}else if(theResult.getStandWorkLength()==6){
+							if(theResult.getQueQin()<=3){
+								kuangGong = 3;
+							}else if(theResult.getQueQin()>3){
+								kuangGong = 6;
+							}else{
+								kuangGong = theResult.getQueQin();
+							}
 						}
 						theResult.setKuangGong(kuangGong);
 					} else {

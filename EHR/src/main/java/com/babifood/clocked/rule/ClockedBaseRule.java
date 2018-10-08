@@ -20,17 +20,13 @@ public class ClockedBaseRule {
 		if (theResult.getClockFlag() == 0) {
 			theResult.setCanBu(0);
 			if (theResult.getJiaBan() >= 4.5) {
-					theResult.setCanBu(1);
+				theResult.setCanBu(1);
 			}
 		} else {
 			// 餐补个数
-			if (theResult.getStandWorkLength() == 8 && theResult.getOriginalCheckingLength() >= 4.5d) {
+			if (theResult.getStandWorkLength() == 8 && theResult.getActualWorkLength() >= 4.5) {
 				theResult.setCanBu(1);
-			} else if (theResult.getStandWorkLength() == 6 && theResult.getOriginalCheckingLength() >= 3.5d) {
-				theResult.setCanBu(1);
-			} else if (theResult.getStandWorkLength() == 8 && theResult.getChuCha() >= 4.5d) {
-				theResult.setCanBu(1);
-			} else if (theResult.getStandWorkLength() == 6 && theResult.getChuCha() >= 3.5d) {
+			} else if (theResult.getStandWorkLength() == 6 && theResult.getActualWorkLength() >= 3.5) {
 				theResult.setCanBu(1);
 			} else {
 				theResult.setCanBu(0);
