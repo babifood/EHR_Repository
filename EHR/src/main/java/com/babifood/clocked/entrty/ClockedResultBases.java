@@ -66,7 +66,9 @@ public class ClockedResultBases {
 	private Integer chiDao;
 	// 早退
 	private Integer zaoTui;
-	// 旷工
+	// 旷工次数
+	private Integer kuangGongCiShu;
+	// 旷工时长
 	private Double kuangGong;
 	// 年假
 	private Double nianJia;
@@ -342,6 +344,12 @@ public class ClockedResultBases {
 	}
 	public void setZaoTui(Integer zaoTui) {
 		this.zaoTui = zaoTui;
+	}
+	public Integer getKuangGongCiShu() {
+		return kuangGongCiShu;
+	}
+	public void setKuangGongCiShu(Integer kuangGongCiShu) {
+		this.kuangGongCiShu = kuangGongCiShu;
 	}
 	public Double getKuangGong() {
 		return kuangGong;

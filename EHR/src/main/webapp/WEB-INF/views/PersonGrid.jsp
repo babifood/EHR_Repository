@@ -237,7 +237,11 @@
 							<tr class="text_tr">
 								<td>国籍:</td>
 								<td>
-									<input type="text" id="p_nationality" name="p_nationality" class="textbox"/>
+									<!--<input type="text" id="p_nationality" name="p_nationality" class="textbox"/>  -->
+									<select id="p_nationality" class="easyui-combobox" editable="false" style="width:100%" required="required">
+										<option value="1">中国</option>
+										<option value="2">其他</option>
+									</select>
 								</td>
 								<td>民族:</td>
 								<td>

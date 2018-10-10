@@ -25,6 +25,7 @@ import com.babifood.clocked.rule.MobileCalcRule;
 import com.babifood.clocked.rule.MobileDaKaRule;
 import com.babifood.clocked.rule.OfficeCalcRule;
 import com.babifood.clocked.rule.OfficeDaKaRule;
+import com.babifood.clocked.rule.OfficeNotCheckRule;
 import com.babifood.clocked.service.CollectionClockedDataService;
 import com.babifood.clocked.service.LoadClockedResultService;
 import com.babifood.constant.ModuleConstant;
@@ -166,6 +167,9 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 					LogManager.putContectOfLogInfo(e.getMessage());
 					log.error("attachWithDaKa()行政考勤:"+e.getMessage());
 				}
+			}else if(daKaType.equals("2")){
+				//不打人员不计算打卡业务跳过本次循环
+				continue;
 			}
 		}
 	}
@@ -179,6 +183,7 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		int size = clockedResultList==null?0:clockedResultList.size();
 		OfficeCalcRule officeCalcRule = null;
 		MobileCalcRule mobileCalcRule = null;
+		OfficeNotCheckRule officeNotCheckRule =null;
 		String daKaType = null;
 		for (int i = 0; i < size; i++) {
 			tmpClockedResult = clockedResultList.get(i);
@@ -208,6 +213,17 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 					log.error("attachWithBizData行政业务:"+e.getMessage());
 				}
 
+			}else if(daKaType.equals("2")){
+				//不打卡人员当天没有请假的的默认视为有效出勤并计算餐补个数，
+				officeNotCheckRule = new OfficeNotCheckRule();
+				try {
+					officeNotCheckRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
+					LogManager.putContectOfLogInfo("计算不考勤业务数据");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LogManager.putContectOfLogInfo(e.getMessage());
+					log.error("attachWithBizData不考勤业务:"+e.getMessage());
+				}
 			}
 
 		}

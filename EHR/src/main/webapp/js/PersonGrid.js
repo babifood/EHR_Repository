@@ -434,6 +434,13 @@ function loadPersonGrid(search_p_number,search_p_name){
 			{
 				field:"p_nationality",
 				title:"国籍",
+				formatter:function(value){
+					if(value=="1"){
+						return "中国";
+					}else if(value=="2"){
+						return "其他";
+					}
+				},
 			},
 			{
 				field:"p_huji",
@@ -673,7 +680,7 @@ function editFromSetValues(data){
 	$("#p_shebao_end_month").datebox('setValue',data.p_shebao_end_month);//社保购买终止月
 	$("#p_gjj_begin_month").datebox('setValue',data.p_gjj_begin_month);//公积金购买起始月
 	$("#p_gjj_end_month").datebox('setValue',data.p_gjj_end_month);//公积金购买终止月
-    $("#p_nationality").val(data.p_nationality);//国籍
+    $("#p_nationality").combobox('setValue',data.p_nationality);//国籍
 	$("#p_nation").val(data.p_nation);//民族
 	$("#p_marriage").combobox('setValue',data.p_marriage);//婚否
 	$("#p_politics").combobox('setValue',data.p_politics);//政治面貌

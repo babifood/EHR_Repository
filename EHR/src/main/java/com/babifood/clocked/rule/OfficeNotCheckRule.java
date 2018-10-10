@@ -1,22 +1,15 @@
 package com.babifood.clocked.rule;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.babifood.clocked.entrty.ClockedBizData;
 import com.babifood.clocked.entrty.ClockedResultBases;
 import com.babifood.utils.UtilDateTime;
-/**
- * 办公室-考勤业务数据--加班/出差/请假/异动计算规则
- * @author BABIFOOD
- *
- */
-@Service
-public class OfficeCalcRule {
+
+//计算不打卡人员的业务数据
+public class OfficeNotCheckRule {
 	private Date yiDongBegin;
 	private Date yiDongEnd;
 
@@ -41,119 +34,20 @@ public class OfficeCalcRule {
 
 		theResult.setEventBeginTime(tmpBegin);
 		theResult.setEventEndTime(tmpEnd);
-
-		calculate(theResult);
-	}
-	/*
-	 * 对最终的数据进行计算
-	 */
-	private void calculate(ClockedResultBases theResult) throws Exception {
-		DateFormat dftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		// 对不需要上班的日期，进行处理
-		if (theResult.getClockFlag() ==0) {
-			theResult.setYiDong(0d);
-			theResult.setChuCha(0d);
-			theResult.setQingJia(0d);
-			theResult.setShiJia(0d);
-			theResult.setBingJia(0d);
-			theResult.setHunJia(0d);
-			theResult.setSangJia(0d);
-			theResult.setNianJia(0d);
-			theResult.setOtherQingJia(0d);
-
-			theResult.setChiDao(0);
-			theResult.setZaoTui(0);
-			theResult.setKuangGongCiShu(0);
-			theResult.setKuangGong(0d);
-
-			// 对于加班的数据，不能清空,比如周末加班
-			// theResult.setJiaBan(0);
-			if (theResult.getCheckingBeginTime() == null || theResult.getCheckingEndTime() == null) {
-				theResult.setActualWorkLength(0d);
-				theResult.setOriginalCheckingLength(0d);
+		//计算餐补
+		if (theResult.getClockFlag() == 0) {
+			theResult.setCanBu(0);
+			//排班标准上下班时间（非工厂）非工作日加班大于4.5小时才发放餐补
+			if (!theResult.getBeginTime().equals("9:00")&&!theResult.getEndTime().equals("18:00")&&theResult.getJiaBan() >= 4.5) {
+				theResult.setCanBu(1);
 			}
-
+		} else {
 			// 餐补个数
-			ClockedBaseRule.calcCanBu(theResult);
-		} else if(theResult.getClockFlag() ==1){
-			// 计算异动时间
-			if (yiDongBegin != null && yiDongEnd != null) {
-				double yiDongHours = WorkHourRule.getOfficeWorkHoursBySameDay(dftime.format(yiDongBegin), dftime.format(yiDongEnd), theResult);
-				theResult.setYiDong(yiDongHours);
-			}
-			// 计算最终有效时长
-			double finalHours = 0;
-			if (theResult.getFinalBeginTime() != null && theResult.getFinalEndTime() != null) {
-				finalHours = WorkHourRule.getOfficeWorkHoursBySameDay(dftime.format(theResult.getFinalBeginTime()), dftime.format(theResult.getFinalEndTime()), theResult);
-			}
-			// 缺勤时长
-			theResult.setQueQin(theResult.getStandWorkLength() - finalHours);
-			// 实际工作时长
-			if (theResult.getStandWorkLength() - theResult.getQingJia() - theResult.getQueQin() < 0) {
-				theResult.setActualWorkLength(0d);
+			if (theResult.getQingJia() >= 4.5) {
+				theResult.setCanBu(0);
 			} else {
-				theResult.setActualWorkLength(theResult.getStandWorkLength() - theResult.getQingJia() - theResult.getQueQin());
+				theResult.setCanBu(1);
 			}
-			// 没有缺勤
-			if (finalHours>=theResult.getStandWorkLength()) {
-				theResult.setChiDao(0);
-				theResult.setZaoTui(0);
-				theResult.setKuangGongCiShu(0);;
-				theResult.setKuangGong(0d);
-			} else {
-				if (theResult.getFinalBeginTime() == null || theResult.getFinalEndTime() == null) {
-					theResult.setKuangGongCiShu(1);
-					theResult.setKuangGong(theResult.getStandWorkLength() - finalHours);
-				} else {
-					// 迟到
-					long chiDaoValue = 0;
-					if (theResult.getFinalBeginTime().after(theResult.getStandBeginTime())) {
-						chiDaoValue = UtilDateTime.getMinuteBetween(theResult.getStandBeginTime(), theResult.getFinalBeginTime());
-					}
-					// 早退
-					long zaoTuiValue = 0;
-					if (theResult.getFinalEndTime().before(theResult.getStandEndTime())) {
-						zaoTuiValue = UtilDateTime.getMinuteBetween(theResult.getFinalEndTime(), theResult.getStandEndTime());
-					}
-					if (chiDaoValue > 15 || zaoTuiValue > 15) {
-						double kuangGong = 0d;
-						//如果员工迟到早退大于15分钟着算4个小时，如果大于4小时着算8小时
-						if(theResult.getStandWorkLength()==8){
-							if(theResult.getQueQin()<=4){
-								kuangGong = 4;
-							}else if(theResult.getQueQin()>4){
-								kuangGong = 8;
-							}else{
-								kuangGong = theResult.getQueQin();
-							}
-						//如果周六员工迟到早退大于15分钟着算3个小时，如果大于3小时着算6小时	
-						}else if(theResult.getStandWorkLength()==6){
-							if(theResult.getQueQin()<=3){
-								kuangGong = 3;
-							}else if(theResult.getQueQin()>3){
-								kuangGong = 6;
-							}else{
-								kuangGong = theResult.getQueQin();
-							}
-						}
-						theResult.setKuangGongCiShu(1);
-						theResult.setKuangGong(kuangGong);
-					} else {
-						if (chiDaoValue > 0) {
-							theResult.setChiDao(1);
-							//缺勤置0
-							theResult.setQueQin(0d);
-						}
-						if (zaoTuiValue > 0) {
-							theResult.setZaoTui(1);
-							//缺勤置0
-							theResult.setQueQin(0d);
-						}
-					}
-				}
-			}
-			// 餐补个数
-			ClockedBaseRule.calcCanBu(theResult);
 		}
 	}
 	/*
@@ -298,7 +192,6 @@ public class OfficeCalcRule {
 			theResult.setJiaBan(theClockedBizData.getTimeLength());
 		}
 	}
-
 	private Date getMin(Date x1, Date x2) {
 		if (x1 == null) {
 			return x2;

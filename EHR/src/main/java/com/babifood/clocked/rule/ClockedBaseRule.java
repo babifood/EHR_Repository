@@ -19,7 +19,8 @@ public class ClockedBaseRule {
 	public static void calcCanBu(ClockedResultBases theResult) {
 		if (theResult.getClockFlag() == 0) {
 			theResult.setCanBu(0);
-			if (theResult.getJiaBan() >= 4.5) {
+			//排班标准上下班时间（非工厂）非工作日加班大于4.5小时才发放餐补
+			if (!theResult.getBeginTime().equals("9:00")&&!theResult.getEndTime().equals("18:00")&&theResult.getJiaBan() >= 4.5) {
 				theResult.setCanBu(1);
 			}
 		} else {

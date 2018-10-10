@@ -98,6 +98,8 @@ function loadSumClockedResult(){
 						return "固定考勤";
 					}else if(value=="1"){
 						return "移动考勤";
+					}else if(value=="2"){
+						return "不打卡";
 					}
 				}
 				
@@ -124,12 +126,13 @@ function loadSumClockedResult(){
 				
 				
 			},
-			{
-				field:"originalCheckingLength",
-				title:"打卡原始时长",
-				
-				
-			},
+			//人事要求不显示
+//			{
+//				field:"originalCheckingLength",
+//				title:"打卡原始时长",
+//				
+//				
+//			},
 			{
 				field:"actualWorkLength",
 				title:"工作时长",
@@ -149,8 +152,14 @@ function loadSumClockedResult(){
 				
 			},
 			{
+				field:"kuangGongCiShu",
+				title:"旷工次数",
+				
+				
+			},
+			{
 				field:"kuangGong",
-				title:"旷工",
+				title:"旷工时长",
 				
 				
 			},
@@ -423,12 +432,13 @@ function loadClockedResult(year,month,workNum,periodEndDate){
 				
 				
 			},
-			{
-				field:"originalCheckingLength",
-				title:"打卡原始时长",
-				
-				
-			},
+			//人事要求不显示
+//			{
+//				field:"originalCheckingLength",
+//				title:"打卡原始时长",
+//				
+//				
+//			},
 			{
 				field:"actualWorkLength",
 				title:"工作时长",
@@ -448,8 +458,14 @@ function loadClockedResult(year,month,workNum,periodEndDate){
 				
 			},
 			{
+				field:"kuangGongCiShu",
+				title:"旷工次数",
+				
+				
+			},
+			{
 				field:"kuangGong",
-				title:"旷工",
+				title:"旷工时长",
 				
 				
 			},

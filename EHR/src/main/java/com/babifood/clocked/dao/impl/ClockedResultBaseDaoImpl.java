@@ -29,12 +29,12 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("postcode,post,checkingtype,paibantype,checkingdate, ");
 		sql.append("week,begintime,endtime,standardworklength, ");
 		sql.append("checkingbegintime,checkingendtime,originalcheckinglength, ");
-		sql.append("actualworklength,chidao,zaotui,kuanggong,nianjia, ");
+		sql.append("actualworklength,chidao,zaotui,kuanggongcishu,kuanggong,nianjia, ");
 		sql.append("tiaoxiu,shijia,bingjia,peixunjia,hunjia, ");
 		sql.append("chanjia,peichanjia,sangjia,qita,queqin, ");
 		sql.append("qingjia,yidong,jiaban,chuchai,canbu, ");
 		sql.append("eventbegintime,eventendtime,clockflag,inoutjob) ");
-		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		final String strSql = sql.toString();
 		List<Object[]> paramsList = new ArrayList<>();
 		for(int i=0;i<saveDataList.size();i++){
@@ -54,6 +54,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 					saveDataList.get(i).getCheckingBeginTime(),saveDataList.get(i).getCheckingEndTime(),
 					saveDataList.get(i).getOriginalCheckingLength(),saveDataList.get(i).getActualWorkLength(),
 					saveDataList.get(i).getChiDao(),saveDataList.get(i).getZaoTui(),
+					saveDataList.get(i).getKuangGongCiShu(),
 					saveDataList.get(i).getKuangGong(),saveDataList.get(i).getNianJia(),
 					saveDataList.get(i).getTiaoXiu(),saveDataList.get(i).getShiJia(),
 					saveDataList.get(i).getBingJia(),saveDataList.get(i).getPeiXunJia(),
@@ -89,7 +90,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("PostCode,Post,CheckingType,PaiBanType,checkingDate, ");
 		sql.append("Week,beginTime,endTime,standardWorkLength, ");
 		sql.append("checkingBeginTime,checkingEndTime,originalCheckingLength, ");
-		sql.append("actualWorkLength,chiDao,zaoTui,kuangGong,nianJia, ");
+		sql.append("actualWorkLength,chiDao,zaoTui,kuangGongCiShu,kuangGong,nianJia, ");
 		sql.append("tiaoXiu,shiJia,bingJia,peixunJia,hunJia, ");
 		sql.append("chanJia,PeiChanJia,SangJia,Qita,Queqin, ");
 		sql.append("Qingjia,Yidong,Jiaban,Chuchai,Canbu, ");
@@ -117,7 +118,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("PostCode,Post,CheckingType,PaiBanType,checkingDate, ");
 		sql.append("Week,beginTime,endTime,standardWorkLength, ");
 		sql.append("checkingBeginTime,checkingEndTime,originalCheckingLength, ");
-		sql.append("actualWorkLength,chiDao,zaoTui,kuangGong,nianJia, ");
+		sql.append("actualWorkLength,chiDao,zaoTui,kuangGongCiShu,kuangGong,nianJia, ");
 		sql.append("tiaoXiu,shiJia,bingJia,peixunJia,hunJia, ");
 		sql.append("chanJia,PeiChanJia,SangJia,Qita,Queqin, ");
 		sql.append("Qingjia,Yidong,Jiaban,Chuchai,Canbu, ");
@@ -138,7 +139,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		StringBuffer sql = new StringBuffer();
 		sql.append("update ehr_checking_result set ");
 		sql.append("checkingbegintime =?,checkingendtime=?,originalcheckinglength=?, ");
-		sql.append("actualworklength=?,chidao=?,zaotui=?,kuanggong=?,nianjia=?, ");
+		sql.append("actualworklength=?,chidao=?,zaotui=?,kuanggongcishu=?,kuanggong=?,nianjia=?, ");
 		sql.append("tiaoxiu=?,shijia=?,bingjia=?,peixunjia=?,hunjia=?, ");
 		sql.append("chanjia=?,peichanjia=?,sangjia=?,qita=?,queqin=?, ");
 		sql.append("qingjia=?,yidong=?,jiaban=?,chuchai=?,canbu=?, ");
@@ -152,6 +153,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 					saveDataList.get(i).getCheckingBeginTime(),saveDataList.get(i).getCheckingEndTime(),
 					saveDataList.get(i).getOriginalCheckingLength(),saveDataList.get(i).getActualWorkLength(),
 					saveDataList.get(i).getChiDao(),saveDataList.get(i).getZaoTui(),
+					saveDataList.get(i).getKuangGongCiShu(),
 					saveDataList.get(i).getKuangGong(),saveDataList.get(i).getNianJia(),
 					saveDataList.get(i).getTiaoXiu(),saveDataList.get(i).getShiJia(),
 					saveDataList.get(i).getBingJia(),saveDataList.get(i).getPeiXunJia(),
@@ -180,7 +182,7 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("Organ,DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,");
 		sql.append("PostCode,Post,CheckingType,PaiBanType,SUM(standardWorkLength) as standardWorkLength,");
 		sql.append("SUM(originalCheckingLength) as originalCheckingLength,SUM(actualWorkLength) as actualWorkLength,");
-		sql.append("SUM(chiDao) as chiDao,SUM(zaoTui) as zaoTui,SUM(kuangGong) as kuangGong,");
+		sql.append("SUM(chiDao) as chiDao,SUM(zaoTui) as zaoTui,SUM(kuangGongCiShu) as kuangGongCiShu,SUM(kuangGong) as kuangGong,");
 		sql.append("SUM(Queqin) as Queqin,SUM(Qingjia) as Qingjia,SUM(nianJia) as nianJia,");
 		sql.append("SUM(tiaoXiu) as tiaoXiu,SUM(shiJia) as shiJia,SUM(bingJia) as bingJia,");
 		sql.append("SUM(peixunJia) as peixunJia,SUM(hunJia) as hunJia,SUM(chanJia) as chanJia,");
