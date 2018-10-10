@@ -392,15 +392,14 @@ public final class UtilDateTime {
 	 * @param endDate
 	 * @return
 	 */
-	public static Double getHours(String startDate,String endDate) {
-		double nh = 1000 * 60 * 60;
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+	public static boolean getHours(String startDate,String endDate) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		try {
 			long seconds = simpleDateFormat.parse(endDate).getTime() - simpleDateFormat.parse(startDate).getTime();
-			return Math.round(seconds*100.0/nh)/100.0 - 1;
+			return seconds > 0;
 		} catch (ParseException e) {
 		}
-		return 0.00;
+		return false;
 	}
 	
 	//获取系统当前日期的前一天
@@ -462,6 +461,18 @@ public final class UtilDateTime {
 		return false;
 	}
     
+    /**
+     * 时间转换为字符串
+     * @param time
+     * @param pattern
+     * @return
+     */
+    public static String dateToString(Date time, String pattern) {
+    	SimpleDateFormat df = new SimpleDateFormat(pattern);
+    	return df.format(time);
+    }
+    
+    
 	public static void main(String args[]) throws ParseException {
 //		System.out.println(isWorkDay("2018-06-25", "yyyy-MM-dd"));
 //		System.out.println(getWeekDay("2018-06-25"));
@@ -481,10 +492,11 @@ public final class UtilDateTime {
 //			e.printStackTrace();
 //		}
 //		System.out.println(month);
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm:ss");//设置日期格式
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm:ss");//设置日期格式
 //		String beginDate = df.format(getDate("2018-09", "yyyy-MM"));
-		System.out.println(isBeforeThanCurrentMonth("2018-09", "yyyy-MM"));
+		System.out.println(getHours("2018-09-30 12:10:00", "2018-09-30 11:00:00"));
 		
 	}
+
 
 }

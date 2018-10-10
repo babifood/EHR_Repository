@@ -293,22 +293,21 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 	 */
 	@Override
 	public void saveSalaryDetailEntityList(List<SalaryDetailEntity> salaryDetails) {
-		String[] sqls = new String[salaryDetails.size()];
+		StringBuffer sql = new StringBuffer();
+		sql.append("REPLACE INTO `ehr_salary_details` (`ID`, `YEAR`, `MONTH`, `P_NUMBER`, `COMPANY_CODE`, ");
+		sql.append("`ORGANIZATION_CODE`, `DEPT_CODE`, `OFFICE_CODE`, `GROUP_CODE`, `POST`, ");
+		sql.append("`Attendance_hours`, `ABSENCE_HOURS`, `BASE_SALARY`, `FIXED_OVERTIME_SALARY`, ");
+		sql.append("`POST_SALARY`, `CALL_SUBSIDIES`, `COMPANY_SALARY`, `OVER_SALARY`, ");
+		sql.append("`RICE_STICK`, `HIGH_TEMPERATURE_ALLOWANCE`, `LOW_TEMPERATURE_ALLOWANCE`, ");
+		sql.append("`MORNING_SHIFT_ALLOWANCE`, `NIGHT_SHIFT_ALLOWANCE`, `STAY_ALLOWANCE`, ");
+		sql.append("`other_allowance`, `performance_bonus`, `SECURITY_BONUS`, `COMPENSATORY_BONUS`, ");
+		sql.append("`OTHER_BONUS`, `ADD_OTHER`, `MEAL_DEDUCTION`, `DORM_DEDUCTION`, `BEFORE_OTHER_DEDUCTION`, ");
+		sql.append("`INSURANCE_DEDUCTION`, `PROVIDENT_FUND_DEDUCTION`, `AFTER_OTHER_DEDUCTION`, ");
+		sql.append("`LATER_AND_LEAVE_DEDUCTION`, `COMPLETION_DEDUCTION`, ");
+		sql.append("`YEAR_DEDUCTION`, `RELAXATION`, `THING_DEDUCTION`, `SICK_DEDUCTION`, `TRAIN_DEDUCTION`, ");
+		sql.append("`PARENTAL_DEDUCTION`, `MARRIAGE_DEDUCTION`, `COMPANION_PARENTAL_DEDUCTION`, `FUNERAL_DEDUCTION`, ");
+		sql.append("`ONBOARDING_DEPARTURE`, `TOTAL_DEDUCTION`, `WAGE_PAYABLE`, `PERSONAL_TAX`, `REAL_WAGES`) VALUES");
 		for(int i = 0 ;i < salaryDetails.size() ; i++){
-			StringBuffer sql = new StringBuffer();
-			sql.append("REPLACE INTO `ehr_salary_details` (`ID`, `YEAR`, `MONTH`, `P_NUMBER`, `COMPANY_CODE`, ");
-			sql.append("`ORGANIZATION_CODE`, `DEPT_CODE`, `OFFICE_CODE`, `GROUP_CODE`, `POST`, ");
-			sql.append("`Attendance_hours`, `ABSENCE_HOURS`, `BASE_SALARY`, `FIXED_OVERTIME_SALARY`, ");
-			sql.append("`POST_SALARY`, `CALL_SUBSIDIES`, `COMPANY_SALARY`, `OVER_SALARY`, ");
-			sql.append("`RICE_STICK`, `HIGH_TEMPERATURE_ALLOWANCE`, `LOW_TEMPERATURE_ALLOWANCE`, ");
-			sql.append("`MORNING_SHIFT_ALLOWANCE`, `NIGHT_SHIFT_ALLOWANCE`, `STAY_ALLOWANCE`, ");
-			sql.append("`other_allowance`, `performance_bonus`, `SECURITY_BONUS`, `COMPENSATORY_BONUS`, ");
-			sql.append("`OTHER_BONUS`, `ADD_OTHER`, `MEAL_DEDUCTION`, `DORM_DEDUCTION`, `BEFORE_OTHER_DEDUCTION`, ");
-			sql.append("`INSURANCE_DEDUCTION`, `PROVIDENT_FUND_DEDUCTION`, `AFTER_OTHER_DEDUCTION`, ");
-			sql.append("`LATER_AND_LEAVE_DEDUCTION`, `COMPLETION_DEDUCTION`, ");
-			sql.append("`YEAR_DEDUCTION`, `RELAXATION`, `THING_DEDUCTION`, `SICK_DEDUCTION`, `TRAIN_DEDUCTION`, ");
-			sql.append("`PARENTAL_DEDUCTION`, `MARRIAGE_DEDUCTION`, `COMPANION_PARENTAL_DEDUCTION`, `FUNERAL_DEDUCTION`, ");
-			sql.append("`ONBOARDING_DEPARTURE`, `TOTAL_DEDUCTION`, `WAGE_PAYABLE`, `PERSONAL_TAX`, `REAL_WAGES`) VALUES");
 			SalaryDetailEntity salaryDetail = salaryDetails.get(i);
 			sql.append("(" + (salaryDetail.getId() != null && salaryDetail.getId() == 0 ? null : salaryDetail.getId()) + ",");
 			sql.append((UtilString.isEmpty(salaryDetail.getYear()) ? null : "'" + salaryDetail.getYear() + "'") + ",");
@@ -361,11 +360,14 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 			sql.append("'" + BASE64Util.encode(salaryDetail.getTotalDeduction()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getWagePayable()) + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.getPersonalTax()) + "',");
-			sql.append("'" +BASE64Util.encode(salaryDetail.getRealWages()) + "')");
-			sqls[i] = sql.toString();
+			if( i == salaryDetails.size() - 1){
+				sql.append("'" + BASE64Util.encode(salaryDetail.getRealWages()) + "')");
+			} else {
+				sql.append("'" + BASE64Util.encode(salaryDetail.getRealWages()) + "'),");
+			}
 		}
 		try {
-			jdbcTemplate.batchUpdate(sqls);
+			jdbcTemplate.update(sql.toString());
 		} catch (Exception e) {
 			log.error("批量插入数据失败", e);
 			throw e;

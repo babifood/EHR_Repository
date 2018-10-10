@@ -271,3 +271,21 @@ function reloadPunchTime() {
 	}
 	$("#punch_time_list").datagrid("load",data);
 }
+
+function syncPunchTimeInfo() {
+	$.ajax({
+		url : prefix + "/punchTime/sync",
+		success:function(result){
+			if(result.code == '1'){
+				$.messager.show({
+					title:'消息提醒',
+					msg:'同步数据成功!',
+					timeout:3000,
+					showType:'slide'
+				});
+			} else {
+				$.messager.alert("消息提示！","同步打卡记录失败!","warning");
+			}
+		}
+	})
+}

@@ -32,4 +32,10 @@ public class PunchTimeController {
 	public Map<String, Object> removePagePunchTimeInfo(Integer id) {
 		return punchTimeService.removePagePunchTimeInfo(id);
 	}
+	
+	@RequestMapping({ "sync" })
+	@ResponseBody
+	public Map<String, Object> syncPunchTimeInfo() {
+		return punchTimeService.syncPunchTimeInfo();
+	}
 }

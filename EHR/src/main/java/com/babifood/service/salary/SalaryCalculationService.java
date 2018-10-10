@@ -3,7 +3,6 @@ package com.babifood.service.salary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +24,10 @@ import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.constant.SalaryConstant;
 import com.babifood.dao.CalculationFormulaDao;
-import com.babifood.dao.PerformanceDao;
 import com.babifood.dao.SalaryCalculationDao;
 import com.babifood.entity.BaseFieldsEntity;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.SalaryDetailEntity;
-import com.babifood.service.AllowanceService;
 import com.babifood.service.InitAttendanceService;
 import com.babifood.service.PersonInFoService;
 import com.babifood.service.SalaryDetailService;
@@ -58,16 +55,10 @@ public class SalaryCalculationService {
 	private SalaryCalculationDao salaryCalculationDao;
 
 	@Autowired
-	private AllowanceService allowanceService;
-
-	@Autowired
 	private SalaryDetailService salaryDetailService;
 
 	@Autowired
 	private CalculationFormulaDao calculationFormulaDao;
-	
-	@Autowired
-	private PerformanceDao performanceDao;
 	
 	private Map<String, String> formulaList;
 	
@@ -112,7 +103,7 @@ public class SalaryCalculationService {
 			}
 			if(type < 3){
 				Integer count = personInfoService.getPersonCount();
-				final int threadCount = 500;// 每个线程初始化的员工数量
+				final int threadCount = 50;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
 				logger.info("薪资计算========>使用线程数量，num=" + num);
 				List<Future<String>> list = new ArrayList<>();
@@ -178,7 +169,6 @@ public class SalaryCalculationService {
 	 * @return 
 	 */
 	public String calculationEmployeesSalary(int index, int threadCount) {
-		Long sLong = System.currentTimeMillis();
 		List<Map<String, Object>> employeeList = personInfoService.findPagePersonInfo(index, threadCount);// 查询员工列表
 		List<SalaryDetailEntity> salaryDetails = new ArrayList<SalaryDetailEntity>();
 		if (employeeList != null && employeeList.size() > 0) {
@@ -192,8 +182,6 @@ public class SalaryCalculationService {
 				}
 			}
 		}
-		Long eLong = System.currentTimeMillis();
-		System.out.println(Thread.currentThread() + "==============================================" + (eLong - sLong));
 		return salaryDetailService.saveSalaryDetailEntityList(salaryDetails);
 	}
 
@@ -227,14 +215,6 @@ public class SalaryCalculationService {
 		if (fees == null || fees.size() <= 0) {
 			throw new Exception("费项数据异常，请检查数据");
 		}
-//		Map<String, Object> allowances = allowanceService.findEmployAllowance(year, month, pNumber);
-//		if (allowances == null || allowances.size() <= 0) {
-//			allowances = new HashMap<String, Object>();
-//		}
-//		Map<String, Object> performanceInfo = performanceDao.getPerformanceInfo(year, month, pNumber);
-//		if(performanceInfo == null){
-//			performanceInfo = new HashMap<String, Object>();
-//		}
 		BaseFieldsEntity baseFields = getBaseFields(employee, arrangementSummary, salary, fees);
 		
 		SalaryDetailEntity salaryDerail = new SalaryDetailEntity();
@@ -246,7 +226,6 @@ public class SalaryCalculationService {
 		setBaseInfo(salaryDerail, employee);
 		// 基础薪资信息
 		setBaseSalaryInfo(salaryDerail, baseFields);
-		
 		// 考勤相关信息
 		setInfoAboutAttendance(salaryDerail, baseFields);
 		// 计算各类补贴
@@ -276,41 +255,44 @@ public class SalaryCalculationService {
 	private BaseFieldsEntity getBaseFields(Map<String, Object> employee, Map<String, Object> arrangementSummary, Map<String, Object> salary,
 			Map<String, Object> fees) {
 		logger.info("薪资计算========>员工薪资计算:获取计算因子");
-		String pNumber = employee.get("pNumber") + "";// 员工编号
 		BaseFieldsEntity baseFields = new BaseFieldsEntity();
-		baseFields.setpNumber(pNumber);
-		String inDate = UtilString.isEmpty(employee.get("inDate") + "") ? UtilDateTime.getCurrentTime("yyyy-MM-dd")
-				: employee.get("inDate") + "";
-		baseFields.setInDate(inDate);
-		baseFields.setAbsenceHours(UtilString.isEmpty(arrangementSummary.get("queqin") + "") ? "0.0"
-				: arrangementSummary.get("queqin") + "");
-		baseFields.setAddOther(UtilString.isEmpty(fees.get("addOther") + "") ? "0.0"
-				: fees.get("addOther") + "");
-		baseFields.setAfterDeduction(UtilString.isEmpty(fees.get("afterDeduction") + "") ? "0.0"
-				: fees.get("afterDeduction") + "");
-		baseFields.setAttendanceHours(UtilString.isEmpty(arrangementSummary.get("standardWorkLength") + "") ? "1.0"
-				: arrangementSummary.get("standardWorkLength") + "");
-		baseFields.setBaseSalary(UtilString.isEmpty(salary.get("baseSalary") + "") ? "0.0"
-				: salary.get("baseSalary") + "");
-//		int companyday = 0;
-//		try {
-//			String inDate = UtilString.isEmpty(employee.get("inDate") + "") ? UtilDateTime.getDate(inDate, "yyyy-MM-dd")
-//					: employee.get("inDate") + "";
-//			int alloverday = (int) ((new Date().getTime() - UtilDateTime.getDate(inDate, "yyyy-MM-dd").getTime())/(24 * 60 * 60 * 1000));
-//			companyday = alloverday/365;//司龄（年）
-//		} catch (Exception e) {
-//		}
-//		baseFields.setCompanyAge(companyday + "");
-		baseFields.setBeforeDeduction(UtilString.isEmpty(fees.get("beforeDeduction") + "") ? "0.0"
-				: fees.get("beforeDeduction") + "");
+		//基础数据相关
+		baseFields.setpNumber(employee.get("pNumber") + "");
+		baseFields.setInDate(UtilString.isEmpty(employee.get("inDate") + "") ? UtilDateTime.getCurrentTime("yyyy-MM-dd")
+				: employee.get("inDate") + "");
+		baseFields.setNationality(UtilString.isEmpty(employee.get("nationality") + "")?"1":employee.get("nationality") + "");
+		baseFields.setProperty(employee.get("property") + "");
+		baseFields.setCompanyType(getCompanyType(employee.get("nationality") + ""));
+		//基础薪资相关
+		baseFields.setStay(UtilString.isEmpty(salary.get("stay") + "") ? "0.0"
+				: salary.get("stay") + "");
+		baseFields.setPostSalary(UtilString.isEmpty(salary.get("postSalary") + "") ? "0.0"
+				: salary.get("postSalary") + "");
 		baseFields.setCallSubsidies(UtilString.isEmpty(salary.get("callSubsidies") + "") ? "0.0"
 				: salary.get("callSubsidies") + "");
 		baseFields.setCompanySalary(UtilString.isEmpty(salary.get("companySalary") + "") ? "0.0"
 				: salary.get("companySalary") + "");
+		baseFields.setWorkType(UtilString.isEmpty(salary.get("workType") + "") ? "0" : salary.get("workType") + "");
+		baseFields.setWorkPlace(UtilString.isEmpty(salary.get("workPlace") + "") ? "0" : salary.get("workPlace") + "");
+		baseFields.setSingelMeal(UtilString.isEmpty(salary.get("singelMeal") + "") ? "0.0"
+				: salary.get("singelMeal") + "");
+		baseFields.setBaseSalary(UtilString.isEmpty(salary.get("baseSalary") + "") ? "0.0"
+				: salary.get("baseSalary") + "");
+		baseFields.setPerformanceSalary(UtilString.isEmpty(salary.get("performanceSalary") + "") ? "0.0"
+				: salary.get("performanceSalary") + "");
+		baseFields.setFixedOverTimeSalary(UtilString.isEmpty(salary.get("fixedOverTimeSalary") + "") ? "0.0"
+				: salary.get("fixedOverTimeSalary") + "");
+		//费用相关
+		baseFields.setAddOther(UtilString.isEmpty(fees.get("addOther") + "") ? "0.0"
+				: fees.get("addOther") + "");
+		baseFields.setAfterDeduction(UtilString.isEmpty(fees.get("afterDeduction") + "") ? "0.0"
+				: fees.get("afterDeduction") + "");
+		baseFields.setBeforeDeduction(UtilString.isEmpty(fees.get("beforeDeduction") + "") ? "0.0"
+				: fees.get("beforeDeduction") + "");
+		baseFields.setPSalary(UtilString.isEmpty(fees.get("pSalary") + "") ? "-1"
+				: fees.get("pSalary") + "");
 		baseFields.setCompensatory(UtilString.isEmpty(fees.get("compensatory") + "") ? "0.0"
 				: fees.get("compensatory") + "");
-		baseFields.setCompletionHours(UtilString.isEmpty(arrangementSummary.get("kuangGong") + "") ? "0.0"
-				: arrangementSummary.get("kuangGong") + "");
 		baseFields.setDormDeduction(UtilString.isEmpty(fees.get("dormDeduction") + "") ? "0.0"
 				: fees.get("dormDeduction") + "");
 		baseFields.setDormFee(UtilString.isEmpty(fees.get("dormFee") + "") ? "0.0"
@@ -319,53 +301,26 @@ public class SalaryCalculationService {
 				: fees.get("dormBonus") + "");
 		baseFields.setElectricityFee(UtilString.isEmpty(fees.get("electricityFee") + "") ? "0.0"
 				: fees.get("electricityFee") + "");
-		baseFields.setFixedOverTimeSalary(UtilString.isEmpty(salary.get("fixedOverTimeSalary") + "") ? "0.0"
-				: salary.get("fixedOverTimeSalary") + "");
 		baseFields.setOverSalary(UtilString.isEmpty(fees.get("overSalary") + "") ? "0.0"
 				: fees.get("overSalary") + "");
-		baseFields.setFullTime("1");
 		baseFields.setHighTem(UtilString.isEmpty(fees.get("highTem") + "") ? "0.0"
 				: fees.get("highTem") + "");
 		baseFields.setInsurance(UtilString.isEmpty(fees.get("insurance") + "") ? "0.0"
 				: fees.get("insurance") + "");
-		baseFields.setLateTime(UtilString.isEmpty(arrangementSummary.get("chiDao") + "") ? "0"
-				: arrangementSummary.get("chiDao") + "");
-		baseFields.setLeaveTime(UtilString.isEmpty(arrangementSummary.get("zaoTui") + "") ? "0"
-				: arrangementSummary.get("zaoTui") + "");
 		baseFields.setLowTem(UtilString.isEmpty(fees.get("lowTem") + "") ? "0.0"
 				: fees.get("lowTem") + "");
-		baseFields.setMainLand("1");
 		baseFields.setMealDeduction(UtilString.isEmpty(fees.get("meal") + "") ? "0.0"
 				: fees.get("meal") + "");
-		baseFields.setMealnum(UtilString.isEmpty(arrangementSummary.get("canbu") + "") ? "0.0"
-				: arrangementSummary.get("canbu") + "");
 		baseFields.setMorningShift(UtilString.isEmpty(fees.get("morningShift") + "") ? "0.0"
 				: fees.get("morningShift") + "");
-		baseFields.setNationality(UtilString.isEmpty(employee.get("nationality") + "")?"1":employee.get("nationality") + "");
 		baseFields.setNightShift(UtilString.isEmpty(fees.get("nightShift") + "") ? "0.0"
 				: fees.get("nightShift") + "");
-		baseFields.setNonContinent("2");
-		baseFields.setOnboardingHours(UtilString.isEmpty(arrangementSummary.get("onboarding") + "") ? "0.0"
-				: arrangementSummary.get("onboarding") + "");
 		baseFields.setOtherAllowance(UtilString.isEmpty(fees.get("otherAllowance") + "") ? "0.0"
 				: fees.get("otherAllowance") + "");
 		baseFields.setOtherBonus(UtilString.isEmpty(fees.get("otherBonus") + "") ? "0.0"
 				: fees.get("otherBonus") + "");
-//		baseFields.setOverTimeSalary(overTimeSalary);
-		baseFields.setParentalHours(UtilString.isEmpty(arrangementSummary.get("chanJia") + "") ? "0.0"
-				: arrangementSummary.get("chanJia") + "");
-		baseFields.setPartTime("0");
 		baseFields.setPerformanceScore(UtilString.isEmpty(fees.get("performanceScore") + "") ? "0.0"
 				: fees.get("performanceScore") + "");
-		baseFields.setPerformanceSalary(UtilString.isEmpty(salary.get("performanceSalary") + "") ? "0.0"
-				: salary.get("performanceSalary") + "");
-		baseFields.setPSalary(UtilString.isEmpty(fees.get("pSalary") + "") ? "-1"
-				: fees.get("pSalary") + "");
-		baseFields.setPiece("1");
-		baseFields.setPiming("0");
-		baseFields.setPostSalary(UtilString.isEmpty(salary.get("postSalary") + "") ? "0.0"
-				: salary.get("postSalary") + "");
-		baseFields.setProperty(employee.get("property") + "");
 		baseFields.setProvidentFund(UtilString.isEmpty(fees.get("providentFund") + "") ? "0.0"
 				: fees.get("providentFund") + "");
 		baseFields.setReserved1(UtilString.isEmpty(fees.get("reserved1") + "") ? "0.0"
@@ -390,17 +345,57 @@ public class SalaryCalculationService {
 				: fees.get("reserved10") + "");
 		baseFields.setSecurity(UtilString.isEmpty(fees.get("security") + "") ? "0.0"
 				: fees.get("security") + "");
+		//考勤相关
+		baseFields.setAbsenceHours(UtilString.isEmpty(arrangementSummary.get("queqin") + "") ? "0.0"
+				: arrangementSummary.get("queqin") + "");
+		baseFields.setAttendanceHours(UtilString.isEmpty(arrangementSummary.get("standardWorkLength") + "") ? "1.0"
+				: arrangementSummary.get("standardWorkLength") + "");
+		baseFields.setLateTime(UtilString.isEmpty(arrangementSummary.get("chiDao") + "") ? "0"
+				: arrangementSummary.get("chiDao") + "");
+		baseFields.setLeaveTime(UtilString.isEmpty(arrangementSummary.get("zaoTui") + "") ? "0"
+				: arrangementSummary.get("zaoTui") + "");
 		baseFields.setSickHours(UtilString.isEmpty(arrangementSummary.get("bingJia") + "") ? "0.0"
 				: arrangementSummary.get("bingJia") + "");
-		baseFields.setSingelMeal(UtilString.isEmpty(salary.get("singelMeal") + "") ? "0.0"
-				: salary.get("singelMeal") + "");
-		baseFields.setStay(UtilString.isEmpty(salary.get("stay") + "") ? "0.0"
-				: salary.get("stay") + "");
+		baseFields.setCompletionHours(UtilString.isEmpty(arrangementSummary.get("kuangGong") + "") ? "0.0"
+				: arrangementSummary.get("kuangGong") + "");
+		baseFields.setMealnum(UtilString.isEmpty(arrangementSummary.get("canbu") + "") ? "0.0"
+				: arrangementSummary.get("canbu") + "");
+		baseFields.setOnboardingHours(UtilString.isEmpty(arrangementSummary.get("onboarding") + "") ? "0.0"
+				: arrangementSummary.get("onboarding") + "");
+		baseFields.setParentalHours(UtilString.isEmpty(arrangementSummary.get("chanJia") + "") ? "0.0"
+				: arrangementSummary.get("chanJia") + "");
 		baseFields.setThingHours(UtilString.isEmpty(arrangementSummary.get("shiJia") + "") ? "0.0"
 				: arrangementSummary.get("shiJia") + "");
-		baseFields.setWorkType(UtilString.isEmpty(salary.get("workType") + "") ? "0" : salary.get("workType") + "");
-		baseFields.setWorkPlace(UtilString.isEmpty(salary.get("workPlace") + "") ? "0" : salary.get("workPlace") + "");
+		baseFields.setYearHours(UtilString.isEmpty(arrangementSummary.get("year") + "") ? "0.0"
+				: arrangementSummary.get("year") + "");
+		baseFields.setTrainHours(UtilString.isEmpty(arrangementSummary.get("peixunJia") + "") ? "0.0"
+				: arrangementSummary.get("peixunJia") + "");
+		baseFields.setMarriageHours(UtilString.isEmpty(arrangementSummary.get("hunJia") + "") ? "0.0"
+				: arrangementSummary.get("hunJia") + "");
+		baseFields.setFuneralHours(UtilString.isEmpty(arrangementSummary.get("SangJia") + "") ? "0.0"
+				: arrangementSummary.get("SangJia") + "");
+		baseFields.setRelaxationHours(UtilString.isEmpty(arrangementSummary.get("tiaoXiu") + "") ? "0.0"
+				: arrangementSummary.get("tiaoXiu") + "");
+		baseFields.setCompanionParentalHours(UtilString.isEmpty(arrangementSummary.get("PeiChanJia") + "") ? "0.0"
+				: arrangementSummary.get("PeiChanJia") + "");
+		baseFields.setOtherHours(UtilString.isEmpty(arrangementSummary.get("qita") + "") ? "0.0"
+				: arrangementSummary.get("qita") + "");
+		//默认参数
+//		baseFields.setNonContinent("2");
+//		baseFields.setMainLand("1");
+//		baseFields.setPartTime("0");
+//		baseFields.setFullTime("1");
+//		baseFields.setPiming("0");
+//		baseFields.setPiece("1");  
 		return baseFields;
+	}
+	
+	public String getCompanyType(String companyCode) {
+		String companyType = "0";
+		if("000000010011".equals(companyType)){
+			companyType = "1";
+		}
+		return companyType;
 	}
 
 	/**
@@ -427,9 +422,9 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(realWagesFormula)){
 			realWagesFormula = SalaryConstant.REAL_WAGES_FORMULA;
 		}
-		salaryDerail.setWagePayable(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(wagePayableFormula, salaryDerail, baseFields, formulaList))+""));// 应发工资
-		salaryDerail.setPersonalTax(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(personalTaxFormula, salaryDerail, baseFields, formulaList))+""));// 个税
-		salaryDerail.setRealWages(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(realWagesFormula, salaryDerail, baseFields, formulaList))+""));// 实发工资
+		salaryDerail.setWagePayable(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(wagePayableFormula, salaryDerail, baseFields))+""));// 应发工资
+		salaryDerail.setPersonalTax(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(personalTaxFormula, salaryDerail, baseFields))+""));// 个税
+		salaryDerail.setRealWages(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(realWagesFormula, salaryDerail, baseFields))+""));// 实发工资
 	}
 
 	/**
@@ -447,11 +442,13 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(dormFormula)){
 			dormFormula = SalaryConstant.DORM_FORMULA;
 		}
-		salaryDerail.setDormDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(dormFormula, salaryDerail, baseFields, formulaList))+""));// 住宿扣款
+		String insuranceFormula = formulaList.get("insuranceFormula");
+		String providentFundFormula = formulaList.get("providentFundFormula");
 		salaryDerail.setBeforeDeduction(BASE64Util.getStringTowDecimal(baseFields.getBeforeDeduction()));// 税前其它扣款
-		salaryDerail.setInsurance(BASE64Util.getStringTowDecimal(baseFields.getInsurance()));// 社保扣款
-		salaryDerail.setProvidentFund(BASE64Util.getStringTowDecimal(baseFields.getProvidentFund()));// 公积金扣款
 		salaryDerail.setAfterDeduction(BASE64Util.getStringTowDecimal(baseFields.getAfterDeduction()));// 其它扣款（税后）
+		salaryDerail.setDormDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(dormFormula, salaryDerail, baseFields))+""));// 住宿扣款
+		salaryDerail.setInsurance(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(insuranceFormula, salaryDerail, baseFields))+""));// 社保扣款
+		salaryDerail.setProvidentFund(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(providentFundFormula, salaryDerail, baseFields))+""));// 公积金扣款
 	}
 
 	/**
@@ -466,11 +463,11 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(performanceFormula)){
 			performanceFormula = SalaryConstant.PERFORMANCE_FORMULA;
 		}
-		salaryDerail.setPerformanceBonus(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields, formulaList))+""));// 绩效奖金
 		salaryDerail.setSecurity(BASE64Util.getStringTowDecimal(baseFields.getSecurity()));// 安全奖
 		salaryDerail.setCompensatory(BASE64Util.getStringTowDecimal(baseFields.getCompensatory()));// 礼金、补偿金
 		salaryDerail.setOtherBonus(BASE64Util.getStringTowDecimal(baseFields.getOtherBonus()));// 其它奖金
 		salaryDerail.setAddOther(BASE64Util.getStringTowDecimal(baseFields.getAddOther()));// 加其它
+		salaryDerail.setPerformanceBonus(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields))+""));// 绩效奖金
 	}
 
 	/**
@@ -501,14 +498,17 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(lowTemFormula)){
 			lowTemFormula = SalaryConstant.LOWTEM_ALLOWANCE_FORMULA;
 		}
-		salaryDerail.setRiceStick(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields, formulaList))+""));// 餐补
-		salaryDerail.setCallSubsidies(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields, formulaList))+""));// 话费补贴
-		salaryDerail.setHighTem(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(highTemFormula, salaryDerail, baseFields, formulaList))+""));// 高温补贴
-		salaryDerail.setLowTem(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(lowTemFormula, salaryDerail, baseFields, formulaList))+""));// 低温补贴
-		salaryDerail.setMorningShift(BASE64Util.getStringTowDecimal(baseFields.getMorningShift()));// 早班津贴
-		salaryDerail.setNightShift(BASE64Util.getStringTowDecimal(baseFields.getNightShift()));// 夜班津贴
-		salaryDerail.setStay(BASE64Util.getStringTowDecimal(baseFields.getStay()));// 住宿补贴
+		String morningShiftFormula = formulaList.get("morningShiftFormula");
+		String nightShiftFormula = formulaList.get("nightShiftFormula");
+		String stayFormula = formulaList.get("stayFormula");
 		salaryDerail.setOtherAllowance(BASE64Util.getStringTowDecimal(baseFields.getOtherAllowance()));// 其它津贴
+		salaryDerail.setRiceStick(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields))+""));// 餐补
+		salaryDerail.setCallSubsidies(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields))+""));// 话费补贴
+		salaryDerail.setHighTem(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(highTemFormula, salaryDerail, baseFields))+""));// 高温补贴
+		salaryDerail.setLowTem(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(lowTemFormula, salaryDerail, baseFields))+""));// 低温补贴
+		salaryDerail.setMorningShift(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(morningShiftFormula, salaryDerail, baseFields))+""));// 早班津贴
+		salaryDerail.setNightShift(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(nightShiftFormula, salaryDerail, baseFields))+""));// 夜班津贴
+		salaryDerail.setStay(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(stayFormula, salaryDerail, baseFields))+""));// 住宿补贴
 	}
 
 	/**
@@ -522,12 +522,16 @@ public class SalaryCalculationService {
 	 */
 	private void setInfoAboutAttendance(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		logger.info("薪资计算========>员工薪资计算:考勤数据计算");
+		String attendanceHoursFormula = formulaList.get("attendanceHoursFormula");
+		String absenceHoursFormula = formulaList.get("absenceHoursFormula");
+		salaryDerail.setAttendanceHours(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(attendanceHoursFormula, salaryDerail, baseFields))+""));// 应出勤小时数
+		salaryDerail.setAbsenceHours(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(absenceHoursFormula, salaryDerail, baseFields))+""));// 缺勤小时数
 		if((Double.valueOf(baseFields.getLateTime()) + Double.valueOf(baseFields.getLeaveTime())) > 2){
 			String laterAndLeaveFormula = formulaList.get("laterAndLeaveFormula");
 			if(UtilString.isEmpty(laterAndLeaveFormula)){
 				laterAndLeaveFormula = SalaryConstant.LATER_AND_LEAVE_FORMULA;
 			}
-			salaryDerail.setLaterAndLeaveDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(laterAndLeaveFormula, salaryDerail, baseFields, formulaList))+""));// 迟到早退扣除薪资
+			salaryDerail.setLaterAndLeaveDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(laterAndLeaveFormula, salaryDerail, baseFields))+""));// 迟到早退扣除薪资
 		} else {
 			salaryDerail.setLaterAndLeaveDeduction(BASE64Util.getStringTowDecimal("0.00"));// 迟到早退扣除薪资
 		}
@@ -536,7 +540,7 @@ public class SalaryCalculationService {
 			if(UtilString.isEmpty(completionFormula)){
 				completionFormula = SalaryConstant.COMPLETION_DEDUCTION_FORMULA;
 			}
-			salaryDerail.setCompletionDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(completionFormula, salaryDerail, baseFields, formulaList))+""));// 旷工扣除
+			salaryDerail.setCompletionDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(completionFormula, salaryDerail, baseFields))+""));// 旷工扣除
 		} else {
 			salaryDerail.setCompletionDeduction(BASE64Util.getStringTowDecimal("0.00"));// 旷工扣除
 		}
@@ -545,7 +549,7 @@ public class SalaryCalculationService {
 			if(UtilString.isEmpty(thingFormula)){
 				thingFormula = SalaryConstant.THING_DEDUCTION_FORMULA;
 			}
-			salaryDerail.setThingDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(thingFormula, salaryDerail, baseFields, formulaList))+""));// 事假
+			salaryDerail.setThingDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(thingFormula, salaryDerail, baseFields))+""));// 事假
 		} else {
 			salaryDerail.setThingDeduction(BASE64Util.getStringTowDecimal("0.00"));//  事假
 		}
@@ -563,7 +567,7 @@ public class SalaryCalculationService {
 			if(UtilString.isEmpty(parentalFormula)){
 				parentalFormula = SalaryConstant.PARENTAL_DEDUCTION_FORMULA;
 			}
-			salaryDerail.setParentalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(parentalFormula, salaryDerail, baseFields, formulaList))+""));// 产假
+			salaryDerail.setParentalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(parentalFormula, salaryDerail, baseFields))+""));// 产假
 		} else {
 			salaryDerail.setParentalDeduction(BASE64Util.getStringTowDecimal("0.00"));// 产假
 		}
@@ -572,7 +576,7 @@ public class SalaryCalculationService {
 			if(UtilString.isEmpty(onboardingFormula)){
 				onboardingFormula = SalaryConstant.ONBOARDING_DEDUCTION_FORMULA;
 			}
-			salaryDerail.setOnboarding(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(onboardingFormula, salaryDerail, baseFields, formulaList))+""));// 月中入职、离职导致缺勤
+			salaryDerail.setOnboarding(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(onboardingFormula, salaryDerail, baseFields))+""));// 月中入职、离职导致缺勤
 		} else {
 			salaryDerail.setOnboarding(BASE64Util.getStringTowDecimal("0.00"));// 月中入职、离职导致缺勤
 		}
@@ -580,16 +584,20 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(totalFormula)){
 			totalFormula = SalaryConstant.TOTAL_DEDUCTION_FORMULA;
 		}
-		salaryDerail.setTotalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(totalFormula, salaryDerail, baseFields, formulaList))+""));// 应扣合计
-		salaryDerail.setAttendanceHours(BASE64Util.getStringTowDecimal(baseFields.getAttendanceHours()));// 应出勤小时数
-		salaryDerail.setAbsenceHours(BASE64Util.getStringTowDecimal(baseFields.getAbsenceHours()));// 缺勤小时数
+		String yearFormula = formulaList.get("yearFormula");
+		String marriageFormula = formulaList.get("marriageFormula");
+		String funeralFormula = formulaList.get("funeralFormula");
+		String relaxationFormula = formulaList.get("relaxationFormula");
+		String trainFormula = formulaList.get("trainFormula");
+		String companionParentalFormula = formulaList.get("companionParentalFormula");
 		salaryDerail.setOverSalary(BASE64Util.getStringTowDecimal(baseFields.getOverSalary()));//加班费
-		salaryDerail.setYearDeduction(BASE64Util.getStringTowDecimal("0"));// 年假
-		salaryDerail.setMarriageDeduction(BASE64Util.getStringTowDecimal("0"));// 婚假
-		salaryDerail.setFuneralDeduction(BASE64Util.getStringTowDecimal("0"));// 丧假
-		salaryDerail.setRelaxation(BASE64Util.getStringTowDecimal("0"));// 调休
-		salaryDerail.setTrainDeduction(BASE64Util.getStringTowDecimal("0"));// 培训假
-		salaryDerail.setCompanionParentalDeduction(BASE64Util.getStringTowDecimal("0"));// 陪产假
+		salaryDerail.setYearDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(yearFormula, salaryDerail, baseFields))+""));// 年假
+		salaryDerail.setMarriageDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(marriageFormula, salaryDerail, baseFields))+""));// 婚假
+		salaryDerail.setFuneralDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(funeralFormula, salaryDerail, baseFields))+""));// 丧假
+		salaryDerail.setRelaxation(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(relaxationFormula, salaryDerail, baseFields))+""));// 调休
+		salaryDerail.setTrainDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(trainFormula, salaryDerail, baseFields))+""));// 培训假
+		salaryDerail.setCompanionParentalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(companionParentalFormula, salaryDerail, baseFields))+""));// 陪产假
+		salaryDerail.setTotalDeduction(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(totalFormula, salaryDerail, baseFields))+""));// 应扣合计
 	}
 
 	private String calculationSick(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception{
@@ -613,7 +621,7 @@ public class SalaryCalculationService {
 				} catch (Exception e) {
 				}
 				baseFields.setCompanyAge(companyday + "");
-				sickhours += Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields, formulaList))+"");
+				sickhours += Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields))+"");
 			}
 		}
 		return BASE64Util.getStringTowDecimal(sickhours + "");
@@ -712,14 +720,14 @@ public class SalaryCalculationService {
 	 * @return
 	 * @throws Exception 
 	 */
-	private String replaceStr(String formula,Map<String, String> formulaListMap, SalaryDetailEntity salaryDerail) throws Exception {
-		logger.info("薪资计算========>员工薪资计算:替换表达式");
-		Set<String> keys = formulaListMap.keySet();
+	private String replaceStr(String formula, SalaryDetailEntity salaryDerail) throws Exception {
+//		logger.info("薪资计算========>员工薪资计算:替换表达式");
+		formula = replaceFormulaValue(formula, salaryDerail);
+		Set<String> keys = formulaList.keySet();
 		for(String key:keys){
 			if(formula.indexOf(key) > -1){
-				formula = formula.replaceAll(key, "("+ formulaListMap.get(key) +")");
-				formula = replaceFormulaValue(formula, salaryDerail);
-				formula = replaceStr(formula, formulaListMap, salaryDerail);
+				formula = formula.replaceAll(key, "("+ formulaList.get(key) +")");
+				formula = replaceStr(formula, salaryDerail);
 				break;
 			}
 		}
@@ -734,7 +742,7 @@ public class SalaryCalculationService {
 	 * @throws Exception
 	 */
 	private String replaceBaseFields(String formula,BaseFieldsEntity baseFields) throws Exception {
-		logger.info("薪资计算========>员工薪资计算:替换基础字敦");
+//		logger.info("薪资计算========>员工薪资计算:替换基础字敦");
 		if(UtilString.isEmpty(formula) || baseFields == null){
 			throw new Exception("数据异常");
 		}
@@ -746,6 +754,9 @@ public class SalaryCalculationService {
 		}
 		if(formula.indexOf("companySalary") > -1){
 			formula = formula.replaceAll("companySalary", "(" + baseFields.getCompanySalary() + ")");
+		}
+		if(formula.indexOf("companyType") > -1){
+			formula = formula.replaceAll("companyType", "(" + baseFields.getCompanyType() + ")");
 		}
 		if(formula.indexOf("postSalary") > -1){
 			formula = formula.replaceAll("postSalary", "(" + baseFields.getPostSalary() + ")");
@@ -840,6 +851,27 @@ public class SalaryCalculationService {
 		if(formula.indexOf("thingHours") > -1){
 			formula = formula.replaceAll("thingHours", "(" + baseFields.getThingHours() + ")");
 		}
+		if(formula.indexOf("yearHours") > -1){
+			formula = formula.replaceAll("yearHours", "(" + baseFields.getYearHours() + ")");
+		}
+		if(formula.indexOf("trainHours") > -1){
+			formula = formula.replaceAll("trainHours", "(" + baseFields.getTrainHours() + ")");
+		}
+		if(formula.indexOf("marriageHours") > -1){
+			formula = formula.replaceAll("marriageHours", "(" + baseFields.getMarriageHours() + ")");
+		}
+		if(formula.indexOf("funeralHours") > -1){
+			formula = formula.replaceAll("funeralHours", "(" + baseFields.getFuneralHours() + ")");
+		}
+		if(formula.indexOf("relaxationHours") > -1){
+			formula = formula.replaceAll("relaxationHours", "(" + baseFields.getRelaxationHours() + ")");
+		}
+		if(formula.indexOf("companionParentalHours") > -1){
+			formula = formula.replaceAll("companionParentalHours", "(" + baseFields.getCompanionParentalHours() + ")");
+		}
+		if(formula.indexOf("otherHours") > -1){
+			formula = formula.replaceAll("otherHours", "(" + baseFields.getOtherHours() + ")");
+		}
 		if(formula.indexOf("afterDeduction") > -1){
 			formula = formula.replaceAll("afterDeduction", "(" + baseFields.getAfterDeduction() + ")");
 		}
@@ -870,9 +902,9 @@ public class SalaryCalculationService {
 		if(formula.indexOf("nationality") > -1){
 			formula = formula.replaceAll("nationality", "(" + baseFields.getNationality() + ")");
 		}
-		if(formula.indexOf("partTime") > -1){
-			formula = formula.replaceAll("partTime", "(" + baseFields.getPartTime() + ")");
-		}
+//		if(formula.indexOf("partTime") > -1){
+//			formula = formula.replaceAll("partTime", "(" + baseFields.getPartTime() + ")");
+//		}
 		if(formula.indexOf("callSubsidies") > -1){
 			formula = formula.replaceAll("callSubsidies", "(" + baseFields.getCallSubsidies() + ")");
 		}
@@ -910,7 +942,7 @@ public class SalaryCalculationService {
 			formula = formula.replaceAll("partTime", "0");
 		}
 		if(formula.indexOf("fullTime") > -1){
-			formula = formula.replaceAll("fullTime", "1");
+			formula = formula.replaceAll("fullTime", "0");
 		}
 		if(formula.indexOf("mainLand") > -1){
 			formula = formula.replaceAll("mainLand", "1");
@@ -942,52 +974,52 @@ public class SalaryCalculationService {
 			return formula;
 		}
 		if (formula.indexOf("laterAndLeaveFormula") > -1 && salaryDerail.getLaterAndLeaveDeduction() != null) {
-			formula.replaceAll("laterAndLeaveFormula", "(" + salaryDerail.getLaterAndLeaveDeduction() + ")");
+			formula = formula.replaceAll("laterAndLeaveFormula", "(" + salaryDerail.getLaterAndLeaveDeduction() + ")");
 		}
 		if (formula.indexOf("completionFormula") > -1 && salaryDerail.getCompletionDeduction() != null) {
-			formula.replaceAll("completionFormula", "(" + salaryDerail.getCompletionDeduction() + ")");
+			formula = formula.replaceAll("completionFormula", "(" + salaryDerail.getCompletionDeduction() + ")");
 		}
 		if (formula.indexOf("thingFormula") > -1 && salaryDerail.getThingDeduction() != null) {
-			formula.replaceAll("thingFormula", "(" + salaryDerail.getThingDeduction() + ")");
+			formula = formula.replaceAll("thingFormula", "(" + salaryDerail.getThingDeduction() + ")");
 		}
 		if (formula.indexOf("sickFormula") > -1 && salaryDerail.getSickDeduction() != null) {
-			formula.replaceAll("sickFormula", "(" + salaryDerail.getSickDeduction() + ")");
+			formula = formula.replaceAll("sickFormula", "(" + salaryDerail.getSickDeduction() + ")");
 		}
 		if (formula.indexOf("parentalFormula") > -1 && salaryDerail.getParentalDeduction() != null) {
-			formula.replaceAll("parentalFormula", "(" + salaryDerail.getParentalDeduction() + ")");
+			formula = formula.replaceAll("parentalFormula", "(" + salaryDerail.getParentalDeduction() + ")");
 		}
 		if (formula.indexOf("onboardingFormula") > -1 && salaryDerail.getOnboarding() != null) {
-			formula.replaceAll("onboardingFormula", "(" + salaryDerail.getOnboarding() + ")");
+			formula = formula.replaceAll("onboardingFormula", "(" + salaryDerail.getOnboarding() + ")");
 		}
 		if (formula.indexOf("totalFormula") > -1 && salaryDerail.getTotalDeduction() != null) {
-			formula.replaceAll("totalFormula", "(" + salaryDerail.getTotalDeduction() + ")");
+			formula = formula.replaceAll("totalFormula", "(" + salaryDerail.getTotalDeduction() + ")");
 		}
 		if (formula.indexOf("riceStickFormula") > -1 && salaryDerail.getRiceStick() != null) {
-			formula.replaceAll("riceStickFormula", "(" + salaryDerail.getRiceStick() + ")");
+			formula = formula.replaceAll("riceStickFormula", "(" + salaryDerail.getRiceStick() + ")");
 		}
 		if (formula.indexOf("callSunSalaryFormula") > -1 && salaryDerail.getCallSubsidies() != null) {
-			formula.replaceAll("callSunSalaryFormula", "(" + salaryDerail.getCallSubsidies() + ")");
+			formula = formula.replaceAll("callSunSalaryFormula", "(" + salaryDerail.getCallSubsidies() + ")");
 		}
 		if (formula.indexOf("highTemFormula") > -1 && salaryDerail.getHighTem() != null) {
-			formula.replaceAll("highTemFormula", "(" + salaryDerail.getHighTem() + ")");
+			formula = formula.replaceAll("highTemFormula", "(" + salaryDerail.getHighTem() + ")");
 		}
 		if (formula.indexOf("lowTemFormula") > -1 && salaryDerail.getLowTem() != null) {
-			formula.replaceAll("lowTemFormula", "(" + salaryDerail.getLowTem() + ")");
+			formula = formula.replaceAll("lowTemFormula", "(" + salaryDerail.getLowTem() + ")");
 		}
 		if (formula.indexOf("wagePayableFormula") > -1 && salaryDerail.getWagePayable() != null) {
-			formula.replaceAll("wagePayableFormula", "(" + salaryDerail.getWagePayable() + ")");
+			formula = formula.replaceAll("wagePayableFormula", "(" + salaryDerail.getWagePayable() + ")");
 		}
 		if (formula.indexOf("personalTaxFormula") > -1 && salaryDerail.getPersonalTax() != null) {
-			formula.replaceAll("personalTaxFormula", "(" + salaryDerail.getPersonalTax() + ")");
+			formula = formula.replaceAll("personalTaxFormula", "(" + salaryDerail.getPersonalTax() + ")");
 		}
 		if (formula.indexOf("realWagesFormula") > -1 && salaryDerail.getRealWages() != null) {
-			formula.replaceAll("realWagesFormula", "(" + salaryDerail.getRealWages() + ")");
+			formula = formula.replaceAll("realWagesFormula", "(" + salaryDerail.getRealWages() + ")");
 		}
 		if (formula.indexOf("performanceFormula") > -1 && salaryDerail.getPerformanceBonus() != null) {
-			formula.replaceAll("performanceFormula", "(" + salaryDerail.getPerformanceBonus() + ")");
+			formula = formula.replaceAll("performanceFormula", "(" + salaryDerail.getPerformanceBonus() + ")");
 		}
 		if (formula.indexOf("dormFormula") > -1 && salaryDerail.getDormDeduction() != null) {
-			formula.replaceAll("dormFormula", "(" + salaryDerail.getDormDeduction() + ")");
+			formula = formula.replaceAll("dormFormula", "(" + salaryDerail.getDormDeduction() + ")");
 		}
 		return formula;
 	}
@@ -1001,10 +1033,8 @@ public class SalaryCalculationService {
 	 * @return
 	 * @throws Exception
 	 */
-	private String replaceFields(String formula, SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields,
-			Map<String, String> formulaList) throws Exception {
-		formula = replaceFormulaValue(formula, salaryDerail);
-		formula = replaceStr(formula, formulaList,salaryDerail);
+	private String replaceFields(String formula, SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
+		formula = replaceStr(formula, salaryDerail);
 		return replaceBaseFields(formula, baseFields);
 	}
 }

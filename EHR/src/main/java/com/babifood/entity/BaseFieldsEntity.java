@@ -69,6 +69,18 @@ public class BaseFieldsEntity {
 	private String providentFund;//公积金
 	
 	private String sickHours;//病假时间
+	
+	private String trainHours;//培训假
+	
+	private String marriageHours;//婚假
+	
+	private String funeralHours;//丧假
+	
+	private String relaxationHours;//调休
+	
+	private String yearHours;//年假
+	
+	private String companionParentalHours;//陪产假
 
 	private String parentalHours;//产假时间
 	
@@ -78,6 +90,8 @@ public class BaseFieldsEntity {
 	
 	private String thingHours;//事假时间
 	
+	private String otherHours;//其他
+	
 	private String afterDeduction;//其它扣款（税后）
 	
 	private String lateTime;//迟到次数
@@ -86,17 +100,17 @@ public class BaseFieldsEntity {
 	
 	private String compensatory;//礼金/补偿金
 	
-	private String partTime;//兼职
+//	private String partTime;//兼职
 	
-	private String fullTime;//全职
+//	private String fullTime;//全职
 	
-	private String mainLand;//大陆
+//	private String mainLand;//大陆
 	
-	private String nonContinent;//非大陆
+//	private String nonContinent;//非大陆
 	
-	private String piece;//计件
+//	private String piece;//计件
 	
-	private String piming;//计时
+//	private String piming;//计时
 	
 	private String workType;//工作类型（计时，计件）
 	
@@ -107,6 +121,8 @@ public class BaseFieldsEntity {
 	private String inDate;//入职时间
 	
 	private String property;//工作类型（兼职、全职）
+	
+	private String companyType;//公司类型
 	
 	private String reserved1;//预留字段1
 
@@ -400,6 +416,54 @@ public class BaseFieldsEntity {
 		this.sickHours = sickHours;
 	}
 
+	public String getTrainHours() {
+		return trainHours;
+	}
+
+	public void setTrainHours(String trainHours) {
+		this.trainHours = trainHours;
+	}
+
+	public String getMarriageHours() {
+		return marriageHours;
+	}
+
+	public void setMarriageHours(String marriageHours) {
+		this.marriageHours = marriageHours;
+	}
+
+	public String getFuneralHours() {
+		return funeralHours;
+	}
+
+	public void setFuneralHours(String funeralHours) {
+		this.funeralHours = funeralHours;
+	}
+
+	public String getRelaxationHours() {
+		return relaxationHours;
+	}
+
+	public void setRelaxationHours(String relaxationHours) {
+		this.relaxationHours = relaxationHours;
+	}
+
+	public String getYearHours() {
+		return yearHours;
+	}
+
+	public void setYearHours(String yearHours) {
+		this.yearHours = yearHours;
+	}
+
+	public String getCompanionParentalHours() {
+		return companionParentalHours;
+	}
+
+	public void setCompanionParentalHours(String companionParentalHours) {
+		this.companionParentalHours = companionParentalHours;
+	}
+
 	public String getParentalHours() {
 		return parentalHours;
 	}
@@ -430,6 +494,14 @@ public class BaseFieldsEntity {
 
 	public void setThingHours(String thingHours) {
 		this.thingHours = thingHours;
+	}
+
+	public String getOtherHours() {
+		return otherHours;
+	}
+
+	public void setOtherHours(String otherHours) {
+		this.otherHours = otherHours;
 	}
 
 	public String getAfterDeduction() {
@@ -464,53 +536,53 @@ public class BaseFieldsEntity {
 		this.compensatory = compensatory;
 	}
 
-	public String getPartTime() {
-		return partTime;
-	}
+//	public String getPartTime() {
+//		return partTime;
+//	}
+//
+//	public void setPartTime(String partTime) {
+//		this.partTime = partTime;
+//	}
 
-	public void setPartTime(String partTime) {
-		this.partTime = partTime;
-	}
+//	public String getFullTime() {
+//		return fullTime;
+//	}
+//
+//	public void setFullTime(String fullTime) {
+//		this.fullTime = fullTime;
+//	}
+//
+//	public String getMainLand() {
+//		return mainLand;
+//	}
+//
+//	public void setMainLand(String mainLand) {
+//		this.mainLand = mainLand;
+//	}
 
-	public String getFullTime() {
-		return fullTime;
-	}
+//	public String getNonContinent() {
+//		return nonContinent;
+//	}
+//
+//	public void setNonContinent(String nonContinent) {
+//		this.nonContinent = nonContinent;
+//	}
 
-	public void setFullTime(String fullTime) {
-		this.fullTime = fullTime;
-	}
+//	public String getPiece() {
+//		return piece;
+//	}
+//
+//	public void setPiece(String piece) {
+//		this.piece = piece;
+//	}
 
-	public String getMainLand() {
-		return mainLand;
-	}
-
-	public void setMainLand(String mainLand) {
-		this.mainLand = mainLand;
-	}
-
-	public String getNonContinent() {
-		return nonContinent;
-	}
-
-	public void setNonContinent(String nonContinent) {
-		this.nonContinent = nonContinent;
-	}
-
-	public String getPiece() {
-		return piece;
-	}
-
-	public void setPiece(String piece) {
-		this.piece = piece;
-	}
-
-	public String getPiming() {
-		return piming;
-	}
-
-	public void setPiming(String piming) {
-		this.piming = piming;
-	}
+//	public String getPiming() {
+//		return piming;
+//	}
+//
+//	public void setPiming(String piming) {
+//		this.piming = piming;
+//	}
 
 	public String getWorkType() {
 		return workType;
@@ -550,6 +622,14 @@ public class BaseFieldsEntity {
 
 	public void setProperty(String property) {
 		this.property = property;
+	}
+
+	public String getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
 	}
 
 	public String getReserved1() {

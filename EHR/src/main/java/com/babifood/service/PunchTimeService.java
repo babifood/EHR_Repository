@@ -12,4 +12,6 @@ public interface PunchTimeService {
 	public abstract Map<String, Object> savePagePunchTimeInfo(PunchTimeEntity paramPunchTimeEntity);
 
 	public abstract Map<String, Object> removePagePunchTimeInfo(Integer paramInteger);
+
+	public abstract Map<String, Object> syncPunchTimeInfo();
 }

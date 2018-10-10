@@ -29,6 +29,15 @@
     p:url="${jdbc.oracle.url}" 
     p:username="${jdbc.oracle.username}" 
     p:password="${jdbc.oracle.password}" />
+    
+    <!-- 配置OA数据源 -->
+  <bean id="KQdataSource" 
+  	class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close" 
+    p:driverClassName="${jdbc.sqlServer.driverClassName}"
+    p:url="${jdbc.sqlServer.url}" 
+    p:username="${jdbc.sqlServer.username}" 
+    p:password="${jdbc.sqlServer.password}" />
   
   <context:annotation-config /> <!-- 此行语句使得resource autowired 等四个注解可以使用 -->
    
@@ -38,6 +47,7 @@
 			<map key-type="java.lang.String">
 				<entry value-ref="EHRdataSource" key="EHR"></entry>
 				<entry value-ref="OAdataSource" key="OA"></entry>
+				<entry value-ref="KQdataSource" key="KQ"></entry>
 			</map>
 		</property>
 		<property name="defaultTargetDataSource" ref="EHRdataSource"/>
@@ -57,7 +67,7 @@
  
   <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="5" />
-		<property name="maxPoolSize" value="20" />
-		<property name="queueCapacity" value="25" />
+		<property name="maxPoolSize" value="50" />
+		<property name="queueCapacity" value="500" />
   </bean>
 </beans>

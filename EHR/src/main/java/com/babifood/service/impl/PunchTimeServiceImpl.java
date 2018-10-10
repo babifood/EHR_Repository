@@ -10,10 +10,18 @@ import org.springframework.stereotype.Service;
 import com.babifood.dao.PunchTimeDao;
 import com.babifood.entity.PunchTimeEntity;
 import com.babifood.service.PunchTimeService;
+import com.babifood.service.scheduling.DakaRecordService;
+import com.babifood.service.scheduling.DakaSourceService;
 
 @Service
 public class PunchTimeServiceImpl implements PunchTimeService {
-
+	
+	@Autowired
+	private DakaSourceService dakaSourceService;
+	
+	@Autowired
+	private DakaRecordService dakaRecordService;
+	
 	@Autowired
 	private PunchTimeDao punchTimeDao;
 
@@ -59,6 +67,21 @@ public class PunchTimeServiceImpl implements PunchTimeService {
 		} catch (Exception e) {
 			result.put("code", "0");
 			result.put("msg", "删除打卡记录失败");
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> syncPunchTimeInfo() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			dakaSourceService.getDakaSource();
+			dakaRecordService.checkDakaRecord();
+			result.put("code", "1");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("code", "同步打卡记录失败");
+			e.printStackTrace();
 		}
 		return result;
 	}
