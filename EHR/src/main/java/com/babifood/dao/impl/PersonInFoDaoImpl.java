@@ -16,7 +16,7 @@ import com.babifood.dao.PersonInFoDao;
 import com.babifood.entity.PersonBasrcEntity;
 @Repository
 @Transactional
-public class PersonInFoDaoImpl implements PersonInFoDao {
+public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements PersonInFoDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	public static final Logger log = Logger.getLogger(LoginDaoImpl.class);
@@ -118,7 +118,10 @@ public class PersonInFoDaoImpl implements PersonInFoDao {
 		if(search_p_name!=null&&!search_p_name.equals("")){
 			sql.append(" and p_name like '%"+search_p_name+"%'");
 		}
-		return jdbctemplate.queryForList(sql.toString());
+//		List<Map<String, Object>> companyCode = super.loadUserDataAuthority();
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		return jdbctemplate.queryForList(returnsql.toString());
+//		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
 	public List<Map<String, Object>> loadEducation(String e_p_id) throws DataAccessException{

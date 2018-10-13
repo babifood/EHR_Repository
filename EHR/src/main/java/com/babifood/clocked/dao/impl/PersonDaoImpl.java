@@ -13,17 +13,16 @@ import org.springframework.stereotype.Repository;
 
 import com.babifood.clocked.dao.PersonDao;
 import com.babifood.clocked.entrty.Person;
+import com.babifood.dao.impl.AuthorityControlDaoImpl;
 import com.babifood.utils.UtilDateTime;
 @Repository
-public class PersonDaoImpl implements PersonDao {
-	public static final Logger log = Logger.getLogger(PersonDaoImpl.class);
+public class PersonDaoImpl extends AuthorityControlDaoImpl implements PersonDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
-	public List<Person> loadPeraonClockedInfo(int year,int month) {
+	public List<Map<String,Object>> loadPeraonClockedInfo(int year,int month) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdfWhere = new SimpleDateFormat("yyyy-MM-dd");
-		List<Person> personList = null;
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append("p_id,p_number as workNum,p_name as userName,p_company_id as companyCode,");
@@ -33,52 +32,10 @@ public class PersonDaoImpl implements PersonDao {
 		sql.append("p_post as post,p_checking_in as daKaType,p_in_date as inDate,p_turn_date as turnDate, ");
 		sql.append("p_out_date as outDate");
 		sql.append(" from ehr_person_basic_info where p_in_date<=? and p_oa_and_ehr = 'OA'");
+		StringBuffer returnSQL = super.jointDataAuthoritySql("p_company_id", sql);
 		Object[] params=new Object[1];
 		params[0]=sdfWhere.format(UtilDateTime.getMonthEndSqlDate(year,month));
-		try {
-			List<Map<String,Object>> list = jdbctemplate.queryForList(sql.toString(),params);
-			if(list.size()>0){
-				personList = new ArrayList<Person>();
-				for (Map<String, Object> map : list) {
-//					if(!"YX".equals(map.get("workNum").toString().substring(0, 2))){
-						if(map.get("outDate")!=null&&!map.get("outDate").equals("")){
-							Date outDate = sdfWhere.parse(map.get("outDate").toString());
-							Date sysStartDate = UtilDateTime.getMonthStartSqlDate(year,month);
-							if(outDate.getTime()<sysStartDate.getTime()){
-								continue;
-							}
-						}
-						Person temp = new Person();
-						temp.setP_id(map.get("p_id").toString());
-						temp.setWorkNum(map.get("workNum").toString());
-						temp.setUserName(map.get("userName").toString());
-						temp.setCompanyCode(map.get("companyCode").toString());
-						temp.setCompany(map.get("company").toString());
-						temp.setOrganCode(map.get("organCode").toString());
-						temp.setOrgan(map.get("organ").toString());
-						temp.setDeptCode(map.get("deptCode").toString());
-						temp.setDept(map.get("dept").toString());
-						temp.setOfficeCode(map.get("officeCode")==null?"":map.get("officeCode").toString());
-						temp.setOffice(map.get("office")==null?"":map.get("office").toString());
-						temp.setGroupCode(map.get("groupCode")==null?"":map.get("groupCode").toString());
-						temp.setGroupName(map.get("groupName")==null?"":map.get("groupName").toString());
-						temp.setPostCode(map.get("postCode").toString());
-						temp.setPost(map.get("post").toString());
-						temp.setDaKaType(map.get("daKaType").toString());
-						temp.setInDate(map.get("inDate")==null?"":map.get("inDate").toString());
-						temp.setTurnDate(map.get("turnDate")==null?"":map.get("turnDate").toString());
-						temp.setOutDate(map.get("outDate")==null?"":map.get("outDate").toString());
-						personList.add(temp);
-//					}
-//					continue;
-				}
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.error("查询错误："+e.getMessage());
-		}
-		return personList;
+		return jdbctemplate.queryForList(returnSQL.toString(),params);
 	}
 
 }

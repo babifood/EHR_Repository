@@ -1,6 +1,5 @@
 package com.babifood.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ import com.babifood.dao.CertificatenDao;
 import com.babifood.entity.Certificaten;
 @Repository
 @Transactional
-public class CertificatenDaoImpl implements CertificatenDao {
+public class CertificatenDaoImpl extends AuthorityControlDaoImpl implements CertificatenDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	public static final Logger log = Logger.getLogger(CertificatenDaoImpl.class);
@@ -24,15 +23,18 @@ public class CertificatenDaoImpl implements CertificatenDao {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append("c_id,c_p_id,c_p_number,c_p_name,c_certificate_name,c_organization,c_certificate_number,c_begin_date,c_end_date,c_desc");
-		sql.append(" from ehr_certificate where 1=1");
+		sql.append("c.c_id,c.c_p_id,c.c_p_number,c.c_p_name,c.c_certificate_name,c.c_organization,c.c_certificate_number,c.c_begin_date,c.c_end_date,c.c_desc,");
+		sql.append("p.p_company_id,p.p_organization_id,p.p_department_id,p.p_section_office_id,p.p_group_id");
+		sql.append(" from ehr_certificate c ");
+		sql.append(" INNER JOIN ehr_person_basic_info p ON c.c_p_id = p.p_id where 1=1");
 		if(c_p_number!=null&&!c_p_number.equals("")){
-			sql.append(" and c_p_number like '%"+c_p_number+"%'");
+			sql.append(" and c.c_p_number like '%"+c_p_number+"%'");
 		}
 		if(c_p_name!=null&&!c_p_name.equals("")){
-			sql.append(" and c_p_name like '%"+c_p_name+"%'");
+			sql.append(" and c.c_p_name like '%"+c_p_name+"%'");
 		}
-		return jdbctemplate.queryForList(sql.toString());
+		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id", sql);
+		return jdbctemplate.queryForList(returnSQL.toString());
 	}
 
 	@Override

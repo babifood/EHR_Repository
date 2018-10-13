@@ -18,6 +18,7 @@ import com.babifood.clocked.entrty.ClockedResultBases;
 import com.babifood.clocked.entrty.Person;
 import com.babifood.clocked.rule.ClockedYesNoRule;
 import com.babifood.clocked.service.ClockedService;
+import com.babifood.clocked.service.PeraonClockedService;
 import com.babifood.clocked.util.ClockedUtil;
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
@@ -29,7 +30,7 @@ import com.cn.babifood.operation.annotation.LogMethod;
 public class ClockedServiceImpl implements ClockedService {
 	public static final Logger log = Logger.getLogger(ClockedServiceImpl.class);
 	@Autowired
-	PersonDao personDao;
+	PeraonClockedService peraonClockedService;
 	@Autowired
 	ClockedResultBaseDao clockedResult;
 	@Autowired
@@ -48,36 +49,30 @@ public class ClockedServiceImpl implements ClockedService {
 		// TODO Auto-generated method stub
 		
 		//根据员工档案获取考勤人员信息
-		List<Person> personList = personDao.loadPeraonClockedInfo(sysYear,sysMonth);
-		int daySize = UtilDateTime.getDaySize(sysYear, sysMonth);
-		int persronSize = personList == null ? 0 : personList.size();
-		dataList = new ArrayList<ClockedResultBases>(daySize*persronSize);
-		if (persronSize > 0) {
-			clockedYesNoRule.init(sysYear, sysMonth);
-		}
-		Person tmpPerson = null;
-		for(int day = 1; day <= daySize; day++){
-			for (int k = 0; k < persronSize; k++) {
-				tmpPerson = personList.get(k);
-				try {
-					dataList.add(ClockedUtil.markClockedYesNo(tmpPerson,ClockedUtil.getDate(sysYear, sysMonth, day),clockedYesNoRule));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					LogManager.putContectOfLogInfo(e.getMessage());
-					log.error("init():"+e.getMessage());
-				}
-			}
-		}
-		
-		//保存数据
+		List<Person> personList=null;
 		int [] rows =null;
 		try {
-			rows = clockedResult.saveClockedResultBase(dataList,sysYear,sysMonth);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("init():"+e.getMessage());
-		}
+				personList = peraonClockedService.filtrateClockedPeraonData(sysYear,sysMonth);
+				int daySize = UtilDateTime.getDaySize(sysYear, sysMonth);
+				int persronSize = personList == null ? 0 : personList.size();
+				dataList = new ArrayList<ClockedResultBases>(daySize*persronSize);
+				if (persronSize > 0) {
+					clockedYesNoRule.init(sysYear, sysMonth);
+				}
+				Person tmpPerson = null;
+				for(int day = 1; day <= daySize; day++){
+					for (int k = 0; k < persronSize; k++) {
+						tmpPerson = personList.get(k);
+						dataList.add(ClockedUtil.markClockedYesNo(tmpPerson,ClockedUtil.getDate(sysYear, sysMonth, day),clockedYesNoRule));
+					}
+				}
+				//保存数据
+				rows = clockedResult.saveClockedResultBase(dataList,sysYear,sysMonth);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LogManager.putContectOfLogInfo(e.getMessage());
+				log.error("init():"+e.getMessage());
+			}
 		return rows;
 	}
 }

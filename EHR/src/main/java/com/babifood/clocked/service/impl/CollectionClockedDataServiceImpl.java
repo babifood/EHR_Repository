@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -31,7 +30,6 @@ import com.babifood.clocked.service.LoadClockedResultService;
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.entity.LoginEntity;
-import com.babifood.service.impl.HomePageServiceImpl;
 import com.babifood.utils.UtilDateTime;
 import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
@@ -61,79 +59,56 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_COLLECTION);
 		// TODO Auto-generated method stub
-		//1读取行政考勤打卡记录
 		try {
+			//1读取行政考勤打卡记录
 			officeDaKaList = officeDaKaDao.loadOfficeDaKaData(year, month);
-			LogManager.putContectOfLogInfo("loadData方法读取行政考勤打卡记录");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadData():"+e.getMessage());
-		}
-		//2读取移动考勤打卡记录
-		List<MobileDaKaLog> mobileDaKaLog = null;
-		try {
+			//2读取移动考勤打卡记录
+			List<MobileDaKaLog> mobileDaKaLog = null;
 			mobileDaKaLog = moveDaKaDao.loadMobileDaKaDate(year, month);
-			LogManager.putContectOfLogInfo("loadData方法读取移动考勤打卡记录");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadData():"+e.getMessage());
-		}
-		int size = mobileDaKaLog == null ? 0 : mobileDaKaLog.size();
-		MoveDaKaRecord moveDaKaRecord = null;
-		MobileDaKaLog tmpLog = null;
-		mobileDaKaMap = new HashMap<String, MoveDaKaRecord>(size);
-		String key = null;
-		for (int i = 0; i < size; i++) {
-			tmpLog = mobileDaKaLog.get(i);
-			key = tmpLog.getWorkNum() + tmpLog.getClockDate();
-			moveDaKaRecord = mobileDaKaMap.get(key);
-			if (moveDaKaRecord == null) {
-				moveDaKaRecord = new MoveDaKaRecord();
-				moveDaKaRecord.setBegin(tmpLog);
-				mobileDaKaMap.put(key, moveDaKaRecord);
-			} else {
-				moveDaKaRecord.setEnd(tmpLog);
-			}
-		}
-		//3读取考勤事件业务信息
-		try {
-			clockedResultList = loadClockedResultService.loadClockedResultDataList(year, month);
-			LogManager.putContectOfLogInfo("loadData读取考勤事件业务信息");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadData():"+e.getMessage());
-		}
-		List<ClockedBizData> clockedBizDataList = null;
-		try {
-			clockedBizDataList = coleckEventResultDao.loadColeckEventResultData(year, month);
-			LogManager.putContectOfLogInfo("loadData读取考勤事件业务信息");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadData():"+e.getMessage());
-		}
-		clockedBizDataMap = new HashMap<String, List<ClockedBizData>>(300);
-
-		if (clockedBizDataList != null && clockedBizDataList.isEmpty() == false) {
-			int xsize = clockedBizDataList.size();
-			ClockedBizData tmpClockedBizData = null;
-			List<ClockedBizData> tmpList = null;
-			for (int i = 0; i < xsize; i++) {
-				tmpClockedBizData = clockedBizDataList.get(i);
-				tmpList = clockedBizDataMap.get(tmpClockedBizData.getWorkNum());
-				if (tmpList == null) {
-					tmpList = new ArrayList<ClockedBizData>(20);
-					clockedBizDataMap.put(tmpClockedBizData.getWorkNum(), tmpList);
+			int size = mobileDaKaLog == null ? 0 : mobileDaKaLog.size();
+			MoveDaKaRecord moveDaKaRecord = null;
+			MobileDaKaLog tmpLog = null;
+			mobileDaKaMap = new HashMap<String, MoveDaKaRecord>(size);
+			String key = null;
+			for (int i = 0; i < size; i++) {
+				tmpLog = mobileDaKaLog.get(i);
+				key = tmpLog.getWorkNum() + tmpLog.getClockDate();
+				moveDaKaRecord = mobileDaKaMap.get(key);
+				if (moveDaKaRecord == null) {
+					moveDaKaRecord = new MoveDaKaRecord();
+					moveDaKaRecord.setBegin(tmpLog);
+					mobileDaKaMap.put(key, moveDaKaRecord);
+				} else {
+					moveDaKaRecord.setEnd(tmpLog);
 				}
-				tmpList.add(tmpClockedBizData);
 			}
-		}
-		if (clockedBizDataList != null) {
-			clockedBizDataList.clear();
-			clockedBizDataList = null;
+			//3读取考勤事件业务信息
+			clockedResultList = loadClockedResultService.loadClockedResultDataList(year, month);
+			List<ClockedBizData> clockedBizDataList = null;
+			clockedBizDataList = coleckEventResultDao.loadColeckEventResultData(year, month);
+			clockedBizDataMap = new HashMap<String, List<ClockedBizData>>(300);
+			if (clockedBizDataList != null && clockedBizDataList.isEmpty() == false) {
+				int xsize = clockedBizDataList.size();
+				ClockedBizData tmpClockedBizData = null;
+				List<ClockedBizData> tmpList = null;
+				for (int i = 0; i < xsize; i++) {
+					tmpClockedBizData = clockedBizDataList.get(i);
+					tmpList = clockedBizDataMap.get(tmpClockedBizData.getWorkNum());
+					if (tmpList == null) {
+						tmpList = new ArrayList<ClockedBizData>(20);
+						clockedBizDataMap.put(tmpClockedBizData.getWorkNum(), tmpList);
+					}
+					tmpList.add(tmpClockedBizData);
+				}
+			}
+			if (clockedBizDataList != null) {
+				clockedBizDataList.clear();
+				clockedBizDataList = null;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadData():"+e.getMessage());
 		}
 	}
 
@@ -146,30 +121,22 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		int size = clockedResultList==null?0:clockedResultList.size();
 		String daKaType = null;
 		for (int i = 0; i < size; i++) {
-			tmpClockedResult = clockedResultList.get(i);
-			//0行政考勤,1移动考勤,2不考勤
-			daKaType = tmpClockedResult.getCheckingType() == null ? "" : tmpClockedResult.getCheckingType();
-			if (daKaType.equals("1")) {
-				try {
+			try {
+				tmpClockedResult = clockedResultList.get(i);
+				//0行政考勤,1移动考勤,2不考勤
+				daKaType = tmpClockedResult.getCheckingType() == null ? "" : tmpClockedResult.getCheckingType();
+				if (daKaType.equals("1")) {
 					MobileDaKaRule.attachWithDaKa(tmpClockedResult, mobileDaKaMap);
-					LogManager.putContectOfLogInfo("根据打卡记录计算移动考勤的数据");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					LogManager.putContectOfLogInfo(e.getMessage());
-					log.error("attachWithDaKa()移动考勤:"+e.getMessage());
-				}
-			} else if(daKaType.equals("0")){
-				try {
+				} else if(daKaType.equals("0")){
 					OfficeDaKaRule.attachWithDaKa(tmpClockedResult, officeDaKaList);
-					LogManager.putContectOfLogInfo("根据打卡记录计算行政的数据");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					LogManager.putContectOfLogInfo(e.getMessage());
-					log.error("attachWithDaKa()行政考勤:"+e.getMessage());
+				}else if(daKaType.equals("2")){
+					//不打人员不计算打卡业务跳过本次循环
+					continue;
 				}
-			}else if(daKaType.equals("2")){
-				//不打人员不计算打卡业务跳过本次循环
-				continue;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LogManager.putContectOfLogInfo(e.getMessage());
+				log.error("attachWithDaKa()计算打卡记录:"+e.getMessage());
 			}
 		}
 	}
@@ -189,43 +156,25 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 			tmpClockedResult = clockedResultList.get(i);
 			//0行政考勤,1移动考勤,2不考勤
 			daKaType = tmpClockedResult.getCheckingType() == null ? "" : tmpClockedResult.getCheckingType();
-			
-			if (daKaType.equals("1")) {
-				mobileCalcRule =  new MobileCalcRule();
-				// 按规则进行计算
-				try {
+			try{
+				if (daKaType.equals("1")) {
+					mobileCalcRule =  new MobileCalcRule();
+					// 按规则进行计算
 					mobileCalcRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
-					LogManager.putContectOfLogInfo("计算移动考勤业务数据");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					LogManager.putContectOfLogInfo(e.getMessage());
-					log.error("attachWithBizData移动考勤业务:"+e.getMessage());
-				}
-			} else if(daKaType.equals("0")){
-				officeCalcRule = new OfficeCalcRule();
-				// 按规则进行计算
-				try {
+				} else if(daKaType.equals("0")){
+					officeCalcRule = new OfficeCalcRule();
+					// 按规则进行计算
 					officeCalcRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
-					LogManager.putContectOfLogInfo("计算行政考勤业务数据");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					LogManager.putContectOfLogInfo(e.getMessage());
-					log.error("attachWithBizData行政业务:"+e.getMessage());
-				}
-
-			}else if(daKaType.equals("2")){
-				//不打卡人员当天没有请假的的默认视为有效出勤并计算餐补个数，
-				officeNotCheckRule = new OfficeNotCheckRule();
-				try {
+				}else if(daKaType.equals("2")){
+					//不打卡人员当天没有请假的的默认视为有效出勤并计算餐补个数，
+					officeNotCheckRule = new OfficeNotCheckRule();
 					officeNotCheckRule.attach(tmpClockedResult, clockedBizDataMap.get(tmpClockedResult.getWorkNum()));
-					LogManager.putContectOfLogInfo("计算不考勤业务数据");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					LogManager.putContectOfLogInfo(e.getMessage());
-					log.error("attachWithBizData不考勤业务:"+e.getMessage());
 				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LogManager.putContectOfLogInfo(e.getMessage());
+				log.error("attachWithBizData()计算考勤业务:"+e.getMessage());
 			}
-
 		}
 	}
 

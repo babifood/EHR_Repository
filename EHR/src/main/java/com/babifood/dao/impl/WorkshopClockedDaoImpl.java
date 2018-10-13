@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.WorkshopClockedDao;
 @Repository
-public class WorkshopClockedDaoImpl implements WorkshopClockedDao {
+public class WorkshopClockedDaoImpl extends AuthorityControlDaoImpl implements WorkshopClockedDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
@@ -27,7 +27,8 @@ public class WorkshopClockedDaoImpl implements WorkshopClockedDao {
 		if(workNumber!=null&&!userName.equals("")){
 			sql.append(" and workname like '%"+userName+"%'");
 		}
-		return jdbctemplate.queryForList(sql.toString());
+		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id", sql);
+		return jdbctemplate.queryForList(returnSQL.toString());
 	}
 	@Override
 	public void saveimportExcelWorkshopClocked(List<Object[]> workshopClockedParam) {

@@ -50,24 +50,11 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 		return list;
 	}
 	@Override
-	@LogMethod(module = ModuleConstant.CLOCKED)
-	public List<ClockedResultBases> loadClockedResultDataList(int year, int month){
+	public List<ClockedResultBases> loadClockedResultDataList(int year, int month) throws Exception{
 		// TODO Auto-generated method stub
-		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
-		LogManager.putUserIdOfLogInfo(login.getUser_id());
-		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat dftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<ClockedResultBases> clockedResultList = null;
-		List<Map<String, Object>> list = null;
-		try {
-			list = clockedResultBaseDao.loadClockedResultDataList(year,month);
-			LogManager.putContectOfLogInfo("查询考勤业务表信息");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadClockedResultDataList:"+e.getMessage());
-		}
+		List<Map<String, Object>> list = clockedResultBaseDao.loadClockedResultDataList(year,month);
 		if(list.size()>0){
 			clockedResultList = new ArrayList<ClockedResultBases>();
 			for (Map<String, Object> map : list) {
@@ -128,7 +115,7 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 				c.setCanBu(0);
 				c.setEventBeginTime(null);
 				c.setEventEndTime(null);
-				
+				c.setInOutJob(0d);
 				c.setClockFlag(map.get("Clockflag")==null?0:Integer.parseInt(map.get("Clockflag").toString()));
 				clockedResultList.add(c);
 			}

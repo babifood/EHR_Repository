@@ -11,9 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import com.babifood.clocked.dao.ClockedResultBaseDao;
 import com.babifood.clocked.entrty.ClockedResultBases;
+import com.babifood.dao.impl.AuthorityControlDaoImpl;
 import com.babifood.utils.CustomerContextHolder;
 @Repository
-public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
+public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements ClockedResultBaseDao {
 	public static final Logger log = Logger.getLogger(ClockedResultBaseDaoImpl.class);
 	@Autowired
 	JdbcTemplate jdbctemplate;
@@ -72,10 +73,9 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		params[0]=year;
 		params[1]=month;
 		int[] rwso = null;
-		
-		jdbctemplate.update(sql_delete.toString(), params);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("companycode", sql_delete);
+		jdbctemplate.update(returnSQL.toString(), params);
 		rwso = jdbctemplate.batchUpdate(strSql,paramsList);
-		
 		return rwso;
 	}
 	@Override
@@ -122,14 +122,15 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		sql.append("tiaoXiu,shiJia,bingJia,peixunJia,hunJia, ");
 		sql.append("chanJia,PeiChanJia,SangJia,Qita,Queqin, ");
 		sql.append("Qingjia,Yidong,Jiaban,Chuchai,Canbu, ");
-		sql.append("EventBeginTime,EventEndTime,Clockflag ");
+		sql.append("EventBeginTime,EventEndTime,Clockflag,inoutjob ");
 		sql.append("from ehr_checking_result ");
 		sql.append("where Year=? and Month = ? ");
-		sql.append("order by WorkNum,checkingDate");
+		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode", sql);
+		returnSQL.append("order by WorkNum,checkingDate");
 		Object[] params=new Object[2];
 		params[0]=year;
 		params[1]=month;
-		return jdbctemplate.queryForList(sql.toString(), params);
+		return jdbctemplate.queryForList(returnSQL.toString(), params);
 	}
 	@Override
 	public int[] updateClockedResultBase(List<ClockedResultBases> saveDataList) throws Exception {
@@ -195,9 +196,10 @@ public class ClockedResultBaseDaoImpl implements ClockedResultBaseDao {
 		if(userName!=null&&!userName.equals("")){
 			sql.append(" and UserName like '%"+userName+"%'");
 		}
-		sql.append(" GROUP BY Year,Month,WorkNum,UserName,CompanyCode,Company,OrganCode,Organ,");
-		sql.append("DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,PostCode,Post,CheckingType,PaiBanType");
-		sql.append(" ORDER BY Year,Month desc");
-		return jdbctemplate.queryForList(sql.toString());
+		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode", sql);
+		returnSQL.append(" GROUP BY Year,Month,WorkNum,UserName,CompanyCode,Company,OrganCode,Organ,");
+		returnSQL.append("DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,PostCode,Post,CheckingType,PaiBanType");
+		returnSQL.append(" ORDER BY Year,Month desc");
+		return jdbctemplate.queryForList(returnSQL.toString());
 	}
 }
