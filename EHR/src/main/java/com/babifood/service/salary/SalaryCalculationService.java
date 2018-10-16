@@ -203,16 +203,18 @@ public class SalaryCalculationService {
 		// 考勤汇总
 		Map<String, Object> arrangementSummary = initAttendanceService.summaryArrangementInfo(year, month, pNumber);
 		if (arrangementSummary == null || arrangementSummary.size() <= 0) {
-			// log
+			logger.error("薪资计算========>考勤汇总数据异常, employee:"+employee);
 			throw new Exception("考勤信息异常");
 		}
 		String lastDay = year + "-" + month + "-" + days;// 该月最后一天
 		Map<String, Object> salary = salaryCalculationDao.findBaseSalary(lastDay, pNumber);
 		if (salary == null || salary.size() <= 0) {
+			logger.error("薪资计算========>基本薪资信息异常, employee:"+employee);
 			throw new Exception("基本薪资信息异常");
 		}
 		Map<String, Object> fees = salaryCalculationDao.findPersonFee(year, month, pNumber);
 		if (fees == null || fees.size() <= 0) {
+			logger.error("薪资计算========>费项数据异常, employee:"+employee);
 			throw new Exception("费项数据异常，请检查数据");
 		}
 		BaseFieldsEntity baseFields = getBaseFields(employee, arrangementSummary, salary, fees);

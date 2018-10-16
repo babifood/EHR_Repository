@@ -173,6 +173,7 @@ function removeArrangementBaseTime(){
 								$('#arrangement_base_time').datagrid('cancelEdit', index)
 								.datagrid('deleteRow', index).datagrid('clearSelections',node);
 								$('#arrangement_base_time').datagrid('acceptChanges');
+								$('#arrangement_select_list').combobox('reload');
 							}else{
 								$.messager.alert("消息提示！","删除失败!","warning");
 							}
@@ -220,6 +221,7 @@ function saveArrangementBaseTime(){
 					});
 					editIndex1 = undefined;
 					$('#arrangement_base_time').datagrid('reload');
+					$('#arrangement_select_list').combobox('reload');
 				}else{
 					$.messager.alert("消息提示！","保存失败!","warning");
 					$('#arrangement_base_time').datagrid('beginEdit', editIndex1);
