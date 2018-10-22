@@ -26,5 +26,7 @@ public class OperationConstant {
 	
 	public static final String OPERATION_LOG_TYPE_ARCHIVE = "归档";//归档
 	
-	public static String OPERATING_TYPE_INITIALIZE = "初始化";
+	public static final String OPERATING_LOG_TYPE_INITIALIZE = "初始化";
+	
+	public static final String OPERATING_LOG_TYPE_PUSH = "数据推送";
 }

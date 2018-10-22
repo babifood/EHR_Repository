@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.babifood.clocked.service.ClockedService;
 import com.babifood.clocked.service.CollectionClockedDataService;
 import com.babifood.clocked.service.LoadClockedResultService;
+import com.babifood.clocked.service.PushClockedDataService;
 import com.babifood.exception.CustomException;
 
 @Controller
@@ -24,6 +25,8 @@ public class ClockedControl {
 	ClockedService clockedService;
 	@Autowired
 	CollectionClockedDataService collectionClockedDataService;
+	@Autowired
+	PushClockedDataService pushClockedDataService;
 	/**
 	 * 考勤明细查询
 	 * @return
@@ -81,6 +84,21 @@ public class ClockedControl {
 		Map<String,Object> map =new HashMap<String,Object>();
 		int[] rows = collectionClockedDataService.execute(sysYear,sysMonth);
 		if(rows!=null&&rows.length>0){
+			map.put("status", "success");
+		}else{
+			map.put("status", "error");
+		}
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("/pushClockedData")
+	public Map<String,Object> pushClockedData(Integer year,Integer month){
+		Calendar tempCal = Calendar.getInstance();
+		int sysYear = year==0?tempCal.get(Calendar.YEAR):year;
+		int sysMonth = month==0?tempCal.get(Calendar.MONTH)+1:month;			
+		Map<String,Object> map =new HashMap<String,Object>();
+		String row = pushClockedDataService.pushDataToOA(sysYear, sysMonth);
+		if(!row.equals("-1")){
 			map.put("status", "success");
 		}else{
 			map.put("status", "error");

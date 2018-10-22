@@ -21,7 +21,7 @@ public class SynchronousOaAccountInfoDaoImpl implements SynchronousOaAccountInfo
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append("name,code from org_member where code is not null");
+		sql.append("id as member,name,code from org_member where code is not null");
 		if(workNum!=null&&!workNum.equals("")){
 			sql.append(" and code like '%"+workNum+"%'");
 		}

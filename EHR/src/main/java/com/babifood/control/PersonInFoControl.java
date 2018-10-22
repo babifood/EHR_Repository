@@ -28,8 +28,8 @@ public class PersonInFoControl {
 	}
 	@ResponseBody
 	@RequestMapping("/getPersonFoPid")
-	public PersonBasrcEntity getPersonFoPid(String p_id){
-		PersonBasrcEntity personBasrc = (PersonBasrcEntity) personInFoService.getPersonFoPid(p_id);
+	public PersonBasrcEntity getPersonFoPid(String p_number){
+		PersonBasrcEntity personBasrc = (PersonBasrcEntity) personInFoService.getPersonFoPid(p_number);
 		return personBasrc;	
 	}
 	//教育背景
@@ -116,9 +116,9 @@ public class PersonInFoControl {
 	}
 	@ResponseBody
 	@RequestMapping("/removePersonInFo")
-	public Map<String,Object> removePersonInFo(String p_id){
+	public Map<String,Object> removePersonInFo(String p_number){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = personInFoService.removePersonInFo(p_id);
+		int rows = personInFoService.removePersonInFo(p_number);
 		if(rows>0){
 			map.put("status", "success");
 		}else{
@@ -149,7 +149,9 @@ public class PersonInFoControl {
 		List<Map<String, Object>> list = personInFoService.loadOaWorkNumInFo(workNum, userName);
 		map.put("total", list.size());
 		map.put("rows", list);
+		System.out.println(map);
 		return map;
+		
 	}
 	@ResponseBody
 	@RequestMapping("/getEhrWorkNum")

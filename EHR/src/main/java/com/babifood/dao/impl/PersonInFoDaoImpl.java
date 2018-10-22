@@ -138,7 +138,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 	@Override
 	public void savePersonInfo(PersonBasrcEntity personInFo) throws DataAccessException{
 		// TODO Auto-generated method stub
-		StringBuffer sql_basrc = new StringBuffer("delete from ehr_person_basic_info where p_id=?");//人员档案信息
+		StringBuffer sql_basrc = new StringBuffer("delete from ehr_person_basic_info where p_number=?");//人员档案信息
 		StringBuffer sql_education = new StringBuffer("delete from ehr_person_education where e_p_id=?");//教育背景
 		StringBuffer sql_cultivateFront = new StringBuffer("delete from ehr_person_cultivate_front where c_p_id=?");//培训经历-入职前
 		StringBuffer sql_cultivateLater = new StringBuffer("delete from ehr_person_cultivate_later where c_p_id=?");//培训经历-入职后
@@ -329,7 +329,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> education_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getEducation().size();i++){
 			education_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getEducation().get(i).getE_begin_date(),
 					personInFo.getEducation().get(i).getE_end_date(),
 					personInFo.getEducation().get(i).getE_organization_name(),
@@ -345,7 +345,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> cultivateFront_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getCultivateFront().size();i++){
 			cultivateFront_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getCultivateFront().get(i).getC_begin_date(),
 					personInFo.getCultivateFront().get(i).getC_end_date(),
 					personInFo.getCultivateFront().get(i).getC_education(),
@@ -359,7 +359,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> cultivateLater_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getCultivateLater().size();i++){
 			cultivateLater_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getCultivateLater().get(i).getC_begin_date(),
 					personInFo.getCultivateLater().get(i).getC_end_date(),
 					personInFo.getCultivateLater().get(i).getC_training_institution(),
@@ -378,7 +378,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> workFront_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getWorkFront().size();i++){
 			workFront_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getWorkFront().get(i).getW_begin_date(),
 					personInFo.getWorkFront().get(i).getW_end_date(),
 					personInFo.getWorkFront().get(i).getW_company_name(),
@@ -396,7 +396,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> workLater_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getWorkLater().size();i++){
 			workLater_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getWorkLater().get(i).getW_begin_date(),
 					personInFo.getWorkLater().get(i).getW_end_date(),
 					personInFo.getWorkLater().get(i).getW_company_name(),
@@ -409,7 +409,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> certificate_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getCertificate().size();i++){
 			certificate_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getCertificate().get(i).getC_name(),
 					personInFo.getCertificate().get(i).getC_organization(),
 					personInFo.getCertificate().get(i).getC_begin_date(),
@@ -422,7 +422,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		List<Object[]> family_params = new ArrayList<>();
 		for(int i=0;i<personInFo.getFamily().size();i++){
 			family_params.add(new Object[]{
-					personInFo.getP_id(),
+					personInFo.getP_number(),
 					personInFo.getFamily().get(i).getF_relation(),
 					personInFo.getFamily().get(i).getF_name(),
 					personInFo.getFamily().get(i).getF_date(),
@@ -433,14 +433,14 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		}	
 		final String family_insert_sql = "insert into ehr_person_family (f_p_id,f_relation,f_name,f_date,f_company,f_duty,f_desc) values(?,?,?,?,?,?,?)";						
 		
-		jdbctemplate.update(sql_basrc.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_education.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_cultivateFront.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_cultivateLater.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_workFront.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_workLater.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_certificate.toString(),personInFo.getP_id());
-		jdbctemplate.update(sql_family.toString(),personInFo.getP_id());
+		jdbctemplate.update(sql_basrc.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_education.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_cultivateFront.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_cultivateLater.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_workFront.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_workLater.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_certificate.toString(),personInFo.getP_number());
+		jdbctemplate.update(sql_family.toString(),personInFo.getP_number());
 		jdbctemplate.update(sql_insert_basrc.toString(),sql_insert_basrc_params);
 		jdbctemplate.batchUpdate(education_insert_sql,education_params);
 		jdbctemplate.batchUpdate(cultivateFront_insert_sql,cultivateFront_params);
@@ -451,9 +451,9 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		jdbctemplate.batchUpdate(family_insert_sql,family_params);
 	}
 	@Override
-	public void removePersonInFo(String p_id) throws DataAccessException{
+	public void removePersonInFo(String p_number) throws DataAccessException{
 		// TODO Auto-generated method stub
-		StringBuffer sql_basrc = new StringBuffer("delete from ehr_person_basic_info where p_id=?");//人员档案信息
+		StringBuffer sql_basrc = new StringBuffer("delete from ehr_person_basic_info where p_number=?");//人员档案信息
 		StringBuffer sql_education = new StringBuffer("delete from ehr_person_education where e_p_id=?");//教育背景
 		StringBuffer sql_cultivateFront = new StringBuffer("delete from ehr_person_cultivate_front where c_p_id=?");//培训经历-入职前
 		StringBuffer sql_cultivateLater = new StringBuffer("delete from ehr_person_cultivate_later where c_p_id=?");//培训经历-入职后
@@ -462,14 +462,14 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		StringBuffer sql_certificate = new StringBuffer("delete from ehr_person_certificate where c_p_id=?");//获得证书
 		StringBuffer sql_family = new StringBuffer("delete from ehr_person_family where f_p_id=?");//家庭背景
 
-		jdbctemplate.update(sql_basrc.toString(),p_id);
-		jdbctemplate.update(sql_education.toString(),p_id);
-		jdbctemplate.update(sql_cultivateFront.toString(),p_id);
-		jdbctemplate.update(sql_cultivateLater.toString(),p_id);
-		jdbctemplate.update(sql_workFront.toString(),p_id);
-		jdbctemplate.update(sql_workLater.toString(),p_id);
-		jdbctemplate.update(sql_certificate.toString(),p_id);
-		jdbctemplate.update(sql_family.toString(),p_id);
+		jdbctemplate.update(sql_basrc.toString(),p_number);
+		jdbctemplate.update(sql_education.toString(),p_number);
+		jdbctemplate.update(sql_cultivateFront.toString(),p_number);
+		jdbctemplate.update(sql_cultivateLater.toString(),p_number);
+		jdbctemplate.update(sql_workFront.toString(),p_number);
+		jdbctemplate.update(sql_workLater.toString(),p_number);
+		jdbctemplate.update(sql_certificate.toString(),p_number);
+		jdbctemplate.update(sql_family.toString(),p_number);
 
 	}
 	@Override
@@ -545,7 +545,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override
-	public Object getPersonFoPid(String p_id) throws DataAccessException{
+	public Object getPersonFoPid(String p_number) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -635,8 +635,8 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append("p_zuigao_xueli,");
 		sql.append("p_recommend_person,");
 		sql.append("p_recommend_relation");
-		sql.append(" from ehr_person_basic_info where p_id=?");
-		return jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), p_id);
+		sql.append(" from ehr_person_basic_info where p_number=?");
+		return jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), p_number);
 	}
 	@Override
 	public List<Map<String, Object>> loadComboboxCompanyData() throws DataAccessException{

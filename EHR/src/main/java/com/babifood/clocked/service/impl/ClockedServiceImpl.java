@@ -40,7 +40,7 @@ public class ClockedServiceImpl implements ClockedService {
 	public int[] init(int year,int month){
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
-		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATING_TYPE_INITIALIZE);
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATING_LOG_TYPE_INITIALIZE);
 		//初始化当前系统日期的整月信息
 		List<ClockedResultBases> dataList  = null; 
 		Calendar tempCal = Calendar.getInstance();
