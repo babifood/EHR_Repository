@@ -31,7 +31,7 @@ public class ColeckEventResultDaoImpl implements ColeckEventResultDao {
 		sql.append("select ");
 		sql.append("year,month,m.code as worknum,createtime,billdate,billnum,billtype,timelength,begintime,endtime,validflag,bizflag1 ");
 		sql.append("from a8xclockedbizdata a inner join org_member m on a.memberid=m.id ");
-		sql.append("where to_char(begintime,'yyyy-mm-dd') >=? and to_char(endtime,'yyyy-mm-dd')<=?");
+		sql.append("where to_char(endtime,'yyyy-mm-dd') >=? and to_char(begintime,'yyyy-mm-dd')<=?");
 		Object[] params=new Object[2];
 		params[0]=df.format(UtilDateTime.getMonthStartSqlDate(year,month));
 		params[1]=df.format(UtilDateTime.getMonthEndSqlDate(year,month));

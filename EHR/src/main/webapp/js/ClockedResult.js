@@ -663,3 +663,38 @@ function executeData(){
 		}
 	});
 }
+//考勤数据推送
+function pushData(){
+	$.ajax({
+		url:prefix+'/clocked/pushClockedData',
+		type:'post',
+		data:{
+			year:$("#year").val()==""?0:$("#year").val(),
+			month:$("#month").val()==""?0:$("#month").val()
+		},
+		contentType:"application/x-www-form-urlencoded",
+		beforeSend:function(){
+			$.messager.progress({
+				text:'推送中......',
+			});
+		},
+		success:function(data){
+			$.messager.progress('close');
+			if(data.status=="success"){
+				$.messager.show({
+					title:'消息提醒',
+					msg:"数据推送成功",
+					timeout:3000,
+					showType:'slide'
+				});
+			}else{
+				$.messager.show({
+					title:'消息提醒',
+					msg:"数据推送失败",
+					timeout:3000,
+					showType:'slide'
+				});
+			}
+		}
+	});
+}

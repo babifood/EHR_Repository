@@ -21,6 +21,9 @@
 	       	<shiro:hasPermission name="cherk:execute">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="executeData()">数据归集</a>
 	        </shiro:hasPermission>
+	        <shiro:hasPermission name="cherk:push">
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" plain="true" onclick="pushData()">数据推送</a>
+	        </shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
 	        	工号：<input type="text" class="textbox" id="WorkNum" name="WorkNum" style="width: 110px;"/>

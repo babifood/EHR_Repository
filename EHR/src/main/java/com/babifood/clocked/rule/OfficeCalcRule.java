@@ -50,15 +50,19 @@ public class OfficeCalcRule {
 	private void calculate(ClockedResultBases theResult) throws Exception {
 		DateFormat dftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		// 对不需要上班的日期，进行处理
-		if (theResult.getClockFlag() ==0) {
+		if (theResult.getClockFlag() ==0) {		
 			theResult.setYiDong(0d);
 			theResult.setChuCha(0d);
 			theResult.setQingJia(0d);
+			theResult.setNianJia(0d);
+			theResult.setTiaoXiu(0d);
 			theResult.setShiJia(0d);
 			theResult.setBingJia(0d);
+			theResult.setPeiXunJia(0d);
 			theResult.setHunJia(0d);
+			theResult.setChanJia(0d);
+			theResult.setPeiChanJia(0d);
 			theResult.setSangJia(0d);
-			theResult.setNianJia(0d);
 			theResult.setOtherQingJia(0d);
 
 			theResult.setChiDao(0);

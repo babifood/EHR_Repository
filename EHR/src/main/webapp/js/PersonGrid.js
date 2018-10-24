@@ -11,7 +11,7 @@ var editIndex_c = undefined;
 var family = 0;//家庭
 var editIndex_f = undefined;
 //人员id
-var p_id="";
+var p_number="";
 //窗体状态
 var win_title;
 //初始化
@@ -127,6 +127,7 @@ function loadOaWorkNumInFo(){
 		},
 		onDblClickRow:function(rowIndex,rowData){
 			console.log(rowData);
+			$("#p_id").val(rowData.member_id);//OA员工编号id
 			$("#p_number").val(rowData.CODE);//编号
 			$("#p_name").val(rowData.NAME);//名称
 			$("#p_oa_and_ehr").val("OA");//区分那个系统创建的员工号段
@@ -608,8 +609,8 @@ function editPersonInFo(){
 	if(row){
 		checkForm(false);
 		$("#person_form").form('clear');
-		p_id=row.p_id;
-		$.post(prefix+"/getPersonFoPid",{p_id:row.p_id},function(data){
+		p_number=row.p_number;
+		$.post(prefix+"/getPersonFoPid",{p_number:row.p_number},function(data){
 			if(data){
 				$("#person_win").window("open").window("setTitle","修改人员");
 				editFromSetValues(data);
@@ -745,7 +746,7 @@ function removePersonInFo(){
 					url:prefix+'/removePersonInFo',
 					type:'post',
 					data:{
-						p_id:row.p_id
+						p_number:row.p_number
 					},
 					contentType:"application/x-www-form-urlencoded",
 					beforeSend:function(){
@@ -1123,10 +1124,10 @@ function loadAccordion(){
 //加载教育背景列表
 function loadEducation(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadEducation?e_p_id=';
 	}else{
-		url=prefix+'/loadEducation?e_p_id='+p_id;
+		url=prefix+'/loadEducation?e_p_id='+p_number;
 	}
 	$("#education_grid").datagrid({
 		url:url,
@@ -1352,10 +1353,10 @@ function onDblClickRowEducation(index){
 //加载培训经历入职前的列表
 function loadCultivateFront(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadCultivateFront?c_p_id=';
 	}else{
-		url=prefix+'/loadCultivateFront?c_p_id='+p_id;
+		url=prefix+'/loadCultivateFront?c_p_id='+p_number;
 	}
 	$("#cultivate_front_grid").datagrid({
 		url:url,
@@ -1503,10 +1504,10 @@ function onDblClickRowCultivateFront(index){
 //加载培训经历入职后的列表
 function loadCultivateLater(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadCultivateLater?c_p_id=';
 	}else{
-		url=prefix+'/loadCultivateLater?c_p_id='+p_id;
+		url=prefix+'/loadCultivateLater?c_p_id='+p_number;
 	}
 	$("#cultivate_later_grid").datagrid({
 		url:url,
@@ -1708,10 +1709,10 @@ function onDblClickRowCultivateLater(index){
 //加载工作经历入职前的列表
 function loadWorkFront(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadWorkFront?w_p_id=';
 	}else{
-		url=prefix+'/loadWorkFront?w_p_id='+p_id;
+		url=prefix+'/loadWorkFront?w_p_id='+p_number;
 	}
 	$("#work_front_grid").datagrid({
 		url:url,
@@ -1900,10 +1901,10 @@ function onDblClickRowWorkFront(index){
 //加载工作经历入职后的列表
 function loadWorkLater(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadWorkLater?w_p_id=';
 	}else{
-		url=prefix+'/loadWorkLater?w_p_id='+p_id;
+		url=prefix+'/loadWorkLater?w_p_id='+p_number;
 	}
 	$("#work_later_grid").datagrid({
 		url:url,
@@ -2037,10 +2038,10 @@ function onDblClickRowWorkLater(index){
 //加载获得证书的列表
 function loadCertificate(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadCertificate?c_p_id=';
 	}else{
-		url=prefix+'/loadCertificate?c_p_id='+p_id;
+		url=prefix+'/loadCertificate?c_p_id='+p_number;
 	}
 	$("#certificate_grid").datagrid({
 		url:url,
@@ -2174,10 +2175,10 @@ function onDblClickRowCertificate(index){
 //加载家庭背景的列表
 function loadFamily(){
 	var url;
-	if(p_id==""){
+	if(p_number==""){
 		url=prefix+'/loadFamily?f_p_id=';
 	}else{
-		url=prefix+'/loadFamily?f_p_id='+p_id;
+		url=prefix+'/loadFamily?f_p_id='+p_number;
 	}
 	$("#family_grid").datagrid({
 		url:url,

@@ -103,15 +103,15 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 	}
 	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
-	public Integer removePersonInFo(String p_id) {
+	public Integer removePersonInFo(String p_number) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_REMOVE);
 		int status = 1;
 		try {
 			// TODO Auto-generated method stub
-			personInFoDao.removePersonInFo(p_id);
-			LogManager.putContectOfLogInfo("参数:"+p_id);
+			personInFoDao.removePersonInFo(p_number);
+			LogManager.putContectOfLogInfo("参数:"+p_number);
 		} catch (Exception e) {
 			// TODO: handle exception
 			status = -1;
@@ -230,15 +230,15 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 	}
 	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
-	public Object getPersonFoPid(String p_id) {
+	public Object getPersonFoPid(String p_number) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		Object obj = null;
 		try {
 			// TODO Auto-generated method stub
-			obj = personInFoDao.getPersonFoPid(p_id);
-			LogManager.putContectOfLogInfo("参数:"+p_id);
+			obj = personInFoDao.getPersonFoPid(p_number);
+			LogManager.putContectOfLogInfo("参数:"+p_number);
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogManager.putContectOfLogInfo(e.getMessage());
@@ -325,6 +325,10 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		List<Map<String, Object>> list = null;
 		try {
 			list = synchronousOaAccountInfoDao.loadOaWorkNumInFo(workNum, userName);
+			for (Map<String, Object> map : list) {
+				if(map.get("member")!=null)
+					map.put("member_id", map.get("member").toString());
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogManager.putContectOfLogInfo(e.getMessage());
