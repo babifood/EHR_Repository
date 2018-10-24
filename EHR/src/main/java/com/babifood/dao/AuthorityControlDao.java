@@ -8,6 +8,8 @@ package com.babifood.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.babifood.clocked.entrty.PushOaDataEntrty;
+
 public interface AuthorityControlDao {
 	public List<Map<String, Object>> loadUserDataAuthority();
 	public StringBuffer jointDataAuthoritySql(String companyCode,StringBuffer sql);

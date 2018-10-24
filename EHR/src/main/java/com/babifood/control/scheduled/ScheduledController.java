@@ -18,13 +18,13 @@ public class ScheduledController {
 	@Autowired
 	private DakaRecordService dakaRecordService;
 	
-	@Scheduled(cron = "0 0/8 * * * ?")
+	@Scheduled(cron = "0 1 0 * * ?")
 	public void getDakaSource() {
 		dakaSourceService.getDakaSource();
 	}
 	
 	
-	@Scheduled(cron = "0 0/2 * * * ?")
+	@Scheduled(cron = "0 0 3 * * ?")
 	public void checkDakaRecord(){
 		try {
 			dakaRecordService.checkDakaRecord();

@@ -37,7 +37,7 @@ public class BaseSalaryController {
 	}
 	
 	/**
-	 * 分页查询基础薪资
+	 * 个人基础薪资调整记录
 	 * @param page
 	 * @param rows
 	 * @param pNumber

@@ -10,7 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.AnnualLeaveDao;
-import com.babifood.utils.IdGen;
+import com.babifood.utils.CustomerContextHolder;
+import com.babifood.utils.UtilDateTime;
 @Repository
 public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	@Autowired
@@ -19,6 +20,7 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	//当前年假记录
 	@Override
 	public List<Map<String, Object>> loadNowAnnualLeave(String npname) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT PNAME as pname,PNUMBER as pnumber,PINDAY as pinday,NOWYEAR as nowyear"
 				+ ",NANNUALLEAVE as nannualleave,NANNUALLEAVEDEADLINE as nannualleavedeadline"
@@ -40,6 +42,7 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	//历史年假记录
 	@Override
 	public List<Map<String, Object>> loadHistoryAnnualLeave(String lpname) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT PNAME as pname,PNUMBER as pnumber,PINDAY as pinday,NOWYEAR as nowyear"
 				+ ",NANNUALLEAVE as nannualleave,NANNUALLEAVEDEADLINE as nannualleavedeadline"
@@ -60,12 +63,12 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	}
 	//取员工入职日期等信息
 	public List<Map<String, Object>> GetHireDate() {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT p_number,p_name,p_in_date ,b.COMPANYDAYFLAG as p_companydayflag,b.PINDAY as pinday");
-		sql.append(" from ehr_person_basic_info a");
-		sql.append(" left join ehr_annualleave b");
-		sql.append(" ON a.p_number=b.PNUMBER where 1=1");
-		sql.append(" ORDER BY p_number ASC");
+		sql.append("SELECT p_number,p_name,p_in_date ,p_company_age as p_companydayflag,p_company_id as companyCode,");
+		sql.append("p_department_id as deptCode, p_organization_id as organizationCode, ");
+		sql.append("p_section_office_id as officeCode,p_group_id as groupCode ");
+		sql.append(" from ehr_person_basic_info where p_out_date is null or p_out_date = ''");
 		List<Map<String, Object>> list = null;
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
@@ -74,57 +77,85 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 		}
 		return list;
 	}
-	public int[] SaveAnnualLeave(List<Map<String, Object>> list,int nowYear) {
-		String [] sqlAll =new String [3];
-		//把当前记录表里需要更新的人员的记录，插入历史记录表
-		StringBuffer sql0 = new StringBuffer();
-		sql0.append("insert into ehr_annualleave_history SELECT * FROM ehr_annualleave where ANNUALLEAVEID in"
-				+ "(select * from(SELECT ANNUALLEAVEID FROM ehr_annualleave where pnumber in(");
-		//删除当前记录表里需要更新的人员的记录
-		StringBuffer sql1 = new StringBuffer();
-		sql1.append("delete from ehr_annualleave where ANNUALLEAVEID in"
-				+ "(select * from(SELECT ANNUALLEAVEID FROM ehr_annualleave where pnumber in(");
-		//插入当前记录表更新的人员数据
-		StringBuffer sql2 = new StringBuffer();
-		sql2.append("insert into ehr_annualleave (ANNUALLEAVEID,PNAME,PNUMBER,PINDAY,COMPANYDAYFLAG,NOWYEAR"
-				+ ",NANNUALLEAVE,NANNUALLEAVEDEADLINE,LANNUALLEAVE,LANNUALLEAVEDEADLINE,USEDDATA,REMAINDATA,DISABLEDDATA,CREATETIME)");
-		sql2.append(" values");
-		for (Map<String, Object> map : list) {
-			sql0.append("'"+map.get("p_number").toString()+"',");//把当前记录表里需要更新的人员的记录，插入历史记录表
-			sql1.append("'"+map.get("p_number").toString()+"',");//删除当前记录表里需要更新的人员的记录
-			String annualleaveid = IdGen.uuid();
-			sql2.append("("//插入当前记录表更新的人员数据
-					+ "'"+annualleaveid+"'"
-					+ ",'"+map.get("p_name").toString()+"'"
-					+ ",'"+map.get("p_number").toString()+"'"
-					+ ",DATE_FORMAT('"+map.get("p_in_date").toString()+"','%Y-%m-%d')"
-					+ ","+(int) map.get("p_companydayflag")+""
-					+ ","+nowYear+""
-					+ ","+(int) map.get("nannualleave")+""
-					+ ",DATE_FORMAT('"+(nowYear+1)+"-07-01','%Y-%m-%d')"
-					+ ","+(int) map.get("lannualleave")+""
-					+ ",DATE_FORMAT('"+(nowYear)+"-07-01','%Y-%m-%d')"
-					+ ","+(int) map.get("useddata")+""
-					+ ","+(int) map.get("remaindata")+""
-					+ ","+(int) map.get("disableddata")+""
-					+ ",DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')"
-					+ "),");
+	public int[] SaveAnnualLeave(List<Map<String, Object>> list) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
+		StringBuffer sql = new StringBuffer();
+		sql.append("REPLACE INTO `ehr_annualleave` (`PNAME`, `PNUMBER`, `PINDAY`, `COMPANYDAYFLAG`, ");
+		sql.append("`NOWYEAR`, `NANNUALLEAVE`, `NANNUALLEAVEDEADLINE`, `LANNUALLEAVE`, `LANNUALLEAVEDEADLINE`, ");
+		sql.append("`USEDDATA`, `REMAINDATA`, `DISABLEDDATA`, `CREATETIME`) VALUES");
+		Map<String, Object> map = null;
+		for(int i = 0; i < list.size() ; i++){
+			map = list.get(i);
+			sql.append("('" + map.get("p_name") + "','" + map.get("p_number") + "','" + map.get("p_in_date") + "'," + map.get("p_companydayflag"));
+			sql.append(",'" + map.get("year") + "'," + map.get("nannualleave") + ",'" + map.get("nannualleavedeadline") + "'," + map.get("lannualleave"));
+			sql.append(",'" + map.get("lannualleavedeadline") + "'," + map.get("useddata") + "," + map.get("remaindata") + "," + map.get("disableddata"));
+			sql.append(",'" + UtilDateTime.getCurrentTime("yyyy-MM-dd HH:mm:ss") + "'");
+			if(i == list.size() - 1){
+				sql.append(")");
+			} else {
+				sql.append("),");
+			}
 		}
-		StringBuffer coSql=sql0.deleteCharAt(sql0.length()-1);  
-		coSql.append(")) a)");
-		sqlAll[0]=coSql.toString();
-		StringBuffer deSql=sql1.deleteCharAt(sql1.length()-1);  
-		deSql.append(")) a)");
-		sqlAll[1]=deSql.toString();
-		StringBuffer inSql=sql2.deleteCharAt(sql2.length()-1);  
-		sqlAll[2]=inSql.toString();
 		int[] rows =null;
 		try {
 			//同时执行三个SQL
-			rows = jdbctemplate.batchUpdate(sqlAll);
+			jdbctemplate.update(sql.toString());
 		} catch (Exception e) {
 			log.error("查询错误："+e.getMessage());
 		}
 		return rows;
+	}
+	@Override
+	public List<Map<String, Object>> findOANianjia(String start) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
+		StringBuffer sql = new StringBuffer();
+		sql.append("select year,month,m.code as worknum,createtime,billdate,billnum,billtype,");
+		sql.append("timelength,begintime,endtime,validflag,bizflag1 ");
+		sql.append("from a8xclockedbizdata a inner join org_member m on a.memberid=m.id ");
+		sql.append("where bizflag1 = '年假' and  to_char(begintime,'yyyy-mm-dd') >=? ");
+		List<Map<String, Object>> nianjiaList = null;
+		try {
+			nianjiaList = jdbctemplate.queryForList(sql.toString(), start);
+		} catch (Exception e) {
+			log.error("查询错误："+e.getMessage());
+		}
+		return nianjiaList;
+	}
+	@Override
+	public List<Map<String, Object>> findCurrentNianjiaLit(String year) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT PNAME as pname,PNUMBER as pnumber,PINDAY as pinday,NOWYEAR as nowyear,");
+		sql.append("NANNUALLEAVE as nannualleave,NANNUALLEAVEDEADLINE as nannualleavedeadline,");
+		sql.append("LANNUALLEAVE as lannualleave,LANNUALLEAVEDEADLINE as lannualleavedeadline,");
+		sql.append("USEDDATA as useddata,REMAINDATA as remaindata,DISABLEDDATA as c ");
+		sql.append(" from ehr_annualleave where NOWYEAR = ?");
+		List<Map<String, Object>> nianjiaList = null;
+		try {
+			nianjiaList = jdbctemplate.queryForList(sql.toString(), year);
+		} catch (Exception e) {
+			log.error("查询错误："+e.getMessage());
+		}
+		return nianjiaList;
+	}
+	@Override
+	public void updateEmpCompanyAge(String pNumber, Integer companyAge) {
+		String sql = "update ehr_person_basic_info set p_company_age = ? where p_number = ?";
+		try {
+			jdbctemplate.update(sql, companyAge, pNumber);
+		} catch (Exception e) {
+			log.error("修改员工司龄失败："+e.getMessage());
+		}
+	}
+	@Override
+	public List<Map<String, Object>> findTotalBingjia(String year) {
+		String sql = "SELECT WorkNum AS pNumber, SUM(bingJia) AS bingJia from ehr_checking_result  WHERE `Year` = ? GROUP BY WorkNum";
+		List<Map<String, Object>> totalBingjia = null;
+		try {
+			totalBingjia = jdbctemplate.queryForList(sql, year);
+		} catch (Exception e) {
+			log.error("查询年度病假数失败："+e.getMessage());
+		}
+		return totalBingjia;
 	}
 }

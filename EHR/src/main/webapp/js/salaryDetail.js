@@ -2,18 +2,40 @@ var prefix = window.location.host;
 prefix = "http://" + prefix + "/EHR";
 
 $(function() {
-	loadSalaryDetails();
-	$('#salary_calculation_month').combobox({    
-	    valueField:'id',    
-	    textField:'text' ,
-	    data:[{id:"01",text:"01"},{id:"02",text:"02"},{id:"03",text:"03"},{id:"044",text:"04"},{id:"05",text:"05"},{id:"06",text:"06"}
-	    ,{id:"07",text:"07"},{id:"08",text:"08"},{id:"09",text:"09"},{id:"10",text:"10"},{id:"11",text:"11"},{id:"12",text:"12"}]
-	}); 
+	loadUserAuthCompany();
 	
 })
 
+function loadUserAuthCompany() {
+	console.log("111111111111111");
+	$.ajax({
+		url:prefix + "/salaryDetail/auth",
+		success:function(result){
+			if(result.code == '1'){
+				var data = result.companyList;
+				if(data && data.length > 0){
+					$('#salary_calculation_company').combobox({    
+					    valueField:'companyCode',    
+					    textField:'companyName' ,
+					    data:data
+					});
+					$('#salary_calculation_company').combobox("setValue",data[0].companyCode);
+				}
+				loadSalaryDetails();
+			}
+		}
+	})
+	$('#salary_calculation_month').combobox({    
+	    valueField:'id',    
+	    textField:'text' ,
+	    data:[{id:"01",text:"01"},{id:"02",text:"02"},{id:"03",text:"03"},{id:"04",text:"04"},{id:"05",text:"05"},{id:"06",text:"06"}
+	    ,{id:"07",text:"07"},{id:"08",text:"08"},{id:"09",text:"09"},{id:"10",text:"10"},{id:"11",text:"11"},{id:"12",text:"12"}]
+	});
+}
+
 //加载薪资明细数据
 function loadSalaryDetails() {
+	console.log($('#salary_calculation_company').val());
 	$("#salaryDetail_datagrid").datagrid({
 		url:prefix + "/salaryDetail/page",
 		type : 'post',
@@ -22,6 +44,7 @@ function loadSalaryDetails() {
 		striped:true,
 		border:false,
 		pagination:true,
+		queryParams:{companyCode:$('#salary_calculation_company').val()},
 		pageSize:10,
 		pageList:[10,20,30],
 		pageNumber:1,
@@ -96,12 +119,14 @@ function loadConditionSalaryDetail() {
 	var organzationName = $("#salary_detail_organzationName").val();
 	var deptName = $("#salary_detail_deptName").val();
 	var officeName = $("#salary_detail_officeName").val();
+	var companyCode = $('#salary_calculation_company').val();
 	$("#salaryDetail_datagrid").datagrid("load", {
 		pNumber : pNumber,
 		pName : pName,
 		deptName : deptName,
 		organzationName : organzationName,
-		officeName : officeName
+		officeName : officeName,
+		companyCode:companyCode
 	})
 }
 
@@ -137,6 +162,7 @@ function calculationSalary(type, value){
 		url : prefix + "/salaryDetail/calculation",
 		data : {
 			type:type,
+			companyCode:$('#salary_calculation_company').val(),
 			year:$("#salary_calculation_year").val(),
 			month:$('#salary_calculation_month').val()
 		},

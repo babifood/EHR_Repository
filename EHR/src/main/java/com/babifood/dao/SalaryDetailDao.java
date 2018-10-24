@@ -19,4 +19,6 @@ public interface SalaryDetailDao {
 
 	public void saveSalaryDetailEntityList(List<SalaryDetailEntity> salaryDetails);
 
+	public List<Map<String, Object>> loadUserAuthCompany();
+
 }

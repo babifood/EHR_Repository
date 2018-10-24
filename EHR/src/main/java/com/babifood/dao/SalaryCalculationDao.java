@@ -6,9 +6,9 @@ public interface SalaryCalculationDao {
 
 	public Map<String, Object> findBaseSalary(String date, String pNumber);
 
-	public Integer findSalaryCalculationStatus(String year, String month);
+	public Integer findSalaryCalculationStatus(String year, String month, String companyCode);
 
-	public void updateSalaryCalculationStatus(String year, String month, Integer type);
+	public void updateSalaryCalculationStatus(String year, String month, Integer type, String companyCode);
 
 	public Map<String, Object> findPersonFee(String year, String month, String pNumber);
 

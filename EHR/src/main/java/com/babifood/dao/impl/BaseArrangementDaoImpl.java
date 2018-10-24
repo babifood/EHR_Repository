@@ -205,7 +205,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 		sql.append("select a.arrangement_id as arrangementId,(CASE a.target_type WHEN '10' THEN '按人员' ");
 		sql.append(" WHEN '5' THEN '按班组' WHEN '4' THEN '按科室' WHEN '3' THEN '按部门' WHEN '2' THEN '按中心' ");
 		sql.append(" WHEN '1' THEN '按公司' END) as arrangementType, b.arrangement_name as arrangementName,");
-		sql.append(" CONCAT(b.start_time,' ~ ',b.end_time) as standardTime ");
+		sql.append(" CONCAT(b.start_time,' ~ ',b.end_time) as standardTime, b.arrangement_type as arrangementType ");
 		sql.append(" from ehr_arrangement_target a LEFT JOIN ehr_base_arrangement b on a.arrangement_id = b.ID ");
 		sql.append(" where a.target_id in (");
 		for (int i = 0; i < targetIds.size(); i++) {

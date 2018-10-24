@@ -12,7 +12,7 @@ import com.babifood.dao.AllowanceDao;
 import com.babifood.utils.UtilString;
 
 @Repository
-public class AllowanceDaoImpl implements AllowanceDao {
+public class AllowanceDaoImpl extends AuthorityControlDaoImpl implements AllowanceDao {
 	
 	private static Logger log = Logger.getLogger(AllowanceDaoImpl.class);
 
@@ -62,6 +62,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 		if(!UtilString.isEmpty(param.get("officeName") + "")){
 			sql.append(" AND e.DEPT_NAME like '%" + param.get("officeName") + "%' ");
 		}
+		sql = super.jointDataAuthoritySql("b.p_company_id", sql);
 		if(!UtilString.isEmpty(param.get("start") + "") && !UtilString.isEmpty(param.get("pageSize") + "")){
 			sql.append("GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC ");
 			sql.append("limit ?, ?");
@@ -126,6 +127,7 @@ public class AllowanceDaoImpl implements AllowanceDao {
 		}
 		Integer total = 0;
 		try {
+			sql = super.jointDataAuthoritySql("b.p_company_id", sql);
 			total = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询津贴、扣款信息列表失败", e);

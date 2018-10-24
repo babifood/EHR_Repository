@@ -11,7 +11,7 @@ public interface PerformanceDao {
 
 	public void savePerformance(List<Object[]> performanceParam);
 
-	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber);
+//	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber);
 
 	public void updatePerformanceScore(String year, String month, String pNumber, String score, String salary);
 

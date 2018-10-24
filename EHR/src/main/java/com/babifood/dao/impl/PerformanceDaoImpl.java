@@ -13,7 +13,7 @@ import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilString;
 
 @Repository
-public class PerformanceDaoImpl implements PerformanceDao {
+public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements PerformanceDao {
 
 	private static Logger log = Logger.getLogger(PerformanceDaoImpl.class);
 	
@@ -48,6 +48,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		}
 		Integer count = 0;
 		try {
+			sql = super.jointDataAuthoritySql("b.p_company_id", sql);
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询绩效数量信息失败", e);
@@ -97,6 +98,7 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		if(!UtilString.isEmpty(params.get("officeName")+"")){
 			sql.append(" AND e.dept_name like '%" + params.get("officeName") + "%' ");
 		}
+		sql = super.jointDataAuthoritySql("b.p_company_id", sql);
 		if(!UtilString.isEmpty(params.get("start")+"") && !UtilString.isEmpty(params.get("pageSize")+"")){
 			sql.append("GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC ");
 			sql.append("limit ?, ?");
@@ -130,29 +132,29 @@ public class PerformanceDaoImpl implements PerformanceDao {
 		}
 	}
 
-	/**
-	 * 查询员工对应月份的绩效薪资信息
-	 */
-	@Override
-	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber) {
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT `YEAR` AS `year`, `MONTH` AS `month`, P_NUMBER AS pNumber, ");
-		sql.append("performance_score AS performanceScore, performance_salary AS pSalary ");
-		sql.append("FROM ehr_performance WHERE P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?");
-		List<Map<String, Object>> performanceList = null;
-		Map<String, Object> performanceInfo = null;
-		try {
-			performanceList = jdbcTemplate.queryForList(sql.toString(), pNumber, month, year);
-			BASE64Util.Base64DecodeMap(performanceList);
-		} catch (Exception e) {
-			log.error("查询员工绩效薪资信息失败", e);
-			throw e;
-		}
-		if(performanceList != null && performanceList.size() > 0){
-			performanceInfo = performanceList.get(0);
-		}
-		return performanceInfo;
-	}
+//	/**
+//	 * 查询员工对应月份的绩效薪资信息
+//	 */
+//	@Override
+//	public Map<String, Object> getPerformanceInfo(String year, String month, String pNumber) {
+//		StringBuffer sql = new StringBuffer();
+//		sql.append("SELECT `YEAR` AS `year`, `MONTH` AS `month`, P_NUMBER AS pNumber, ");
+//		sql.append("performance_score AS performanceScore, performance_salary AS pSalary ");
+//		sql.append("FROM ehr_performance WHERE P_NUMBER = ? AND `MONTH` = ? AND `YEAR` = ?");
+//		List<Map<String, Object>> performanceList = null;
+//		Map<String, Object> performanceInfo = null;
+//		try {
+//			performanceList = jdbcTemplate.queryForList(sql.toString(), pNumber, month, year);
+//			BASE64Util.Base64DecodeMap(performanceList);
+//		} catch (Exception e) {
+//			log.error("查询员工绩效薪资信息失败", e);
+//			throw e;
+//		}
+//		if(performanceList != null && performanceList.size() > 0){
+//			performanceInfo = performanceList.get(0);
+//		}
+//		return performanceInfo;
+//	}
 
 	/**
 	 * 修改绩效薪资信息

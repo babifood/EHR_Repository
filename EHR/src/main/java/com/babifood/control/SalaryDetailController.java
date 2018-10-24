@@ -1,6 +1,7 @@
 package com.babifood.control;
 
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +39,8 @@ public class SalaryDetailController {
 	 */
 	@RequestMapping("page")
 	@ResponseBody
-	public Map<String, Object> getPageSalaryDetails(Integer page, Integer rows, String pNumber, String pName, String organzationName, String deptName, String officeName, String groupName){
-		return salaryDetailService.getPageSalaryDetails(page, rows, pNumber, pName, organzationName, deptName, officeName, groupName);
+	public Map<String, Object> getPageSalaryDetails(Integer page, Integer rows, String pNumber, String pName, String companyCode, String organzationName, String deptName, String officeName, String groupName){
+		return salaryDetailService.getPageSalaryDetails(page, rows, pNumber, pName, companyCode, organzationName, deptName, officeName, groupName);
 	}
 	
 	/**
@@ -49,8 +50,8 @@ public class SalaryDetailController {
 	 */
 	@RequestMapping("calculation")
 	@ResponseBody
-	public Map<String, Object> salaryCalculation(Integer type ,String year, String month){
-		return salaryCalculationService.salaryCalculation(type, year, month);
+	public Map<String, Object> salaryCalculation(Integer type, String companyCode, String year, String month){
+		return salaryCalculationService.salaryCalculation(type, companyCode, year, month);
 	}
 	
 	/**
@@ -66,5 +67,16 @@ public class SalaryDetailController {
         response.setHeader("Content-disposition", "attachment;filename=" + filename + ".xls"); 
         OutputStream ouputStream = response.getOutputStream();    
         salaryDetailService.exportExcel(ouputStream);
+	}
+	
+	/**
+	 * 薪资明细导出
+	 * @param response
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("auth")
+	public Map<String, Object> getUserAuth() throws Exception {
+		return salaryDetailService.getUserAuth();
 	}
 }

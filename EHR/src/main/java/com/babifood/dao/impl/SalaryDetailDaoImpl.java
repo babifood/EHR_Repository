@@ -4,17 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.SalaryDetailDao;
+import com.babifood.entity.LoginEntity;
 import com.babifood.entity.SalaryDetailEntity;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilString;
 
 @Repository
-public class SalaryDetailDaoImpl implements SalaryDetailDao {
+public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements SalaryDetailDao {
 
 	private static Logger log = Logger.getLogger(SalaryDetailDaoImpl.class);
 
@@ -146,7 +148,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 					BASE64Util.encode(salaryDetail.getOtherAllowance()),
 					BASE64Util.encode(salaryDetail.getPerformanceBonus()),
 					BASE64Util.encode(salaryDetail.getSecurity()),
-					BASE64Util.encode(salaryDetail.getCompensatory()),//TODO
+					BASE64Util.encode(salaryDetail.getCompensatory()),
 					BASE64Util.encode(salaryDetail.getOtherBonus()), 
 					BASE64Util.encode(salaryDetail.getAddOther()),
 					BASE64Util.encode(salaryDetail.getMealDeduction()),
@@ -190,6 +192,9 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		sql.append("LEFT JOIN ehr_dept e on a.GROUP_CODE = e.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept g on a.COMPANY_CODE = g.DEPT_CODE ");
 		sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number WHERE 1=1 ");
+		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
+			sql.append(" AND a.COMPANY_CODE like '%" + params.get("companyCode") + "%'");
+		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
 		}
@@ -210,6 +215,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		}
 		Integer count = 0;
 		try {
+			sql = super.jointDataAuthoritySql("a.COMPANY_CODE", sql);
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询薪资明细数量失败", e);
@@ -252,6 +258,9 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
 		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE WHERE 1=1 ");
+		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
+			sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
+		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
 		}
@@ -270,6 +279,7 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		if (!UtilString.isEmpty(params.get("groupName") + "")) {
 			sql.append(" AND e.DEPT_NAME like '%" + params.get("groupName") + "%'");
 		}
+		sql = super.jointDataAuthoritySql("a.COMPANY_CODE", sql);
 		if(!UtilString.isEmpty(params.get("start") + "") && !UtilString.isEmpty(params.get("start") + "")){
 			sql.append(" GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC");
 			sql.append(" limit ?, ?");
@@ -374,4 +384,17 @@ public class SalaryDetailDaoImpl implements SalaryDetailDao {
 		}
 	}
 
+	@Override
+	public List<Map<String, Object>> loadUserAuthCompany() {
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("select ");
+		sql.append("r.organization_code as companyCode, r.organization_name as companyName ");
+		sql.append("from ehr_user_role u ");
+		sql.append("inner join ehr_roles r ");
+		sql.append("on u.role_id =r.role_id ");
+		sql.append("where u.user_id = ? ");
+		return jdbctemplate.queryForList(sql.toString(),login.getUser_id());
+	}
 }

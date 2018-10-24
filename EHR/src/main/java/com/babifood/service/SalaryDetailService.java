@@ -11,10 +11,12 @@ public interface SalaryDetailService {
 	public Map<String, Object> saveCurrentMonthSalary(SalaryDetailEntity salaryDerail);
 
 	public Map<String, Object> getPageSalaryDetails(Integer page, Integer row, String pNumber, String pName,
-			String organzationName, String deptName, String officeName, String groupName);
+			String companyCode, String organzationName, String deptName, String officeName, String groupName);
 
 	public void exportExcel(OutputStream ouputStream) throws Exception;
 
 	public String saveSalaryDetailEntityList(List<SalaryDetailEntity> salaryDetails);
+
+	public Map<String, Object> getUserAuth();
 
 }

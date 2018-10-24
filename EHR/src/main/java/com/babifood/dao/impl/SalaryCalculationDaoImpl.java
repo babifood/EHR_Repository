@@ -41,12 +41,12 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 	}
 
 	@Override
-	public Integer findSalaryCalculationStatus(String year, String month) {
-		String sql = "SELECT `status`  FROM `ehr_salary_calculation_status` WHERE `YEAR` = ? AND `MONTH` = ?";
+	public Integer findSalaryCalculationStatus(String year, String month, String companyCode) {
+		String sql = "SELECT `status`  FROM `ehr_salary_calculation_status` WHERE `YEAR` = ? AND `MONTH` = ? AND company_code = ?";
 		Integer status = 0;
 		List<Integer> statusList = null;
 		try {
-			statusList = jdbcTemplate.queryForList(sql, Integer.class, year, month);
+			statusList = jdbcTemplate.queryForList(sql, Integer.class, year, month, companyCode);
 		} catch (Exception e) {
 			log.error("查询薪资计算状态失败", e);
 			throw e;
@@ -58,10 +58,10 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 	}
 
 	@Override
-	public void updateSalaryCalculationStatus(String year, String month, Integer type) {
-		String sql = "replace into ehr_salary_calculation_status (`YEAR`, `MONTH`, `status`) values (?, ?, ?)";
+	public void updateSalaryCalculationStatus(String year, String month, Integer type, String companyCode) {
+		String sql = "replace into ehr_salary_calculation_status (`YEAR`, `MONTH`, `status`, company_code) values (?, ?, ?, ?)";
 		try {
-			jdbcTemplate.update(sql, year, month, type);
+			jdbcTemplate.update(sql, year, month, type, companyCode);
 			log.info("薪资计算========>修改计算状态");
 		} catch (Exception e) {
 			log.error("新增或修复薪资计算状态失败", e);

@@ -11,6 +11,8 @@ public class BaseFieldsEntity {
 	private String companySalary;//司龄工资
 	
 	private String postSalary;//岗位工资
+	
+	private String arrangementType;//工作制  1-大小周 2-1.5休 3-双休 4-单休
 
 	private String attendanceHours;//应出勤小时数
 	
@@ -190,6 +192,14 @@ public class BaseFieldsEntity {
 
 	public void setPostSalary(String postSalary) {
 		this.postSalary = postSalary;
+	}
+
+	public String getArrangementType() {
+		return arrangementType;
+	}
+
+	public void setArrangementType(String arrangementType) {
+		this.arrangementType = arrangementType;
 	}
 
 	public String getAttendanceHours() {

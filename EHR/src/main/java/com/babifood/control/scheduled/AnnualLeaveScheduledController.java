@@ -1,5 +1,6 @@
 package com.babifood.control.scheduled;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,19 +15,16 @@ import com.babifood.service.AnnualLeaveService;
 @EnableScheduling
 public class AnnualLeaveScheduledController {
 	@Autowired
-	private AnnualLeaveService AnnualLeaveService;
-	@Scheduled(cron = "0 09 10 * * ?")
-	public void getAnuualLeave(){
-		List<Map<String, Object>> PersonlistNow = AnnualLeaveService.GetHireDate();
-		List<Map<String, Object>> PersonlistNew = AnnualLeaveService.setCompanyDayFlag(PersonlistNow);
-		List<Map<String, Object>> PersonAnnualLeavelist = AnnualLeaveService.setAnnualLeavelist(PersonlistNew);
+	private AnnualLeaveService annualLeaveService;
+	@Scheduled(cron = "0 0/6 * * * ?")
+	public void getAnuualLeave() throws ParseException{
+		List<Map<String, Object>> PersonlistNow = annualLeaveService.GetHireDate();
+		List<Map<String, Object>> PersonlistNew = annualLeaveService.setCompanyDayFlag(PersonlistNow);
+		List<Map<String, Object>> PersonAnnualLeavelist = annualLeaveService.setAnnualLeavelist(PersonlistNew);
 		if(PersonAnnualLeavelist.isEmpty()){
 			 System.out.println("没有需要更新的年假记录！");
 		}else{
-			 int[] rows=AnnualLeaveService.SaveAnnualLeave(PersonAnnualLeavelist);
-			 System.out.println("插入“历史年假表”数据"+rows[0]+"条");
-			 System.out.println("删除“当前年假表”中需更新人员数据"+rows[1]+"条");
-			 System.out.println("插入“当前年假表”中最新人员数据"+rows[2]+"条");
+			annualLeaveService.SaveAnnualLeave(PersonAnnualLeavelist);
 		}
      }
 }

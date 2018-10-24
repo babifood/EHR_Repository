@@ -314,7 +314,21 @@ function targetDrawCld(SY, SM) {
             if (data.code === "1") {
             	rows = data.arrangementList;
             	if(data.arrangementType){
-            		$("#target_arrangement_type").text(data.arrangementType+"   ");
+            		var type;
+            		if(data.arrangementType == '10'){//1-公司 2-中心 3-部门 4-科室 5-组 10-人员
+            			type = "按人员";
+            		} else if (data.arrangementType == '1') {
+            			type = "按公司";
+					} else if (data.arrangementType == '2') {
+						type = "按中心";
+					} else if (data.arrangementType == '3') {
+						type = "按部门";
+					} else if (data.arrangementType == '4') {
+						type = "按科室";
+					} else if (data.arrangementType == '5') {
+						type = "按班组";
+					}
+            		$("#target_arrangement_type").text(type+"   ");
             		$("#target_arrangement_name").text(data.arrangementName + ":");
             		$("#target_arrangement_time").text(data.standardTime);
             	} else {

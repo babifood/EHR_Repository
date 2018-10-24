@@ -59,5 +59,6 @@ public class AuthorityControlDaoImpl implements AuthorityControlDao {
 		}
 		return thissql;
 	}
+	
 
 }

@@ -16,6 +16,8 @@ import javax.script.ScriptException;
 
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,14 @@ import org.springframework.stereotype.Service;
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.constant.SalaryConstant;
+import com.babifood.dao.BaseArrangementDao;
 import com.babifood.dao.CalculationFormulaDao;
+import com.babifood.dao.PersonInFoDao;
 import com.babifood.dao.SalaryCalculationDao;
 import com.babifood.entity.BaseFieldsEntity;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.SalaryDetailEntity;
 import com.babifood.service.InitAttendanceService;
-import com.babifood.service.PersonInFoService;
 import com.babifood.service.SalaryDetailService;
 import com.babifood.utils.BASE64Util;
 import com.babifood.utils.UtilDateTime;
@@ -46,7 +49,7 @@ public class SalaryCalculationService {
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Autowired
-	private PersonInFoService personInfoService;
+	private PersonInFoDao personInFoDao;
 
 	@Autowired
 	private InitAttendanceService initAttendanceService;
@@ -56,6 +59,9 @@ public class SalaryCalculationService {
 
 	@Autowired
 	private SalaryDetailService salaryDetailService;
+	
+	@Autowired
+	private BaseArrangementDao baseArrangementDao;
 
 	@Autowired
 	private CalculationFormulaDao calculationFormulaDao;
@@ -88,21 +94,22 @@ public class SalaryCalculationService {
 	}
 
 	@LogMethod(module = ModuleConstant.CALCULATIONSALARY)
-	public Map<String, Object> salaryCalculation(Integer type, String cyear, String cmonth){
+	public Map<String, Object> salaryCalculation(Integer type, String companyCode, String cyear, String cmonth){
 		Map<String, Object> result = new HashMap<String, Object>();
 		String calculationType = type == 1 ? "薪资试算" : type == 2 ? "薪资核算" : "薪资归档";
 		try {
 			init(cyear, cmonth);
-			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			Subject subject = SecurityUtils.getSubject();
+			LoginEntity login = (LoginEntity) subject.getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_CALCULATION);
-			Integer currentType = salaryCalculationDao.findSalaryCalculationStatus(year, month);
+			Integer currentType = salaryCalculationDao.findSalaryCalculationStatus(year, month, companyCode);
 			logger.info("薪资计算========>操作人userId："+login.getUser_id()+",用户名："+login.getUser_name()+",currentType:"+currentType+"type:"+type);
 			if(type < currentType || (type == 3 && (currentType == 1 || currentType == 3))){
 				return getSalaryCalculation(type, currentType);
 			}
 			if(type < 3){
-				Integer count = personInfoService.getPersonCount();
+				Integer count = personInFoDao.getPersonCount();
 				final int threadCount = 50;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
 				logger.info("薪资计算========>使用线程数量，num=" + num);
@@ -112,7 +119,10 @@ public class SalaryCalculationService {
 					Callable<String> c1 = new Callable<String>() {
 						@Override
 						public String call() throws Exception {
-							return calculationEmployeesSalary(index, threadCount);
+							ThreadContext.bind(subject);
+							String result = calculationEmployeesSalary(index, threadCount);
+							ThreadContext.unbindSubject();
+							return result;
 						}
 					};
 					//执行任务并获取Future对象
@@ -123,7 +133,7 @@ public class SalaryCalculationService {
 					logger.info("薪资计算========>使用线程编号：i=" + i + ",执行结果：" + list.get(i).get());
 				}
 			}
-			salaryCalculationDao.updateSalaryCalculationStatus(year, month, type);
+			salaryCalculationDao.updateSalaryCalculationStatus(year, month, type, companyCode);
 			result.put("code", "1");
 			LogManager.putContectOfLogInfo(calculationType);
 		} catch (Exception e) {
@@ -169,7 +179,7 @@ public class SalaryCalculationService {
 	 * @return 
 	 */
 	public String calculationEmployeesSalary(int index, int threadCount) {
-		List<Map<String, Object>> employeeList = personInfoService.findPagePersonInfo(index, threadCount);// 查询员工列表
+		List<Map<String, Object>> employeeList = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount);;// 查询员工列表
 		List<SalaryDetailEntity> salaryDetails = new ArrayList<SalaryDetailEntity>();
 		if (employeeList != null && employeeList.size() > 0) {
 			logger.info("薪资计算========>薪资计算index："+index+",员工数量："+employeeList.size());
@@ -265,6 +275,8 @@ public class SalaryCalculationService {
 		baseFields.setNationality(UtilString.isEmpty(employee.get("nationality") + "")?"1":employee.get("nationality") + "");
 		baseFields.setProperty(employee.get("property") + "");
 		baseFields.setCompanyType(getCompanyType(employee.get("nationality") + ""));
+		String arrangementType = getArrangementType(employee);
+		baseFields.setArrangementType(arrangementType);
 		//基础薪资相关
 		baseFields.setStay(UtilString.isEmpty(salary.get("stay") + "") ? "0.0"
 				: salary.get("stay") + "");
@@ -390,6 +402,32 @@ public class SalaryCalculationService {
 //		baseFields.setPiming("0");
 //		baseFields.setPiece("1");  
 		return baseFields;
+	}
+	
+	private String getArrangementType(Map<String, Object> employee) {
+		List<String> targetIds = new ArrayList<String>();
+		if (!UtilString.isEmpty(employee.get("companyCode")+"")) {
+			targetIds.add(employee.get("companyCode")+"");
+		}
+		if (!UtilString.isEmpty(employee.get("deptCode")+"")) {
+			targetIds.add(employee.get("deptCode")+"");
+		}
+		if (!UtilString.isEmpty(employee.get("organizationCode")+"")) {
+			targetIds.add(employee.get("organizationCode")+"");
+		}
+		if (!UtilString.isEmpty(employee.get("officeCode")+"")) {
+			targetIds.add(employee.get("officeCode")+"");
+		}
+		if(!UtilString.isEmpty(employee.get("groupCode")+"")){
+			targetIds.add(employee.get("groupCode")+"");
+		}
+		targetIds.add(employee.get("pNumber")+"");
+		String arrangementType = "1";
+		List<Map<String, Object>> arrangementList = baseArrangementDao.findArrangementByTargetId(targetIds);
+		if (arrangementList != null && arrangementList.size() > 0) {
+			arrangementType = arrangementList.get(0).get("arrangementType") + "";
+		}
+		return arrangementType;
 	}
 	
 	public String getCompanyType(String companyCode) {
@@ -607,13 +645,15 @@ public class SalaryCalculationService {
 		if(UtilString.isEmpty(sickFormula)){
 			sickFormula = SalaryConstant.SICK_DEDUCTION_FORMULA;
 		}
-		Double sickhours = 0.0;
+		Double sickSalary = 0.0;
+		Double sickHours = 0.0;
 		List<Map<String, Object>> sickList = initAttendanceService.findCurrentMonthSick(year, month, baseFields.getpNumber());
 		if(sickList != null && sickList.size() > 0){
 			for(Map<String, Object> map : sickList){
 				Double sickGrandHours = initAttendanceService.findYearSickHours(year, month, baseFields.getpNumber(), map.get("checkingDate")+"");
 				baseFields.setSickGrandHours(sickGrandHours + "");
 				baseFields.setSickHours(map.get("bingJia") + "");
+				sickHours += Double.valueOf(map.get("bingJia") + "");
 				int companyday = 0;
 				try {
 					int alloverday = (int) ((UtilDateTime.getDate(map.get("checkingDate") + "", "yyyy-MM-dd").getTime()
@@ -623,10 +663,11 @@ public class SalaryCalculationService {
 				} catch (Exception e) {
 				}
 				baseFields.setCompanyAge(companyday + "");
-				sickhours += Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields))+"");
+				sickSalary += Double.valueOf(scriptEngine.eval(replaceFields(sickFormula, salaryDerail, baseFields))+"");
 			}
 		}
-		return BASE64Util.getStringTowDecimal(sickhours + "");
+		baseFields.setSickHours(sickHours+"");
+		return BASE64Util.getStringTowDecimal(sickSalary + "");
 	}
 	
 	/**
@@ -762,6 +803,9 @@ public class SalaryCalculationService {
 		}
 		if(formula.indexOf("postSalary") > -1){
 			formula = formula.replaceAll("postSalary", "(" + baseFields.getPostSalary() + ")");
+		}
+		if(formula.indexOf("arrangementType") > -1){
+			formula = formula.replaceAll("arrangementType", "(" + baseFields.getArrangementType() + ")");
 		}
 		if(formula.indexOf("attendanceHours") > -1){
 			formula = formula.replaceAll("attendanceHours", "(" + baseFields.getAttendanceHours() + ")");

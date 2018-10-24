@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
+import com.babifood.dao.AuthorityControlDao;
 import com.babifood.dao.SalaryDetailDao;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.SalaryDetailEntity;
@@ -61,7 +62,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 	@Override
 	@LogMethod(module = ModuleConstant.SALARYDETAIL)
 	public Map<String, Object> getPageSalaryDetails(Integer page, Integer row, String pNumber, String pName,
-			String organzationName, String deptName, String officeName, String groupName) {
+			String companyCode, String organzationName, String deptName, String officeName, String groupName) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer pageNum = page == null ? 1 : page;
@@ -74,6 +75,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		params.put("deptName", deptName);
 		params.put("officeName", officeName);
 		params.put("groupName", groupName);
+		params.put("companyCode", companyCode);
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -206,6 +208,20 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 			message = "批量保存薪资明细失败，错误信息：" + e.getMessage();
 		}
 		return message;
+	}
+
+	@Override
+	public Map<String, Object> getUserAuth() {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			List<Map<String, Object>> companyList = salaryDetailDao.loadUserAuthCompany();
+			result.put("companyList", companyList);
+			result.put("code", "1");
+		} catch (Exception e) {
+			logger.error("查询用户权限公司失败",e);
+			result.put("code", "0");
+		}
+		return result;
 	}
 
 }

@@ -16,6 +16,7 @@
 					<span style="color: #95B8E7;font-size: 15px">薪资计算年、月：</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					年份：<input type="text" class="easyui-numberspinner" id="salary_calculation_year" data-options="min:2018,editable:false"> &nbsp;&nbsp;&nbsp;
 	      			月份：<input type="text" class="easyui-combobox" id="salary_calculation_month"> &nbsp;&nbsp;&nbsp;
+	      			所属公司：<input type="text" class="easyui-combobox" id="salary_calculation_company">
 				</div>
 				<div >
 					<shiro:hasPermission name="salaryDetail:export">

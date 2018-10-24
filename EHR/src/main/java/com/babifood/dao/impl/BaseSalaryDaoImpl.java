@@ -19,7 +19,7 @@ import com.babifood.utils.UtilString;
  *
  */
 @Repository
-public class BaseSalaryDaoImpl implements BaseSalaryDao {
+public class BaseSalaryDaoImpl extends AuthorityControlDaoImpl implements BaseSalaryDao {
 
 	private static Logger log = Logger.getLogger(BaseSalaryDaoImpl.class);
 
@@ -43,6 +43,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		}
 		int count = 0;
 		try {
+			sql = super.jointDataAuthoritySql("b.p_company_id", sql);
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询基础薪资信息总数失败", e);
@@ -127,6 +128,7 @@ public class BaseSalaryDaoImpl implements BaseSalaryDao {
 		if (!UtilString.isEmpty(params.get("pName") + "")) {
 			sql.append(" AND b.p_name like '%" + params.get("pName") + "%'");
 		}
+		sql = super.jointDataAuthoritySql("b.p_company_id", sql);
 		sql.append(" order by b.p_number");
 		sql.append(" limit ?, ?");
 		List<Map<String, Object>> baseSalaryList = null;
