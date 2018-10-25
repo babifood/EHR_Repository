@@ -382,7 +382,6 @@ function updateLoadGroupCombotree(newValue){
 	    }  
 	});  
 }
-
 //加载职级ComboGrid
 function loadLevelComboBox(){
 	$('#p_level_name').combobox({    
@@ -546,6 +545,10 @@ function loadPersonGrid(search_p_number,search_p_name){
 				title:"职级名称",
 			},
 			{
+				field:"p_birthday",
+				title:"员工出生年月日",
+			},
+			{
 				field:"p_in_date",
 				title:"入职日期",
 			},
@@ -556,6 +559,32 @@ function loadPersonGrid(search_p_number,search_p_name){
 			{
 				field:"p_phone",
 				title:"联系电话",
+			},
+			{
+				field:"p_checking_in",
+				title:"考勤方式",
+				formatter:function(value){
+					if(value=="0"){
+						return "行政考勤";
+					}else if(value=="1"){
+						return "移动考勤";
+					}else if(value=="2"){
+						return "不考勤";
+					}
+				},
+			},
+			{
+				field:"p_use_work_form",
+				title:"用工形式",
+				formatter:function(value){
+					if(value=="0"){
+						return "劳动合同制";
+					}else if(value=="1"){
+						return "劳务派遣制";
+					}else if(value=="2"){
+						return "其他";
+					}
+				},
 			},
 			{
 				field:"p_nationality",
