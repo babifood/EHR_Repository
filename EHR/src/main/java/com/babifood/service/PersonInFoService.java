@@ -40,5 +40,6 @@ public interface PersonInFoService {
 	
 	public List<Map<String, Object>> loadOaWorkNumInFo(String workNum,String userName);
 	
-	public Object getRandomYxWorkNum();
+	public Object getRandomYxWorkNum(String companyId, String organizationId);
+
 }

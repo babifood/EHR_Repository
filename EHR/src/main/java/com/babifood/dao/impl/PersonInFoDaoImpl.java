@@ -776,10 +776,18 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		return jdbctemplate.queryForObject(sql.toString(),new BeanPropertyRowMapper<>(PersonBasrcEntity.class), pNumber);
 	}
 	@Override
-	public List<Map<String, Object>> loadEHRWorkNumInFo() throws DataAccessException{
+	public List<Map<String, Object>> loadEHRWorkNumInFo(String companyId, String organizationId) throws DataAccessException{
 		// TODO Auto-generated method stub
-//		return jdbctemplate.queryForList("select p_number from ehr_person_basic_info");
-		return jdbctemplate.queryForList("select max(p_number) as p_number from ehr_person_basic_info where p_oa_and_ehr = 'EHR'");
+		StringBuffer sql = new StringBuffer();
+		sql.append("select max(p_number) as p_number from ehr_person_basic_info where 1=1 and p_oa_and_ehr = 'EHR'");
+		if(companyId.equals("000000010012")&&!organizationId.equals("0000000100120003")){
+			sql.append(" and p_company_id = '"+companyId+"' and p_organization_id <> '"+organizationId+"'");
+		}else if(companyId.equals("000000010012")&&organizationId.equals("0000000100120003")){
+			sql.append(" and p_company_id = '"+companyId+"' and p_organization_id = '"+organizationId+"'");
+		}else{
+			sql.append(" and p_company_id = '"+companyId+"'");
+		}
+		return jdbctemplate.queryForList(sql.toString());
 		
 	}
 

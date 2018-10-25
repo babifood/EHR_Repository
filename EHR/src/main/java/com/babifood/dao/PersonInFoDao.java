@@ -41,6 +41,6 @@ public interface PersonInFoDao {
 	public Object getPersonByPnumber(String pNumber);
 	
 	
-	public List<Map<String, Object>> loadEHRWorkNumInFo();
+	public List<Map<String, Object>> loadEHRWorkNumInFo(String companyId, String organizationId);
 
 }
