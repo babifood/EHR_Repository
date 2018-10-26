@@ -70,9 +70,12 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		sql_user_role.append("delete from ehr_user_role where user_role_id =?");
 		StringBuffer sql_menu_role = new StringBuffer();
 		sql_menu_role.append("delete from ehr_role_menu where role_menu_id =?");
+		StringBuffer ehr_role_authority = new StringBuffer();
+		ehr_role_authority.append("delete from ehr_role_authority where role_id =?");
 		jdbctemplate.update(sql_role.toString(),role_id);
 		jdbctemplate.update(sql_user_role.toString(),role_id);
 		jdbctemplate.update(sql_menu_role.toString(),role_id);
+		jdbctemplate.update(ehr_role_authority.toString(),role_id);
 	}
 	//查询用户及角色信息
 	@Override
