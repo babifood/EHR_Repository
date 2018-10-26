@@ -50,6 +50,9 @@ body{
      position:absolute;
      left:50px;
      top:80px;
+     width: 150px;
+     height: 167px;
+     background: url(../images/login/babi.png) no-repeat;
 }
 
 .login,.login2{

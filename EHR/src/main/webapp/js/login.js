@@ -18,8 +18,7 @@ $(function(){
 		$('#username').focus();
 	}else if(!$('#password').validatebox('isValid')){
 		$('#password').focus();
-	}
-	
+	} 
 });
 //登录按钮点击事件
 function loginButton(){
