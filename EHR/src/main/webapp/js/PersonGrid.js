@@ -698,6 +698,9 @@ function loadPersonGrid(search_p_number,search_p_name){
 				},
 			}
 		]],
+		onDblClickRow:function(rowIndex, rowData){
+			lookPersonInFo(rowData);
+		},
 		loadFilter:function(data){
 			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
 	            data = {
@@ -753,6 +756,17 @@ function onneOrInline(){
 		document.getElementById("update_companyAndOrg").style.cssText="background: #fff;text-align: right;font-weight: 900;";
 		document.getElementById("update_depaAndOffice").style.cssText="background: #F5FAFA;text-align: right;font-weight: 900;";
 		document.getElementById("update_group").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+	}else if(insertOrUpdate=="look"){
+		document.getElementById("insert_companyAndOrg").style.display="none";
+		document.getElementById("insert_depaAndOffice").style.display="none";
+		document.getElementById("insert_group").style.display="none";
+		document.getElementById("update_companyAndOrg").style.display="inline";//显示
+		document.getElementById("update_depaAndOffice").style.display="inline";
+		document.getElementById("update_group").style.display="inline";
+		//设置显示控件的样式
+		document.getElementById("update_companyAndOrg").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+		document.getElementById("update_depaAndOffice").style.cssText="background: #F5FAFA;text-align: right;font-weight: 900;";
+		document.getElementById("update_group").style.cssText="background: #fff;text-align: right;font-weight: 900;";
 	}
 	
 }
@@ -783,6 +797,7 @@ function addPersonInFo(){
 	}
 	$("#oaSync").linkbutton('enable');
 	$("#ehrAot").linkbutton('enable');
+	$("#save_linkbutton").linkbutton('enable');
 	checkForm(true);
 }
 //修改人员信息
@@ -823,9 +838,46 @@ function editPersonInFo(){
 //		$("#p_name").attr("disabled","disabled");
 		$("#oaSync").linkbutton('disable');
 		$("#ehrAot").linkbutton('disable');
+		$("#save_linkbutton").linkbutton('enable');
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
+}
+//查看员工信息
+function lookPersonInFo(rowData){
+	insertOrUpdate="look";
+	checkForm(false);
+	$("#person_form").form('clear');
+	p_number=rowData.p_number;
+	$.post(prefix+"/getPersonFoPid",{p_number:rowData.p_number},function(data){
+		if(data){
+			onneOrInline();	
+			$("#person_win").window("open").window("setTitle","查看人员");
+			editFromSetValues(data);
+			var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
+			if(index==0){
+				//教育背景
+				loadEducation();
+			}else if(index==1){
+				//培训经历
+				loadCultivateFront();
+				loadCultivateLater();
+			}else if(index==2){
+				//工作经历
+				loadWorkFront();
+				loadWorkLater();
+			}else if(index==3){
+				//获得证书
+				loadCertificate();
+			}else if(index==4){
+				//家庭背景
+				loadFamily();
+			}
+		}			
+	  });
+	$("#oaSync").linkbutton('disable');
+	$("#ehrAot").linkbutton('disable');
+	$("#save_linkbutton").linkbutton('disable');
 }
 //编辑时给页面内容赋值
 function editFromSetValues(data){

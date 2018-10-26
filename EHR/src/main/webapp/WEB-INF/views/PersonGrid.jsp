@@ -569,7 +569,7 @@
 				</div>     
 			</div>
 			<div data-options="region:'south',border:false" style="text-align:center;padding:5px 0 0;">
-				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="savePersonInFo()" style="width:80px">保存</a>
+				<a id="save_linkbutton" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="savePersonInFo()" style="width:80px">保存</a>
 				<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="javascript:$('#person_win').window('close')" style="width:80px">取消</a>
 			</div>
 		</div>
