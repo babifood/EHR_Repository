@@ -250,4 +250,13 @@ public class JobLevelPageControl{
 		}
 		return map;
 	}
+	/**
+	 * 加载岗位信息
+	 * @return 返回职位json
+	 */
+	@ResponseBody
+	@RequestMapping("/loadComboboxPostData")
+	public List<Map<String, Object>> loadComboboxPostData(){
+		return JobLevelPageService.loadPostAll(null,"",null,"");
+	}
 }

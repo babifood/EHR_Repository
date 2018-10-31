@@ -63,14 +63,9 @@
 								<td>
 									<input type="text" id="p_name" name="p_name" disabled="disabled" class="textbox"/>
 								</td>
-								<td>职称:</td>
+								<td>性别:</td>
 								<td>
-									<select id="p_title" class="easyui-combobox" editable="false" style="width:100%" required="required">
-										<option value="0">无职称</option>
-										<option value="1">初级职称</option>
-										<option value="2">中级职称</option>
-										<option value="3">高级职称</option>
-									</select> 
+									<input type="text" id="p_sex" name="p_sex" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -78,9 +73,9 @@
 								<td>
 									<input type="text" id="p_id_num" name="p_id_num" class="textbox" onblur="checkIdNumFormat()"/>
 								</td>
-								<td>性别:</td>
+								<td>员工出生年月日:</td>
 								<td>
-									<input type="text" id="p_sex" name="p_sex" class="textbox" disabled="disabled"/>
+									<input type="text" id="p_birthday" name="p_birthday" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
 							<tr class="text_tr">
@@ -88,21 +83,21 @@
 								<td>
 									<input type="text" id="p_age" name="p_age" class="textbox" disabled="disabled"/>
 								</td>
-								<td>员工出生年月日:</td>
-								<td>
-									<input type="text" id="p_birthday" name="p_birthday" class="textbox" disabled="disabled"/>
-								</td>
-							</tr>
-							<tr class="text_tr">
 								<td>岗位名称:</td>
 								<td>
 									<input type="hidden" id="p_post_id" name="p_post_id"/>
 									<input type="text" id="p_post" name="p_post" style="width:100%"/>
 								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>职等名称:</td>
+								<td>
+									<input type="text" id="p_title" name="p_title" class="textbox" disabled="disabled"/>
+								</td>
 								<td>职级名称:</td>
 								<td>
 									<input type="hidden" id="p_level_id" name="p_level_id"/>
-									<input type="text" id="p_level_name" name="p_level_name" style="width:100%"/>
+									<input type="text" id="p_level_name" name="p_level_name" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
 							<!-- 用户显示信息开始 -->
@@ -423,6 +418,7 @@
 										<option value="5">亲戚</option>
 										<option value="6">兄弟</option>
 										<option value="7">姐妹</option>
+										<option value="8">朋友</option>
 									</select> 
 								</td>
 							</tr>

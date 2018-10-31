@@ -57,11 +57,11 @@ function loadJobLevel(joblevel_name,position_name){
 				title:"职务级别描述",
 				width:200,
 			},
-			{
-				field:"position_name",
-				title:"包含职位",
-				width:200,
-			},
+//			{
+//				field:"position_name",
+//				title:"包含职等",
+//				width:200,
+//			},
 		]],
 		loadFilter:function(data){
 			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
@@ -291,24 +291,24 @@ function loadPosition(position_name,JobLevel_name,post_name){
 		columns:[[
 			{
 				field:"position_name",
-				title:"职务名称",
+				title:"职等名称",
 				width:100,
 			},
 			{
 				field:"joblevel_name",
-				title:"所属职务级别",
+				title:"职级名称",
 				width:100,
 			},
 			{
 				field:"joblevel_desc",
-				title:"所属职务级别描述",
+				title:"职级描述",
 				width:100,
 			},
-			{
-				field:"post_name",
-				title:"包含岗位名称",
-				width:100,
-			}
+//			{
+//				field:"post_name",
+//				title:"包含岗位名称",
+//				width:100,
+//			}
 		]],
 		loadFilter:function(data){
 			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
@@ -343,15 +343,21 @@ function loadPosition(position_name,JobLevel_name,post_name){
 }
 //加载职级下拉框
 function loadComboboxJobLevelData(){
-	$("#position_joblevel").combobox({
-		valueField:'id',
-		textField:'text',
-		url:prefix+"/loadComboboxJobLevelData",
-		editable:false,
-		onHidePanel:function(none){
+	var url=prefix+"/loadComboboxJobLevelData";
+	$('#position_joblevel').combogrid({    
+		idField: 'LEVELID',
+		textField: 'LEVELNAME',
+		url:url,
+		method: 'get',
+		columns: [[
+			{field:'LEVELNAME',title:'职级名称',width:60},
+			{field:'LEVELDESC',title:'职级描述',width:60},
+		]],
+		fitColumns: true,
+		onHidePanel:function(){
 			$("#position_joblevel_span").html("");
 		}
-	});
+	}); 
 }
 //添加职位
 function addPosition(){
@@ -551,7 +557,12 @@ function loadPost(post_name,position_name){
 			//},
 			{
 				field:"position_name",
-				title:"所属职位名称",
+				title:"职等名称",
+				width:100,
+			},
+			{
+				field:"joblevel_name",
+				title:"职级名称",
 				width:100,
 			}
 		]],
@@ -588,15 +599,21 @@ function loadPost(post_name,position_name){
 }
 //加载职位下拉框
 function loadComboboxPositionData(){
-	$("#post_position").combobox({
-		valueField:'id',
-		textField:'text',
-		url:prefix+"/loadComboboxPositionData",
-		editable:false,
-		onHidePanel:function(none){
+	var url=prefix+"/loadComboboxPositionData";
+	$('#post_position').combogrid({    
+		idField: 'POSITION_ID',
+		textField: 'POSITION_NAME',
+		url:url,
+		method: 'get',
+		columns: [[
+			{field:'POSITION_NAME',title:'职等名称',width:60},
+			{field:'JOBLEVEL_NAME',title:'职级名称',width:60},
+		]],
+		fitColumns: true,
+		onHidePanel:function(){
 			$("#post_position_span").html("");
 		}
-	});
+	}); 
 }
 //添加岗位
 function addPost(){

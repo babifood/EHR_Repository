@@ -113,7 +113,7 @@ public class JobLevelDapImpl implements JobLevelDao {
 	public List<Map<String, Object>> loadComboboxJobLevelData() {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select JOBLEVEL_ID as id,JOBLEVEL_DESC as text");
+		sql.append("select JOBLEVEL_ID as LEVELID,JOBLEVEL_NAME AS LEVELNAME,JOBLEVEL_DESC as LEVELDESC");
 		sql.append(" from ehr_joblevel");
 		List<Map<String, Object>> list = null;
 		try {
@@ -220,8 +220,7 @@ public class JobLevelDapImpl implements JobLevelDao {
 	public List<Map<String, Object>> loadComboboxPositionData() {
 		// TODO Auto-generated method stub
 				StringBuffer sql = new StringBuffer();
-				sql.append("select POSITION_ID as id,POSITION_NAME as text");
-				sql.append(" from ehr_position");
+				sql.append("SELECT P.POSITION_ID,P.POSITION_NAME,L.JOBLEVEL_NAME FROM ehr_position P INNER JOIN ehr_joblevel L ON P.JOBLEVEL_ID=L.JOBLEVEL_ID");
 				List<Map<String, Object>> list = null;
 				try {
 					list=jdbctemplate.queryForList(sql.toString());
@@ -235,15 +234,18 @@ public class JobLevelDapImpl implements JobLevelDao {
 	public List<Map<String, Object>> loadPostAll(Integer post_id, String post_name, Integer position_id,String position_name) {
 		// TODO Auto-generated method stub
 				StringBuffer sql = new StringBuffer();
-				sql.append("select u.POST_ID as post_id,u.POST_NAME as post_name,u.POSITION_ID as position_id,r.POSITION_ID,r.POSITION_NAME as position_name");
-				sql.append(" from ehr_post u inner join ehr_position r on u.POSITION_ID = r.POSITION_ID where 1=1");
+				sql.append("SELECT U.POST_ID AS post_id,U.POST_NAME AS post_name,U.POSITION_ID AS position_id,P.POSITION_NAME AS position_name,L.JOBLEVEL_ID as joblevel_id,L.JOBLEVEL_NAME AS joblevel_name");
+				sql.append(" FROM ehr_post U");
+				sql.append(" INNER JOIN ehr_position P ON U.POSITION_ID = P.POSITION_ID");
+				sql.append(" INNER JOIN ehr_joblevel L ON P.JOBLEVEL_ID = L.JOBLEVEL_ID");
+				sql.append(" WHERE 1=1");
 				if(post_name!=null&&!post_name.equals("")){
-					sql.append(" and u.POST_NAME like '%"+post_name+"%'");
+					sql.append(" and U.POST_NAME like '%"+post_name+"%'");
 				}
 				if(position_name!=null&&!position_name.equals("")){
-					sql.append(" and r.POSITION_NAME like '%"+position_name+"%'");
+					sql.append(" and P.POSITION_NAME like '%"+position_name+"%'");
 				}
-				sql.append(" GROUP BY post_id ASC");
+				sql.append(" GROUP BY U.post_id ASC");
 				System.out.println(sql); 
 				List<Map<String, Object>> list = null;
 				try {

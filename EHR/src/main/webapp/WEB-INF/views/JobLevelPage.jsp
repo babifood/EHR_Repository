@@ -18,8 +18,8 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeJobLevel()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		职务级别：<input type="text" class="textbox" id="search_joblevel_name" name="search_joblevel_name" style="width: 110px;"/>
-	        		包含职位：<input type="text" class="textbox" id="search_positionofjoblevel_name" name="search_positionofjoblevel_name" style="width: 110px;"/>
+	        		职级名称：<input type="text" class="textbox" id="search_joblevel_name" name="search_joblevel_name" style="width: 110px;"/>
+	        		<!--包含职位：<input type="text" class="textbox" id="search_positionofjoblevel_name" name="search_positionofjoblevel_name" style="width: 110px;"/> -->
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetJobLevel()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchJobLevel()">查询</a>
 	        	</div>
@@ -29,14 +29,14 @@
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">职级信息</span></div>
 			        <table>
 			        	<tr style="margin-bottom: 10px;">
-			        		<td>职务级别：</td>
+			        		<td>职级名称：</td>
 			        		<td>
 			        			<input type="text" id="JobLevel_name" name="JobLevel_name" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
 			        			<span id="JobLevel_name_span" style="color: red"></span>
 			        		</td>
 			        	</tr>
 			        	<tr style="margin-bottom: 10px;">
-			        		<td>职务级别描述：</td>
+			        		<td>职级描述：</td>
 			        		<td>
 			        			<input type="text" id="JobLevel_desc" name="JobLevel_desc" class="textbox" data-options="required:true" onblur="noBlurJoblevel()" style="width: 180px;"/>
 			        			<span id="JobLevel_desc_span" style="color: red"></span>
@@ -50,7 +50,7 @@
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#JobLevel_dog').dialog('close')" style="width: 90px;">取消</a>
 	        </div>
 	    </div> 
-	    <div title="职位信息">   
+	    <div title="职等信息">   
 	        <table id="position_tbo"></table>  
 	        <div id="position_tbar" style="padding: 5px;">
 	        	<div style="margin-bottom: 5px;">
@@ -59,9 +59,9 @@
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removePosition()">删除</a>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
-	        		职位名称：<input type="text" class="textbox" id="search_position_name" name="search_position_name" style="width: 110px;"/>
-	        		所属职级：<input type="text" class="textbox" id="search_joblevelforposition_name" name="search_joblevelforposition_name" style="width: 110px;"/>
-	        		包含岗位：<input type="text" class="textbox" id="search_postofposition_name" name="search_postofposition_name" style="width: 110px;"/>
+	        		职等名称：<input type="text" class="textbox" id="search_position_name" name="search_position_name" style="width: 110px;"/>
+	        		职级名称：<input type="text" class="textbox" id="search_joblevelforposition_name" name="search_joblevelforposition_name" style="width: 110px;"/>
+	        		<!--包含岗位：<input type="text" class="textbox" id="search_postofposition_name" name="search_postofposition_name" style="width: 110px;"/>  -->
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPosition()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPosition()">查询</a>
 	        	</div>
@@ -71,14 +71,14 @@
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">职位信息</span></div>
 					<table>
 						<tr style="margin-bottom: 10px;">
-							<td>职位名称：</td>
+							<td>职等名称：</td>
 							<td>
 								<input type="text" id="position_name" name="position_name" class="textbox"  onblur="noBlurPosition()"style="width: 180px;"/>
 			       			    <span id="position_name_span" style="color: red"></span>
 							</td>
 						</tr>
 						<tr style="margin-bottom: 10px;">
-							<td>所属职务级别：</td>
+							<td>职级名称：</td>
 							<td>
 								<input id="position_joblevel" name="position_joblevel" style="width: 180px;"/>  
 			       			   	<span id="position_joblevel_span" style="color: red"></span>
@@ -102,7 +102,7 @@
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
 	        		岗位名称：<input type="text" class="textbox" id="search_post_name" name="search_post_name" style="width: 110px;"/>
-	        		所属职位：<input type="text" class="textbox" id="search_positionforpost_name" name="search_positionforpost_name" style="width: 110px;"/>
+	        		职等名称：<input type="text" class="textbox" id="search_positionforpost_name" name="search_positionforpost_name" style="width: 110px;"/>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPost()">重置</a>
 	        		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPost()">查询</a>
 	        	</div>
@@ -119,7 +119,7 @@
 			        		</td>
 			        	</tr>
 			        	<tr style="margin-bottom: 10px;">
-			        		<td>所属职位名称：</td>
+			        		<td>职等名称：</td>
 			        		<td>
 			        			<input id="post_position" name="post_position" style="width: 180px;"/>  
 			       			   	<span id="post_position_span" style="color: red"></span>

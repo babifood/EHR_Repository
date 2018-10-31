@@ -23,7 +23,6 @@ $(function(){
 	//加载人员档案列表
 	loadPersonGrid(null,null);
 	loadAccordion();
-	loadLevelComboBox();
 	loadPostComboBox();
 	//初始加载公司
 	insertLoadCompanyComboBox();
@@ -169,14 +168,26 @@ function createWorkNum(){
 }
 //加载岗位combobox
 function loadPostComboBox(){
-	$('#p_post').combobox({    
-	    url:prefix+'/loadComboboxPositionData',    
-	    valueField:'id',    
-	    textField:'text',
-	    onSelect: function(rec){
-	    	$("#p_post_id").val(rec.id);
-	    }   
-	});
+	var url=prefix+"/loadComboboxPostData";
+	$('#p_post').combogrid({    
+		idField: 'post_name',
+		textField: 'post_name',
+		url:url,
+		method: 'get',
+		columns: [[
+			{field:'post_name',title:'岗位名称',width:60},
+			{field:'position_name',title:'职等名称',width:60},
+			{field:'joblevel_name',title:'职级名称',width:60},
+		]],
+		fitColumns: true,
+		onHidePanel:function(){
+			var row = $('#p_post').combogrid('grid').datagrid('getSelected');	// 获取数据表格对象
+			$("#p_post_id").val(row.post_id);//编号
+			$("#p_title").val(row.position_name);
+			$("#p_level_id").val(row.joblevel_id);
+			$("#p_level_name").val(row.joblevel_name);
+		}
+	}); 
 }
 //新增加载公司combobox
 function insertLoadCompanyComboBox(){
@@ -382,17 +393,17 @@ function updateLoadGroupCombotree(newValue){
 	    }  
 	});  
 }
-//加载职级ComboGrid
-function loadLevelComboBox(){
-	$('#p_level_name').combobox({    
-		url:prefix+'/loadComboboxJobLevelData',    
-	    valueField:'id',    
-	    textField:'text',
-	    onSelect: function(rec){
-	    	$("#p_level_id").val(rec.id);
-	    } 
-	}); 
-}
+////加载职级ComboGrid
+//function loadLevelComboBox(){
+//	$('#p_level_name').combobox({    
+//		url:prefix+'/loadComboboxJobLevelData',    
+//	    valueField:'id',    
+//	    textField:'text',
+//	    onSelect: function(rec){
+//	    	$("#p_level_id").val(rec.id);
+//	    } 
+//	}); 
+//}
 //表单验证
 function checkForm(tRf){
 	var box =["p_title"]
@@ -888,11 +899,11 @@ function editFromSetValues(data){
 	$("#p_birthday").val(data.p_birthday);//出生年月日
 	$("#p_sex").val(data.p_sex);//性别
 	$("#p_age").val(data.p_age);//年龄
-	$("#p_title").combobox('setValue',data.p_title);//职称
+	$("#p_title").val(data.p_title);//职称
 	$("#p_post_id").val(data.p_post_id);//岗位编号
-	$("#p_post").combobox('setValue',data.p_post);//岗位名称
+	$("#p_post").combogrid('setValue',data.p_post);//岗位名称
 	$("#p_level_id").val(data.p_level_id);//职级编号
-	$("#p_level_name").combobox('setValue',data.p_level_name);//职级名称
+	$("#p_level_name").val(data.p_level_name);//职级名称
 	$("#p_company_id").val(data.p_company_id);//公司编码
 	
 	$("#update_p_company_name").combobox('setValue',data.p_company_name);//公司名称
@@ -1218,9 +1229,9 @@ function setData(){
 			p_age:$("#p_age").val(),//年龄
 			p_title:$("#p_title").val(),//职称
 			p_post_id:$("#p_post_id").val(),//岗位编号
-			p_post:$('#p_post').combobox('getText'),//岗位名称
+			p_post:$('#p_post').combogrid('getText'),//岗位名称
 			p_level_id:$("#p_level_id").val(),//职级编号
-			p_level_name:$("#p_level_name").combobox('getText'),//职级名称
+			p_level_name:$("#p_level_name").val(),//职级名称
 			
 			p_company_id:p_company_id,//公司编码
 			p_company_name:p_company_name,//公司名称
