@@ -204,9 +204,9 @@ public class JobLevelPageControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/savePost")
-	public Map<String,Object> savePost(String post_name, Integer position_id){
+	public Map<String,Object> savePost(String post_name, Integer position_id,Integer post_project_id){
 		Map<String,Object> map =new HashMap<String,Object>();
-		int rows = JobLevelPageService.savePost(post_name,position_id);
+		int rows = JobLevelPageService.savePost(post_name,position_id,post_project_id);
 		if(rows>0){
 			map.put("status", "success");
 		}else{
@@ -258,5 +258,14 @@ public class JobLevelPageControl{
 	@RequestMapping("/loadComboboxPostData")
 	public List<Map<String, Object>> loadComboboxPostData(){
 		return JobLevelPageService.loadPostAll(null,"",null,"");
+	}
+	/**
+	 * 加载岗位信息
+	 * @return 返回职位json
+	 */
+	@ResponseBody
+	@RequestMapping("/loadPostProjectList")
+	public List<Map<String, Object>> loadPostProjectList(){
+		return JobLevelPageService.loadPostProjectList();
 	}
 }

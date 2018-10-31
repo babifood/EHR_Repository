@@ -70,9 +70,9 @@ public class JobLevelServiceImpl implements JobLevelPageService {
 		return JobLevelDao.loadPostAll(post_id,post_name,position_id,position_name);
 	}
 	@Override
-	public Integer savePost(String post_name, Integer position_id) {
+	public Integer savePost(String post_name, Integer position_id,Integer post_project_id) {
 		// TODO Auto-generated method stub
-		return JobLevelDao.savePost(post_name,position_id);
+		return JobLevelDao.savePost(post_name,position_id,post_project_id);
 	}
 	@Override
 	public Integer editPost(PostEntity postEntity) {
@@ -83,6 +83,11 @@ public class JobLevelServiceImpl implements JobLevelPageService {
 	public Integer removePost(Integer post_id) {
 		// TODO Auto-generated method stub
 		return JobLevelDao.removePost(post_id);
+	}
+	@Override
+	public List<Map<String, Object>> loadPostProjectList() {
+		// TODO Auto-generated method stub
+		return JobLevelDao.loadPostProjectList();
 	}
 
 }

@@ -114,7 +114,8 @@
 			        	<tr style="margin-bottom: 10px;">
 			        		<td>岗位名称：</td>
 			        		<td>
-			        			<input type="text" id="post_name" name="post_name" class="textbox"  onblur="noBlurPost()"style="width: 180px;"/>
+			        			<input type="hidden" id="post_project_id" name="post_project_id"/>
+			        			<input type="text" id="post_name" name="post_name" style="width: 180px;"/>
 			       			   	<span id="post_name_span" style="color: red"></span>
 			        		</td>
 			        	</tr>

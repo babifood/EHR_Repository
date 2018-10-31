@@ -38,9 +38,11 @@ public interface JobLevelPageService {
 	
 	public List<Map<String,Object>> loadPostAll(Integer post_id,String post_name,Integer position_id,String position_name);
 	
-	public Integer savePost(String post_name,Integer position_id);
+	public Integer savePost(String post_name,Integer position_id,Integer post_project_id);
 	
 	public Integer editPost(PostEntity postEntity);
 	
 	public Integer removePost(Integer post_id);
+
+	public List<Map<String, Object>> loadPostProjectList();
 }

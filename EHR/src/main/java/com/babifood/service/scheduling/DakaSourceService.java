@@ -34,7 +34,6 @@ public class DakaSourceService {
 			final Integer threadCount = 500;
 			int threadNum = total % threadCount == 0 ? total / threadCount : total / threadCount + 1;
 			final String beginTime = beginDate;
-			System.out.println("==========================total:" + total);
 			for (int i = 0; i < threadNum; i++) {
 				final Integer index = i;
 				Runnable thread = new Runnable() {

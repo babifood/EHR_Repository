@@ -41,6 +41,8 @@ private Logger logger = LoggerFactory.getLogger(DakaSourceDao.class);
 		} catch (Exception e) {
 			logger.error("查询未同步打卡记录总数失败", e);
 			throw e;
+		}finally {
+			CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		}
 		return total;
 	}
@@ -60,6 +62,8 @@ private Logger logger = LoggerFactory.getLogger(DakaSourceDao.class);
 		} catch (Exception e) {
 			logger.error("查询考勤系统打卡记录失败", e);
 			throw e;
+		}finally {
+			CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		}
 		return dakaRecordList;
 	}
