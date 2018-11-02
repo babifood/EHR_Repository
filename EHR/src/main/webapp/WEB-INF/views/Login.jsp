@@ -27,7 +27,7 @@
 				</tr>
 				<tr>
 					<td class="lable" style="white-space: nowrap; letter-spacing: 0.5em; vertical-align: middle">密码：</td>
-					<td colspan="2"><input type="password" id="password" name="password" class="login" onkeydown="loginButton()"/></td>
+					<td colspan="2"><input type="password" id="password" name="password" class="login"/></td>
 				</tr>
 				<tr>
 					<td><input type="hidden" id="msg" value="${status}"/></td>
@@ -35,7 +35,7 @@
 				</tr>
 				<tr>
 					<td colspan="3" style="text-align: center"><input type="button"
-						value="登录" class="login_button" onclick="loginButton()"/> 
+						value="登录" class="login_button" onclick="loginButton()" onkeydown="loginButton()"/> 
 				</tr>
 			</table>
 		</form>

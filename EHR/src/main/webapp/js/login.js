@@ -11,7 +11,7 @@ $(function(){
 		required : true,
 		validType :'length[6,18]',
 		missingMessage :'密码不能为空!',
-		invalidMessage :'密码不能少于6位且不能大于30位',
+		invalidMessage :'密码不能少于6位且不能大于18位',
 	});
 	//页面加载时光标定位到输入框
 	if(!$('#username').validatebox('isValid')){

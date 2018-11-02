@@ -1,25 +1,37 @@
 @CHARSET "UTF-8";
 #logo{
 	float: left;
-	width: 80%;
+	width: 75%;
 	line-height: 55px;
 	font-size: 30px;
 	font-style: italic;
 	font-weight: 800;
+	
 }
 #logo span{
 	padding-left: 80px;
 	color: blue;
 }
-#logoout{
-	float: right;
-	width: 20%;
+#userinfo{
+	float: left;
+	width: 10%;
 	line-height: 55px;
 	color: blue;
 }
-#logoout a{
+#outOrUpdate{
+	float: left;
+	width: 15%;
+	line-height: 55px;
+	
+}
+#updatePsd_form input{
+	height: 20px;
+	margin: 0;
+	padding: 0,2px;
+}
+/*#logoout a{
 	text-decoration: none;
 }
 #logoout a:hover {
 	text-decoration: underline;
-}
+}*/

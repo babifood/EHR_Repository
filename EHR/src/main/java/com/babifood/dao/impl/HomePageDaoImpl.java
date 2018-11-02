@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.HomePageDao;
 @Repository
-public class HomePageDaoImpl implements HomePageDao {
+public class HomePageDaoImpl extends AuthorityControlDaoImpl implements HomePageDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
@@ -35,7 +35,8 @@ public class HomePageDaoImpl implements HomePageDao {
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		return jdbctemplate.queryForList(sql.toString(),params);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override
 	public List<Map<String, Object>> loadZhuanZheng(String beginDate, String endDate) {
@@ -47,18 +48,21 @@ public class HomePageDaoImpl implements HomePageDao {
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		return jdbctemplate.queryForList(sql.toString(),params);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override
 	public List<Map<String, Object>> loadCertificateExpire(String beginDate, String endDate) {
 		// TODO Auto-generated method stub
 		StringBuffer sql=new StringBuffer();
-		sql.append("select c_p_number,c_p_name,c_organization,c_certificate_name,c_certificate_number,c_begin_date,c_end_date from ehr_certificate ");
+		sql.append("select c_p_number,c_p_name,c_organization,c_certificate_name,c_certificate_number,c_begin_date,c_end_date from ehr_certificate c");
+		sql.append(" INNER JOIN ehr_person_basic_info p on c.c_p_number = p.p_number  ");
 		sql.append("where c_end_date between ? and ?");
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		return jdbctemplate.queryForList(sql.toString(),params);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p.p_company_id", sql);
+		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override
 	public List<Map<String, Object>> loadWorkInOutForms(String thisYear) {
@@ -86,7 +90,29 @@ public class HomePageDaoImpl implements HomePageDao {
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		return jdbctemplate.queryForList(returnsql.toString(),params);
+	}
+	@Override
+	public List<Map<String, Object>> loadUserInfo(String psd_account, String gtePasswordMd5) {
+		// TODO Auto-generated method stub
+		StringBuffer sql=new StringBuffer();
+		sql.append("select user_id,user_name,show_name from ehr_users where user_name = ? and `password` = ?");
+		Object[] params=new Object[2];
+		params[0]= psd_account;
+		params[1]= gtePasswordMd5;
 		return jdbctemplate.queryForList(sql.toString(),params);
+	}
+	@Override
+	public int updatePassword(String psd_account, String gtePasswordMd5, String gtePasswordMd52) {
+		// TODO Auto-generated method stub
+		StringBuffer sql=new StringBuffer();
+		sql.append("update ehr_users set `password` = ? where user_name =? and `password`=?");
+		Object[] params=new Object[3];
+		params[0]= gtePasswordMd52;
+		params[1]= psd_account;
+		params[2]= gtePasswordMd5;
+		return jdbctemplate.update(sql.toString(),params);
 	}
 
 }

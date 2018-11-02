@@ -18,5 +18,8 @@ public interface HomePageService {
 	public List<Map<String, Object>> loadWorkInOutForms();
 
 	public List<Map<String, Object>> loadContractExpire();
+
+	public String updatePassword(String psd_account, String psd_original, String psd_new,
+			String psd_affirm);
 	
 }
