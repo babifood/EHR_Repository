@@ -904,8 +904,9 @@ function editFromSetValues(data){
 	$("#p_post").combogrid('setValue',data.p_post);//岗位名称
 	$("#p_level_id").val(data.p_level_id);//职级编号
 	$("#p_level_name").val(data.p_level_name);//职级名称
-	$("#p_company_id").val(data.p_company_id);//公司编码
 	
+	$("#update_p_company_id").val(data.p_company_id);//公司编码
+	console.log("company"+$("#update_p_company_id").val());
 	$("#update_p_company_name").combobox('setValue',data.p_company_name);//公司名称
 	$("#update_p_organization_id").val(data.p_organization_id);//单位机构编号
 	$("#update_p_organization").combotree("setValue",data.p_organization);//单位机构
@@ -914,8 +915,8 @@ function editFromSetValues(data){
 	$("#update_p_section_office_id").val(data.p_section_office_id);//科室编号
 	$("#update_p_section_office").combotree("setValue",data.p_section_office);//科室
 	$("#update_p_group_id").val(data.p_group_id);//班组编号
+	$("#update_p_group").combotree("setValue",data.p_group);//班组
 	
-	$("#p_group").combotree("setValue",data.p_group);//班组
 	$("#p_state").combobox('setValue',data.p_state);//员工状态
 	$("#p_property").combobox('setValue',data.p_property);//员工性质
 	$("#p_post_property").combobox('setValue',data.p_post_property);//岗位性质

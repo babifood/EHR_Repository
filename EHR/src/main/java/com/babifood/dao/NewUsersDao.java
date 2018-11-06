@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.RoleAuthorityEntity;
 import com.babifood.entity.RoleMenuEntity;
+import com.babifood.entity.RoleResourceEntity;
 @Repository
 public interface NewUsersDao {
 	public List<Map<String,Object>> loadUserAll(String user_name,String show_name);
@@ -42,5 +43,9 @@ public interface NewUsersDao {
 
 	public List<Map<String, Object>> loadCombotreeDeptData(String id);
 	
-	public List<Map<String, Object>> loadComboboxOrgaData();
+	public List<Map<String, Object>> loadAllocationResourceTree(String resource);
+
+	public void saveRoleResource(RoleResourceEntity[] roleResourceEntity);
+
+	public List<Map<String, Object>> loadRoleResource(String role_id);
 }

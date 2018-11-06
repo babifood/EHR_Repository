@@ -48,7 +48,7 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		}
 		Integer count = 0;
 		try {
-			sql = super.jointDataAuthoritySql("b.p_company_id", sql);
+			sql = super.jointDataAuthoritySql("b.p_company_id","b.p_organization_id",sql);
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询绩效数量信息失败", e);
@@ -98,7 +98,7 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		if(!UtilString.isEmpty(params.get("officeName")+"")){
 			sql.append(" AND e.dept_name like '%" + params.get("officeName") + "%' ");
 		}
-		sql = super.jointDataAuthoritySql("b.p_company_id", sql);
+		sql = super.jointDataAuthoritySql("b.p_company_id","b.p_organization_id",sql);
 		if(!UtilString.isEmpty(params.get("start")+"") && !UtilString.isEmpty(params.get("pageSize")+"")){
 			sql.append("GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC ");
 			sql.append("limit ?, ?");

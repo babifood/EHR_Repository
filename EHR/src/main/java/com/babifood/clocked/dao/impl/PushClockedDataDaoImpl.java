@@ -33,7 +33,7 @@ public class PushClockedDataDaoImpl extends AuthorityControlDaoImpl implements P
 		sql.append("INNER JOIN ehr_dept org ON ck.OrganCode = org.DEPT_CODE ");
 		sql.append("INNER JOIN ehr_person_basic_info p ON ck.WorkNum = p.p_number ");
 		sql.append("WHERE 1=1  and ck.`Year` =? and ck.`Month` =? and p.p_oa_and_ehr = 'OA'");
-		StringBuffer returnSQL = super.jointDataAuthoritySql("ck.CompanyCode", sql);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("ck.CompanyCode","ck.OrganCode",sql);
 		Object[] params=new Object[2];
 		params[0]= year;
 		params[1]= month;

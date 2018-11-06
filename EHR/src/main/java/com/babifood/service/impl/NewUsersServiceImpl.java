@@ -14,12 +14,15 @@ import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.dao.NewUsersDao;
 import com.babifood.entity.LoginEntity;
+import com.babifood.entity.ResourceTreeEntity;
 import com.babifood.entity.RoleAuthorityEntity;
 import com.babifood.entity.RoleMenuEntity;
+import com.babifood.entity.RoleResourceEntity;
 import com.babifood.entity.UserRoleEntity;
 import com.babifood.service.NewUsersService;
 import com.babifood.utils.IdGen;
 import com.babifood.utils.MD5;
+import com.babifood.utils.TreeUtil;
 import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
 @Service
@@ -362,20 +365,56 @@ public class NewUsersServiceImpl implements NewUsersService {
 	}
 	@LogMethod(module = ModuleConstant.USER)
 	@Override
-	public List<Map<String, Object>> loadComboboxOrgaData() {
+	public List<ResourceTreeEntity> loadAllocationResourceTree(String resource,String role_id) {
 		// TODO Auto-generated method stub
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+		List<ResourceTreeEntity> listTree = new ArrayList<ResourceTreeEntity>();
 		List<Map<String, Object>> list = null;
+		List<Map<String, Object>> listRoleResource = null;
 		try {
-			list = newUsersDao.loadComboboxOrgaData();
+			list = newUsersDao.loadAllocationResourceTree(resource);
+			listRoleResource = newUsersDao.loadRoleResource(role_id);
+			for (Map<String, Object> map : list) {
+				if(map.get("nid").equals("0000")){
+					ResourceTreeEntity t = new ResourceTreeEntity();
+					t.setId(map.get("id").toString());
+					t.setText(map.get("text").toString());
+					t.setChildren(TreeUtil.getTreeChildNode(map.get("id").toString(), list,listRoleResource));
+					if(resource.equals("1")){
+						List<ResourceTreeEntity> tree= t.getChildren();
+						for (ResourceTreeEntity resourceTreeEntity : tree) {
+							resourceTreeEntity.setChildren(TreeUtil.getTreeChildNode(resourceTreeEntity.getId(), list,listRoleResource));
+						}
+					}
+					listTree.add(t);
+				}
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadComboboxOrgaData:"+e.getMessage());
+			log.error("loadAllocationResourceTree:"+e.getMessage());
 		}
-		return list;
+		return listTree;
+	}
+	@Override
+	public Integer saveRoleResource(RoleResourceEntity[] roleResourceEntity) {
+		// TODO Auto-generated method stub
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_ADD);
+		int rows = 1;
+		try {
+			// TODO Auto-generated method stub
+			newUsersDao.saveRoleResource(roleResourceEntity);
+		} catch (Exception e) {
+			// TODO: handle exception
+			rows = -1;
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("saveRoleResource:"+e.getMessage());
+		}
+		return rows;
 	}
 
 }

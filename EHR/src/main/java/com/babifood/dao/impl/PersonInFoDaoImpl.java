@@ -119,7 +119,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 			sql.append(" and p_name like '%"+search_p_name+"%'");
 		}
 //		List<Map<String, Object>> companyCode = super.loadUserDataAuthority();
-		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
 		return jdbctemplate.queryForList(returnsql.toString());
 //		return jdbctemplate.queryForList(sql.toString());
 	}

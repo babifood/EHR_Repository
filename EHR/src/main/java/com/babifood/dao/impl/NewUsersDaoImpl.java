@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.babifood.dao.NewUsersDao;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.RoleMenuEntity;
+import com.babifood.entity.RoleResourceEntity;
 @Repository
 @Transactional
 public class NewUsersDaoImpl implements NewUsersDao {
@@ -25,7 +26,7 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public List<Map<String, Object>> loadRoleAll(String role_name) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select role_id,role_name,role_desc,state,organization_name,organization_code");
+		sql.append("select role_id,role_name,role_desc,state,organization_name,organization_code,resource");
 		sql.append(" from ehr_roles");
 		if(role_name!=null||!role_name.equals("")){
 			sql.append(" where role_name like '%"+role_name+"%'");
@@ -36,15 +37,16 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public Integer saveRole(String role_id,String role_name,String role_desc,String state,String organization_code,String organization_name) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("insert into ehr_roles (role_id,role_name,role_desc,state,organization_name,organization_code) ");
-		sql.append(" values(?,?,?,?,?,?)");
-		Object[] params=new Object[6];
+		sql.append("insert into ehr_roles (role_id,role_name,role_desc,state,organization_name,organization_code,resource) ");
+		sql.append(" values(?,?,?,?,?,?,?)");
+		Object[] params=new Object[7];
 		params[0]=role_id;
 		params[1]=role_name;
 		params[2]=role_desc;
 		params[3]=state;
 		params[4]=organization_name;
 		params[5]=organization_code;
+		params[6]="1";
 		return jdbctemplate.update(sql.toString(), params);
 	}
 	@Override
@@ -72,10 +74,13 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		sql_menu_role.append("delete from ehr_role_menu where role_menu_id =?");
 		StringBuffer ehr_role_authority = new StringBuffer();
 		ehr_role_authority.append("delete from ehr_role_authority where role_id =?");
+		StringBuffer ehr_role_resource = new StringBuffer();
+		ehr_role_resource.append("delete from ehr_role_resource where role_id =?");
 		jdbctemplate.update(sql_role.toString(),role_id);
 		jdbctemplate.update(sql_user_role.toString(),role_id);
 		jdbctemplate.update(sql_menu_role.toString(),role_id);
 		jdbctemplate.update(ehr_role_authority.toString(),role_id);
+		jdbctemplate.update(ehr_role_resource.toString(),role_id);
 	}
 	//查询用户及角色信息
 	@Override
@@ -268,11 +273,45 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		return jdbctemplate.queryForList(sql.toString(),id);
 	}
 	@Override
-	public List<Map<String, Object>> loadComboboxOrgaData() throws DataAccessException{
+	public List<Map<String, Object>> loadAllocationResourceTree(String resource) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select dept_code,dept_name from ehr_dept");
-		sql.append(" where type in('1','2') ORDER BY DEPT_CODE");
+		sql.append("select dept_code as id ,dept_name as text,pcode as nid from ehr_dept where 1=1");
+		if(resource.equals("0")){
+			sql.append(" and type in('1','2') ORDER BY DEPT_CODE");
+		}else if(resource.equals("1")){
+			sql.append(" and type in('1','2','3') ORDER BY DEPT_CODE");
+		}
+		
 		return jdbctemplate.queryForList(sql.toString());
+	}
+	@Override
+	public void saveRoleResource(RoleResourceEntity[] roleResourceEntity) {
+		// TODO Auto-generated method stub
+		StringBuffer sql_roleResource_del= new StringBuffer();
+		sql_roleResource_del.append("delete from ehr_role_resource where role_id=?");
+		StringBuffer sql_roles_update= new StringBuffer();
+		sql_roles_update.append("update ehr_roles set resource = '0' where role_id=?");
+		List<Object[]> params= new ArrayList<>();
+		for(int i=0;i<roleResourceEntity.length;i++){
+			params.add(new Object[]{
+					roleResourceEntity[i].getRole_id(),
+					roleResourceEntity[i].getRole_name(),
+					roleResourceEntity[i].getResource_code(),
+					roleResourceEntity[i].getResource_name()
+					});
+			
+		}
+		final String sql_roleResource_insert = "insert into ehr_role_resource (role_id,role_name,resource_code,resource_name) values(?,?,?,?)";
+		jdbctemplate.update(sql_roleResource_del.toString(),roleResourceEntity[0].getRole_id());
+		jdbctemplate.update(sql_roles_update.toString(),roleResourceEntity[0].getRole_id());
+		jdbctemplate.batchUpdate(sql_roleResource_insert, params);
+	}
+	@Override
+	public List<Map<String, Object>> loadRoleResource(String role_id) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("select role_id,role_name,resource_code,resource_name from ehr_role_resource where role_id=?");
+		return jdbctemplate.queryForList(sql.toString(),role_id);
 	}
 }

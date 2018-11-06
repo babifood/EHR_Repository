@@ -62,7 +62,7 @@ public class AllowanceDaoImpl extends AuthorityControlDaoImpl implements Allowan
 		if(!UtilString.isEmpty(param.get("officeName") + "")){
 			sql.append(" AND e.DEPT_NAME like '%" + param.get("officeName") + "%' ");
 		}
-		sql = super.jointDataAuthoritySql("b.p_company_id", sql);
+		sql = super.jointDataAuthoritySql("b.p_company_id","b.p_organization_id", sql);
 		if(!UtilString.isEmpty(param.get("start") + "") && !UtilString.isEmpty(param.get("pageSize") + "")){
 			sql.append("GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC ");
 			sql.append("limit ?, ?");
@@ -127,7 +127,7 @@ public class AllowanceDaoImpl extends AuthorityControlDaoImpl implements Allowan
 		}
 		Integer total = 0;
 		try {
-			sql = super.jointDataAuthoritySql("b.p_company_id", sql);
+			sql = super.jointDataAuthoritySql("b.p_company_id","b.p_organization_id", sql);
 			total = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询津贴、扣款信息列表失败", e);

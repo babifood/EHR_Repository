@@ -69,18 +69,30 @@ function loadRole(data){
 			},
 			{
 				field:"organization_name",
-				title:"所属机构",
+				title:"角色属性",
 				width:100,
 			},
 			{
 				field:"state",
 				title:"状态",
-				width:100,
+				width:50,
 				formatter:function(value){
 					if(value=="0"){
 						return "禁用";
 					}else if(value=="1"){
 						return "启用";
+					}
+				},
+			},
+			{
+				field:"resource",
+				title:"是否已分配资源",
+				width:50,
+				formatter:function(value){
+					if(value=="0"){
+						return "是";
+					}else if(value=="1"){
+						return "否";
 					}
 				},
 			}
@@ -119,10 +131,17 @@ function loadRole(data){
 //加载下拉树
 function loadCombotree(){
 	$('#role_organization').combobox({    
-	    url: prefix+"/loadComboboxOrga",
+//	    url: prefix+"/loadComboboxOrga",
 	    editable:false,
-	    valueField:'dept_code',    
-	    textField:'dept_name',
+	    valueField:'label',    
+	    textField:'value',
+	    data: [{
+			label: '0',
+			value: '公司角色'
+		},{
+			label: '1',
+			value: '机构角色'
+		}],
 		onHidePanel:function(none){
 			$("#role_organization_span").html("");
 		},
@@ -222,8 +241,8 @@ function saveRole(){
 			role_name:$('#role_name').val(),
 			role_desc:$('#role_desc').val(),
 			state:$("input[name='role_radio']:checked").val(),
-			organization_code:$("#role_organization").combotree("getValue"),
-			organization_name:$("#role_organization").combotree("getText")
+			organization_code:$("#role_organization").combobox("getValue"),
+			organization_name:$("#role_organization").combobox("getText")
 		};
 		url = prefix+'/saveRole';
 		msg = "角色保存成功!";
@@ -233,8 +252,8 @@ function saveRole(){
 				role_name:$('#role_name').val(),
 				role_desc:$('#role_desc').val(),
 				state:$("input[name='role_radio']:checked").val(),
-				organization_code:$("#role_organization").combotree("getValue"),
-				organization_name:$("#role_organization").combotree("getText")
+				organization_code:$("#role_organization").combobox("getValue"),
+				organization_name:$("#role_organization").combobox("getText")
 			};	
 		url = prefix+'/editRole';
 		msg = "角色修改成功!";
@@ -245,7 +264,7 @@ function saveRole(){
 	}else if($("#role_desc").val()==""){
 		$("#role_desc_span").html("描述不能为空");
 		$('#role_desc').focus();
-	}else if($("#role_organization").combotree("getValue")==""){
+	}else if($("#role_organization").combobox("getValue")==""){
 		$("#role_organization_span").html("机构不能为空");
 		$('#role_organization').focus();
 	}else{
@@ -277,7 +296,86 @@ function saveRole(){
 		});
 	}
 	
-}
+};
+//角色资源分配
+function allocationResource(){
+var row = $("#role_tbo").datagrid("getSelected");
+	if(row){
+		loadAllocationResourceTree(row.organization_code,row.role_id);
+		$("#role_resource_dog").dialog("open").dialog("center").dialog("setTitle","分配资源");
+	}else{
+		$.messager.alert("消息提示！","选择角色后才能分配资源！","info");
+	}
+};
+//加载分配资源树
+function loadAllocationResourceTree(resource,role_id){
+	$('#role_resource_ul').tree({    
+	    url:prefix+'/loadAllocationResourceTree?resource='+resource+'&role_id='+role_id,
+	    checkbox:true,
+	    lines:true,
+	}); 
+};
+//保存角色和分配的资源
+function saveRoleResource(){
+	var row = $("#role_tbo").datagrid("getSelected");
+	var nodes = $('#role_resource_ul').tree('getChecked');
+	var params = [];
+	var param =[];
+	if(nodes.length>0){
+		for(var i=0;i<nodes.length;i++){
+			if(row.organization_code=="0"){
+				if(nodes[i].id!="00000001"){
+					var param ={};
+					param.resource_code=nodes[i].id;
+					param.resource_name=nodes[i].text;
+					param.role_id=row.role_id;
+					param.role_name=row.role_name;
+					params.push(param);	
+				}
+			}else if(row.organization_code=="1"){
+				if(nodes[i].id!="00000001"&&nodes[i].id!="000000010001"&&nodes[i].id!="000000010002"&&nodes[i].id!="000000010003"
+					&&nodes[i].id!="000000010004"&&nodes[i].id!="000000010011"&&nodes[i].id!="000000010012"){
+					var param ={};
+					param.resource_code=nodes[i].id;
+					param.resource_name=nodes[i].text;
+					param.role_id=row.role_id;
+					param.role_name=row.role_name;
+					params.push(param);	
+				}
+			}	
+		}
+		$.ajax({
+			url:prefix+"/saveRoleResource",
+			type:'post',
+			data:JSON.stringify(params),
+			contentType:"application/json",
+			beforeSend:function(){
+				$.messager.progress({
+					text:'保存中......',
+				});
+			},
+			success:function(data){
+				$.messager.progress('close');
+				if(data.status=="success"){
+					$.messager.show({
+						title:'消息提醒',
+						msg:"资源分配成功",
+						timeout:3000,
+						showType:'slide'
+					});
+					$('#role_resource_dog').dialog('close');
+					loadRole(null);
+				}else{
+					$.messager.alert("消息提示！","资源分配失败！","warning");
+				}
+			}
+		});
+	}else{
+		$.messager.alert("消息提示！","请选择资源","info");
+	}
+//	console.log(row);
+//	console.log(nodes);
+};
 /**
  * ---------------------------------------添加用户function---------------------------------------
  * @returns

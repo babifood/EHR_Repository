@@ -33,7 +33,7 @@ public class CertificatenDaoImpl extends AuthorityControlDaoImpl implements Cert
 		if(c_p_name!=null&&!c_p_name.equals("")){
 			sql.append(" and c.c_p_name like '%"+c_p_name+"%'");
 		}
-		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id", sql);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id","p.p_organization_id",sql);
 		return jdbctemplate.queryForList(returnSQL.toString());
 	}
 

@@ -35,7 +35,7 @@ public class HomePageDaoImpl extends AuthorityControlDaoImpl implements HomePage
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
 		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override
@@ -48,7 +48,7 @@ public class HomePageDaoImpl extends AuthorityControlDaoImpl implements HomePage
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
 		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override
@@ -61,7 +61,7 @@ public class HomePageDaoImpl extends AuthorityControlDaoImpl implements HomePage
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		StringBuffer returnsql = super.jointDataAuthoritySql("p.p_company_id", sql);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p.p_company_id","p.p_organization_id",sql);
 		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override
@@ -90,7 +90,7 @@ public class HomePageDaoImpl extends AuthorityControlDaoImpl implements HomePage
 		Object[] params=new Object[2];
 		params[0]= beginDate;
 		params[1]= endDate;
-		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id", sql);
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
 		return jdbctemplate.queryForList(returnsql.toString(),params);
 	}
 	@Override

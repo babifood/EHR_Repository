@@ -12,5 +12,5 @@ import com.babifood.clocked.entrty.PushOaDataEntrty;
 
 public interface AuthorityControlDao {
 	public List<Map<String, Object>> loadUserDataAuthority();
-	public StringBuffer jointDataAuthoritySql(String companyCode,StringBuffer sql);
+	public StringBuffer jointDataAuthoritySql(String companyCode,String organCode,StringBuffer sql);
 }

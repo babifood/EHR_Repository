@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.babifood.entity.LoginEntity;
+import com.babifood.entity.ResourceTreeEntity;
 import com.babifood.entity.RoleMenuEntity;
+import com.babifood.entity.RoleResourceEntity;
 import com.babifood.service.NewUsersService;
 import com.babifood.shiro.CustomRealm;
 
@@ -43,9 +45,9 @@ public class NewUserControl {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/loadComboboxOrga")
-	public List<Map<String,Object>> loadComboboxOrgaData(){
-		return newUsersService.loadComboboxOrgaData();
+	@RequestMapping("/loadAllocationResourceTree")
+	public List<ResourceTreeEntity> loadAllocationResourceTree(String resource,String role_id){
+		return newUsersService.loadAllocationResourceTree(resource,role_id);
 	}
 	/**
 	 * 加载部门信息Combotree
@@ -186,6 +188,19 @@ public class NewUserControl {
 			map.put("status", "error");
 		}
 		return map;
+	}
+	@ResponseBody
+	@RequestMapping("/saveRoleResource")
+	public Map<String,Object> saveRoleResource(@RequestBody RoleResourceEntity[] roleResourceEntity){
+		Map<String,Object> map =new HashMap<String,Object>();
+		int rows = newUsersService.saveRoleResource(roleResourceEntity);
+		if(rows>0){
+			map.put("status", "success");
+		}else{
+			map.put("status", "error");
+		}
+		return map;
+		
 	}
 	@ResponseBody
 	@RequestMapping("/saveMenuRole")
