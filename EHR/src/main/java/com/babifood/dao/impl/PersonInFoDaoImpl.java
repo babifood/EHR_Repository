@@ -791,4 +791,31 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		
 	}
 
+	@Override
+	public List<Map<String, Object>> loadPersonlimit(String search_p_number, String search_p_name, Integer limit) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select p_id,p_number,p_name,p_sex,p_age,p_title,p_post_id,p_post,p_level_id,");
+		sql.append("p_level_name,p_company_id,p_company_name,p_department_id,p_department,p_organization_id,");
+		sql.append("p_organization,p_section_office_id,p_section_office,p_group_id,p_group,p_state,p_property,");
+		sql.append("p_post_property,p_in_date,p_turn_date,p_out_date,p_out_describe,p_checking_in,");
+		sql.append("p_contract_begin_date,p_contract_end_date,p_shebao_begin_month,p_shebao_end_month,");
+		sql.append("p_gjj_begin_month,p_gjj_end_month,p_nationality,p_nation,p_marriage,p_politics,p_phone,");
+		sql.append("p_bank_nub,p_bank_name,p_huji_add,p_changzhu_add,p_urgency_name,p_urgency_relation,");
+		sql.append("p_urgency_phone,p_urgency_id_nub,p_urgency_add,p_company_age,p_c_yingpin_table,p_c_interview_tab,");
+		sql.append("p_c_id_copies,p_c_xueli,p_c_xuewei,p_c_bank_nub,p_c_tijian_tab,p_c_health,p_c_img,");
+		sql.append("p_c_welcome,p_c_staff,p_c_admin,p_c_shebao,p_c_shangbao,p_c_secrecy,p_c_prohibida,");
+		sql.append("p_c_contract,p_c_post,p_c_corruption,p_c_probation,p_create_date,p_this_dept_code,");
+		sql.append("p_id_num,p_birthday,p_use_work_form,p_contract_count,p_oa_and_ehr,p_huji,b.dept_name as deptName,");
+		sql.append("p_hukou_xingzhi,p_age_qujian,p_zuigao_xueli,p_recommend_person,p_recommend_relation");
+		sql.append(" from ehr_person_basic_info a left join ehr_dept b on a.p_this_dept_code = b.dept_code where 1=1");
+		if(search_p_number!=null&&!search_p_number.equals("")){
+			sql.append(" and p_number like '%"+search_p_number+"%'");
+		}
+		if(search_p_name!=null&&!search_p_name.equals("")){
+			sql.append(" and p_name like '%"+search_p_name+"%'");
+		}
+		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
+		sql.append(" limit "+ limit);
+		return jdbctemplate.queryForList(returnsql.toString());
+	}
 }

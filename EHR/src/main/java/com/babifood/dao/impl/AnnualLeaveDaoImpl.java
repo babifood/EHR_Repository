@@ -1,5 +1,6 @@
 package com.babifood.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.babifood.dao.AnnualLeaveDao;
 import com.babifood.utils.CustomerContextHolder;
 import com.babifood.utils.UtilDateTime;
+import com.babifood.utils.UtilString;
 @Repository
 public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	@Autowired
@@ -65,10 +67,10 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	public List<Map<String, Object>> GetHireDate() {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT p_number,p_name,p_in_date ,p_company_age as p_companydayflag,p_company_id as companyCode,");
-		sql.append("p_department_id as deptCode, p_organization_id as organizationCode, ");
-		sql.append("p_section_office_id as officeCode,p_group_id as groupCode ");
-		sql.append(" from ehr_person_basic_info where p_out_date is null or p_out_date = ''");
+		sql.append("SELECT p_id,p_number,p_name,p_in_date ,p_company_age as p_companydayflag,p_company_id as companyCode,");
+		sql.append("p_department_id as deptCode, p_organization_id as organizationCode,p_organization AS organizationName, ");
+		sql.append("p_section_office_id as officeCode,p_group_id as groupCode, p_company_name AS companyName ");
+		sql.append(" from ehr_person_basic_info where p_out_date is null or p_out_date = '' and p_oa_and_ehr = 'OA'");
 		List<Map<String, Object>> list = null;
 		try {
 			list=jdbctemplate.queryForList(sql.toString());
@@ -140,6 +142,7 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	}
 	@Override
 	public void updateEmpCompanyAge(String pNumber, Integer companyAge) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		String sql = "update ehr_person_basic_info set p_company_age = ? where p_number = ?";
 		try {
 			jdbctemplate.update(sql, companyAge, pNumber);
@@ -149,6 +152,7 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 	}
 	@Override
 	public List<Map<String, Object>> findTotalBingjia(String year) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
 		String sql = "SELECT WorkNum AS pNumber, SUM(bingJia) AS bingJia from ehr_checking_result  WHERE `Year` = ? GROUP BY WorkNum";
 		List<Map<String, Object>> totalBingjia = null;
 		try {
@@ -157,5 +161,39 @@ public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
 			log.error("查询年度病假数失败："+e.getMessage());
 		}
 		return totalBingjia;
+	}
+	@Override
+	public void pushAnnualToOA(List<String> ids, List<Map<String, Object>> list, String year) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_OA);
+		StringBuffer deleteSql = new StringBuffer();
+		year = (Integer.valueOf(year) + 2) + "";
+		deleteSql.append("delete from formmain_0294 where field0003 = '" + year + "' and field0007 in (");
+		for(int i = 0; i < ids.size() ; i++){
+			if(i == ids.size() - 1){
+				deleteSql.append("'" + ids.get(i) + "')");
+			} else {
+				deleteSql.append("'" + ids.get(i) + "',");
+			}
+		}
+		List<String> sqlList = new ArrayList<String>();
+		for(int i = 0; i < list.size(); i++){
+			StringBuffer pushSsql = new StringBuffer();
+			pushSsql.append("insert into formmain_0294 (ID, STATE, START_MEMBER_ID, START_DATE, APPROVE_MEMBER_ID, ");
+			pushSsql.append("APPROVE_DATE, FINISHEDFLAG, RATIFYFLAG, RATIFY_MEMBER_ID, RATIFY_DATE, SORT, MODIFY_MEMBER_ID, ");
+			pushSsql.append("MODIFY_DATE, FIELD0002, FIELD0003, FIELD0004, FIELD0006, FIELD0007, FIELD0008, FIELD0009, ");
+			pushSsql.append("FIELD0010, FIELD0001, FIELD0005, FIELD0011, FIELD0012, FIELD0013) values ");
+			Map<String, Object> map = list.get(i);
+			String deptName = UtilString.isEmpty(map.get("organizationName")+"") ? map.get("companyName") + "":map.get("organizationName") + "";
+			pushSsql.append("('"+map.get("OAID")+"', '1', '', '', '0', '', '0', '0', '0', null, '0', '', '', '"+map.get("p_name"));
+			pushSsql.append("', '"+year+"', '', '"+deptName+"', '"+map.get("p_number")+"', to_timestamp('"+(Integer.valueOf(year) - 1)+"-07-01','yyyy-MM-dd'), to_timestamp('"+year+"-07-01','yyyy-MM-dd'), '', '");
+			pushSsql.append(map.get("useddata")+"', '"+map.get("lannualleave")+"', '"+map.get("remaindata")+"', '"+map.get("disableddata")+"', '"+map.get("nannualleave")+"')");
+			sqlList.add(pushSsql.toString());
+		}
+		try {
+			jdbctemplate.update(deleteSql.toString());
+			jdbctemplate.batchUpdate(sqlList.toArray(new String[list.size()]));
+		} catch (Exception e) {
+			log.error("OA年假推送失败："+e.getMessage());
+		}
 	}
 }

@@ -17,7 +17,7 @@ public interface DormitoryService {
 
 	public Map<String, Object> getUnStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String stay, String type);
 
-	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName, String dormType);
+	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName, String dormType, String checkingStart, String checkingEnd, String checkoutStart, String checkoutEnd);
 
 //	public Map<String, Object> cheakingDormitory(String dormitoryId, String pnumber,String stayTime);
 
@@ -35,5 +35,8 @@ public interface DormitoryService {
 	public Map<String, Object> importDormitoryCost(MultipartFile file, String type);
 
 	public Map<String, Object> operateDormitory(DormitoryEntity dorm,DormitoryStayEntiry dormStay);
+
+	public Map<String, Object> exportRecord(OutputStream ouputStream, String checkingStart, String checkingEnd,
+			String checkoutStart, String checkoutEnd);
 
 }

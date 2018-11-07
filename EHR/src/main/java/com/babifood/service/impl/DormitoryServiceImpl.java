@@ -199,7 +199,7 @@ public class DormitoryServiceImpl implements DormitoryService {
 	 */
 	@Override
 	@LogMethod(module = ModuleConstant.DORMITORY)
-	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName, String dormType) {
+	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName, String dormType, String checkingStart, String checkingEnd, String checkoutStart, String checkoutEnd) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer pageNum = page == null? 1 : page <= 0 ? 1 : page;
@@ -212,6 +212,10 @@ public class DormitoryServiceImpl implements DormitoryService {
 		params.put("pNumber", pNumber);
 		params.put("pName", pName);
 		params.put("dormType", dormType);
+		params.put("checkingStart", checkingStart);
+		params.put("checkingEnd", checkingEnd);
+		params.put("checkoutStart", checkoutStart);
+		params.put("checkoutEnd", checkoutEnd);
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -495,6 +499,57 @@ public class DormitoryServiceImpl implements DormitoryService {
 		row1Name.put("宿舍电费", "electricityFee");
 		row1Name.put("宿舍奖励", "dormBonus");
 		row1Name.put("宿舍扣款", "dormDeduction");
+		return row1Name;
+	}
+
+
+	@Override
+	public Map<String, Object> exportRecord(OutputStream ouputStream, String checkingStart, String checkingEnd,
+			String checkoutStart, String checkoutEnd) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, String> row1Name = getRecordRow1Name();
+		String[] sort = new String[] { "pNumber", "pName", "phone", "identity", "floor1", "roomNo", "bedNo", "dormitorType",
+				"type1", "stayTime", "outTime", "remark" };
+		List<Map<String, Object>> dormitoryCosts = null;
+		try {
+			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+			LogManager.putUserIdOfLogInfo(login.getUser_id());
+			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EXPORT);
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("checkingStart", checkingStart);
+			param.put("checkingEnd", checkingEnd);
+			param.put("checkoutStart", checkoutStart);
+			param.put("checkoutEnd", checkoutEnd);
+			param.put("start", 0);
+			param.put("pageSize", 10000);
+			dormitoryCosts = dormitoryDao.getStayDormitory(param);
+			LogManager.putContectOfLogInfo("导出住宿记录信息");
+			ExcelUtil.exportExcel("住宿记录", row1Name, dormitoryCosts, ouputStream, sort);
+			result.put("code", "1");
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", "导出excel失败");
+			log.error("导出宿舍费用信息失败", e);
+			LogManager.putContectOfLogInfo("导出宿舍费用信息失败,错误信息：" + e.getMessage());
+		}
+		return result;
+	}
+
+
+	private Map<String, String> getRecordRow1Name() {
+		Map<String, String> row1Name = new HashMap<String, String>();
+		row1Name.put("phone", "手机号码");
+		row1Name.put("identity", "身份证号");
+		row1Name.put("pNumber", "员工工号");
+		row1Name.put("pName", "员工姓名");
+		row1Name.put("floor1", "楼层");
+		row1Name.put("roomNo", "房间号");
+		row1Name.put("bedNo", "床位号");
+		row1Name.put("type1", "住宿类型");
+		row1Name.put("dormitorType", "宿舍类型");
+		row1Name.put("stayTime", "入住时间");
+		row1Name.put("outTime", "搬出时间");
+		row1Name.put("remark", "备注");
 		return row1Name;
 	}
 

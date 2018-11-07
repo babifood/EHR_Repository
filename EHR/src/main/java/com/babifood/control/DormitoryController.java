@@ -84,8 +84,31 @@ public class DormitoryController {
 	 */
 	@RequestMapping("stay")
 	@ResponseBody
-	public Map<String, Object> getStayDormitory(Integer page,Integer rows,String floor, String roomNo, String sex, String pNumber, String pName ,String dormType) {
-		return dormitoryService.getStayDormitory(page, rows, floor, roomNo, sex, pNumber, pName, dormType);
+	public Map<String, Object> getStayDormitory(Integer page, Integer rows, String floor, String roomNo, String sex,
+			String pNumber, String pName, String dormType, String checkingStart, String checkingEnd,
+			String checkoutStart, String checkoutEnd) {
+		return dormitoryService.getStayDormitory(page, rows, floor, roomNo, sex, pNumber, pName, dormType,
+				checkingStart, checkingEnd, checkoutStart, checkoutEnd);
+	}
+	
+	/**
+	 * 导出住宿记录
+	 * @param response
+	 * @param type
+	 * @param year
+	 * @param month
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("exportRecord")
+	@ResponseBody
+	public Map<String, Object> exportRecord(HttpServletResponse response, String checkingStart, String checkingEnd,
+			String checkoutStart, String checkoutEnd) throws IOException{
+		String filename = new String("员工住宿记录".getBytes("UTF-8"),"ISO8859-1") + UtilDateTime.getCurrentTime("yyyyMMddHHmmss");
+		response.setContentType("application/vnd.ms-excel");    
+        response.setHeader("Content-disposition", "attachment;filename=" + filename + ".xls");    
+        OutputStream ouputStream = response.getOutputStream();   
+		return dormitoryService.exportRecord(ouputStream, checkingStart, checkingEnd, checkoutStart, checkoutEnd);
 	}
 	
 //	/**
