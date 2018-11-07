@@ -2,7 +2,6 @@ package com.babifood.control;
 
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,5 +122,10 @@ public class HomePageControl {
 		List<Map<String, Object>> list = null;
 		list = homePageService.loadWorkInOutForms();
 		return list;
-	}		
+	}	
+	@ResponseBody
+	@RequestMapping("/updatePassword")
+	public String updatePassword(String psd_account,String psd_original,String psd_new,String psd_affirm){
+		return homePageService.updatePassword(psd_account,psd_original,psd_new,psd_affirm);
+	}
 }

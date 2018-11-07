@@ -14,6 +14,8 @@ $(function(){
 	loadComboboxJobLevelData();
 	//加载职位下拉框
 	loadComboboxPositionData();
+	//加载岗位项目列表
+	loadPostProjectList();
 });
 /**
  * -----------------------------------------职级列表function-------------------------------------------
@@ -57,11 +59,11 @@ function loadJobLevel(joblevel_name,position_name){
 				title:"职务级别描述",
 				width:200,
 			},
-			{
-				field:"position_name",
-				title:"包含职位",
-				width:200,
-			},
+//			{
+//				field:"position_name",
+//				title:"包含职等",
+//				width:200,
+//			},
 		]],
 		loadFilter:function(data){
 			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
@@ -291,24 +293,24 @@ function loadPosition(position_name,JobLevel_name,post_name){
 		columns:[[
 			{
 				field:"position_name",
-				title:"职务名称",
+				title:"职等名称",
 				width:100,
 			},
 			{
 				field:"joblevel_name",
-				title:"所属职务级别",
+				title:"职级名称",
 				width:100,
 			},
 			{
 				field:"joblevel_desc",
-				title:"所属职务级别描述",
+				title:"职级描述",
 				width:100,
 			},
-			{
-				field:"post_name",
-				title:"包含岗位名称",
-				width:100,
-			}
+//			{
+//				field:"post_name",
+//				title:"包含岗位名称",
+//				width:100,
+//			}
 		]],
 		loadFilter:function(data){
 			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
@@ -343,22 +345,28 @@ function loadPosition(position_name,JobLevel_name,post_name){
 }
 //加载职级下拉框
 function loadComboboxJobLevelData(){
-	$("#position_joblevel").combobox({
-		valueField:'id',
-		textField:'text',
-		url:prefix+"/loadComboboxJobLevelData",
-		editable:false,
-		onHidePanel:function(none){
+	var url=prefix+"/loadComboboxJobLevelData";
+	$('#position_joblevel').combogrid({    
+		idField: 'LEVELID',
+		textField: 'LEVELNAME',
+		url:url,
+		method: 'get',
+		columns: [[
+			{field:'LEVELNAME',title:'职级名称',width:60},
+			{field:'LEVELDESC',title:'职级描述',width:60},
+		]],
+		fitColumns: true,
+		onHidePanel:function(){
 			$("#position_joblevel_span").html("");
 		}
-	});
+	}); 
 }
 //添加职位
 function addPosition(){
 	$("#position_dog").dialog("open").dialog("center").dialog("setTitle","添加职位");
 	//$("#position_id").val("");
 	$("#position_name").val("");
-	$("#position_joblevel").combobox('setValue','')
+	$("#position_joblevel").combogrid('setValue','')
 	$('#position_name').focus();
 }
 //修改职位
@@ -369,8 +377,7 @@ function editPosition(){
 		$("#position_dog").dialog("open").dialog("center").dialog("setTitle","修改职位");
 		//$("#position_id").val(row.position_id);
 		$("#position_name").val(row.position_name);
-		$("#position_joblevel").combobox('setValue',row.joblevel_id);
-		$("#position_joblevel").combobox('setText',row.joblevel_desc);
+		$("#position_joblevel").combogrid('setValue',row.joblevel_id);
 		$('#position_id').focus();
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -420,13 +427,13 @@ function removePosition(){
 }
 //职位查询
 function searchPosition(){
-	loadPosition($("#search_position_name").val(),$("#search_joblevelforposition_name").val(),$("#search_postofposition_name").val())
+	loadPosition($("#search_position_name").val(),$("#search_joblevelforposition_name").val(),"")
 }
 //重置职位查询条件
 function resetPosition(){
 	$("#search_position_name").val("");
 	$("#search_joblevelforposition_name").val("");
-	$("#search_postofposition_name").val("");
+//	$("#search_postofposition_name").val("");
 }
 //职位文本校验
 function checkDataPosition(){
@@ -435,7 +442,7 @@ function checkDataPosition(){
 		$('#position_name').focus();
 		return false;
 	}
-	if($("#position_joblevel").combobox('getValue')==""){
+	if($("#position_joblevel").combogrid('getValue')==""){
 		$("#position_joblevel_span").html("所属职级不能为空");
 		$('#position_joblevel').focus();
 		return false;
@@ -448,7 +455,7 @@ function noBlurPosition(){
 	if(!$("#position_name").val()==""){
 		$("#position_name_span").html("");		
 	}
-	if(!$("#position_joblevel").val()==""){
+	if(!$("#position_joblevel").combogrid('getValue')==""){
 		$("#position_joblevel_span").html("");		
 	}
 }
@@ -461,7 +468,7 @@ function savePosition(){
 	if(dog_title=="添加职位"){
 		data={
 				Position_name:$("#position_name").val(),
-				joblevel_id:$("#position_joblevel").combobox('getValue'),
+				joblevel_id:$("#position_joblevel").combogrid('getValue'),
 		};
 		url = prefix+'/savePosition';
 		msg = "职位保存成功!";
@@ -469,7 +476,7 @@ function savePosition(){
 		data={
 				position_id:objRowsPosition.position_id,
 				Position_name:$("#position_name").val(),
-				joblevel_id:$("#position_joblevel").combobox('getValue'),
+				joblevel_id:$("#position_joblevel").combogrid('getValue'),
 			};
 		url = prefix+'/editPosition';
 		msg = "职位修改成功!";
@@ -551,7 +558,12 @@ function loadPost(post_name,position_name){
 			//},
 			{
 				field:"position_name",
-				title:"所属职位名称",
+				title:"职等名称",
+				width:100,
+			},
+			{
+				field:"joblevel_name",
+				title:"职级名称",
 				width:100,
 			}
 		]],
@@ -588,32 +600,41 @@ function loadPost(post_name,position_name){
 }
 //加载职位下拉框
 function loadComboboxPositionData(){
-	$("#post_position").combobox({
-		valueField:'id',
-		textField:'text',
-		url:prefix+"/loadComboboxPositionData",
-		editable:false,
-		onHidePanel:function(none){
+	var url=prefix+"/loadComboboxPositionData";
+	$('#post_position').combogrid({    
+		idField: 'POSITION_ID',
+		textField: 'POSITION_NAME',
+		url:url,
+		method: 'get',
+		columns: [[
+			{field:'POSITION_NAME',title:'职等名称',width:60},
+			{field:'JOBLEVEL_NAME',title:'职级名称',width:60},
+		]],
+		fitColumns: true,
+		onHidePanel:function(){
 			$("#post_position_span").html("");
 		}
-	});
+	}); 
 }
 //添加岗位
 function addPost(){
 	$("#post_dog").dialog("open").dialog("center").dialog("setTitle","添加岗位");
-	$("#post_name").val("");
-	$("#post_position").combobox('setValue','')
+	$("#post_project_id").val();
+	$("#post_name").combobox('setValue','');
+	$("#post_position").combogrid('setValue','');
 	$('#post_name').focus();
 }
 //修改岗位
 function editPost(){
 	var row = $("#post_tbo").datagrid("getSelected");
 	objRowsPost =row;
+	console.log(row);
 	if(row){
 		$("#post_dog").dialog("open").dialog("center").dialog("setTitle","修改岗位");
-		$("#post_name").val(row.post_name);
-		$("#post_position").combobox('setValue',row.position_id);
-		$("#post_position").combobox('setText',row.position_name);
+		$("#post_project_id").val(row.post_project_id);
+		$("#post_name").combobox('setValue',row.post_name);
+		$("#post_position").combogrid('setValue',row.position_id);
+//		$("#post_position").combobox('setText',row.position_name);
 		$('#post_name').focus();
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
@@ -669,12 +690,12 @@ function resetPost(){
 }
 //岗位文本校验
 function checkDataPost(){
-	if($("#post_name").val()==""){
+	if($("#post_name").combobox('getValue')==""){
 		$("#post_name_span").html("岗位名称不能为空");
 		$('#post_name').focus();
 		return false;
 	}
-	if($("#post_position").combobox('getValue')==""){
+	if($("#post_position").combogrid('getValue')==""){
 		$("#post_position_span").html("所属职位不能为空");
 		$('#post_position').focus();
 		return false;
@@ -684,10 +705,10 @@ function checkDataPost(){
 }
 //岗位文本框失去焦点事件
 function noBlurPost(){
-	if(!$("#post_name").val()==""){
+	if(!$("#post_name").combobox('getText')==""){
 		$("#post_name_span").html("");		
 	}
-	if(!$("#post_position").val()==""){
+	if(!$("#post_position").combogrid('getText')==""){
 		$("#post_position_span").html("");		
 	}
 }
@@ -699,16 +720,18 @@ function savePost(){
 	var msg;
 	if(dog_title=="添加岗位"){
 		data={
-				post_name:$("#post_name").val(),
-				position_id:$("#post_position").combobox('getValue'),
+				post_name:$("#post_name").combobox('getValue'),
+				position_id:$("#post_position").combogrid('getValue'),
+				post_project_id:$("#post_project_id").val(),
 		};
 		url = prefix+'/savePost';
 		msg = "岗位保存成功!";
 	}else if(dog_title=="修改岗位"){
 		data={
 				post_id:objRowsPost.post_id,
-				post_name:$("#post_name").val(),
-				position_id:$("#post_position").combobox('getValue'),
+				post_name:$("#post_name").combobox('getValue'),
+				position_id:$("#post_position").combogrid('getValue'),
+				post_project_id:$("#post_project_id").val(),
 			};
 		url = prefix+'/editPost';
 		msg = "岗位修改成功!";
@@ -742,4 +765,18 @@ function savePost(){
 		});
 	}
 	
+}
+//加载岗位项目列表
+function loadPostProjectList(){
+	$('#post_name').combobox({    
+	    url:prefix+'/loadPostProjectList',    
+	    valueField:'post_project_name',    
+	    textField:'post_project_name',
+	    onSelect: function(rec){
+	    	$("#post_project_id").val(rec.post_project_id);
+	    },
+	    onHidePanel:function(){
+			$("#post_name_span").html("");
+		}
+	});
 }

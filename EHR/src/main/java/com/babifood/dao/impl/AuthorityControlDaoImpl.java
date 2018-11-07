@@ -22,43 +22,35 @@ public class AuthorityControlDaoImpl implements AuthorityControlDao {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append("r.organization_code as companyCodes ");
-		sql.append("from ehr_user_role u ");
-		sql.append("inner join ehr_roles r ");
-		sql.append("on u.role_id =r.role_id ");
-		sql.append("where u.user_id = ? ");
+		sql.append("rr.resource_code,r.organization_code as resource ");
+		sql.append("from ehr_user_role ur ");
+		sql.append("inner join ehr_roles r on ur.role_id =r.role_id ");
+		sql.append("inner join ehr_role_resource rr ON r.role_id = rr.role_id ");
+		sql.append("where ur.user_id = ? ");
 		return jdbctemplate.queryForList(sql.toString(),login.getUser_id());
 	}
 	/**
 	 * 根据数据权限添加SQL过滤条件
 	 */
 	@Override
-	public StringBuffer jointDataAuthoritySql(String companyCode,StringBuffer sql) {
+	public StringBuffer jointDataAuthoritySql(String companyCode,String orgaCode,StringBuffer sql) {
 		// TODO Auto-generated method stub
 		StringBuffer thissql = sql;
-		List<Map<String, Object>> companyCodes = loadUserDataAuthority();
-		int size = companyCodes==null?0:companyCodes.size();
-		if(size==1){
-			//如果有集团权限，默认查所有，所有不加任何条件
-			if(!companyCodes.get(0).get("companyCodes").equals("00000001")){
-				thissql.append(" and "+companyCode+" = '"+companyCodes.get(0).get("companyCodes")+"'");
-			}
-		}else if(size>1){
+		List<Map<String, Object>> codes = loadUserDataAuthority();
+		if(codes.size()>0){
 			String companys = "";
-			for (Map<String, Object> map : companyCodes) {
-				if(map.get("companyCodes").equals("00000001")){
-					companys = map.get("companyCodes").toString();
-					break;
-				}
-				companys+="'"+map.get("companyCodes")+"',";
+			for (Map<String, Object> map : codes) {
+				companys+="'"+map.get("resource_code")+"',";
 			}
 			//如果有集团权限，默认查所有，所有不加任何条件
-			if(!companyCodes.get(0).get("companyCodes").equals("00000001")){
+			if(codes.get(0).get("resource").equals("0")){
 				thissql.append(" and "+companyCode+" in("+companys.substring(0, companys.length()-1)+")");
+			}else if(codes.get(0).get("resource").equals("1")){
+				thissql.append(" and "+orgaCode+" in("+companys.substring(0, companys.length()-1)+")");
 			}
+		}else{
+			thissql.append(" and 1=2");
 		}
 		return thissql;
 	}
-	
-
 }

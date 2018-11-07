@@ -27,7 +27,7 @@ public class WorkshopClockedDaoImpl extends AuthorityControlDaoImpl implements W
 		if(workNumber!=null&&!userName.equals("")){
 			sql.append(" and workname like '%"+userName+"%'");
 		}
-		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id", sql);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id","p.p_organization_id",sql);
 		return jdbctemplate.queryForList(returnSQL.toString());
 	}
 	@Override

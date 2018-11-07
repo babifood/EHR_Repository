@@ -18,5 +18,9 @@ public interface HomePageDao {
 
 	public List<Map<String, Object>> loadContractExpire(String beginDate, String endDate);
 
+	public List<Map<String, Object>> loadUserInfo(String psd_account, String gtePasswordMd5);
+
+	public int updatePassword(String psd_account, String gtePasswordMd5, String gtePasswordMd52);
+
 	
 }

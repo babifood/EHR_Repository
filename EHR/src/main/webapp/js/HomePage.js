@@ -66,6 +66,62 @@ function RightAccordion(){
 function logoout(){
 	location.href = prefix+'/logout';
 };
+//打开修改密码窗口
+function updatePassword(){
+	$("#updatePsd_dog").dialog("open").dialog("center").dialog("setTitle","修改密码");
+	$("#updatePsd_form").form('clear');
+};
+//更新密码
+function updateNewPsd(){
+	$.messager.progress();	// 显示进度条
+	$('#updatePsd_form').form('submit', {
+		url:prefix+"/updatePassword",
+		onSubmit: function(param){
+			var isValid = $(this).form('validate');
+			if (!isValid){
+				$.messager.progress('close');	// 如果表单是无效的则隐藏进度条
+			}
+			return isValid;	// 返回false终止表单提交
+		},
+		success: function(data){
+			console.log(data);
+			if(data=="succeed"){
+				$.messager.show({
+					title:'消息提醒',
+					msg:"密码修改成功!",
+					timeout:3000,
+					showType:'slide'
+				});
+				$('#updatePsd_dog').dialog('close');
+			}else if(data=="error"){
+				$.messager.alert("消息提示！","用户名或密码错误!","warning");
+			}else{
+				$.messager.alert("消息提示！","网络连接失败","warning");
+			}
+			$.messager.progress('close');	// 如果提交成功则隐藏进度条
+		}
+	});
+};
+$.extend($.fn.validatebox.defaults.rules, {    
+    equals: {    
+        validator: function(value,param){    
+            return value == $(param[0]).val();    
+        },    
+        message: '两次密码不一致!'   
+    },
+//    username: {// 验证用户名
+//        validator: function (value) {
+//            return /^[a-zA-Z][a-zA-Z0-9_]{5,15}$/i.test(value);
+//        },
+//        message: '用户名不合法（字母开头，允许6-16字节，允许字母数字下划线）'
+//    },
+    pasd: {// 验证用户名
+        validator: function (value) {
+            return /^[a-zA-Z][a-zA-Z0-9_]{5,15}$/i.test(value);
+        },
+        message: '密码格式不正确（字母开头，允许6-16字节，允许字母数字下划线）'
+    },
+}); 
 /*------------------------------------------员工生日提醒function--------------------------------------------------*/
 //员工生日提醒
 function loadWorkBirthdayRemind(){

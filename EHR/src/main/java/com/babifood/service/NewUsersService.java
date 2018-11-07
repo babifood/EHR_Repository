@@ -6,8 +6,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.babifood.entity.LoginEntity;
+import com.babifood.entity.ResourceTreeEntity;
 import com.babifood.entity.RoleAuthorityEntity;
 import com.babifood.entity.RoleMenuEntity;
+import com.babifood.entity.RoleResourceEntity;
 import com.babifood.entity.UserRoleEntity;
 
 @Service
@@ -42,5 +44,7 @@ public interface NewUsersService {
 
 	public List<Map<String, Object>> loadCombotreeDeptData(String id);
 	
-	public List<Map<String, Object>> loadComboboxOrgaData();
+	public List<ResourceTreeEntity> loadAllocationResourceTree(String resource,String role_id);
+
+	public Integer saveRoleResource(RoleResourceEntity[] roleResourceEntity);
 }

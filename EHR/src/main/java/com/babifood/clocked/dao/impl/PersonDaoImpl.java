@@ -32,7 +32,7 @@ public class PersonDaoImpl extends AuthorityControlDaoImpl implements PersonDao 
 		sql.append("p_post as post,p_checking_in as daKaType,p_in_date as inDate,p_turn_date as turnDate, ");
 		sql.append("p_out_date as outDate");
 		sql.append(" from ehr_person_basic_info where p_in_date<=? and p_oa_and_ehr = 'OA'");
-		StringBuffer returnSQL = super.jointDataAuthoritySql("p_company_id", sql);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
 		Object[] params=new Object[1];
 		params[0]=sdfWhere.format(UtilDateTime.getMonthEndSqlDate(year,month));
 		return jdbctemplate.queryForList(returnSQL.toString(),params);

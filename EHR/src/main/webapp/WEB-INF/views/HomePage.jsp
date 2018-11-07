@@ -19,7 +19,11 @@
 <body class="easyui-layout">
 	<div data-options="region:'north',split:false,noheader:true" style="height:60px;background-color:#ECF5FF;">
 		<div id="logo"><span>企业人力资源系统</span></div>
-		<div id="logoout">您好：${activeUser.show_name}/<a href="javascript:void(0)" onclick="logoout()">安全退出</a></div>
+		<div id="userinfo">您好：${activeUser.show_name}</div>
+		<div id="outOrUpdate">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true" onclick="logoout()">安全退出</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-lock" 	plain="true" onclick="updatePassword()">修改密码</a>
+		</div>
 	</div>   
     <div data-options="region:'south',split:false,noheader:true" style="height:32px;line-height: 30px;text-align: center;background-color:#ECF5FF;">
     	版权所有 &copy 2018 中饮食品科技股份有限公司
@@ -67,5 +71,32 @@
 		    </div>
 	    </div>
     </div>  
+    <div id="updatePsd_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#updatePsd_dog_buttons" style="width: 450px;">
+		<form id="updatePsd_form" method="post">
+			<div style="margin: 0;padding: 20px 50px;">
+				<div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">修改密码</span></div>
+				    <div style="margin-bottom: 10px;">
+				    	<label for="psd_account">用户账号：</label>
+				        <input type="text" name="psd_account" class="easyui-validatebox" data-options="required:true" validType="username" style="width: 180px;"/>
+				    </div>
+				    <div style="margin-bottom: 10px;">
+				    	<label for="psd_original">原始密码：</label>
+				        <input type="password"  name="psd_original" class="easyui-validatebox" data-options="required:true"  style="width: 180px;"/>
+				    </div>
+				    <div style="margin-bottom: 10px;">
+				    	<label for="psd_new">新改密码：</label>
+				        <input type="password" id="psd_new" name="psd_new" class="easyui-validatebox" data-options="required:true"  validType="pasd" style="width: 180px;"/>
+				    </div>
+				    <div style="margin-bottom: 10px;">
+				    	<label for="psd_affirm">确认密码：</label>
+				        <input type="password" name="psd_affirm"  class="easyui-validatebox"  required="required" validType="equals['#psd_new']"  style="width: 180px;"/>  
+				    </div>
+			 </div>
+		 </form>
+	</div>	
+	<div id="updatePsd_dog_buttons" style="text-align: center;">
+	     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="updateNewPsd()" style="width: 90px;">保存</a>
+	     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#updatePsd_dog').dialog('close')" style="width: 90px;">取消</a>
+	</div> 	      	  		
 </body>
 </html>

@@ -50,7 +50,7 @@
 								<td>
 									<input type="hidden" id="p_oa_and_ehr" name="p_oa_and_ehr"/>
 									<input type="hidden" id="p_id" name="p_id"/>
-									<input type="text" id="p_number" name="p_number" class="textbox"/>
+									<input type="text" id="p_number" name="p_number" disabled="disabled" class="textbox"/>
 								</td>
 								<td>工号创建:</td>
 								<td style="text-align: left;">
@@ -61,22 +61,7 @@
 							<tr class="text_tr">
 								<td>姓名:</td>
 								<td>
-									<input type="text" id="p_name" name="p_name" class="textbox"/>
-								</td>
-								<td>职称:</td>
-								<td>
-									<select id="p_title" class="easyui-combobox" editable="false" style="width:100%" required="required">
-										<option value="0">无职称</option>
-										<option value="1">初级职称</option>
-										<option value="2">中级职称</option>
-										<option value="3">高级职称</option>
-									</select> 
-								</td>
-							</tr>
-							<tr class="text_tr">
-								<td>员工身份证号码:</td>
-								<td>
-									<input type="text" id="p_id_num" name="p_id_num" class="textbox" onblur="checkIdNumFormat()"/>
+									<input type="text" id="p_name" name="p_name" disabled="disabled" class="textbox"/>
 								</td>
 								<td>性别:</td>
 								<td>
@@ -84,9 +69,9 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>年龄:</td>
+								<td>员工身份证号码:</td>
 								<td>
-									<input type="text" id="p_age" name="p_age" class="textbox" disabled="disabled"/>
+									<input type="text" id="p_id_num" name="p_id_num" class="textbox" onblur="checkIdNumFormat()"/>
 								</td>
 								<td>员工出生年月日:</td>
 								<td>
@@ -94,55 +79,97 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
+								<td>年龄:</td>
+								<td>
+									<input type="text" id="p_age" name="p_age" class="textbox" disabled="disabled"/>
+								</td>
 								<td>岗位名称:</td>
 								<td>
 									<input type="hidden" id="p_post_id" name="p_post_id"/>
 									<input type="text" id="p_post" name="p_post" style="width:100%"/>
 								</td>
+							</tr>
+							<tr class="text_tr">
+								<td>职等名称:</td>
+								<td>
+									<input type="text" id="p_title" name="p_title" class="textbox" disabled="disabled"/>
+								</td>
 								<td>职级名称:</td>
 								<td>
 									<input type="hidden" id="p_level_id" name="p_level_id"/>
-									<input type="text" id="p_level_name" name="p_level_name" style="width:100%"/>
+									<input type="text" id="p_level_name" name="p_level_name" class="textbox" disabled="disabled"/>
 								</td>
 							</tr>
-							<tr class="text_tr">
+							<!-- 用户显示信息开始 -->
+							<tr id ="insert_companyAndOrg" class="text_tr">
 								<td>所属公司:</td>
 								<td>
-									<input type="hidden" id="p_company_id" name="p_company_id"/>
-									<input type="text" id="p_company_name" name="p_company_name" editable="false" style="width:100%" required="required"/>
+									<input type="hidden" id="insert_p_company_id" name="p_company_id"/>
+									<input type="text" id="insert_p_company_name" name="p_company_name" disabled="disabled" class="textbox" required="required"/>
 								</td>
 								<td>中心机构:</td>
 								<td>
-									<input type="hidden" id="p_organization_id" name="p_organization_id"/>
-									<input type="text" id="p_organization" name="p_organization" editable="false" style="width:100%" required="required"/>
+									<input type="hidden" id="insert_p_organization_id" name="p_organization_id"/>
+									<input type="text" id="insert_p_organization" name="p_organization" disabled="disabled" class="textbox" required="required"/>
 								</td>
 							</tr>
-							<tr class="text_tr">
+							<tr id="insert_depaAndOffice" class="text_tr">
 								<td>所属部门:</td>
 								<td>
-									<input type="hidden" id="p_department_id" name="p_department_id"/>
-									<input type="text" id="p_department" name="p_department" editable="false" style="width:100%" required="required"/>
+									<input type="hidden" id="insert_p_department_id" name="p_department_id"/>
+									<input type="text" id="insert_p_department" name="p_department" disabled="disabled" class="textbox" required="required"/>
 								</td>
 								<td>所属科室:</td>
 								<td>
-									<input type="hidden" id="p_section_office_id" name="p_section_office_id"/>
-									<input type="text" id="p_section_office" name="p_section_office" style="width:100%"/>
+									<input type="hidden" id="insert_p_section_office_id" name="p_section_office_id"/>
+									<input type="text" id="insert_p_section_office" name="p_section_office" disabled="disabled" class="textbox"/>
 								</td>
 							</tr>
-							<tr class="text_tr">
+							<tr id="insert_group" class="text_tr">
 								<td>所属班组:</td>
 								<td>
-									<input type="hidden" id="p_group_id" name="p_group_id"/>
-									<input type="text" id="p_group" name="p_group" style="width:100%"/>
+									<input type="hidden" id="insert_p_group_id" name="p_group_id"/>
+									<input type="text" id="insert_p_group" name="p_group" disabled="disabled" class="textbox"/>
 								</td>
-								<td>员工状态:</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<!-- 用户新增信息结束 -->
+							<!-- 用户修改信息开始-->
+							<tr id ="update_companyAndOrg" class="text_tr">
+								<td>所属公司:</td>
 								<td>
-									<select id="p_state" class="easyui-combobox" editable="false" style="width:100%" required="required">
-										<option value="0">在职</option>
-										<option value="1">离职</option>
-									</select>
+									<input type="hidden" id="update_p_company_id" name="p_company_id"/>
+									<input type="text" id="update_p_company_name" name="p_company_name" style="width:100%"  required="required"/>
+								</td>
+								<td>中心机构:</td>
+								<td>
+									<input type="hidden" id="update_p_organization_id" name="p_organization_id"/>
+									<input type="text" id="update_p_organization" name="p_organization" style="width:100%"  required="required"/>
 								</td>
 							</tr>
+							<tr id="update_depaAndOffice" class="text_tr">
+								<td>所属部门:</td>
+								<td>
+									<input type="hidden" id="update_p_department_id" name="p_department_id"/>
+									<input type="text" id="update_p_department" name="p_department" style="width:100%" />
+								</td>
+								<td>所属科室:</td>
+								<td>
+									<input type="hidden" id="update_p_section_office_id" name="p_section_office_id"/>
+									<input type="text" id="update_p_section_office" name="p_section_office"  style="width:100%"/>
+								</td>
+							</tr>
+							<tr id="update_group" class="text_tr">
+								<td>所属班组:</td>
+								<td>
+									<input type="hidden" id="update_p_group_id" name="p_group_id"/>
+									<input type="text" id="update_p_group" name="p_group"  style="width:100%"/>
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<!-- 用户修改信息结束-->
 							<tr class="text_tr">
 								<td>员工性质:</td>
 								<td>
@@ -334,9 +361,12 @@
 								</td>
 							</tr>
 							<tr class="text_tr">
-								<td>常住联系地址:</td>
+								<td>员工状态:</td>
 								<td>
-									<input type="text" id="p_changzhu_add" name="p_changzhu_add" class="textbox"/>
+									<select id="p_state" class="easyui-combobox" editable="false" style="width:100%" required="required">
+										<option value="0">在职</option>
+										<option value="1">离职</option>
+									</select>
 								</td>
 								<td>紧急联系人名称:</td>
 								<td>
@@ -388,6 +418,7 @@
 										<option value="5">亲戚</option>
 										<option value="6">兄弟</option>
 										<option value="7">姐妹</option>
+										<option value="8">朋友</option>
 									</select> 
 								</td>
 							</tr>
@@ -396,8 +427,10 @@
 								<td>
 									<input type="text" id="p_company_age" name="p_company_age" class="textbox" disabled="disabled"/>
 								</td>
-								<td></td>
-								<td></td>
+								<td>常住联系地址:</td>
+								<td>
+									<input type="text" id="p_changzhu_add" name="p_changzhu_add" class="textbox"/>
+								</td>
 							</tr>
 							<tr class="text_tr">
 								<td colspan="4" style="text-align: center"><span style="color: red">注:以下资料是否已经提交给人事部</span></td>
@@ -532,12 +565,54 @@
 				</div>     
 			</div>
 			<div data-options="region:'south',border:false" style="text-align:center;padding:5px 0 0;">
-				<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="savePersonInFo()" style="width:80px">保存</a>
+				<a id="save_linkbutton" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="savePersonInFo()" style="width:80px">保存</a>
 				<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="javascript:$('#person_win').window('close')" style="width:80px">取消</a>
 			</div>
 		</div>
 	</div>
-	<div id="dlg">
+	<div id="check_workNum_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#check_workNum_dog_buttons" style="width: 400px;">
+		<form id="check_workNum_dog_form" action="javascript:void(0)" style="width: 100%">
+		<div style="margin: 0;padding: 20px 50px;">
+			<div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">校验和生成员工编号</span></div>
+			<div style="margin-bottom: 10px;">
+				 公司名称：<input type="text" id="check_dog_company" name="check_dog_company" required="true" editable="false" style="width: 180px;"/>
+				 	   <input type="hidden" id="check_dog_company_id" name="check_dog_company_id"/>
+			</div>
+			<div style="margin-bottom: 10px;">
+				中心机构：<input type="text" id="check_dog_organization" name="check_dog_organization" required="true" editable="false" style="width: 180px;"/>
+					   <input type="hidden" id="check_dog_organization_id" name="check_dog_organization_id"/>
+			</div>
+			<div style="margin-bottom: 10px;">
+				部门名称：<input type="text" id="check_dog_department" name="check_dog_department" editable="false" style="width: 180px;"/>
+					   <input type="hidden" id="check_dog_department_id" name="check_dog_department_id"/>
+			</div>
+			<div style="margin-bottom: 10px;">
+				科室名称：<input type="text" id="check_dog_section_office" name="check_dog_section_office" editable="false" style="width: 180px;"/>
+					   <input type="hidden" id="check_dog_section_office_id" name="check_dog_section_office_id"/>
+			</div>
+			<div style="margin-bottom: 10px;">
+				班组名称：<input type="text" id="check_dog_group" name="check_dog_group" editable="false" style="width: 180px;"/>
+					   <input type="hidden" id="check_dog_group_id" name="check_dog_group_id"/>
+			</div>
+			<div id="oa_div_woekName">
+				员工名称：<input type="text" id="check_dog_workName" name="check_dog_workName" required="true" style="width: 180px;"/>
+			</div>
+			<div id="ehr_div_woekName">
+				员工名称：<input type="text" id="check_dog_EHR_workName" name="check_dog_EHR_workName" class="textbox" required="true" style="width: 100px;"/>
+					   <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" plain="true" onclick="createWorkNum()">生成工号</a>
+			</div>
+			<div style="margin-bottom: 10px;">
+				员工编号：<input type="text" id="check_dog_workNum" name="check_dog_workNum"  class="textbox" disabled="disabled" style="width: 180px;"/>
+			</div>
+		</div>
+		</form>
+		<div id="check_workNum_dog_buttons" style="text-align: center;">
+	        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="checkOAworkNem()" style="width: 90px;">确定</a>
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#check_workNum_dog').dialog('close')" style="width: 90px;">取消</a>
+	    </div>
+	</div>	      	
+	<!--<div id="dlg">
+		 原来发号的的规则
 		<table id="dlg_grid"></table>
 		<div id="dlg_tbar">
 	        <div style="padding: 0 0 0 7px;color: #333;">
@@ -546,8 +621,8 @@
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="reloadOaWorkNum()">重置</a>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="loadOaWorkNumInFo()">查询</a>
 	        </div>
-		</div>
-	</div>
+		</div> 
+	</div>-->
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/PersonGrid.js"></script>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/validatebox.js"></script>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/utrls.js"></script>

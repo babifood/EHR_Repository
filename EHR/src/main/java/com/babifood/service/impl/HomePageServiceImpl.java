@@ -3,6 +3,7 @@ package com.babifood.service.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.babifood.constant.OperationConstant;
 import com.babifood.dao.HomePageDao;
 import com.babifood.entity.LoginEntity;
 import com.babifood.service.HomePageService;
+import com.babifood.utils.MD5;
 import com.babifood.utils.UtilDateTime;
 import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
@@ -163,6 +165,36 @@ public class HomePageServiceImpl implements HomePageService {
 			log.error("loadContractExpire:"+e.getMessage());
 		}
 		return list;
+	}
+	@Override
+	@LogMethod(module = ModuleConstant.USER)
+	public String updatePassword(String psd_account, String psd_original, String psd_new,
+			String psd_affirm) {
+		// TODO Auto-generated method stub
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EDIT);
+		String status = "";
+		List<Map<String, Object>> list = null;
+		int rows = 0;
+		try {
+			list = homePageDao.loadUserInfo(psd_account, MD5.gtePasswordMd5(psd_original));
+			if(list.size()>0){
+				rows = homePageDao.updatePassword(psd_account,MD5.gtePasswordMd5(psd_original),MD5.gtePasswordMd5(psd_new));
+				if(rows>0){
+					status ="succeed";
+					LogManager.putContectOfLogInfo("执行updatePassword方法,密码修改成功!");
+				}
+			}else{
+				status ="error";
+				LogManager.putContectOfLogInfo("执行updatePassword方法,用户名或密码错误!");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadContractExpire:"+e.getMessage());
+		}
+		return status;
 	}
 
 }

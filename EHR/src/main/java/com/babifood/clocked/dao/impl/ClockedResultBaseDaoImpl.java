@@ -73,7 +73,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		params[0]=year;
 		params[1]=month;
 		int[] rwso = null;
-		StringBuffer returnSQL = super.jointDataAuthoritySql("companycode", sql_delete);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("companycode","organcode",sql_delete);
 		jdbctemplate.update(returnSQL.toString(), params);
 		rwso = jdbctemplate.batchUpdate(strSql,paramsList);
 		return rwso;
@@ -125,7 +125,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("EventBeginTime,EventEndTime,Clockflag,inoutjob ");
 		sql.append("from ehr_checking_result ");
 		sql.append("where Year=? and Month = ? ");
-		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode", sql);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode","OrganCode",sql);
 		returnSQL.append("order by WorkNum,checkingDate");
 		Object[] params=new Object[2];
 		params[0]=year;
@@ -196,7 +196,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		if(userName!=null&&!userName.equals("")){
 			sql.append(" and UserName like '%"+userName+"%'");
 		}
-		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode", sql);
+		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode","OrganCode",sql);
 		returnSQL.append(" GROUP BY Year,Month,WorkNum,UserName,CompanyCode,Company,OrganCode,Organ,");
 		returnSQL.append("DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,PostCode,Post,CheckingType,PaiBanType");
 		returnSQL.append(" ORDER BY Year,Month desc");

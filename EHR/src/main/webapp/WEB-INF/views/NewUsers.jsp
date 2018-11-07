@@ -24,6 +24,9 @@
 	        		<shiro:hasPermission name="role:remove">
 	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeRole()">删除</a>
 	        		</shiro:hasPermission>
+	        		<shiro:hasPermission name="role:resource">
+	        		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="allocationResource()">分配资源</a>
+	        		</shiro:hasPermission>
 	        	</div>
 	        	<div style="padding: 0 0 0 7px;color: #333;">
 	        		角色名称：<input type="text" class="textbox" id="search_role_name" name="search_role_name" style="width: 110px;"/>
@@ -42,7 +45,7 @@
 			       			   <span id="role_desc_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	所属机构：<input type="text" id="role_organization" name="role_organization" style="width: 180px;"/>
+			        	角色属性：<input type="text" id="role_organization" name="role_organization" style="width: 180px;"/>
 			       			   <span id="role_organization_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
@@ -53,6 +56,14 @@
 	        <div id="role_dlg_buttons" style="text-align: center;">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveRole()" style="width: 90px;">保存</a>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#role_dog').dialog('close')" style="width: 90px;">取消</a>
+	        </div>
+	        <!-- 分配资源dialog -->
+	        <div id="role_resource_dog" class="easyui-dialog" closed="true" data-options="modal: true" buttons="#role_resource_dlg_buttons" style="width: 450px;height: 500px;">
+		      	<ul id="role_resource_ul"></ul>
+		    </div>	  		
+	        <div id="role_resource_dlg_buttons" style="text-align: center;">
+	        	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveRoleResource()" style="width: 90px;">保存</a>
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#role_resource_dog').dialog('close')" style="width: 90px;">取消</a>
 	        </div>
 	    </div>   
 	    <div title="添加用户">   
@@ -79,27 +90,27 @@
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">角色信息</span></div>
 			        <div style="margin-bottom: 10px;">
-			        	用户账号：<input type="text" id="user_name" name="user_name" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        	用户账号：<input type="text" id="user_name" name="user_name" class="textbox"   style="width: 180px;"/>
 			        		   <span id="user_name_span" style="color: red"></span>	
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户密码：<input type="password" id="password" name="password" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        	用户密码：<input type="password" id="password" name="password" class="textbox"    style="width: 180px;"/>
 			       			   <span id="password_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户名称：<input type="text" id="show_name" name="show_name" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        	用户名称：<input type="text" id="show_name" name="show_name" class="textbox"  style="width: 180px;"/>
 			       			   <span id="show_name_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户角色：<input id="user_role" name="user_role" style="width: 180px;"/>  
+			        	用户角色：<input id="user_role" name="user_role" required="true" style="width: 180px;"/>  
 			       			   <span id="user_role_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户手机：<input type="text" id="phone" name="phone" class="textbox" style="width: 180px;"/>
+			        	用户手机：<input type="text" id="phone" name="phone" class="textbox"  style="width: 180px;"/>
 			       			   <span id="phone_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户邮箱：<input type="text" id="e_mail" name="e_mail" class="textbox" style="width: 180px;"/>
+			        	用户邮箱：<input type="text" id="e_mail" name="e_mail" class="textbox"  style="width: 180px;"/>
 			       			   <span id="e_mail_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">

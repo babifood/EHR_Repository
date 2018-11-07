@@ -215,7 +215,7 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		}
 		Integer count = 0;
 		try {
-			sql = super.jointDataAuthoritySql("a.COMPANY_CODE", sql);
+			sql = super.jointDataAuthoritySql("a.COMPANY_CODE","a.ORGANIZATION_CODE",sql);
 			count = jdbcTemplate.queryForInt(sql.toString());
 		} catch (Exception e) {
 			log.error("查询薪资明细数量失败", e);
@@ -279,7 +279,7 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		if (!UtilString.isEmpty(params.get("groupName") + "")) {
 			sql.append(" AND e.DEPT_NAME like '%" + params.get("groupName") + "%'");
 		}
-		sql = super.jointDataAuthoritySql("a.COMPANY_CODE", sql);
+		sql = super.jointDataAuthoritySql("a.COMPANY_CODE","a.ORGANIZATION_CODE",sql);
 		if(!UtilString.isEmpty(params.get("start") + "") && !UtilString.isEmpty(params.get("start") + "")){
 			sql.append(" GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC");
 			sql.append(" limit ?, ?");

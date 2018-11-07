@@ -7,28 +7,31 @@ public class PostEntity {
 	private int post_id;
 	private String post_name;
 	private int position_id;
+	private int post_project_id;
 	
-	public PostEntity() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	public int getpost_id() {
+	public int getPost_id() {
 		return post_id;
 	}
-	public void setpost_id(int post_id) {
+	public void setPost_id(int post_id) {
 		this.post_id = post_id;
 	}
-	public String getpost_name() {
+	public String getPost_name() {
 		return post_name;
 	}
-	public void setpost_name(String post_name) {
+	public void setPost_name(String post_name) {
 		this.post_name = post_name;
 	}
-	public int getposition_id() {
+	public int getPosition_id() {
 		return position_id;
 	}
-	public void setposition_id(int position_id) {
+	public void setPosition_id(int position_id) {
 		this.position_id = position_id;
+	}
+	public int getPost_project_id() {
+		return post_project_id;
+	}
+	public void setPost_project_id(int post_project_id) {
+		this.post_project_id = post_project_id;
 	}
 	
 }

@@ -10,7 +10,11 @@ var certificate = 0;//证书
 var editIndex_c = undefined;
 var family = 0;//家庭
 var editIndex_f = undefined;
-//人员id
+//检验员工编号或创建员工编号
+var checkOrCreate = "";
+//新增和修改标识
+var insertOrUpdate = "";
+//人员编号
 var p_number="";
 //窗体状态
 var win_title;
@@ -19,214 +23,243 @@ $(function(){
 	//加载人员档案列表
 	loadPersonGrid(null,null);
 	loadAccordion();
-	loadLevelComboBox();
 	loadPostComboBox();
 	//初始加载公司
-	loadCompanyComboBox();
+	insertLoadCompanyComboBox();
+	updateLoadCompanyComboBox();
 	//初始加载机构
-	loadOrganizationCombotree(null);
+	insertLoadOrganizationCombotree(null);
+	updateLoadOrganizationCombotree(null);
 	//初始加载部门
-	loadDepartmentCombotree(null);
+	insertLoadDepartmentCombotree(null);
+	updateLoadDepartmentCombotree(null);
 	//初始加载科室
-	loadSectionCombotree(null);
+	insertLoadSectionCombotree(null);
+	updateLoadSectionCombotree(null);
 	//初始加载班组
-	loadGroupCombotree(null);
+	insertLoadGroupCombotree(null);
+	updateLoadGroupCombotree(null);
 	//计算公司司龄（按月计算）
 	inDateChange();
+	//初始化OA员工信息
+	loadOaWorkNumInFo();
 });
 //OA同步员工编号
 function oaSyncWorkNum(){
-	$('#dlg').dialog({
-        title: 'OA工号信息',
-        iconCls:"icon-save",
-        width: 480,
-        height: 300,
-        modal: true,
-        buttons: [ {
-            text: '关闭',
-            iconCls: 'icon-cancel',
-            handler: function () {
-                $('#dlg').dialog('close');
-            }
-        }]
-    });
-	loadOaWorkNumInFo();
+	checkOrCreate="OA";
+	document.getElementById("oa_div_woekName").style.display="inline";
+    document.getElementById("ehr_div_woekName").style.display="none";
+    document.getElementById("oa_div_woekName").style.cssText="margin-bottom:10px;";
+	$("#check_workNum_dog").dialog("open").dialog("center").dialog("setTitle","校验员工编号");
+	$("#check_workNum_dog_form").form('clear');
+	
 }
-//重置OA加载OA员工工号信息列表查询条件
-function reloadOaWorkNum(){
-	$("#dlg_workNum").val("");
-	$("#dlg_userName").val("");
-}
-//加载OA员工工号信息列表
+//加载OA员工编号信息
 function loadOaWorkNumInFo(){
-	var workNum = $('#dlg_workNum').val();
-	var userName = $('#dlg_userName').val();
-	var url;
-	if(workNum!=null&&userName!=null){
-		url=prefix+"/loadOaSyncWorkNum?workNum="+workNum+"&userName="+userName;
-	}else if(workNum!=null&&userName==null){
-		url=prefix+"/loadOaSyncWorkNum?workNum="+workNum+"&userName=";
-	}else if(workNum==null&&userName!=null){
-		url=prefix+"/loadOaSyncWorkNum?workNum=&userName="+userName;
-	}else{
-		url=prefix+"/loadOaSyncWorkNum?workNum=&userName=";
-	}
-	$("#dlg_grid").datagrid({
+	var url=prefix+"/loadOaSyncWorkNum?workNum=&userName=";
+	$('#check_dog_workName').combogrid({    
+		idField: 'NAME',
+		textField: 'NAME',
 		url:url,
-		fit:true,
-		fitColumns:true,
-		striped:true,
-		border:false,
-		pagination:true,
-		pageSize:10,
-		pageList:[10,20,30],
-		pageNumber:1,
-		toolbar:"#dlg_tbar",
-		singleSelect:true,
-		rownumbers:true,
-		columns:[[
-			{
-				field:"CODE",
-				title:"工号",
-				width:100,
-			},
-			{
-				field:"NAME",
-				title:"姓名",
-				width:100,
-			}
+		method: 'get',
+		columns: [[
+			{field:'CODE',title:'工号',width:60},
+			{field:'NAME',title:'姓名',width:60},
 		]],
-		loadFilter:function(data){
-			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
-	            data = {
-	                total: data.length,
-	                rows: data
-	            }
-	        }
-	        var dg = $(this);
-	        var opts = dg.datagrid('options');
-	        var pager = dg.datagrid('getPager');
-	        pager.pagination({
-	            onSelectPage:function(pageNum, pageSize){
-	                opts.pageNumber = pageNum;
-	                opts.pageSize = pageSize;
-	                pager.pagination('refresh',{
-	                    pageNumber:pageNum,
-	                    pageSize:pageSize
-	                });
-	                dg.datagrid('loadData',data);
-	            }
-	        });
-	        if (!data.originalRows){
-	            data.originalRows = (data.rows);
-	        }
-	        var start = (opts.pageNumber-1)*parseInt(opts.pageSize);
-	        var end = start + parseInt(opts.pageSize);
-	        data.rows = (data.originalRows.slice(start, end));
-	        return data;
-		},
-		onDblClickRow:function(rowIndex,rowData){
-			console.log(rowData);
-			$("#p_id").val(rowData.member_id);//OA员工编号id
-			$("#p_number").val(rowData.CODE);//编号
-			$("#p_name").val(rowData.NAME);//名称
-			$("#p_oa_and_ehr").val("OA");//区分那个系统创建的员工号段
-			$('#dlg').dialog('close');
-			checkForm(true);
+		fitColumns: true,
+		onHidePanel:function(){
+			var row = $('#check_dog_workName').combogrid('grid').datagrid('getSelected');	// 获取数据表格对象
+			$("#check_dog_workNum").val(row.CODE);//编号
 		}
-	});
+	}); 
+}
+//校验OA的员工编号是否合法，并赋值给主页面的对应字段
+function checkOAworkNem(){
+	var zygfMin = 0;
+	var zygfMax = 0;
+	if(checkOrCreate=="OA"){
+		zygfMin = 100001;
+		zygfMax = 119999;
+	}else if(checkOrCreate=="EHR"){
+		zygfMin = 200000;
+		zygfMax = 209999;
+	}
+	var company_id = $('#check_dog_company_id').val();
+	var organization_id = $('#check_dog_organization_id').val();
+	var woek_num = $('#check_dog_workNum').val();
+	if(company_id==null||company_id==""||organization_id==null||organization_id==""||woek_num==null||woek_num==""){
+		$.messager.alert('警告','请输入完整数据!','warning');
+		return;
+	}
+	var row = $('#check_dog_workName').combogrid('grid').datagrid('getSelected');
+	var checkWorkNum = false;
+	if(company_id=="000000010002"&&woek_num>=zygfMin&&woek_num<=zygfMax){//中饮股份
+		checkWorkNum = true;
+	}else if(company_id=="000000010011"&&woek_num>=120000&&woek_num<=129999){//中饮管理
+		checkWorkNum = true;
+	}else if(company_id=="000000010012"&&organization_id!="0000000100120003"&&woek_num>=130000&&woek_num<=134999){//良星餐饮运营中心
+		checkWorkNum = true;
+	}else if(company_id=="000000010012"&&organization_id=="0000000100120003"&&woek_num>=135000&&woek_num<=139999){//良星餐饮生产中心
+		checkWorkNum = true;
+	}else if(company_id=="000000010004"&&woek_num>=140001&&woek_num<=149999){//北京中饮
+		checkWorkNum = true;
+	}else if(company_id=="000000010003"&&woek_num>=150001&&woek_num<=154999){//杭州中巴
+		checkWorkNum = true;
+	}else if(company_id=="000000010001"&&woek_num>=155001&&woek_num<=159999){//南京巴比
+		checkWorkNum = true;
+	}
+	if(checkWorkNum){
+		//查询数据库看号段有没有被占用
+		$.post(prefix+"/getPersonByPnumber",{pNumber:woek_num},
+		    function(data,status){
+				if(data==null||data==""){
+					if(checkOrCreate=="OA"){
+						$("#p_id").val(row.member_id);//OA员工编号id
+						$("#p_number").val(row.CODE);//编号
+						$("#p_name").val(row.NAME);//名称
+						$("#p_oa_and_ehr").val("OA");//区分那个系统创建的员工号段
+					}else if(checkOrCreate=="EHR"){
+						$("#p_number").val(woek_num);//编号
+						$("#p_name").val($('#check_dog_EHR_workName').val());//名称
+						$("#p_oa_and_ehr").val("EHR");//区分那个系统创建的员工号段
+					}
+					$("#insert_p_company_id").val($('#check_dog_company_id').val());
+					$("#insert_p_company_name").val($("#check_dog_company").combobox("getText"));
+					$("#insert_p_organization_id").val($('#check_dog_organization_id').val());
+					$("#insert_p_organization").val($("#check_dog_organization").combotree("getText"));
+					$("#insert_p_department_id").val($('#check_dog_department_id').val());
+					$("#insert_p_department").val($("#check_dog_department").combotree("getText"));
+					$("#insert_p_section_office_id").val($('#check_dog_section_office_id').val());
+					$("#insert_p_section_office").val($("#check_dog_section_office").combotree("getText"));
+					$("#insert_p_group_id").val($('#check_dog_group_id').val());
+					$("#insert_p_group").val($("#check_dog_group").combotree("getText"));
+					$('#check_workNum_dog').dialog('close');
+				}else{
+					$.messager.alert('警告','当前员工编号已被占用,请更改!','warning');   
+				}
+		    });
+	}else{
+		$.messager.alert('警告','员工编号不符合规则!\n提示:\n中饮股份从100001~119999\n中饮管理从120000~129999\n良星餐饮(营运)从130000~134999\n良星餐饮(生产)从135000~139999\n北京中饮从140001~149999\n杭州中巴从150001~154999\n南京巴比从155001~159999','warning');   
+	}
 }
 //EHR自动发号
 function ehrAotuWorkNum(){
-	$.get(prefix+"/getEhrWorkNum",function(data,status){
-		$("#p_number").val(data);//编号
-		$("#p_name").val("");//名称
-		$("#p_oa_and_ehr").val("EHR");//区分那个系统创建的员工号段
-		checkForm(true);
-	});
+	checkOrCreate="EHR";
+	document.getElementById("oa_div_woekName").style.display="none";
+	document.getElementById("ehr_div_woekName").style.display="inline";
+	document.getElementById("ehr_div_woekName").style.cssText="margin-bottom:10px;";
+	$("#check_workNum_dog").dialog("open").dialog("center").dialog("setTitle","创建员工编号");
+	$("#check_workNum_dog_form").form('clear');
+	notNullvalidate("check_dog_EHR_workName",true);
+}
+//EHR根据公司机构信息自动生成员工编号
+function createWorkNum(){
+	var company_id = $('#check_dog_company_id').val();
+	var organization_id = $('#check_dog_organization_id').val();
+	var woek_Name = $('#check_dog_EHR_workName').val();
+	if(company_id==null||company_id==""||organization_id==null||organization_id==""||woek_Name==null||woek_Name==""){
+		$.messager.alert('警告','请输入完整数据!','warning');
+		return;
+	}
+	$.post(prefix+"/getEhrWorkNum",{companyId:company_id,organizationId:organization_id},
+		    function(data,status){
+				$('#check_dog_workNum').val(data);
+		    });
 }
 //加载岗位combobox
 function loadPostComboBox(){
-	$('#p_post').combobox({    
-	    url:prefix+'/loadComboboxPositionData',    
-	    valueField:'id',    
-	    textField:'text',
-	    onSelect: function(rec){
-	    	$("#p_post_id").val(rec.id);
-	    }   
-	});
+	var url=prefix+"/loadComboboxPostData";
+	$('#p_post').combogrid({    
+		idField: 'post_name',
+		textField: 'post_name',
+		url:url,
+		method: 'get',
+		columns: [[
+			{field:'post_name',title:'岗位名称',width:60},
+			{field:'position_name',title:'职等名称',width:60},
+			{field:'joblevel_name',title:'职级名称',width:60},
+		]],
+		fitColumns: true,
+		onHidePanel:function(){
+			var row = $('#p_post').combogrid('grid').datagrid('getSelected');	// 获取数据表格对象
+			$("#p_post_id").val(row.post_id);//编号
+			$("#p_title").val(row.position_name);
+			$("#p_level_id").val(row.joblevel_id);
+			$("#p_level_name").val(row.joblevel_name);
+		}
+	}); 
 }
-//加载公司combobox
-function loadCompanyComboBox(){
-	$('#p_company_name').combobox({    
+//新增加载公司combobox
+function insertLoadCompanyComboBox(){
+	$('#check_dog_company').combobox({    
 	    url:prefix+'/loadComboboxCompanyData',    
 	    valueField:'dept_code',    
 	    textField:'dept_name',
 	    onSelect: function(rec){
-	    	$("#p_company_id").val(rec.dept_code);
+	    	$("#check_dog_company_id").val(rec.dept_code);
 	    },
 	    onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	$("#p_organization_id").val("");//单位机构编号
-	    	$("#p_organization").combotree("setValue","");//单位机构
-	    	$("#p_department_id").val("");//所属部门编号
-	    	$("#p_department").combotree("setValue","");//所属部门
-	    	$("#p_section_office_id").val("");//科室编号
-	    	$("#p_section_office").combotree("setValue","");//科室
-	    	$("#p_group_id").val("");//班组编号
-	    	$("#p_group").combotree("setValue","");//班组
-	    	loadOrganizationCombotree(newValue);
+	    	$("#check_dog_organization_id").val("");//单位机构编号
+	    	$("#check_dog_organization").combotree("setValue","");//单位机构
+	    	$("#check_dog_department_id").val("");//所属部门编号
+	    	$("#check_dog_department").combotree("setValue","");//所属部门
+	    	$("#check_dog_section_office_id").val("");//科室编号
+	    	$("#check_dog_section_office").combotree("setValue","");//科室
+	    	$("#check_dog_group_id").val("");//班组编号
+	    	$("#check_dog_group").combotree("setValue","");//班组
+	    	insertLoadOrganizationCombotree(newValue);
 	    }
 	});
 }
-//加载单位机构下拉树
-function loadOrganizationCombotree(newValue){
+//新增加载单位机构下拉树
+function insertLoadOrganizationCombotree(newValue){
 	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
-	$('#p_organization').combotree({    
+	$('#check_dog_organization').combotree({    
 	    url: url,
 	    valueField:'id',    
 	    textField:'text',
 	    editable:false,
 	    onSelect: function(rec){
-	    	$("#p_organization_id").val(rec.id);
+	    	$("#check_dog_organization_id").val(rec.id);
 	    },
 	    onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	$("#p_department_id").val("");//所属部门编号
-	    	$("#p_department").combotree("setValue","");//所属部门
-	    	$("#p_section_office_id").val("");//科室编号
-	    	$("#p_section_office").combotree("setValue","");//科室
-	    	$("#p_group_id").val("");//班组编号
-	    	$("#p_group").combotree("setValue","");//班组
-	    	loadDepartmentCombotree(newValue);
+	    	$("#check_dog_department_id").val("");//所属部门编号
+	    	$("#check_dog_department").combotree("setValue","");//所属部门
+	    	$("#check_dog_section_office_id").val("");//科室编号
+	    	$("#check_dog_section_office").combotree("setValue","");//科室
+	    	$("#check_dog_group_id").val("");//班组编号
+	    	$("#check_dog_group").combotree("setValue","");//班组
+	    	insertLoadDepartmentCombotree(newValue);
 	    }
 	});  
 }
-//加载部门下拉树
-function loadDepartmentCombotree(newValue){
+//新增加载部门下拉树
+function insertLoadDepartmentCombotree(newValue){
 	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
-	$('#p_department').combotree({    
+	$('#check_dog_department').combotree({    
 	    url: url,
 	    valueField:'id',    
 	    textField:'text',
 	    editable:false,
 	    onSelect: function(rec){
-	    	$("#p_department_id").val(rec.id);
+	    	$("#check_dog_department_id").val(rec.id);
 	    },
 	    onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	$("#p_section_office_id").val("");//科室编号
-	    	$("#p_section_office").combotree("setValue","");//科室
-	    	$("#p_group_id").val("");//班组编号
-	    	$("#p_group").combotree("setValue","");//班组
-	    	loadSectionCombotree(newValue);
+	    	$("#check_dog_section_office_id").val("");//科室编号
+	    	$("#check_dog_section_office").combotree("setValue","");//科室
+	    	$("#check_dog_group_id").val("");//班组编号
+	    	$("#check_dog_group").combotree("setValue","");//班组
+	    	insertLoadSectionCombotree(newValue);
 	    }
 	});  
 }
-//加载科室下拉树
-function loadSectionCombotree(newValue){
+//新增加载科室下拉树
+function insertLoadSectionCombotree(newValue){
 	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
-	$('#p_section_office').combotree({    
+	$('#check_dog_section_office').combotree({    
 	    url: url,
 	    valueField:'id',    
 	    textField:'text',
@@ -234,19 +267,19 @@ function loadSectionCombotree(newValue){
 	    onSelect: function(rec){
 //	    	alert(rec);
 //	    	console.log(rec);
-	    	$("#p_section_office_id").val(rec.id);
+	    	$("#check_dog_section_office_id").val(rec.id);
 	    },onChange:function(newValue,oldValue){
 //	    	console.log(newValue);
-	    	$("#p_group_id").val("");//班组编号
-	    	$("#p_group").combotree("setValue","");//班组
-	    	loadGroupCombotree(newValue);
+	    	$("#check_dog_group_id").val("");//班组编号
+	    	$("#check_dog_group").combotree("setValue","");//班组
+	    	insertLoadGroupCombotree(newValue);
 	    }  
 	});  
 }
-//加载班组下拉树
-function loadGroupCombotree(newValue){
+//新增加载班组下拉树
+function insertLoadGroupCombotree(newValue){
 	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
-	$('#p_group').combotree({    
+	$('#check_dog_group').combotree({    
 	    url: url,
 	    valueField:'id',    
 	    textField:'text',
@@ -254,24 +287,126 @@ function loadGroupCombotree(newValue){
 	    onSelect: function(rec){
 //	    	alert(rec);
 //	    	console.log(rec);
-	    	$("#p_group_id").val(rec.id);
+	    	$("#check_dog_group_id").val(rec.id);
 	    }  
 	});  
 }
-//加载职级ComboGrid
-function loadLevelComboBox(){
-	$('#p_level_name').combobox({    
-		url:prefix+'/loadComboboxJobLevelData',    
+//修改时加载公司combobox
+function updateLoadCompanyComboBox(){
+	$('#update_p_company_name').combobox({    
+	    url:prefix+'/loadComboboxCompanyData',    
+	    valueField:'dept_code',    
+	    textField:'dept_name',
+	    onSelect: function(rec){
+	    	$("#update_p_company_id").val(rec.dept_code);
+	    },
+	    onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	$("#update_p_organization_id").val("");//单位机构编号
+	    	$("#update_p_organization").combotree("setValue","");//单位机构
+	    	$("#update_p_department_id").val("");//所属部门编号
+	    	$("#update_p_department").combotree("setValue","");//所属部门
+	    	$("#update_p_section_office_id").val("");//科室编号
+	    	$("#update_p_section_office").combotree("setValue","");//科室
+	    	$("#update_p_group_id").val("");//班组编号
+	    	$("#update_p_group").combotree("setValue","");//班组
+	    	updateLoadOrganizationCombotree(newValue);
+	    }
+	});
+}
+//修改加载单位机构下拉树
+function updateLoadOrganizationCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
+	$('#update_p_organization').combotree({    
+	    url: url,
 	    valueField:'id',    
 	    textField:'text',
+	    editable:false,
 	    onSelect: function(rec){
-	    	$("#p_level_id").val(rec.id);
-	    } 
-	}); 
+	    	$("#update_p_organization_id").val(rec.id);
+	    },
+	    onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	$("#update_p_department_id").val("");//所属部门编号
+	    	$("#update_p_department").combotree("setValue","");//所属部门
+	    	$("#update_p_section_office_id").val("");//科室编号
+	    	$("#update_p_section_office").combotree("setValue","");//科室
+	    	$("#update_p_group_id").val("");//班组编号
+	    	$("#update_p_group").combotree("setValue","");//班组
+	    	updateLoadDepartmentCombotree(newValue);
+	    }
+	});  
 }
+//修改加载部门下拉树
+function updateLoadDepartmentCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
+	$('#update_p_department').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+	    	$("#update_p_department_id").val(rec.id);
+	    },
+	    onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	$("#update_p_section_office_id").val("");//科室编号
+	    	$("#update_p_section_office").combotree("setValue","");//科室
+	    	$("#update_p_group_id").val("");//班组编号
+	    	$("#update_p_group").combotree("setValue","");//班组
+	    	updateLoadSectionCombotree(newValue);
+	    }
+	});  
+}
+//修改时加载科室下拉树
+function updateLoadSectionCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
+	$('#update_p_section_office').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+//	    	alert(rec);
+//	    	console.log(rec);
+	    	$("#update_p_section_office_id").val(rec.id);
+	    },onChange:function(newValue,oldValue){
+//	    	console.log(newValue);
+	    	$("#update_p_group_id").val("");//班组编号
+	    	$("#update_p_group").combotree("setValue","");//班组
+	    	updateLoadGroupCombotree(newValue);
+	    }  
+	});  
+}
+//修改加载班组下拉树
+function updateLoadGroupCombotree(newValue){
+	var url=prefix+"/loadCombotreeDeptData?id="+newValue;
+	$('#update_p_group').combotree({    
+	    url: url,
+	    valueField:'id',    
+	    textField:'text',
+	    editable:false,
+	    onSelect: function(rec){
+//	    	alert(rec);
+//	    	console.log(rec);
+	    	$("#update_p_group_id").val(rec.id);
+	    }  
+	});  
+}
+////加载职级ComboGrid
+//function loadLevelComboBox(){
+//	$('#p_level_name').combobox({    
+//		url:prefix+'/loadComboboxJobLevelData',    
+//	    valueField:'id',    
+//	    textField:'text',
+//	    onSelect: function(rec){
+//	    	$("#p_level_id").val(rec.id);
+//	    } 
+//	}); 
+//}
 //表单验证
 function checkForm(tRf){
-	var box =["p_number","p_name","p_title"]
+	var box =["p_title"]
 	for(var i=0;i<box.length;i++){
 		notNullvalidate(box[i],tRf);
 	}
@@ -302,8 +437,8 @@ function checkIdNumFormat(){
 //表单提交验证
 function checkFormData(){
 	var check = true;
-	var box =["p_number","p_name","p_title","p_id_num"]
-	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age","p_company_name","p_organization","p_department","p_hukou_xingzhi"]
+	var box =["p_title","p_id_num"]
+	var uasyUIbox =["p_sex","p_age","p_state","p_property","p_post_property","p_in_date","p_turn_date","p_checking_in","p_marriage","p_politics","p_company_age","p_hukou_xingzhi"]
 	for(var i=0;i<box.length;i++){
 		if(!$('#'+box[i]).validatebox('isValid')){
 			check = false;
@@ -421,6 +556,10 @@ function loadPersonGrid(search_p_number,search_p_name){
 				title:"职级名称",
 			},
 			{
+				field:"p_birthday",
+				title:"员工出生年月日",
+			},
+			{
 				field:"p_in_date",
 				title:"入职日期",
 			},
@@ -431,6 +570,32 @@ function loadPersonGrid(search_p_number,search_p_name){
 			{
 				field:"p_phone",
 				title:"联系电话",
+			},
+			{
+				field:"p_checking_in",
+				title:"考勤方式",
+				formatter:function(value){
+					if(value=="0"){
+						return "行政考勤";
+					}else if(value=="1"){
+						return "移动考勤";
+					}else if(value=="2"){
+						return "不考勤";
+					}
+				},
+			},
+			{
+				field:"p_use_work_form",
+				title:"用工形式",
+				formatter:function(value){
+					if(value=="0"){
+						return "劳动合同制";
+					}else if(value=="1"){
+						return "劳务派遣制";
+					}else if(value=="2"){
+						return "其他";
+					}
+				},
 			},
 			{
 				field:"p_nationality",
@@ -544,6 +709,9 @@ function loadPersonGrid(search_p_number,search_p_name){
 				},
 			}
 		]],
+		onDblClickRow:function(rowIndex, rowData){
+			lookPersonInFo(rowData);
+		},
 		loadFilter:function(data){
 			if (typeof data.length == 'number' && typeof data.splice == 'function'){    // 判断数据是否是数组
 	            data = {
@@ -575,9 +743,48 @@ function loadPersonGrid(search_p_number,search_p_name){
 		}
 	});
 }
-
+//新增和修改是显示和隐藏公司机构部门科室班组信息
+function onneOrInline(){
+	if(insertOrUpdate=="insert"){
+		document.getElementById("insert_companyAndOrg").style.display="inline";
+		document.getElementById("insert_depaAndOffice").style.display="inline";
+		document.getElementById("insert_group").style.display="inline";
+		document.getElementById("update_companyAndOrg").style.display="none";//隐藏
+		document.getElementById("update_depaAndOffice").style.display="none";
+		document.getElementById("update_group").style.display="none";
+		//设置显示控件的样式
+		document.getElementById("insert_companyAndOrg").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+		document.getElementById("insert_depaAndOffice").style.cssText="background: #F5FAFA;text-align: right;font-weight: 900;";
+		document.getElementById("insert_group").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+	}else if(insertOrUpdate=="update"){
+		document.getElementById("insert_companyAndOrg").style.display="none";
+		document.getElementById("insert_depaAndOffice").style.display="none";
+		document.getElementById("insert_group").style.display="none";
+		document.getElementById("update_companyAndOrg").style.display="inline";//显示
+		document.getElementById("update_depaAndOffice").style.display="inline";
+		document.getElementById("update_group").style.display="inline";
+		//设置显示控件的样式
+		document.getElementById("update_companyAndOrg").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+		document.getElementById("update_depaAndOffice").style.cssText="background: #F5FAFA;text-align: right;font-weight: 900;";
+		document.getElementById("update_group").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+	}else if(insertOrUpdate=="look"){
+		document.getElementById("insert_companyAndOrg").style.display="none";
+		document.getElementById("insert_depaAndOffice").style.display="none";
+		document.getElementById("insert_group").style.display="none";
+		document.getElementById("update_companyAndOrg").style.display="inline";//显示
+		document.getElementById("update_depaAndOffice").style.display="inline";
+		document.getElementById("update_group").style.display="inline";
+		//设置显示控件的样式
+		document.getElementById("update_companyAndOrg").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+		document.getElementById("update_depaAndOffice").style.cssText="background: #F5FAFA;text-align: right;font-weight: 900;";
+		document.getElementById("update_group").style.cssText="background: #fff;text-align: right;font-weight: 900;";
+	}
+	
+}
 //添加人员信息
 function addPersonInFo(){
+	insertOrUpdate="insert";
+	onneOrInline();	
 	$("#person_win").window("open").window("setTitle","添加人员");
 	$("#person_form").form('clear');
 	var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
@@ -601,10 +808,12 @@ function addPersonInFo(){
 	}
 	$("#oaSync").linkbutton('enable');
 	$("#ehrAot").linkbutton('enable');
+	$("#save_linkbutton").linkbutton('enable');
 	checkForm(true);
 }
 //修改人员信息
 function editPersonInFo(){
+	insertOrUpdate="update";
 	var row = $("#person_grid").datagrid("getSelected");
 	if(row){
 		checkForm(false);
@@ -612,6 +821,7 @@ function editPersonInFo(){
 		p_number=row.p_number;
 		$.post(prefix+"/getPersonFoPid",{p_number:row.p_number},function(data){
 			if(data){
+				onneOrInline();	
 				$("#person_win").window("open").window("setTitle","修改人员");
 				editFromSetValues(data);
 				var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
@@ -639,9 +849,46 @@ function editPersonInFo(){
 //		$("#p_name").attr("disabled","disabled");
 		$("#oaSync").linkbutton('disable');
 		$("#ehrAot").linkbutton('disable');
+		$("#save_linkbutton").linkbutton('enable');
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}
+}
+//查看员工信息
+function lookPersonInFo(rowData){
+	insertOrUpdate="look";
+	checkForm(false);
+	$("#person_form").form('clear');
+	p_number=rowData.p_number;
+	$.post(prefix+"/getPersonFoPid",{p_number:rowData.p_number},function(data){
+		if(data){
+			onneOrInline();	
+			$("#person_win").window("open").window("setTitle","查看人员");
+			editFromSetValues(data);
+			var index = $("#person_accordion").accordion('getPanelIndex',$("#person_accordion").accordion('getSelected'));
+			if(index==0){
+				//教育背景
+				loadEducation();
+			}else if(index==1){
+				//培训经历
+				loadCultivateFront();
+				loadCultivateLater();
+			}else if(index==2){
+				//工作经历
+				loadWorkFront();
+				loadWorkLater();
+			}else if(index==3){
+				//获得证书
+				loadCertificate();
+			}else if(index==4){
+				//家庭背景
+				loadFamily();
+			}
+		}			
+	  });
+	$("#oaSync").linkbutton('disable');
+	$("#ehrAot").linkbutton('disable');
+	$("#save_linkbutton").linkbutton('disable');
 }
 //编辑时给页面内容赋值
 function editFromSetValues(data){
@@ -652,21 +899,24 @@ function editFromSetValues(data){
 	$("#p_birthday").val(data.p_birthday);//出生年月日
 	$("#p_sex").val(data.p_sex);//性别
 	$("#p_age").val(data.p_age);//年龄
-	$("#p_title").combobox('setValue',data.p_title);//职称
+	$("#p_title").val(data.p_title);//职称
 	$("#p_post_id").val(data.p_post_id);//岗位编号
-	$("#p_post").combobox('setValue',data.p_post);//岗位名称
+	$("#p_post").combogrid('setValue',data.p_post);//岗位名称
 	$("#p_level_id").val(data.p_level_id);//职级编号
-	$("#p_level_name").combobox('setValue',data.p_level_name);//职级名称
-	$("#p_company_id").val(data.p_company_id);//公司编码
-	$("#p_company_name").combobox('setValue',data.p_company_name);//公司名称
-	$("#p_organization_id").val(data.p_organization_id);//单位机构编号
-	$("#p_organization").combotree("setValue",data.p_organization);//单位机构
-	$("#p_department_id").val(data.p_department_id);//所属部门编号
-	$("#p_department").combotree("setValue",data.p_department);//所属部门
-	$("#p_section_office_id").val(data.p_section_office_id);//科室编号
-	$("#p_section_office").combotree("setValue",data.p_section_office);//科室
-	$("#p_group_id").val(data.p_group_id);//班组编号
-	$("#p_group").combotree("setValue",data.p_group);//班组
+	$("#p_level_name").val(data.p_level_name);//职级名称
+	
+	$("#update_p_company_id").val(data.p_company_id);//公司编码
+	console.log("company"+$("#update_p_company_id").val());
+	$("#update_p_company_name").combobox('setValue',data.p_company_name);//公司名称
+	$("#update_p_organization_id").val(data.p_organization_id);//单位机构编号
+	$("#update_p_organization").combotree("setValue",data.p_organization);//单位机构
+	$("#update_p_department_id").val(data.p_department_id);//所属部门编号
+	$("#update_p_department").combotree("setValue",data.p_department);//所属部门
+	$("#update_p_section_office_id").val(data.p_section_office_id);//科室编号
+	$("#update_p_section_office").combotree("setValue",data.p_section_office);//科室
+	$("#update_p_group_id").val(data.p_group_id);//班组编号
+	$("#update_p_group").combotree("setValue",data.p_group);//班组
+	
 	$("#p_state").combobox('setValue',data.p_state);//员工状态
 	$("#p_property").combobox('setValue',data.p_property);//员工性质
 	$("#p_post_property").combobox('setValue',data.p_post_property);//岗位性质
@@ -945,6 +1195,30 @@ function getFamilyGridToArr(){
 }
 //赋值
 function setData(){
+	var p_company_id ="",p_company_name="",p_department_id="",p_department="",p_organization_id="",p_organization="",p_section_office_id="",p_section_office="",p_group_id="",p_group="";
+	if(insertOrUpdate == "insert"){
+		p_company_id=$("#insert_p_company_id").val();//公司编码
+		p_company_name=$("#insert_p_company_name").val();//公司名称
+		p_department_id=$("#insert_p_department_id").val();//所属部门编号
+		p_department=$("#insert_p_department").val();//所属部门
+		p_organization_id=$("#insert_p_organization_id").val();//单位机构编码
+		p_organization=$("#insert_p_organization").val();//单位机构
+		p_section_office_id=$("#insert_p_section_office_id").val();//科室
+		p_section_office=$("#insert_p_section_office").val();//科室
+		p_group_id=$("#insert_p_group_id").val();//班组
+		p_group=$("#insert_p_group_id").val();//班组
+	}else if(insertOrUpdate == "update"){
+		p_company_id=$("#update_p_company_id").val();//公司编码
+		p_company_name=$("#update_p_company_name").combobox("getText");//公司名称
+		p_department_id=$("#update_p_department_id").val();//所属部门编号
+		p_department=$("#update_p_department").combotree("getText");//所属部门
+		p_organization_id=$("#update_p_organization_id").val();//单位机构编码
+		p_organization=$("#update_p_organization").combotree("getText");//单位机构
+		p_section_office_id=$("#update_p_section_office_id").val();//科室
+		p_section_office=$("#update_p_section_office").combotree("getText");//科室
+		p_group_id=$("#update_p_group_id").val();//班组
+		p_group=$("#update_p_group").combotree("getText");//班组
+	}
 	var data={
 			p_id:$("#p_id").val(),//人员ID
 			p_number:$("#p_number").val(),//编号
@@ -956,19 +1230,21 @@ function setData(){
 			p_age:$("#p_age").val(),//年龄
 			p_title:$("#p_title").val(),//职称
 			p_post_id:$("#p_post_id").val(),//岗位编号
-			p_post:$('#p_post').combobox('getText'),//岗位名称
+			p_post:$('#p_post').combogrid('getText'),//岗位名称
 			p_level_id:$("#p_level_id").val(),//职级编号
-			p_level_name:$("#p_level_name").combobox('getText'),//职级名称
-			p_company_id:$("#p_company_id").val(),//公司编码
-			p_company_name:$("#p_company_name").combobox("getText"),//公司名称
-			p_department_id:$("#p_department_id").val(),//所属部门编号
-			p_department:$("#p_department").combotree("getText"),//所属部门
-			p_organization_id:$("#p_organization_id").val(),//单位机构编码
-			p_organization:$("#p_organization").combotree("getText"),//单位机构
-			p_section_office_id:$("#p_section_office_id").val(),//科室
-			p_section_office:$("#p_section_office").combotree("getText"),//科室
-			p_group_id:$("#p_group_id").val(),//班组
-			p_group:$("#p_group").combotree("getText"),//班组
+			p_level_name:$("#p_level_name").val(),//职级名称
+			
+			p_company_id:p_company_id,//公司编码
+			p_company_name:p_company_name,//公司名称
+			p_department_id:p_department_id,//所属部门编号
+			p_department:p_department,//所属部门
+			p_organization_id:p_organization_id,//单位机构编码
+			p_organization:p_organization,//单位机构
+			p_section_office_id:p_section_office_id,//科室
+			p_section_office:p_section_office,//科室
+			p_group_id:p_group_id,//班组
+			p_group:p_group,//班组
+			
 			p_state:$("#p_state").val(),//员工状态
 			p_property:$("#p_property").val(),//员工性质
 			p_post_property:$("#p_post_property").val(),//岗位性质
