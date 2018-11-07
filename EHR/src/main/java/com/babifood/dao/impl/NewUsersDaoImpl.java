@@ -117,7 +117,7 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select role_id,role_name,organization_code,organization_name");
-		sql.append(" from ehr_roles where state = '1'");
+		sql.append(" from ehr_roles where state = '1' and resource = '0'");
 		return jdbctemplate.queryForList(sql.toString());
 	}
 	@Override

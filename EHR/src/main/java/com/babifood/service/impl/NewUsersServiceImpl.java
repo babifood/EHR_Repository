@@ -62,8 +62,8 @@ public class NewUsersServiceImpl implements NewUsersService {
 			String role_name="";
 			for(int j=0;j<roleList.size();j++){
 				if(userList.get(i).get("user_id").toString().equals(roleList.get(j).get("user_id").toString())){
-					role_id+=roleList.get(j).get("role_id")+"/";
-					role_name+=roleList.get(j).get("role_name")+"/";
+					role_id+=roleList.get(j).get("role_id");
+					role_name+=roleList.get(j).get("role_name");
 				}
 			}
 			dataMap.put("role_id",role_id);

@@ -48,6 +48,8 @@ public class AuthorityControlDaoImpl implements AuthorityControlDao {
 			}else if(codes.get(0).get("resource").equals("1")){
 				thissql.append(" and "+orgaCode+" in("+companys.substring(0, companys.length()-1)+")");
 			}
+		}else{
+			thissql.append(" and 1=2");
 		}
 		return thissql;
 	}

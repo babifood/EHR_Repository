@@ -477,21 +477,11 @@ function loadUsers(account,username){
 }
 //加载角色下拉框
 function loadCombobox(){
-//	$("#user_role").combobox({
-//		valueField:'id',
-//		textField:'text',
-//		url:prefix+"/loadComboboxData",
-//		editable:false,
-//		onHidePanel:function(none){
-//			$("#user_role_span").html("");
-//		},
-//		separator:'/',
-//		multiple:true
-//	});
 	$('#user_role').combogrid({    
 	    panelWidth:230,    
 	    idField:'role_id',    
-	    textField:'role_name',    
+	    textField:'role_name',
+	    editable:false,
 	    url:prefix+"/loadComboboxData",    
 	    columns:[[    
 	        {
@@ -501,17 +491,16 @@ function loadCombobox(){
 	        },    
 	        {
 	        	field:'organization_name',
-	        	title:'机构名称',
+	        	title:'角色属性',
 	        	width:100
 	        }   
-	    ]],
-	    separator:'/',
-	    multiple:true
+	    ]]
 	});  
 
 }
 //添加用户
 function addUser(){
+	ValiDateBox();
 	$("#user_dog").dialog("open").dialog("center").dialog("setTitle","添加用户");
 	$("#user_name").val("");
 	$("#password").val("");
@@ -525,6 +514,7 @@ function addUser(){
 }
 //修改用户
 function editUser(){
+	ValiDateBox();
 	var row = $("#user_tbo").datagrid("getSelected");
 	objRowsUser =row;
 	if(row){
@@ -592,61 +582,95 @@ function searchUser(){
 }
 //文本校验
 function checkData(){
-	if($("#user_name").val()==""){
-		$("#user_name_span").html("账号不能为空");
+	if(!$("#user_name").validatebox('isValid')){
 		$('#user_name').focus();
 		return false;
 	}
-	if($("#password").val()==""){
-		$("#password_span").html("密码不能为空");
+	if(!$("#password").validatebox('isValid')){
 		$('#password').focus();
 		return false;
 	}
-	if($("#show_name").val()==""){
-		$("#show_name_span").html("名称不能为空");
+	if(!$("#show_name").validatebox('isValid')){
 		$('#show_name').focus();
 		return false;
 	}
 	if($("#user_role").combogrid('getValues')==""){
-		$("#user_role_span").html("角色不能为空");
 		$('#user_role').focus();
 		return false;
 	}
-//	alert($("#user_role").val());
-//	alert($("#user_role").combobox('getText'));
-//	console.log($("#user_role").combobox('getValues'));
+	if(!$("#phone").validatebox('isValid')){
+		$('#phone').focus();
+		return false;
+	}
+	if(!$("#e_mail").validatebox('isValid')){
+		$('#e_mail').focus();
+		return false;
+	}
 	return true;
-	
 }
-//文本框失去焦点事件
+//文本框添加验证
+function ValiDateBox(){
+	$('#user_name').validatebox({
+		required : true,
+		validType :'username',
+		missingMessage :'用户账号不能为空!',
+	});
+	$('#password').validatebox({
+		required : true,
+		validType :'pasd',
+		missingMessage :'用户密码不能为空!',
+	});
+	$('#show_name').validatebox({
+		required : true,
+		missingMessage :'用户名称不能为空!',
+	});
+	$('#phone').validatebox({
+		validType :'mobile',
+	});
+	$('#e_mail').validatebox({
+		validType :'e_mail',
+	});
+}
+//用户账号失去焦点后去验证账号是否被占用
 function noBlurUser(){
-	if(!$("#user_name").val()==""){
-		$("#user_name_span").html("");
-	}
-	if(!$("#password").val()==""){
-		$("#password_span").html("");		
-	}
-	if(!$("#show_name").val()==""){
-		$("#show_name_span").html("");		
+	if($("#user_name").validatebox('isValid')){
+		//查看账号是否被占用
 	}
 }
+$.extend($.fn.validatebox.defaults.rules, {    
+    username: {// 验证用户名
+        validator: function (value) {
+            return /[a-zA-Z0-9_]{6,16}$/i.test(value);
+        },
+        message: '用户账号不合法（允许6-16字节，允许字母数字下划线）'
+    },
+    pasd: {// 验证用户名
+        validator: function (value) {
+            return /[a-zA-Z0-9_]{6,16}$/i.test(value);
+        },
+        message: '密码格式不正确（允许6-16字节，允许字母数字下划线）'
+    },
+    mobile: {// 验证手机号码
+        validator: function (value) {
+            return /^(13|15|18)\d{9}$/i.test(value);
+        },
+        message: '手机号码格式不正确'
+    },
+    e_mail: {// 验证手机号码
+        validator: function (value) {
+            return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i.test(value);
+        },
+        message: 'Email格式不正确'
+    },
+    
+    
+}); 
 //获取Combobox的值
 function getComboboxValues(){
 	var boxValArr = [];
-	var boxVal = $('#user_role').combogrid('getValues');
+	var boxVal = $('#user_role').combogrid('getValue');
 	var boxtext = $('#user_role').combogrid('getText');
-	var valarr = boxVal.join(',').split(',');
-	var textarr = boxtext.split('/');
-	for(var i = 0;i<valarr.length;i++){
-		if(valarr[i]==""){
-			continue;
-		}else{
-			boxValArr.push(
-				{role_id:valarr[i],role_name:textarr[i]}
-			);
-		}
-	}
-	console.log(boxValArr);
+	boxValArr.push({role_id:boxVal,role_name:boxtext});
 	return boxValArr;
 }
 //保存角色

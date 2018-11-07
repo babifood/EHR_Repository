@@ -90,27 +90,27 @@
 		      	<div style="margin: 0;padding: 20px 50px;">
 			        <div style="margin-bottom: 20px;font-size: 18px;border-bottom: 1px solid #ccc;"><span style="color: blue;">角色信息</span></div>
 			        <div style="margin-bottom: 10px;">
-			        	用户账号：<input type="text" id="user_name" name="user_name" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        	用户账号：<input type="text" id="user_name" name="user_name" class="textbox"   style="width: 180px;"/>
 			        		   <span id="user_name_span" style="color: red"></span>	
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户密码：<input type="password" id="password" name="password" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        	用户密码：<input type="password" id="password" name="password" class="textbox"    style="width: 180px;"/>
 			       			   <span id="password_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户名称：<input type="text" id="show_name" name="show_name" class="textbox"  onblur="noBlurUser()" style="width: 180px;"/>
+			        	用户名称：<input type="text" id="show_name" name="show_name" class="textbox"  style="width: 180px;"/>
 			       			   <span id="show_name_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户角色：<input id="user_role" name="user_role" style="width: 180px;"/>  
+			        	用户角色：<input id="user_role" name="user_role" required="true" style="width: 180px;"/>  
 			       			   <span id="user_role_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户手机：<input type="text" id="phone" name="phone" class="textbox" style="width: 180px;"/>
+			        	用户手机：<input type="text" id="phone" name="phone" class="textbox"  style="width: 180px;"/>
 			       			   <span id="phone_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户邮箱：<input type="text" id="e_mail" name="e_mail" class="textbox" style="width: 180px;"/>
+			        	用户邮箱：<input type="text" id="e_mail" name="e_mail" class="textbox"  style="width: 180px;"/>
 			       			   <span id="e_mail_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">
