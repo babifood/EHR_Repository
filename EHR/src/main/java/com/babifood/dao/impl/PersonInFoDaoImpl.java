@@ -21,7 +21,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 	JdbcTemplate jdbctemplate;
 	public static final Logger log = Logger.getLogger(LoginDaoImpl.class);
 	@Override
-	public List<Map<String, Object>> loadPersonInFo(String search_p_number,String search_p_name) throws DataAccessException{
+	public List<Map<String, Object>> loadPersonInFo(String searchKey,String searchVal) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -112,16 +112,12 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append("p_recommend_person,");
 		sql.append("p_recommend_relation");
 		sql.append(" from ehr_person_basic_info where 1=1");
-		if(search_p_number!=null&&!search_p_number.equals("")){
-			sql.append(" and p_number like '%"+search_p_number+"%'");
+		if(!searchKey.equals("")&&!searchVal.equals("")){
+			sql.append(" and "+searchKey+" like '%"+searchVal+"%'");
 		}
-		if(search_p_name!=null&&!search_p_name.equals("")){
-			sql.append(" and p_name like '%"+search_p_name+"%'");
-		}
-//		List<Map<String, Object>> companyCode = super.loadUserDataAuthority();
 		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
 		return jdbctemplate.queryForList(returnsql.toString());
-//		return jdbctemplate.queryForList(sql.toString());
+
 	}
 	@Override
 	public List<Map<String, Object>> loadEducation(String e_p_id) throws DataAccessException{

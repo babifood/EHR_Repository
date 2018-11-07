@@ -124,7 +124,7 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 	}
 	@Override
 	@LogMethod(module = ModuleConstant.CLOCKED)
-	public List<Map<String, Object>> loadSumClockedResultData(String workNum, String userName){
+	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal){
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
@@ -137,7 +137,7 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 		int sysMonth = tempCal.get(Calendar.MONTH)+1;	
 		List<Map<String, Object>> sumList =null;
 		try {
-			sumList = clockedResultBaseDao.loadSumClockedResultData(workNum, userName);
+			sumList = clockedResultBaseDao.loadSumClockedResultData(searchKey, searchVal);
 			LogManager.putContectOfLogInfo("查询考勤汇总信息");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

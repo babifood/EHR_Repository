@@ -65,7 +65,7 @@ public class WorkCalendarDaoImpl implements WorkCalendarDao {
 		List<SpecialWorkCalendar> specialList = null;
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append("t.target_id,t.target_type,s.DATE,s.start_time,s.end_time,b.arrangement_type ");
+		sql.append("t.target_id,t.target_type,s.DATE,s.start_time,s.end_time,b.arrangement_type,s.is_attend ");
 		sql.append("from ");
 		sql.append("ehr_arrangement_target t ");
 		sql.append("inner join ehr_special_arrangement s on t.arrangement_id = s.arrangement_id ");
@@ -90,6 +90,7 @@ public class WorkCalendarDaoImpl implements WorkCalendarDao {
 					special.setStart_time(map.get("start_time").toString());
 					special.setEnd_time(map.get("end_time").toString());
 					special.setArrangement_type(map.get("arrangement_type").toString());
+					special.setIs_attend(map.get("is_attend").toString());
 					specialList.add(special);
 				}
 			}

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.babifood.entity.PersonBasrcEntity;
 @Repository
 public interface PersonInFoDao {
-	public List<Map<String, Object>> loadPersonInFo(String search_p_number,String search_p_name);
+	public List<Map<String, Object>> loadPersonInFo(String searchKey,String searchVal);
 
 	public List<Map<String, Object>> loadEducation(String e_p_id);
 
@@ -39,7 +39,6 @@ public interface PersonInFoDao {
 	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize);
 
 	public Object getPersonByPnumber(String pNumber);
-	
 	
 	public List<Map<String, Object>> loadEHRWorkNumInFo(String companyId, String organizationId);
 

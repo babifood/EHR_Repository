@@ -12,5 +12,5 @@ public interface ClockedResultBaseDao {
 	public int[] updateClockedResultBase(List<ClockedResultBases> saveDataList) throws Exception;
 	public List<Map<String,Object>> loadClockedResultData(int year,int month,String workNum,String periodEndDate) throws Exception;
 	public List<Map<String,Object>> loadClockedResultDataList(int year,int month) throws Exception;
-	public List<Map<String,Object>> loadSumClockedResultData(String workNum,String userName) throws Exception;
+	public List<Map<String,Object>> loadSumClockedResultData(String searchKey,String searchVal) throws Exception;
 }

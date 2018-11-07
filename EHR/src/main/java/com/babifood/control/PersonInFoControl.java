@@ -19,9 +19,9 @@ public class PersonInFoControl {
 	//主列表人员档案信息
 	@ResponseBody
 	@RequestMapping("/loadPersonInFo")
-	public Map<String,Object> loadPersonInFo(String search_p_number,String search_p_name){
+	public Map<String,Object> loadPersonInFo(String searchKey,String searchVal){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = personInFoService.loadPersonInFo(search_p_number,search_p_name);
+		List<Map<String, Object>> list = personInFoService.loadPersonInFo(searchKey,searchVal);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;

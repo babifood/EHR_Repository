@@ -55,10 +55,10 @@ public class ClockedControl {
 	 */
 	@ResponseBody
 	@RequestMapping("/loadSumClockedResult")
-	public Map<String,Object> loadSumClockedResult(String WorkNum,String UserName){
+	public Map<String,Object> loadSumClockedResult(String searchKey,String searchVal){
 		Map<String,Object> map =new HashMap<String,Object>();
 		List<Map<String, Object>> list = null;
-		list = loadClockedResultService.loadSumClockedResultData(WorkNum,UserName);
+		list = loadClockedResultService.loadSumClockedResultData(searchKey,searchVal);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;

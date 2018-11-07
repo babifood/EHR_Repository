@@ -195,22 +195,46 @@ public class ClockedYesNoRule {
 		List<SpecialWorkCalendar> special=filtrateSpecialWorkCalendarData(person,sysFrontDate);
 		for(int i = 0;i<special.size();i++){
 			if(person.getCompanyCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
-				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				if(special.get(i).getIs_attend().equals("0")){
+					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				}else if(special.get(i).getIs_attend().equals("1")){
+					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				}
 				break;
 			}else if(person.getOrganCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
-				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				if(special.get(i).getIs_attend().equals("0")){
+					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				}else if(special.get(i).getIs_attend().equals("1")){
+					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				}
 				break;
 			}else if(person.getDeptCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
-				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				if(special.get(i).getIs_attend().equals("0")){
+					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				}else if(special.get(i).getIs_attend().equals("1")){
+					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				}
 				break;
 			}else if(person.getOfficeCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
-				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				if(special.get(i).getIs_attend().equals("0")){
+					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				}else if(special.get(i).getIs_attend().equals("1")){
+					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				}
 				break;
 			}else if(person.getGroupCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
-				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				if(special.get(i).getIs_attend().equals("0")){
+					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				}else if(special.get(i).getIs_attend().equals("1")){
+					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				}
 				break;
 			}else if(person.getWorkNum().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
-				tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				if(special.get(i).getIs_attend().equals("0")){
+					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				}else if(special.get(i).getIs_attend().equals("1")){
+					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
+				}
 				break;
 			}
 		}

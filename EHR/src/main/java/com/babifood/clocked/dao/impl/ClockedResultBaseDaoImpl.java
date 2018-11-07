@@ -174,7 +174,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 	 * 查询考勤结果汇总数据
 	 */
 	@Override
-	public List<Map<String, Object>> loadSumClockedResultData(String workNum, String userName) throws Exception {
+	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal) throws Exception {
 		// TODO Auto-generated method stub
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
@@ -190,11 +190,8 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("SUM(PeiChanJia) as PeiChanJia,SUM(SangJia) as SangJia,SUM(Yidong) as Yidong,");
 		sql.append("SUM(Jiaban) as Jiaban,SUM(Chuchai) as Chuchai,SUM(Canbu) as Canbu ");
 		sql.append("from ehr_checking_result where 1=1");
-		if(workNum!=null&&!workNum.equals("")){
-			sql.append(" and WorkNum = '"+workNum+"'");
-		}
-		if(userName!=null&&!userName.equals("")){
-			sql.append(" and UserName like '%"+userName+"%'");
+		if(!searchKey.equals("")&&!searchVal.equals("")){
+			sql.append(" and "+searchKey+" like '%"+searchVal+"%'");
 		}
 		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode","OrganCode",sql);
 		returnSQL.append(" GROUP BY Year,Month,WorkNum,UserName,CompanyCode,Company,OrganCode,Organ,");
