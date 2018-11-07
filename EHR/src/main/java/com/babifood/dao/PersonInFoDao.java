@@ -41,6 +41,7 @@ public interface PersonInFoDao {
 	public Object getPersonByPnumber(String pNumber);
 	
 	
-	public List<Map<String, Object>> loadEHRWorkNumInFo();
+	public List<Map<String, Object>> loadEHRWorkNumInFo(String companyId, String organizationId);
 
+	public List<Map<String, Object>> loadPersonlimit(String search_p_number, String search_p_name, Integer limit);
 }
