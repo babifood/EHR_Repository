@@ -54,7 +54,7 @@ function loadBaseSalary() {
 						idField:'p_number',
 						textField:'p_name',
 						toolbar:getBaseSalaryTools(),
-						url:prefix+'/loadPersonInFo',
+						url:prefix+'/loadPersonlimit',
 						columns:[[
 							{field:'p_number',title:'员工编号',width:100},
 							{field:'p_name',title:'员工名称',width:100},

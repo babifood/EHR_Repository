@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.babifood.dao.AnnualLeaveDao;
 import com.babifood.dao.BaseArrangementDao;
 import com.babifood.service.AnnualLeaveService;
+import com.babifood.utils.CustomerContextHolder;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 
@@ -127,7 +129,7 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 				String number = map.get("p_number").toString(); // 工号
 				try {
 					Map<String, Object> map1 = new HashMap<String, Object>();
-					String name = map.get("p_name").toString(); // 姓名
+					String name = map.get("p_id").toString(); // 姓名
 					String p_in_date = map.get("p_in_date").toString(); // 入职日期
 					int companydayflag = (int) map.get("currentCAge"); // 当前的司龄
 					map1.put("p_number", number);
@@ -135,6 +137,8 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 					map1.put("p_in_date", p_in_date);
 					map1.put("p_companydayflag", companydayflag);
 					map1.put("year", year);
+					map1.put("companyName", map.get("companyName"));
+					map1.put("organizationName", map.get("organizationName"));
 					int nannualleave = computeAnnualLeave(map); // 本年年假数，根据上年请病假的天数做扣减未做，待修正
 					map1.put("nannualleave", nannualleave);
 					int lannualleave = 0; // 上年结余数，待修正，应该在每年的1月1日取上一年最后的剩余年假数，之后持续一年时间不变
@@ -166,6 +170,7 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 					map1.put("remaindata", nannualleave + lannualleave - useddata - disableddata); // 剩余年假数
 					map1.put("nannualleavedeadline", (Integer.valueOf(year) - 1) + "-07-01");
 					map1.put("lannualleavedeadline", year + "-07-01");
+					map1.put("OAID", getID());
 					listAL.add(map1);
 				} catch (Exception e) {
 					logger.error("计算年假失败；pNumber=" + number, e);
@@ -174,6 +179,23 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 			}
 		}
 		return listAL;
+	}
+	
+	private String getID(){
+		String[] nums = new String[]{"0","1","2","3","4","5","6","7","8","9"}; 
+		Random random = new Random();
+
+		String id = "";
+		int num = random.nextInt(10);
+		if(num < 4){
+			id +="-";
+		}
+		int index = random.nextInt(4) + 15;
+		for(int i = 0; i < index ; i++){
+			num = random.nextInt(10);
+			id += nums[num];
+		}
+		return id;
 	}
 	
 	/**
@@ -200,6 +222,7 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 		}
 		targetIds.add(employee.get("p_number")+"");
 		String arrangementType = "1";
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		List<Map<String, Object>> arrangementList = baseArrangementDao.findArrangementByTargetId(targetIds);
 		if (arrangementList != null && arrangementList.size() > 0) {
 			arrangementType = arrangementList.get(0).get("arrangementType") + "";
@@ -329,8 +352,14 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 	}
 
 	@Override
-	public int[] SaveAnnualLeave(List<Map<String, Object>> list) {
-		return annualLeaveDao.SaveAnnualLeave(list);
+	public void SaveAnnualLeave(List<Map<String, Object>> list) {
+		annualLeaveDao.SaveAnnualLeave(list);
+		String year = UtilDateTime.getCurrentYear();
+		List<String> ids = new ArrayList<String>();
+		for(Map<String, Object> map: list){
+			ids.add(map.get("p_number") + "");
+		}
+		annualLeaveDao.pushAnnualToOA(ids, list, year);
 	}
 
 }

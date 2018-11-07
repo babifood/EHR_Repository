@@ -13,12 +13,12 @@
 	</div>
 	<div class="main" style="height: 98%">
 		<div id="myrl"
-			style="width: 100%"; margin-left: auto; margin-right: auto; height: 100%; overflow: hidden;">
+			style="width: 100%; margin-left: auto; margin-right: auto; height: 100%; overflow: hidden;">
 <!-- 			<form name=CLD> -->
-				<TABLE class="biao" style="table-layout: fixed" width="100%">
-					<TBODY id="holiday_calendar-table">
-						<TR>
-							<TD class="calTit" colSpan=7
+				<table class="biao" style="table-layout: fixed; width=100%">
+					<tbody id="holiday_calendar-table">
+						<tr>
+							<td class="calTit" colSpan=7
 								style="height: 35px; padding-top: 3px; text-align: center;">
 
 								<a href="#" title="上一年" id="holiday_nianjian" class="ymNaviBtn lsArrow"></a>
@@ -70,9 +70,9 @@
 								</div> 
 								<a href="#" id="holiday_nianjia" title="下一年" class="ymNaviBtn rsArrow" style="float: right;"></a> 
 								<a href="#" id="holiday_yuejia" title="下一月" class="ymNaviBtn rArrow" style="float: right;"></a> <!--	<a id="jintian" href="#" title="今天" class="btn" style="float:right; margin-top:-2px; font-size:12px; text-align:center;">今天</a>-->
-							</TD>
-						</TR>
-						<TR class="calWeekTit"
+							</td>
+						</tr>
+						<tr class="calWeekTit"
 							style="font-size: 12px; height: 35px; text-align: center;">
 							<TD width="100" class="red">星期日</TD>
 							<TD width="100">星期一</TD>
@@ -81,10 +81,10 @@
 							<TD width="100">星期四</TD>
 							<TD width="100">星期五</TD>
 							<TD width="100" class="red">星期六</TD>
-						</TR>
+						</tr>
 
 					</tbody>
-				</TABLE>
+				</table>
 <!-- 			</form> -->
 		</div>
 	</div>

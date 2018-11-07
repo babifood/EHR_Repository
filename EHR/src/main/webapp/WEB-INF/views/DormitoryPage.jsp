@@ -22,8 +22,8 @@
 					</shiro:hasPermission>
 					<shiro:hasPermission name="dormitory:checking">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="outPersonChecking()">入住</a>
-						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitoryFormalities()">办理手续</a>
-						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitory()">搬出</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitoryFormalities()">退宿手续</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="moveOutDormitory()">退宿</a>
 					</shiro:hasPermission>
 				</div>
 	        	<div style="margin-left: 10px">
@@ -49,11 +49,18 @@
 		<div data-options="fit:true,border:false,noheader:true" class="easyui-panel">
 			<table class="easyui-datagrid" id="stay_dormitory_list"></table>
 			<div style="margin-bottom: 5px;" id="stay_dormitory_list_tools">
-<!-- 				<div> -->
-<!-- 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="moveOutDormitory()">搬出</a> -->
-<!-- 				</div> -->
 	        	<div style="margin-left: 10px ;margin-top: 5px">
 	        		<div>
+<%-- 	        			<shiro:hasPermission name="record:export">    --%>
+<!-- 						    <div data-options="iconCls:'icon-remove'" onclick="exportDormitoryRecord()">导出</div>  -->
+						    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-export" plain="true" onclick="exportDormitoryRecord()">导出</a> 
+<%-- 					    </shiro:hasPermission> --%>
+					    入住时间：<input type="text" class="textbox" id="checking_dormitory_checking_start"/> &nbsp;~&nbsp;
+					    <input type="text" class="textbox" id="checking_dormitory_checking_end"/> &nbsp;&nbsp;&nbsp;
+					    搬出时间：<input type="text" class="textbox" id="checking_dormitory_checkout_start"/> &nbsp;~&nbsp;
+					    <input type="text" class="textbox" id="checking_dormitory_checkout_end"/> &nbsp;&nbsp;&nbsp;
+	        		</div>
+	        		<div style="margin-top: 5px">
 	        			工号：<input type="text" class="textbox" id="checking_dormitory_pnumber" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
 		        		宿舍类型：<input type="text" class="easyui-combobox" id="checking_dormitory_sex" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
 						data: [{value: '0',text: '男宿舍'}, {value: '1',text: '女宿舍'}],editable:false,onSelect:function(rec){searchCheckingEmployeeList(2,rec.value)}"> &nbsp;&nbsp;&nbsp;
@@ -153,5 +160,5 @@
 <!-- 		<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dormitory_cost_dialog').dialog('close')" style="width: 90px;">取消</a> -->
 <!-- 	</div> -->
 </div>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"/>
-<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/dormitory.js"/>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/dormitory.js"></script>

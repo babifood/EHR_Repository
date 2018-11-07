@@ -157,4 +157,12 @@ public class PersonInFoControl {
 	public Object getEhrWorkNum(String companyId,String organizationId){
 		return personInFoService.getRandomYxWorkNum(companyId,organizationId);
 	}
+	@RequestMapping("/loadPersonlimit")
+	public Map<String,Object> loadPersonlimit(String search_p_number,String search_p_name, Integer limit){
+		Map<String,Object> map =new HashMap<String,Object>();
+		List<Map<String, Object>> list = personInFoService.loadPersonlimit(search_p_number,search_p_name, limit);
+		map.put("total", list.size());
+		map.put("rows", list);
+		return map;
+	}
 }

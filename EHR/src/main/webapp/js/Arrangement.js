@@ -363,7 +363,7 @@ function settingArrangement(targetId,type,clientX,clientY){
 
 //保存特殊绑定的特殊排班信息
 function settingArangement(){
-	$.messager.confirm('确认对话框', '更改信息下月生效，确定更改吗?', function(r){
+	$.messager.confirm('确认对话框', '确定更改吗?', function(r){
 		if (r){
 			var targetId = $("#arrangement_target_id").val();
 			var type = $("#arrangement_target_type").val();

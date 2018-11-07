@@ -374,5 +374,22 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return newWorkNum;
 	}
-	
+	@Override
+	public List<Map<String, Object>> loadPersonlimit(String search_p_number, String search_p_name, Integer limit) {
+		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+		LogManager.putUserIdOfLogInfo(login.getUser_id());
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+		List<Map<String, Object>> list=null;
+		try {
+			if(limit == null || limit == 0){
+				limit = 20;
+			}
+			list = personInFoDao.loadPersonlimit(search_p_number, search_p_name, limit);
+			LogManager.putContectOfLogInfo("参数：search_p_number="+search_p_number+"search_p_name="+search_p_name);
+		} catch (Exception e) {
+			LogManager.putContectOfLogInfo(e.getMessage());
+			log.error("loadPersonInFo:"+e.getMessage());
+		}
+		return list;
+	}
 }

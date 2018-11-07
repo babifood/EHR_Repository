@@ -25,6 +25,6 @@ public interface AnnualLeaveService {
 	public List<Map<String, Object>> setAnnualLeavelist(List<Map<String, Object>> list) throws ParseException;
 	
 	//查当前年假记录表中有没有变更的员工，有的话，取数据存到历史表去，当前年假表中删除对应数据后，最后把新数据插入当前年假表
-	public int[] SaveAnnualLeave(List<Map<String, Object>> list);
+	public void SaveAnnualLeave(List<Map<String, Object>> list);
 
 }

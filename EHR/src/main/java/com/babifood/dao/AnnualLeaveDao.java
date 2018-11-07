@@ -29,5 +29,7 @@ public interface AnnualLeaveDao {
 	public void updateEmpCompanyAge(String pNumber, Integer companyAge);
 
 	public List<Map<String, Object>> findTotalBingjia(String year);
+
+	public void pushAnnualToOA(List<String> ids, List<Map<String, Object>> list, String year);
 	
 }
