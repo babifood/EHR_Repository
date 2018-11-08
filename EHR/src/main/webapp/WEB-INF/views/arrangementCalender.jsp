@@ -14,9 +14,9 @@
 			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateSpecialArrangement()">修改</a>
 		</div>
 	</div>
-	<div id="myrl" style="width: 100%"; margin-left: auto; margin-right:auto; height: 100%; overflow:hidden;">
+	<div id="myrl" style="width: 100%; margin-left: auto; margin-right:auto; height: 100%; overflow:hidden;">
 		<!-- 			<form name=CLD> -->
-		<TABLE class="biao" style="table-layout: fixed" width="100%">
+		<TABLE class="biao" style="table-layout: fixed width=100%">
 			<TBODY id="calendar-table">
 				<TR>
 					<TD class="calTit" colSpan=7
