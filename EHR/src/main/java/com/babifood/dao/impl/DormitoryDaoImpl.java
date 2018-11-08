@@ -85,9 +85,11 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		sql.append("select a.id as id, a.floor as floor, a.room_no as roomNo, a.Bed_No as bedNo, b.stay_time as stayTime, ");
 		sql.append("a.sex as sex, a.remark as remark,b.p_number AS pNumber, if(c.p_name IS NULL,b.person_name,c.p_name) AS pName, ");
 		sql.append("IF(b.p_number IS NOT NULL,'已入住', '未入住') as stay, b.out_time as outTime, b.remark as remark, ");
-		sql.append("b.DORM_TYPE AS type from ehr_dormitory a ");
+		sql.append("c.p_this_dept_code as currentDept,d.dept_name as deptName,");
+		sql.append("b.DORM_TYPE AS type, c.p_phone as phone, c.p_id_num AS identity from ehr_dormitory a ");
 		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay where is_delete = '0') b on a.id = b.dormitory_id ");
 		sql.append("LEFT JOIN ehr_person_basic_info c ON b.p_number = c.p_number ");
+		sql.append("LEFT JOIN ehr_dept d ON c.p_this_dept_code = d.dept_code ");
 		sql.append(" where a.is_delete = '0'");
 		if(!UtilString.isEmpty(params.get("floor") + "")){
 			sql.append(" AND a.floor = " + params.get("floor"));
@@ -107,7 +109,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		if(!UtilString.isEmpty(params.get("dormType") + "")){
 			sql.append(" AND b.DORM_TYPE = " + params.get("dormType"));
 		}
-		sql.append(" Limit ?,?");
+		sql.append(" order by a.floor, a.room_no, a.Bed_No Limit ?,?");
 		List<Map<String, Object>> dormitorys = null;
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(),params.get("start") ,params.get("pageSize"));
@@ -127,7 +129,10 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		sql.append("SELECT a.p_number AS pNumber, if(c.p_name IS NULL,a.person_name,c.p_name) AS pName, ");
 		sql.append("b.room_no AS roomNo, b.Bed_No AS bedNo, b.sex AS sex, a.stay_time AS stayTime, ");
 		sql.append("b.floor AS floor, a.dorm_type as type, a.out_time AS outTime, a.remark as remark, ");
-		sql.append("a.dorm_type as type FROM ehr_dormitory_stay a ");
+		sql.append("(case b.SEX WHEN '0' THEN '男' WHEN '1' THEN '女' End) AS dormitorType,");
+		sql.append("(case b.floor WHEN '1' THEN '一楼' WHEN '2' THEN '二楼' WHEN '3' THEN '三楼' WHEN '4' THEN '四楼' WHEN '5' THEN '五楼' WHEN '6' THEN '六楼' END) AS floor1,");
+		sql.append("(case a.dorm_type WHEN '1' THEN '员工入住' WHEN '2' THEN '加盟商入住' WHEN '3' THEN '营运入住' WHEN '4' THEN '其他' END) AS type1,");
+		sql.append("c.p_phone as phone, c.p_id_num AS identity FROM ehr_dormitory_stay a ");
 		sql.append("LEFT JOIN ehr_dormitory b ON a.dormitory_id = b.ID ");
 		sql.append("LEFT JOIN ehr_person_basic_info c ON a.p_number = c.p_number");
 		sql.append(" where 1=1 ");
@@ -148,6 +153,25 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		}
 		if(!UtilString.isEmpty(params.get("dormType") + "")){
 			sql.append(" AND a.dorm_type = " + params.get("dormType"));
+		}
+		if(!UtilString.isEmpty(params.get("checkingStart") + "")){
+			sql.append(" AND a.stay_time >= '" + params.get("checkingStart")+"'");
+		}
+		if(!UtilString.isEmpty(params.get("checkingEnd") + "")){
+			sql.append(" AND a.stay_time <= '" + params.get("checkingEnd")+"'");
+		}
+		if(!UtilString.isEmpty(params.get("checkoutStart") + "")){
+			sql.append(" AND");
+			if(UtilString.isEmpty(params.get("checkoutEnd") + "")){
+				sql.append(" (a.out_time is null or a.out_time = '' or ");
+			}
+			sql.append(" a.out_time >= '" + params.get("checkoutStart")+"'");
+			if(UtilString.isEmpty(params.get("checkoutEnd") + "")){
+				sql.append(")");
+			}
+		}
+		if(!UtilString.isEmpty(params.get("checkoutEnd") + "")){
+			sql.append(" AND a.out_time <= '" + params.get("checkoutEnd")+"'");
 		}
 		sql.append(" ORDER BY create_time DESC Limit ?,?");
 		List<Map<String, Object>> dormitorys = null;
@@ -304,6 +328,25 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		if(!UtilString.isEmpty(params.get("dormType") + "")){
 			sql.append(" AND a.dorm_type = " + params.get("dormType"));
 		}
+		if(!UtilString.isEmpty(params.get("checkingStart") + "")){
+			sql.append(" AND a.stay_time >= '" + params.get("checkingStart")+"'");
+		}
+		if(!UtilString.isEmpty(params.get("checkingEnd") + "")){
+			sql.append(" AND a.stay_time <= '" + params.get("checkingEnd")+"'");
+		}
+		if(!UtilString.isEmpty(params.get("checkoutStart") + "")){
+			sql.append(" AND");
+			if(UtilString.isEmpty(params.get("checkoutEnd") + "")){
+				sql.append(" (a.out_time is null or a.out_time = '' or ");
+			}
+			sql.append(" a.out_time >= '" + params.get("checkoutStart")+"'");
+			if(UtilString.isEmpty(params.get("checkoutEnd") + "")){
+				sql.append(")");
+			}
+		}
+		if(!UtilString.isEmpty(params.get("checkoutEnd") + "")){
+			sql.append(" AND a.out_time <= '" + params.get("checkoutEnd")+"'");
+		}
 		int count = 0;
 		try {
 			count = jdbcTemplate.queryForInt(sql.toString());
@@ -356,7 +399,7 @@ public class DormitoryDaoImpl implements DormitoryDao {
 		sql.append("SELECT a.ID AS id, a.DORM_DEDUCTION AS dormDeduction, a.DORM_BONUS AS dormBonus, ");
 		sql.append("a.`YEAR` AS `year`, a.`MONTH` AS `month`, a.P_NUMBER AS pNumber, d.p_name AS pName, ");
 		sql.append("c.FLOOR AS floor, c.ROOM_NO AS roomNo, c.BED_NO AS bedNo, a.DORM_FEE AS dormFee,");
-		sql.append("a.ELECTRICITY_FEE AS electricityFee FROM EHR_DORMITORY_FEE a ");
+		sql.append("a.ELECTRICITY_FEE AS electricityFee, d.p_phone as phone, d.p_id_num AS identity FROM EHR_DORMITORY_FEE a ");
 		sql.append("LEFT JOIN (SELECT * FROM ehr_dormitory_stay WHERE IS_DELETE = '0') b ON a.P_NUMBER = b.p_number ");
 		sql.append("LEFT JOIN ehr_dormitory c ON c.ID = b.dormitory_id ");
 		sql.append("LEFT JOIN ehr_person_basic_info d ON a.P_NUMBER = d.p_number ");
