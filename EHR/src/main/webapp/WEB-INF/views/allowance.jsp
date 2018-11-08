@@ -64,7 +64,7 @@
 <!-- 			<a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#allowance_dialog').dialog('close')" style="width: 90px;">取消</a> -->
 <!-- 		</div> -->
 	</div>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"/>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/allowance.js"/>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"></script>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/allowance.js"></script>
 </body>
 </html>

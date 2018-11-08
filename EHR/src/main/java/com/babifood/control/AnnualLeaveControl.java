@@ -23,9 +23,9 @@ public class AnnualLeaveControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/loadNowAnnualLeave")
-	public Map<String,Object> loadNowAnnualLeave(String npname){
+	public Map<String,Object> loadNowAnnualLeave(String npname, String npnumber){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = AnnualLeaveService.loadNowAnnualLeave(npname);
+		List<Map<String, Object>> list = AnnualLeaveService.loadNowAnnualLeave(npname, npnumber);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;

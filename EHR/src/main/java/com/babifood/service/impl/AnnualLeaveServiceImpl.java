@@ -33,8 +33,8 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 	BaseArrangementDao baseArrangementDao;
 
 	@Override
-	public List<Map<String, Object>> loadNowAnnualLeave(String npname) {
-		return annualLeaveDao.loadNowAnnualLeave(npname);
+	public List<Map<String, Object>> loadNowAnnualLeave(String npname, String npnumber) {
+		return annualLeaveDao.loadNowAnnualLeave(npname, npnumber);
 	}
 
 	@Override

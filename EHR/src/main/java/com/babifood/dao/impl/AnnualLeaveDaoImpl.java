@@ -15,24 +15,36 @@ import com.babifood.utils.CustomerContextHolder;
 import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 @Repository
-public class AnnualLeaveDaoImpl implements AnnualLeaveDao {
+public class AnnualLeaveDaoImpl extends AuthorityControlDaoImpl implements AnnualLeaveDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	Logger log = LoggerFactory.getLogger(LoginDaoImpl.class);
 	//当前年假记录
 	@Override
-	public List<Map<String, Object>> loadNowAnnualLeave(String npname) {
+	public List<Map<String, Object>> loadNowAnnualLeave(String npname,String npnumber) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT PNAME as pname,PNUMBER as pnumber,PINDAY as pinday,NOWYEAR as nowyear"
-				+ ",NANNUALLEAVE as nannualleave,NANNUALLEAVEDEADLINE as nannualleavedeadline"
-				+ ",LANNUALLEAVE as lannualleave,LANNUALLEAVEDEADLINE as lannualleavedeadline"
-				+ ",USEDDATA as useddata,REMAINDATA as remaindata,DISABLEDDATA as disableddata ");
-		sql.append(" from ehr_annualleave where 1=1");
-		if(npname!=null&&!npname.equals("")){
+		sql.append("SELECT a.PNAME as pname,a.PNUMBER as pnumber,a.PINDAY as pinday,a.NOWYEAR as nowyear,");
+		sql.append("a.NANNUALLEAVE as nannualleave,a.NANNUALLEAVEDEADLINE as nannualleavedeadline,");
+		sql.append("a.LANNUALLEAVE as lannualleave,a.LANNUALLEAVEDEADLINE as lannualleavedeadline,");
+		sql.append("a.USEDDATA as useddata,a.REMAINDATA as remaindata,a.DISABLEDDATA as disableddata, ");
+		sql.append("c.DEPT_NAME as companyName, d.DEPT_NAME as organizationName, e.DEPT_NAME as deptName,");
+		sql.append("f.DEPT_NAME as officeName, g.DEPT_NAME as groupName");
+		sql.append(" from ehr_annualleave a INNER JOIN ehr_person_basic_info b ON a.PNUMBER = b.p_number ");
+		sql.append(" LEFT JOIN ehr_dept c on b.P_COMPANY_ID = c.DEPT_CODE ");
+		sql.append(" LEFT JOIN ehr_dept d on b.P_ORGANIZATION_ID = d.DEPT_CODE ");
+		sql.append(" LEFT JOIN ehr_dept e on b.P_DEPARTMENT_ID = e.DEPT_CODE ");
+		sql.append(" LEFT JOIN ehr_dept f on b.P_SECTION_OFFICE_ID = f.DEPT_CODE ");
+		sql.append(" LEFT JOIN ehr_dept g on b.P_GROUP_ID = g.DEPT_CODE where 1=1 ");
+		if(!UtilString.isEmpty(npname)){
 			sql.append(" and PNAME like '%"+npname+"%'");
 		}
-		sql.append(" ORDER BY PNUMBER ASC");
+		if(!UtilString.isEmpty(npnumber)){
+			sql.append(" and PNUMBER like '%"+npnumber+"%'");
+		}
+		sql = super.jointDataAuthoritySql("b.P_COMPANY_ID", "b.P_ORGANIZATION_ID", sql);
+		sql.append(" group by a.NOWYEAR,a.PNUMBER ");
+		sql.append(" ORDER BY a.NOWYEAR desc");
 		List<Map<String, Object>> list = null;
 		try {
 			list=jdbctemplate.queryForList(sql.toString());

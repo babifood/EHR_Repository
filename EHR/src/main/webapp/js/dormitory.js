@@ -146,7 +146,7 @@ function loadDormitoryInfo(){
 //					type:'text',
 					type:'combogrid',
 					options:{
-						panelWidth:400,
+						panelWidth:500,
 						idField:'p_number',
 						textField:'p_number',
 						toolbar:getDormitoryTools(),
@@ -197,7 +197,7 @@ function loadDormitoryInfo(){
 			{
 				field:"identity",
 				title:"身份证号",
-				width:100,
+				width:150,
 			},{
 				field : "type",
 				title : "入住类型",
@@ -698,7 +698,7 @@ function loadStayDormitoryInfo(){
 			{
 				field:"identity",
 				title:"身份证号",
-				width:100,
+				width:150,
 			},
 			{
 				field:"floor",
@@ -1093,7 +1093,7 @@ function loadDormitoryCostList() {
 				editor : {
 					type:'combogrid',
 					options:{
-						panelWidth:400,
+						panelWidth:300,
 						idField:'p_number',
 						textField:'p_name',
 						toolbar:getDormitotyCostTools(),
@@ -1121,7 +1121,7 @@ function loadDormitoryCostList() {
 			{
 				field:"identity",
 				title:"身份证号",
-				width:100,
+				width:150,
 			},
 			{
 				field:"floor",

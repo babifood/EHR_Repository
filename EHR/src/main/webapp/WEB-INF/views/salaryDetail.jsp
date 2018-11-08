@@ -50,6 +50,6 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/salaryDetail.js"/>
+	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/salaryDetail.js"></script>
 </body>
 </html>

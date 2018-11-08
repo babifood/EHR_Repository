@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public interface AnnualLeaveService {
 	
 	//当前年假记录
-	public List<Map<String,Object>> loadNowAnnualLeave(String npname);
+	public List<Map<String,Object>> loadNowAnnualLeave(String npname, String npnumber);
 	
 	//历史年假记录
 	public List<Map<String,Object>> loadHistoryAnnualLeave(String lpname);

@@ -3,26 +3,19 @@ var objRowsNowAnnualLeave;
 //初始化
 $(function(){
 	//加载当前年假记录
-	loadNowAnnualLeave(null);
-	//加载历史年假记录
-	loadHistoryAnnualLeave(null);
+	loadNowAnnualLeave();
+//	//加载历史年假记录
+//	loadHistoryAnnualLeave();
 });
 /**
  * -----------------------------------------当前年假记录function-------------------------------------------
  * @returns
  */
 //当前年假记录
-function loadNowAnnualLeave(npname){
-	var url;
-	if(npname!=null){
-		url=prefix+"/loadNowAnnualLeave?npname="+npname;
-	}
-	else{
-		url=prefix+"/loadNowAnnualLeave?npname=";
-	}
+function loadNowAnnualLeave(){
 	//当前年假记录列表
 	$("#nannualleave_tbo").datagrid({
-		url:url,
+		url:prefix+"/loadNowAnnualLeave",
 		loadMsg:"数据加载中......",
 		fit:true,
 		fitColumns:true,
@@ -47,6 +40,26 @@ function loadNowAnnualLeave(npname){
 				width:100,
 			},
 			{
+				field:"companyName",
+				title:"公司名称",
+				width:100,
+			},
+			{
+				field:"organizationName",
+				title:"中心名称",
+				width:100,
+			},
+			{
+				field:"deptName",
+				title:"部门名称",
+				width:100,
+			},
+			{
+				field:"officeName",
+				title:"科室名称",
+				width:100,
+			},
+			{
 				field:"pinday",
 				title:"员工入职日期",
 				width:100,
@@ -120,33 +133,29 @@ function loadNowAnnualLeave(npname){
 	        var end = start + parseInt(opts.pageSize);
 	        data.rows = (data.originalRows.slice(start, end));
 	        return data;
-		}
+		},
+		onDblClickRow:loadHistoryAnnualLeave
 	});
 }
 //当前年假记录查询
 function searchnannualleave(){
-	loadNowAnnualLeave($("#search_npname").val());
+//	loadNowAnnualLeave($("#search_npname").val());
+	$("#nannualleave_tbo").datagrid("load",{npname:$("#search_npname").val(),npnumber:$("#search_npnumber").val()});
 }
 //重置当前年假记录查询条件
 function resetnannualleave(){
 	$("#search_npname").val('');//人员
+	$("#search_npnumber").val('');
 }
 /**
  * -----------------------------------------历史年假记录function-------------------------------------------
  * @returns
  */
 //历史年假记录
-function loadHistoryAnnualLeave(lpname){
-	var url;
-	if(lpname!=null){
-		url=prefix+"/loadHistoryAnnualLeave?lpname="+lpname;
-	}
-	else{
-		url=prefix+"/loadHistoryAnnualLeave?lpname=";
-	}
+function loadHistoryAnnualLeave(rowIndex, rowData){
 	//当前年假记录列表
-	$("#lannualleave_tbo").datagrid({
-		url:url,
+	$("#nannualleave_tbo_history").datagrid({
+		url:prefix+"/loadNowAnnualLeave",
 		loadMsg:"数据加载中......",
 		fit:true,
 		fitColumns:true,
@@ -155,8 +164,9 @@ function loadHistoryAnnualLeave(lpname){
 		pagination:true,
 		pageSize:10,
 		pageList:[10,20,30],
-		pageNumber:1,
-		toolbar:"#lannualleave_tbar",
+		pageNumber:1,queryParams:{
+			npnumber: rowData.pnumber,
+		},
 		singleSelect:true,
 		rownumbers:true,
 		columns:[[
@@ -246,12 +256,5 @@ function loadHistoryAnnualLeave(lpname){
 	        return data;
 		}
 	});
-}
-//历史年假记录查询
-function searchlannualleave(){
-	loadHistoryAnnualLeave($("#search_lpname").val());
-}
-//重置历史年假记录查询条件
-function resetlannualleave(){
-	$("#search_lpname").val('');//人员
+	$("#nannualleave_tbo_history_dialog").dialog("open");
 }

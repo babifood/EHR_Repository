@@ -51,30 +51,30 @@
 			<div style="margin-bottom: 5px;" id="stay_dormitory_list_tools">
 	        	<div style="margin-left: 10px ;margin-top: 5px">
 	        		<div>
-<%-- 	        			<shiro:hasPermission name="record:export">    --%>
-<!-- 						    <div data-options="iconCls:'icon-remove'" onclick="exportDormitoryRecord()">导出</div>  -->
-						    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-export" plain="true" onclick="exportDormitoryRecord()">导出</a> 
-<%-- 					    </shiro:hasPermission> --%>
 					    入住时间：<input type="text" class="textbox" id="checking_dormitory_checking_start"/> &nbsp;~&nbsp;
 					    <input type="text" class="textbox" id="checking_dormitory_checking_end"/> &nbsp;&nbsp;&nbsp;
 					    搬出时间：<input type="text" class="textbox" id="checking_dormitory_checkout_start"/> &nbsp;~&nbsp;
 					    <input type="text" class="textbox" id="checking_dormitory_checkout_end"/> &nbsp;&nbsp;&nbsp;
 	        		</div>
 	        		<div style="margin-top: 5px">
-	        			工号：<input type="text" class="textbox" id="checking_dormitory_pnumber" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
 		        		宿舍类型：<input type="text" class="easyui-combobox" id="checking_dormitory_sex" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
 						data: [{value: '0',text: '男宿舍'}, {value: '1',text: '女宿舍'}],editable:false,onSelect:function(rec){searchCheckingEmployeeList(2,rec.value)}"> &nbsp;&nbsp;&nbsp;
+	        			工号：<input type="text" class="textbox" id="checking_dormitory_pnumber" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
 		        		房间号：<input type="text" class="textbox" id="checking_dormitory_roomNo" oninput="searchCheckingEmployeeList()">
 	        		</div>
 	        		<div style="margin-top: 5px">
-		       			姓名：<input type="text" class="textbox" id="checking_dormitory_pname" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
 						住宿类型：<input type="text" class="easyui-combobox" id="checking_dormitory_type" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
 						data: [{value: '1',text: '员工入住'}, {value: '2',text: '加盟商入住'}, {value: '3',text: '营运入住'}, {value: '4',text: '其他'}],
 						editable:false,onSelect:function(rec){searchCheckingEmployeeList(3,rec.value)}"> &nbsp;&nbsp;&nbsp;
-		        		楼层：<input type="text" class="easyui-combobox" id="checking_dormitory_floor" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
+		       			姓名：<input type="text" class="textbox" id="checking_dormitory_pname" oninput="searchCheckingEmployeeList()"/> &nbsp;&nbsp;&nbsp;
+		        		楼 &nbsp; 层：<input type="text" class="easyui-combobox" id="checking_dormitory_floor" style="width: 164px" data-options="valueField: 'value',textField: 'text', 
 							data: [{value: '1',text: '一楼'}, {value: '2',text: '二楼'}, {value: '3',text: '三楼'}, {value: '4',text: '四楼'}, 
 							{value: '5',text: '五楼'}, {value: '6',text: '六楼'}],editable:false,onSelect:function(rec){searchCheckingEmployeeList(1,rec.value)}"> &nbsp;&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clearSearchCheckingEmployee()">重置</a>
+<%-- 	        			<shiro:hasPermission name="record:export">    --%>
+<!-- 						    <div data-options="iconCls:'icon-remove'" onclick="exportDormitoryRecord()">导出</div>  -->
+						    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="exportDormitoryRecord()">导出</a> 
+<%-- 					    </shiro:hasPermission> --%>
 	        		</div>
 	        	</div>
 			</div>
