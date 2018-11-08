@@ -21,8 +21,8 @@
 		<div id="logo"><span>企业人力资源系统</span></div>
 		<div id="userinfo">您好：${activeUser.show_name}</div>
 		<div id="outOrUpdate">
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true" onclick="logoout()">安全退出</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-lock" 	plain="true" onclick="updatePassword()">修改密码</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" plain="true" onclick="logoout()" style="color: blue;">安全退出</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-lock" 	plain="true" onclick="updatePassword()" style="color: blue;">修改密码</a>
 		</div>
 	</div>   
     <div data-options="region:'south',split:false,noheader:true" style="height:32px;line-height: 30px;text-align: center;background-color:#ECF5FF;">

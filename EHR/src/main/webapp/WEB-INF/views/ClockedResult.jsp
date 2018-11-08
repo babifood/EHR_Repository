@@ -26,10 +26,20 @@
 	        </shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
-	        	工号：<input type="text" class="textbox" id="WorkNum" name="WorkNum" style="width: 110px;"/>
+	        	<!--工号：<input type="text" class="textbox" id="WorkNum" name="WorkNum" style="width: 110px;"/>
 	        	姓名：<input type="text" class="textbox" id="UserName" name="UserName" style="width: 110px;"/>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clockedReset()">重置</a>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="clockedSearch()">查询</a>
+	        	 -->
+	        	<input id="clocked_Search" class="easyui-searchbox" style="width:300px" data-options="searcher:clockedSearch,prompt:'请输入......',menu:'#clocked_Search_menu'"></input> 
+				<div id="clocked_Search_menu" style="width:120px"> 
+					<div data-options="name:'WorkNum'">员工编号</div> 
+					<div data-options="name:'UserName'">员工姓名</div>
+					<div data-options="name:'Company'">所属公司</div> 
+					<div data-options="name:'Organ'">中心机构</div> 
+					<div data-options="name:'Dept'">所属部门</div> 
+					<div data-options="name:'Post'">岗位名称</div>
+				</div> 
 	        </div>
 		</div>
 	</div>

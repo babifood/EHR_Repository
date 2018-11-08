@@ -1,32 +1,16 @@
 //初始化
 $(function(){
-	//alert("aaaa");
-	loadSumClockedResult();
+	loadSumClockedResult("","");
 });
 //条件查询
-function clockedSearch(){
-//	alert("aaaa");
-	loadSumClockedResult();
-}
-//重置
-function clockedReset(){
-	$("#WorkNum").val("");
-	$("#UserName").val("");
+function clockedSearch(value,name){
+	if(value!=""){
+		loadSumClockedResult(name,value);
+	}
 }
 //加载考勤汇总数据
-function loadSumClockedResult(){
-	var WorkNum = $("#WorkNum").val();
-	var UserName = $("#UserName").val();
-	var url;
-	if(WorkNum!=null&&UserName!=null){
-		url=prefix+"/clocked/loadSumClockedResult?WorkNum="+WorkNum+"&UserName="+UserName;
-	}else if(WorkNum!=null&&UserName==null){
-		url=prefix+"/clocked/loadSumClockedResult?WorkNum="+WorkNum+"&UserName=";
-	}else if(WorkNum==null&&UserName!=null){
-		url=prefix+"/clocked/loadSumClockedResult?WorkNum=&UserName="+UserName;
-	}else{
-		url=prefix+"/clocked/loadSumClockedResult?WorkNum=&UserName=";
-	}
+function loadSumClockedResult(searchKey,searchVal){
+	var	url=prefix+"/clocked/loadSumClockedResult?searchKey="+searchKey+"&searchVal="+searchVal;
 	$("#clocked_grid").datagrid({
 		url:url,
 		fit:true,

@@ -15,6 +15,7 @@ public class SpecialWorkCalendar {
 	private String start_time;
 	private String end_time;
 	private String arrangement_type;
+	private String is_attend;
 	
 	public String getArrangement_type() {
 		return arrangement_type;
@@ -51,6 +52,12 @@ public class SpecialWorkCalendar {
 	}
 	public void setEnd_time(String end_time) {
 		this.end_time = end_time;
+	}
+	public String getIs_attend() {
+		return is_attend;
+	}
+	public void setIs_attend(String is_attend) {
+		this.is_attend = is_attend;
 	}
 	
 }
