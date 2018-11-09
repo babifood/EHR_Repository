@@ -1093,7 +1093,7 @@ function loadDormitoryCostList() {
 				editor : {
 					type:'combogrid',
 					options:{
-						panelWidth:300,
+						panelWidth:400,
 						idField:'p_number',
 						textField:'p_name',
 						toolbar:getDormitotyCostTools(),
