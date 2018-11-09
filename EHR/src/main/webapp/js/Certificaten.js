@@ -2,41 +2,15 @@ var editIndex = undefined;
 var combogridUrl;
 //初始化
 $(function(){
-	//重写Text
-	overrideGridEditText();
 	//加载列表
 	loadCertificaten(null,null);
 	//初始化导出导出功能
 	initImportExcel();
 });
-//重写Text
-function overrideGridEditText(){
-	$.extend($.fn.datagrid.defaults.editors, {
-		combogrid: {
-			init: function(container, options){
-				var input = $('<input type="text" class="datagrid-editable-input">').appendTo(container); 
-				input.combogrid(options);
-				return input;
-			},
-			destroy: function(target){
-				$(target).combogrid('destroy');
-			},
-			getValue: function(target){
-				return $(target).combogrid('getValue');
-			},
-			setValue: function(target, value){
-				$(target).combogrid('setValue', value);
-			},
-			resize: function(target, width){
-				$(target).combogrid('resize',width);
-			}
-		}
-	});
-}
 //下拉列表查询人员信息
-function searchPerson(value,name){
-	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.searchKey = name;
-	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.searchVal = value;
+function searchPerson(pNumber, pName){
+	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_number = pNumber;
+	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_name = pName;
 	$('.combogrid-f').combogrid('grid').datagrid('reload');
 }
 //加载教育背景列表
@@ -89,21 +63,26 @@ function loadCertificaten(c_p_number,c_p_name){
 			{
 				field:"c_p_name",
 				title:"人员名称",
-				width:100,
+				width:120,
 				editor:{
 					type:'combogrid',
 					options:{
-						panelWidth:300,
-						idField:'p_name',
+						panelWidth:320,
+						idField:'p_number',
 						textField:'p_name',
-						toolbar:'#Marketer_ID_Member_bar',
-						url:prefix+'/loadPersonInFo',
+						url:prefix+'/loadPersonlimit',
+						toolbar:createToolbar(),
+						loadMsg:'玩命加载中......',
 						columns:[[
 							{field:'p_number',title:'员工编号',width:100},
 							{field:'p_name',title:'员工名称',width:100},
 						]],
+						filter:function(q, row){
+							console.log("q:"+q);
+							console.log("row"+row);
+						},
 						required:true,
-						editable:false,
+//						editable:false,
 						onSelect:function (index, row){
 							var ed_num = $('#certificaten_grid').datagrid('getEditor', {index:editIndex,field:'c_p_number'});
 							var ed_id = $('#certificaten_grid').datagrid('getEditor', {index:editIndex,field:'c_p_id'});
@@ -150,7 +129,7 @@ function loadCertificaten(c_p_number,c_p_name){
 			{
 				field:"c_begin_date",
 				title:"颁发日期",
-				width:120,
+				width:110,
 				editor:{
 					type:'datebox',
 					options:{
@@ -175,7 +154,7 @@ function loadCertificaten(c_p_number,c_p_name){
 			{
 				field:"c_end_date",
 				title:"失效日期",
-				width:120,
+				width:110,
 				editor:{
 					type:'datebox',
 					options:{
@@ -242,6 +221,31 @@ function loadCertificaten(c_p_number,c_p_name){
 		}
 	});
 }
+//动态创建Toolbar
+function createToolbar(){
+	var tools = document.createElement("div");
+	tools.id = "dormitory_cost_member_bar";
+	tools.appendChild(document.createTextNode("工号："));
+	var input = document.createElement("input");
+	input.type="text";input.classList.add("textbox");input.id="query_p_number";
+	input.style="width: 110px;";
+	input.value="";
+	input.oninput=function(value){
+		searchPerson(value.target.value, null);
+	};
+	tools.appendChild(input);
+	tools.appendChild(document.createTextNode(" "));
+	tools.appendChild(document.createTextNode("姓名："));
+	var input1 = document.createElement("input");
+	input1.type="text";input1.classList.add("textbox");input1.id="query_p_name";
+	input1.style="width: 110px;";
+	input.value="";
+	input1.oninput=function(value){
+		searchPerson(null, value.target.value);
+	};
+	tools.appendChild(input1);
+	return tools;
+}
 //查询条件重置
 function resetCertificaten(){
 	$("#search_p_number").val("");$("#search_p_name").val("");
@@ -266,13 +270,12 @@ function addCertificaten(){
 	if (endEditing()){
 		$('#certificaten_grid').datagrid('appendRow',{});
 		editIndex = $('#certificaten_grid').datagrid('getRows').length-1;
-		$('#certificaten_grid').datagrid('selectRow', editIndex)
-		.datagrid('beginEdit', editIndex);
+		$('#certificaten_grid').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
 		var editors = $("#certificaten_grid").datagrid('getEditors',editIndex);  
 		var sumEditor = editors[1];  
 		//设置sum字段为只读属性  
 		$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
-		$(sumEditor.target).css('background','#DCDCDC'); 
+		$(sumEditor.target).css('background','#DCDCDC');
 	}
 }
 //删除
@@ -319,7 +322,8 @@ function removeCertificaten(){
 	}else{
 		$.messager.alert("消息提示！","请选择一条数据！","info");
 	}	
-}
+};
+//赋值
 function setData(){
 	var rowData =$('#certificaten_grid').datagrid('getSelected');
 	var data={
@@ -367,9 +371,6 @@ function acceptCertificaten(){
 		});
 	}
 }
-function saveCertificaten(){
-	
-}
 //取消
 function rejectCertificaten(){
 	$('#certificaten_grid').datagrid('rejectChanges');
@@ -387,6 +388,8 @@ function onDblClickRowCertificaten(index){
 			//设置sum字段为只读属性  
 			$(sumEditor.target).attr({'readonly':true,'unselectable':'on'});  
 			$(sumEditor.target).css('background','#DCDCDC');
+			//从新加载一下选择人员combogrid列表
+			$('.combogrid-f').combogrid('grid').datagrid('reload');
 		} else {
 			$('#certificaten_grid').datagrid('selectRow', editIndex);
 		}

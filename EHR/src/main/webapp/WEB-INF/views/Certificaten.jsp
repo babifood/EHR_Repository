@@ -42,19 +42,6 @@
 	        	<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchCertificaten()">查询</a>
 	        </div>
 		</div>
-		<div id="Marketer_ID_Member_bar">
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<tr>
-					<td style="padding: 0 0 0 0px;color: #333;">
-						<input id="certificaten_searchbox" class="easyui-searchbox" style="width:190px" data-options="searcher:searchPerson,prompt:'请输入......',menu:'#certificaten_search_menu'"></input> 
-						<div id="certificaten_search_menu" style="width:120px"> 
-							<div data-options="name:'p_number'">员工编号</div> 
-							<div data-options="name:'p_name'">员工姓名</div>
-						</div> 
-					</td>
-				</tr>
-			</table>
-		</div>
 	</div>
 	<div id="certificaten_dlg" class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" closed="true" buttons="#certificaten_dialog_buttons"></div>
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/validatebox.js"></script>
