@@ -19,15 +19,29 @@ public class ScheduledController {
 	private DakaRecordService dakaRecordService;
 	
 	@Scheduled(cron = "0 1 0 * * ?")
-	public void getDakaSource() {
-		dakaSourceService.getDakaSource();
+	public void getDakaSourceFirst() {
+		dakaSourceService.getDakaSource("1");
+	}
+	
+	@Scheduled(cron = "0 30 0 * * ?")
+	public void getDakaSourceSecond() {
+		dakaSourceService.getDakaSource("2");
 	}
 	
 	
-	@Scheduled(cron = "0 0 3 * * ?")
+	@Scheduled(cron = "0 1 1 * * ?")
+	public void checkDakaRecordFirst(){
+		try {
+			dakaRecordService.checkDakaRecord("1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Scheduled(cron = "0 30 1 * * ?")
 	public void checkDakaRecord(){
 		try {
-			dakaRecordService.checkDakaRecord();
+			dakaRecordService.checkDakaRecord("2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

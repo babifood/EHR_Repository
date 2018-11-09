@@ -25,18 +25,19 @@ public class DakaRecordService {
 	@Autowired
 	private DakaSourceDao dakaSourceDao;
 
-	public void checkDakaRecord() throws Exception {
+	public void checkDakaRecord(String type) throws Exception {
 		// 打卡记录最后日期
 		Calendar calendar = Calendar.getInstance();
-		String lastDay = dakaRecordDao.findLastDay();
+		String lastDay = dakaRecordDao.findLastDay(type);
 		if (UtilString.isEmpty(lastDay)) {
 			calendar.set(Calendar.YEAR, 2018);
-			calendar.set(Calendar.MONTH, 6);
+			calendar.set(Calendar.MONTH, 8);//9月
 			calendar.set(Calendar.DAY_OF_MONTH, 1);
 		} else {
 			calendar.setTime(UtilDateTime.getDate(lastDay, "yyyy-MM-dd"));
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
 		String beginTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00:000");
 		calendar.add(Calendar.DAY_OF_MONTH, 1);
 		String endTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00:000");
@@ -45,19 +46,23 @@ public class DakaRecordService {
 			if(dakaRecord == null || dakaRecord.size() <= 0){
 				break;
 			}
-			calculateDakaRecord(dakaRecord, beginTime.substring(0, 10));
+			calculateDakaRecord(dakaRecord, beginTime.substring(0, 10), type);
 			beginTime = endTime;
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 			endTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00.000");
 		}
 	}
 
-	private void calculateDakaRecord(List<Map<String, Object>> dakaRecord, String day) {
+	private void calculateDakaRecord(List<Map<String, Object>> dakaRecord, String day, String type) {
 		Map<String, List<Map<String, Object>>> dakaRecordMap = getDakaRecordMap(dakaRecord);
 		if(dakaRecordMap != null && dakaRecordMap.size() > 0){
+			String status = "0";
+			if("2".equals(type)){
+				status = "1";
+			}
 			List<Object[]> dakaParams = new ArrayList<Object[]>();
 			for(List<Map<String, Object>> dakaList : dakaRecordMap.values()){
-				Object[] obj = new Object[5];
+				Object[] obj = new Object[7];
 				obj[0] = dakaList.get(0).get("pNumber");
 				obj[1] = dakaList.get(0).get("pName");
 				obj[2] = day;
@@ -76,6 +81,8 @@ public class DakaRecordService {
 					obj[3] = start.split(" ")[1].substring(0, 5);
 					obj[4] = end.split(" ")[1].substring(0, 5);
 				}
+				obj[5] = "1";
+				obj[6] = status;
 				dakaParams.add(obj);
 			}
 			dakaRecordDao.saveDakaRecord(dakaParams);
@@ -101,7 +108,6 @@ public class DakaRecordService {
 	 * @return
 	 */
 	private Map<String, List<Map<String, Object>>> getDakaRecordMap(List<Map<String, Object>> dakaRecord) {
-		Long start = System.currentTimeMillis();
 		Map<String, List<Map<String, Object>>> dakaRecordMap = new HashMap<String, List<Map<String, Object>>>();
 		for(Map<String, Object> map:dakaRecord){
 			String pNumber = map.get("pNumber")+"";
@@ -112,8 +118,6 @@ public class DakaRecordService {
 			list.add(map);
 			dakaRecordMap.put(pNumber, list);
 		}
-		Long end = System.currentTimeMillis();
-		System.out.println("整理每个员工的打卡数据" + (end - start));
 		return dakaRecordMap;
 	}
 

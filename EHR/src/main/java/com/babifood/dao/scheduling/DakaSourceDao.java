@@ -19,12 +19,18 @@ private Logger logger = LoggerFactory.getLogger(DakaSourceDao.class);
 	@Autowired
 	private JdbcTemplate jdbctemplate;
 	
-	public String findLastDay() {
+	public String findLastDay(String type) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
-		String sql = "select max(check_time) from ehr_daka_source ";
+		StringBuffer sql = new StringBuffer();
+		sql.append("select max(check_time) from ehr_daka_source ");
+		if("1".equals(type)){
+			sql.append(" where type1 = '1'");
+		} else if ("2".equals(type)) {
+			sql.append(" where type2 = '1'");
+		}
 		String checkTime = "";
 		try {
-			checkTime = jdbctemplate.queryForObject(sql, String.class);
+			checkTime = jdbctemplate.queryForObject(sql.toString(), String.class);
 		} catch (Exception e) {
 			logger.error("查询最后打卡记录日期失败", e);
 			throw e;
@@ -72,7 +78,7 @@ private Logger logger = LoggerFactory.getLogger(DakaSourceDao.class);
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
 		sql.append("REPLACE INTO `ehr_daka_source` (`id`, `p_number`, `p_name`, `check_time`, `check_type`, ");
-		sql.append("`verify_code`, `sn_name`) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		sql.append("`verify_code`, `sn_name` ,`type1`, `type2`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		try {
 			jdbctemplate.batchUpdate(sql.toString(), params);
 		} catch (Exception e) {
