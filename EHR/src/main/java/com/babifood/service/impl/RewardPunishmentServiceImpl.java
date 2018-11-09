@@ -41,9 +41,9 @@ public class RewardPunishmentServiceImpl implements RewardPunishmentService {
 		return RewardPunishmentDao.loadComboboxRAPItemData(category_id);
 	}
 	@Override
-	public List<Map<String, Object>> loadRewardPunishment(String rap_category, String rap_item) {
+	public List<Map<String, Object>> loadRewardPunishment(String searchKey, String searchVal) {
 		// TODO Auto-generated method stub
-		return RewardPunishmentDao.loadRewardPunishment(rap_category,rap_item);
+		return RewardPunishmentDao.loadRewardPunishment(searchKey,searchVal);
 	}
 	@Override
 	public int[] saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity) {

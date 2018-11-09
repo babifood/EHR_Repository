@@ -23,7 +23,7 @@ public interface RewardPunishmentDao {
 	//奖惩记录
 	public List<Map<String,Object>> loadComboboxRAPItemData(String category_id);
 			
-	public List<Map<String,Object>> loadRewardPunishment(String rap_category, String rap_item);
+	public List<Map<String,Object>> loadRewardPunishment(String searchKey, String searchVal);
 			
 	public int[] saveRewardPunishment(RewardPunishmentEntity rewardpunishmentEntity);
 			

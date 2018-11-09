@@ -107,9 +107,9 @@ public class RewardPunishmentControl{
 	 */
 	@ResponseBody
 	@RequestMapping("/loadRewardPunishment")
-	public Map<String,Object> loadRewardPunishment(String rap_category, String rap_item){
+	public Map<String,Object> loadRewardPunishment(String searchKey, String searchVal){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = RewardPunishmentService.loadRewardPunishment(rap_category,rap_item);
+		List<Map<String, Object>> list = RewardPunishmentService.loadRewardPunishment(searchKey,searchVal);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;

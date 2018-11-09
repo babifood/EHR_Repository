@@ -160,7 +160,7 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 	}
 	//奖惩记录
 	@Override
-	public List<Map<String, Object>> loadRewardPunishment(String rap_category, String rap_item) {
+	public List<Map<String, Object>> loadRewardPunishment(String searchKey, String searchVal) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select u.RAP_ID as rap_id,u.RAPI_CATEGORY_ID as rap_category_id,r.RAPI_CATEGORY_NAME as rap_category_name,u.RAP_P_ID as rap_p_id,u.RAP_P_NAME as rap_p"
@@ -168,11 +168,8 @@ public class RewardPunishmentDaoImpl implements RewardPunishmentDao {
 				+ ",u.RAP_MONEY as rap_money,u.RAP_PROPOSER_ID as rap_proposer_id,u.RAP_PROPOSER_NAME as rap_proposer"
 				+ ",u.RAP_DESC as rap_desc,r.RAPI_ID,r.RAPI_NAME as rap_item_name");
 		sql.append(" from ehr_rewardandpunishment u inner join ehr_rewardandpunishment_item r on u.RAP_ITEM_ID = r.RAPI_ID where 1=1");
-		if(rap_category!=null&&!rap_category.equals("")){
-			sql.append(" and u.RAPI_CATEGORY_ID like '%"+rap_category+"%'");
-		}
-		if(rap_item!=null&&!rap_item.equals("")){
-			sql.append(" and r.RAPI_NAME like '%"+rap_item+"%'");
+		if(!searchKey.equals("")&&!searchVal.equals("")){
+			sql.append(" and u."+searchKey+" like '%"+searchVal+"%'");
 		}
 		sql.append(" ORDER BY rap_id ASC");
 		List<Map<String, Object>> list = null;

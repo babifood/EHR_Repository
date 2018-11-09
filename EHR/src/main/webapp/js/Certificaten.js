@@ -1,4 +1,5 @@
-var editIndex = undefined;   
+var editIndex = undefined; 
+var combogridUrl;
 //初始化
 $(function(){
 	//重写Text
@@ -33,9 +34,9 @@ function overrideGridEditText(){
 	});
 }
 //下拉列表查询人员信息
-function searchPerson(){
-	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_number = $("#p_number").val();
-	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_name = $("#p_name").val();
+function searchPerson(value,name){
+	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.searchKey = name;
+	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.searchVal = value;
 	$('.combogrid-f').combogrid('grid').datagrid('reload');
 }
 //加载教育背景列表
@@ -92,7 +93,7 @@ function loadCertificaten(c_p_number,c_p_name){
 				editor:{
 					type:'combogrid',
 					options:{
-						panelWidth:400,
+						panelWidth:300,
 						idField:'p_name',
 						textField:'p_name',
 						toolbar:'#Marketer_ID_Member_bar',

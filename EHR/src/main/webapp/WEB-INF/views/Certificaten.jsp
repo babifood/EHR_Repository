@@ -45,10 +45,12 @@
 		<div id="Marketer_ID_Member_bar">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<tr>
-					<td style="padding: 0 0 0 7px;color: #333;">
-						工号：<input type="text" class="textbox" id="p_number" name="p_number" style="width: 110px;"/>
-	        			姓名：<input type="text" class="textbox" id="p_name" name="p_name" style="width: 110px;"/>
-	        			<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPerson()">查询</a>
+					<td style="padding: 0 0 0 0px;color: #333;">
+						<input id="certificaten_searchbox" class="easyui-searchbox" style="width:190px" data-options="searcher:searchPerson,prompt:'请输入......',menu:'#certificaten_search_menu'"></input> 
+						<div id="certificaten_search_menu" style="width:120px"> 
+							<div data-options="name:'p_number'">员工编号</div> 
+							<div data-options="name:'p_name'">员工姓名</div>
+						</div> 
 					</td>
 				</tr>
 			</table>

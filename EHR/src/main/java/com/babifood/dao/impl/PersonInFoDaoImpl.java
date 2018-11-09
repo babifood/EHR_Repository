@@ -112,7 +112,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append("p_recommend_person,");
 		sql.append("p_recommend_relation");
 		sql.append(" from ehr_person_basic_info where 1=1");
-		if(!searchKey.equals("")&&!searchVal.equals("")){
+		if(!"".equals(searchKey)&&searchKey!=null&&!"".equals(searchVal)&&searchVal!=null){
 			sql.append(" and "+searchKey+" like '%"+searchVal+"%'");
 		}
 		StringBuffer returnsql = super.jointDataAuthoritySql("p_company_id","p_organization_id",sql);
