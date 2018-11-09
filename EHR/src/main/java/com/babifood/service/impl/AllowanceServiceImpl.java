@@ -109,8 +109,8 @@ public class AllowanceServiceImpl implements AllowanceService {
 		row1Name.put("月", "month");
 		row1Name.put("员工工号", "pNumber");
 		row1Name.put("员工姓名", "pName");
-		row1Name.put("高温津贴", "highTem");
-		row1Name.put("低温津贴", "lowTem");
+		row1Name.put("高温津贴(标准)", "highTem");
+		row1Name.put("低温津贴(标准)", "lowTem");
 		row1Name.put("夜班津贴", "nightShift");
 		row1Name.put("早班津贴", "morningShift");
 		row1Name.put("驻外/住宿津贴", "stay");
@@ -284,8 +284,8 @@ public class AllowanceServiceImpl implements AllowanceService {
 		row1Name.put("month", "月");
 		row1Name.put("pNumber", "员工工号");
 		row1Name.put("pName", "员工姓名");
-		row1Name.put("highTem", "高温津贴");
-		row1Name.put("lowTem", "低温津贴");
+		row1Name.put("highTem", "高温津贴(标准)");
+		row1Name.put("lowTem", "低温津贴(标准)");
 		row1Name.put("nightShift", "夜班津贴");
 		row1Name.put("morningShift", "早班津贴");
 		row1Name.put("stay", "驻外/住宿津贴");

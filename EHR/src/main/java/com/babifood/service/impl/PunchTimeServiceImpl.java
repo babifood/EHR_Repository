@@ -75,8 +75,8 @@ public class PunchTimeServiceImpl implements PunchTimeService {
 	public Map<String, Object> syncPunchTimeInfo() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			dakaSourceService.getDakaSource();
-			dakaRecordService.checkDakaRecord();
+			dakaSourceService.getDakaSource("2");
+			dakaRecordService.checkDakaRecord("2");
 			result.put("code", "1");
 		} catch (Exception e) {
 			result.put("code", "0");
