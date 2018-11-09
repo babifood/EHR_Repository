@@ -280,11 +280,11 @@ public class JobLevelDapImpl implements JobLevelDao {
 		// TODO Auto-generated method stub
 				StringBuffer sql = new StringBuffer();
 				sql.append("update ehr_post set POST_NAME=?,POSITION_ID=?,POST_PROJECT_ID=? where POST_ID=?");
-				Object[] params=new Object[3];
+				Object[] params=new Object[4];
 				params[0]=postEntity.getPost_name();
 				params[1]=postEntity.getPosition_id();
-				params[2]=postEntity.getPost_id();
-				params[3]=postEntity.getPost_project_id();
+				params[2]=postEntity.getPost_project_id();
+				params[3]=postEntity.getPost_id();
 				int rows =-1;
 				try {
 					rows = jdbctemplate.update(sql.toString(), params);

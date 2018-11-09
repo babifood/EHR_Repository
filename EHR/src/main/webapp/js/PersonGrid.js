@@ -168,6 +168,7 @@ function createWorkNum(){
 }
 //加载岗位combobox
 function loadPostComboBox(){
+	debugger;
 	var url=prefix+"/loadComboboxPostData";
 	$('#p_post').combogrid({    
 		idField: 'post_name',
@@ -180,13 +181,19 @@ function loadPostComboBox(){
 			{field:'joblevel_name',title:'职级名称',width:60},
 		]],
 		fitColumns: true,
-		onHidePanel:function(){
-			var row = $('#p_post').combogrid('grid').datagrid('getSelected');	// 获取数据表格对象
-			$("#p_post_id").val(row.post_id);//编号
-			$("#p_title").val(row.position_name);
-			$("#p_level_id").val(row.joblevel_id);
-			$("#p_level_name").val(row.joblevel_name);
-		}
+		onClickRow:function(rowIndex,rowData){
+			$("#p_post_id").val(rowData.post_id);//编号
+			$("#p_title").val(rowData.position_name);
+			$("#p_level_id").val(rowData.joblevel_id);
+			$("#p_level_name").val(rowData.joblevel_name);
+		},
+//		onHidePanel:function(){
+//			var row = $('#p_post').combogrid('grid').datagrid('getSelected');	// 获取数据表格对象
+//			$("#p_post_id").val(row.post_id);//编号
+//			$("#p_title").val(row.position_name);
+//			$("#p_level_id").val(row.joblevel_id);
+//			$("#p_level_name").val(row.joblevel_name);
+//		}
 	}); 
 }
 //新增加载公司combobox
