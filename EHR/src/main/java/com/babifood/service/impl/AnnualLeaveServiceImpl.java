@@ -359,7 +359,7 @@ public class AnnualLeaveServiceImpl implements AnnualLeaveService {
 		for(Map<String, Object> map: list){
 			ids.add(map.get("p_number") + "");
 		}
-		annualLeaveDao.pushAnnualToOA(ids, list, year);
+//		annualLeaveDao.pushAnnualToOA(ids, list, year);
 	}
 
 }
