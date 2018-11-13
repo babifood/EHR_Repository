@@ -70,4 +70,6 @@
 		<property name="maxPoolSize" value="50" />
 		<property name="queueCapacity" value="500" />
   </bean>
+  <!-- 获取bean配置 -->
+  <bean id="appContext" class="com.babifood.utils.AppContext"></bean>
 </beans>
