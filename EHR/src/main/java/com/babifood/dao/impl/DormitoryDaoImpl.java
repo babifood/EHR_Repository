@@ -17,7 +17,7 @@ import com.babifood.utils.UtilDateTime;
 import com.babifood.utils.UtilString;
 
 @Repository
-public class DormitoryDaoImpl implements DormitoryDao {
+public class DormitoryDaoImpl extends AuthorityControlDaoImpl implements DormitoryDao {
 	
 	private static Logger log = Logger.getLogger(DormitoryDaoImpl.class);
 	

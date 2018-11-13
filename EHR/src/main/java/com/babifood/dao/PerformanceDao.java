@@ -15,4 +15,8 @@ public interface PerformanceDao {
 
 	public void updatePerformanceScore(String year, String month, String pNumber, String score, String salary);
 
+	public List<Map<String, Object>> loadUserDataAuthority();
+
+	public List<String> findPNumberList(List<Map<String, Object>> auths);
+
 }

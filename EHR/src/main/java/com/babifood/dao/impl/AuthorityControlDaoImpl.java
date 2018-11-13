@@ -6,10 +6,12 @@ import java.util.Map;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.babifood.dao.AuthorityControlDao;
 import com.babifood.entity.LoginEntity;
 
+@Repository
 public class AuthorityControlDaoImpl implements AuthorityControlDao {
 	@Autowired
 	JdbcTemplate jdbctemplate;
@@ -53,4 +55,30 @@ public class AuthorityControlDaoImpl implements AuthorityControlDao {
 		}
 		return thissql;
 	}
+	@Override
+	public List<String> findPNumberList(List<Map<String, Object>> auths) {
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT p_number FROM ehr_person_basic_info ");
+		StringBuffer companyCodes = new StringBuffer();
+		StringBuffer organizationCodes = new StringBuffer();
+		for(int i = 0; i < auths.size(); i++){
+			Map<String, Object> map = auths.get(i);
+			companyCodes.append("'"+map.get("resource_code")+"'");
+			organizationCodes.append("'"+map.get("resource")+"'");
+			if(i < auths.size() - 1){
+				companyCodes.append(",");
+				organizationCodes.append(",");
+			}
+		}
+		sql.append("where p_company_id in (" + companyCodes.toString() + ") or ");
+		sql.append("p_organization_id in (" + organizationCodes.toString() + ")");
+		List<String> pNumberList = null;
+		try {
+			pNumberList = jdbctemplate.queryForList(sql.toString(), String.class);
+		} catch (Exception e) {
+			throw e;
+		}
+		return pNumberList;
+	}
+
 }

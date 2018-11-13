@@ -262,40 +262,40 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 		}
 		return list;
 	}
-	@LogMethod(module = ModuleConstant.PERSONINFO)
-	@Override
-	public Integer getPersonCount() {
-		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
-		LogManager.putUserIdOfLogInfo(login.getUser_id());
-		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
-		Integer count = 0;
-		try {
-			// TODO Auto-generated method stub
-			count = personInFoDao.getPersonCount();
-		} catch (Exception e) {
-			// TODO: handle exception
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("getPersonByPnumber:"+e.getMessage());
-		}
-		return count;
-	}
-	@LogMethod(module = ModuleConstant.PERSONINFO)
-	@Override
-	public List<Map<String, Object>> findPagePersonInfo(int index, int threadCount) {
-		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
-		LogManager.putUserIdOfLogInfo(login.getUser_id());
-		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
-		List<Map<String, Object>> list = null;
-		try {
-			list = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount);
-		} catch (Exception e) {
-			// TODO: handle exception
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadOaWorkNumInFo:"+e.getMessage());
-		}
-		return list;
-		
-	}
+//	@LogMethod(module = ModuleConstant.PERSONINFO)
+//	@Override
+//	public Integer getPersonCount() {
+//		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+//		LogManager.putUserIdOfLogInfo(login.getUser_id());
+//		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+//		Integer count = 0;
+//		try {
+//			// TODO Auto-generated method stub
+//			count = personInFoDao.getPersonCount();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			LogManager.putContectOfLogInfo(e.getMessage());
+//			log.error("getPersonByPnumber:"+e.getMessage());
+//		}
+//		return count;
+//	}
+//	@LogMethod(module = ModuleConstant.PERSONINFO)
+//	@Override
+//	public List<Map<String, Object>> findPagePersonInfo(int index, int threadCount) {
+//		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
+//		LogManager.putUserIdOfLogInfo(login.getUser_id());
+//		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
+//		List<Map<String, Object>> list = null;
+//		try {
+//			list = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			LogManager.putContectOfLogInfo(e.getMessage());
+//			log.error("loadOaWorkNumInFo:"+e.getMessage());
+//		}
+//		return list;
+//		
+//	}
 	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
 	public Object getPersonByPnumber(String pNumber) {

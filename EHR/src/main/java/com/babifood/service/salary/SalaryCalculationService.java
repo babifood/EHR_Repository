@@ -109,7 +109,7 @@ public class SalaryCalculationService {
 				return getSalaryCalculation(type, currentType);
 			}
 			if(type < 3){
-				Integer count = personInFoDao.getPersonCount();
+				Integer count = personInFoDao.getPersonCount(year+"-"+month+"-01");
 				final int threadCount = 50;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
 				logger.info("薪资计算========>使用线程数量，num=" + num);
@@ -179,7 +179,7 @@ public class SalaryCalculationService {
 	 * @return 
 	 */
 	public String calculationEmployeesSalary(int index, int threadCount) {
-		List<Map<String, Object>> employeeList = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount);;// 查询员工列表
+		List<Map<String, Object>> employeeList = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount, year+"-"+month+"-01");;// 查询员工列表
 		List<SalaryDetailEntity> salaryDetails = new ArrayList<SalaryDetailEntity>();
 		if (employeeList != null && employeeList.size() > 0) {
 			logger.info("薪资计算========>薪资计算index："+index+",员工数量："+employeeList.size());
