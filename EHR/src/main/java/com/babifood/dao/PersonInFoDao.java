@@ -34,9 +34,9 @@ public interface PersonInFoDao {
 	
 	public List<Map<String, Object>> findPersonListByIds(String[] ids);
 
-	public Integer getPersonCount();
+	public Integer getPersonCount(String date);
 
-	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize);
+	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize, String date);
 
 	public Object getPersonByPnumber(String pNumber);
 	

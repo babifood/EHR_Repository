@@ -263,6 +263,7 @@ function cancelPunchTime() {
 }
 
 function reloadPunchTime() {
+	console.log("1111111111111");
 	var pNumber = $("#punch_time_number").val();
 	var pName = $("#punch_time_name").val();
 	var data = {

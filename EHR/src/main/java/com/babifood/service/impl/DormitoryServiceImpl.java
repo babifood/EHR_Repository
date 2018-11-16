@@ -450,11 +450,20 @@ public class DormitoryServiceImpl implements DormitoryService {
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_IMPORT);
 			values = ExcelUtil.importExcel(file, row1Name);
 			if(values != null && values.size() > 0){
-				List<Object[]> dormitoryCostParam = getDormitoryCostParam(values);
-				dormitoryDao.saveDormitoryCosts(dormitoryCostParam);
+				Map<String, Object> user = checkValues(values);
+				if(user == null || user.size() <= 0){
+					List<Object[]> dormitoryCostParam = getDormitoryCostParam(values);
+					dormitoryDao.saveDormitoryCosts(dormitoryCostParam);
+					result.put("code", "1");
+					result.put("msg", "导入数据成功");
+				} else {
+					result.put("code", "0");
+					result.put("msg", "导入数据失败，"+user.get("pName") + ",工号"+user.get("pNumber")+"不是权限范围内员工");
+				}
+			} else {
+				result.put("code", "1");
+				result.put("msg", "导入数据成功");
 			}
-			result.put("code", "1");
-			result.put("msg", "导入数据成功");
 			LogManager.putContectOfLogInfo("导入宿舍费用信息");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -469,6 +478,21 @@ public class DormitoryServiceImpl implements DormitoryService {
 			LogManager.putContectOfLogInfo("导入宿舍费用信息失败,保存导入数据异常,错误信息：" + e.getMessage());
 		}
 		return result;
+	}
+	
+	public Map<String, Object> checkValues(List<Map<String, Object>> values) {
+		Map<String, Object> user = new HashMap<String, Object>();
+		List<Map<String, Object>> auths = dormitoryDao.loadUserDataAuthority();
+		if(auths != null && auths.size() > 0){
+			List<String> pNumberList = dormitoryDao.findPNumberList(auths);
+			for(Map<String, Object> map : values){
+				if(!pNumberList.contains(map.get("pNumber")+"")){
+					user = map;
+					break;
+				}
+			}
+		}
+		return user;
 	}
 
 	private List<Object[]> getDormitoryCostParam(List<Map<String, Object>> values) {

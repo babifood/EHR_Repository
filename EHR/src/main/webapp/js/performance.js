@@ -98,7 +98,7 @@ function initPerformanceImportExcel(){
 					$("#performance_list_datagrid").datagrid("reload");
 				});
 			} else {
-				$.messager.confirm('提示', "导入失败!");
+				$.messager.confirm('提示', result.msg);
 			}
 		}
 	});
@@ -122,6 +122,7 @@ function loadConditionPerformance(){
 
 //导出
 function exportPerformance(type){
+	console.log("11111111111111 "+type);
 	window.location.href = prefix + "/performance/export?type=" + type;
 }
 
@@ -162,7 +163,7 @@ function importPerformanceInfos(){
 						$("#performance_list_datagrid").datagrid("reload");
 				    });
 			} else {
-				$.messager.confirm('提示',"导入失败!");
+				$.messager.confirm('提示',obj.msg);
 			}
 			$("#performance_booten").linkbutton('enable');
 		}
@@ -207,13 +208,13 @@ function savePerformanceSocre() {
 		$('#performance_list_datagrid').datagrid('endEdit', performanceIndex);
 		var rows = $('#performance_list_datagrid').datagrid("getRows");
 		var rowData = rows[performanceIndex];
-		if(pSalary != null && pSalary != "" && rowData.performanceScore){
-			$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
-			$.messager.alert("消息提示！","绩效分数非导入，不能修改!","warning");
-		} else if(performanceScore != null && performanceScore != "" && rowData.pSalary){
-			$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
-			$.messager.alert("消息提示！","绩效工资非导入，不能修改!","warning");
-		} else {
+//		if(pSalary != null && pSalary != "" && rowData.performanceScore){
+//			$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+//			$.messager.alert("消息提示！","绩效分数非导入，不能修改!","warning");
+//		} else if(performanceScore != null && performanceScore != "" && rowData.pSalary){
+//			$('#performance_list_datagrid').datagrid('selectRow', performanceIndex).datagrid('beginEdit', performanceIndex);
+//			$.messager.alert("消息提示！","绩效工资非导入，不能修改!","warning");
+//		} else {
 			$.ajax({
 				url:prefix+'/performance/save',
 				type:'post',
@@ -246,7 +247,7 @@ function savePerformanceSocre() {
 					}
 				}
 			});
-		}
+//		}
 	}
 }
 

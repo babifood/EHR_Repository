@@ -137,11 +137,20 @@ public class PerformanceServiceImpl implements PerformanceService{
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_IMPORT);
 			values = ExcelUtil.importExcel(file, row1Name);
 			if(values != null && values.size() > 0){
-				List<Object[]> performanceParam = getPerformanceParam(values);
-				performanceDao.savePerformance(performanceParam);
+				Map<String, Object> user = checkValues(values);
+				if(user == null || user.size() <= 0){
+					List<Object[]> performanceParam = getPerformanceParam(values);
+					performanceDao.savePerformance(performanceParam);
+					result.put("code", "1");
+					result.put("msg", "导入数据成功");
+				} else {
+					result.put("code", "0");
+					result.put("msg", "导入数据失败，"+user.get("pName") + ",工号"+user.get("pNumber")+"不是权限范围内员工");
+				}
+			} else {
+				result.put("code", "1");
+				result.put("msg", "导入数据成功");
 			}
-			result.put("code", "1");
-			result.put("msg", "导入数据成功");
 			LogManager.putContectOfLogInfo("导入绩效薪资信息");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -156,6 +165,21 @@ public class PerformanceServiceImpl implements PerformanceService{
 			LogManager.putContectOfLogInfo("导出绩效信息列表失败，错误信息：保存绩效信息失败，" + e.getMessage());
 		}
 		return result;
+	}
+	
+	public Map<String, Object> checkValues(List<Map<String, Object>> values) {
+		Map<String, Object> user = new HashMap<String, Object>();
+		List<Map<String, Object>> auths = performanceDao.loadUserDataAuthority();
+		if(auths != null && auths.size() > 0){
+			List<String> pNumberList = performanceDao.findPNumberList(auths);
+			for(Map<String, Object> map : values){
+				if(!pNumberList.contains(map.get("pNumber")+"")){
+					user = map;
+					break;
+				}
+			}
+		}
+		return user;
 	}
 
 	/**

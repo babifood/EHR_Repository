@@ -9,4 +9,8 @@ public interface WorkshopClockedDao {
 
 	void saveimportExcelWorkshopClocked(List<Object[]> workshopClockedParam);
 
+	List<Map<String, Object>> loadUserDataAuthority();
+
+	List<String> findPNumberList(List<Map<String, Object>> auths);
+
 }

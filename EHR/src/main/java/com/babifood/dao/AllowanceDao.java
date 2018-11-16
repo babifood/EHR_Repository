@@ -11,4 +11,8 @@ public interface AllowanceDao {
 
 	public Integer getAllowanceCount(Map<String, Object> param);
 
+	public List<Map<String, Object>> loadUserDataAuthority();
+
+	public List<String> findPNumberList(List<Map<String, Object>> auths);
+
 }

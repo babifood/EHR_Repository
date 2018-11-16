@@ -146,7 +146,7 @@ function initImportExcel(){
 					$("#workshop_grid").datagrid("reload");
 				});
 			} else {
-				$.messager.confirm('提示', "导入失败!");
+				$.messager.confirm('提示', result.msg);
 			}
 		}
 	});

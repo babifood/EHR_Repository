@@ -36,7 +36,7 @@ public class AllowanceServiceImpl implements AllowanceService {
 	
 	@Autowired
 	private AllowanceDao allowanceDao;
-	
+
 	/**
 	 * 查询员工津贴、奖金、扣款信息
 	 */
@@ -78,13 +78,24 @@ public class AllowanceServiceImpl implements AllowanceService {
 		List<Map<String, Object>> values = null;
 		try {
 			values = ExcelUtil.importExcel(file, row1Name);
-			if ("1".equals(type)) {//覆盖导入
-				getEmployAllowanceParamCover(values);
-			} else {//忽略导入
-				getEmployAllowanceParamIgnore(values);
+			if(values != null && values.size() > 0){
+				Map<String, Object> user = checkValues(values);
+				if(user == null || user.size() <= 0){
+					if ("1".equals(type)) {//覆盖导入
+						getEmployAllowanceParamCover(values);
+					} else {//忽略导入
+						getEmployAllowanceParamIgnore(values);
+					}
+					result.put("code", "1");
+					result.put("msg", "导入数据成功");
+				} else {
+					result.put("code", "0");
+					result.put("msg", "导入数据失败，"+user.get("pName") + ",工号"+user.get("pNumber")+"不是权限范围内员工");
+				}
+			} else {
+				result.put("code", "1");
+				result.put("msg", "导入数据成功");
 			}
-			result.put("code", "1");
-			result.put("msg", "导入数据成功");
 		} catch (IOException e) {
 			result.put("code", "0");
 			result.put("msg", "excel数据异常，导入数据失败");
@@ -99,6 +110,21 @@ public class AllowanceServiceImpl implements AllowanceService {
 		return result;
 	}
 
+	public Map<String, Object> checkValues(List<Map<String, Object>> values) {
+		Map<String, Object> user = new HashMap<String, Object>();
+		List<Map<String, Object>> auths = allowanceDao.loadUserDataAuthority();
+		if(auths != null && auths.size() > 0){
+			List<String> pNumberList = allowanceDao.findPNumberList(auths);
+			for(Map<String, Object> map : values){
+				if(!pNumberList.contains(map.get("pNumber")+"")){
+					user = map;
+					break;
+				}
+			}
+		}
+		return user;
+	}
+	
 	/**
 	 * 对应Excel 第一行数据
 	 * @return

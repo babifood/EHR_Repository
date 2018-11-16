@@ -186,7 +186,7 @@ function initAllowanceImportExcel(){
 					$("#allowance_list_datagrid").datagrid("reload");
 				});
 			} else {
-				$.messager.confirm('提示', "导入失败!");
+				$.messager.confirm('提示', result.msg);
 			}
 		}
 	});

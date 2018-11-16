@@ -43,5 +43,9 @@ public interface DormitoryDao {
 
 	public void saveDormitoryCosts(List<Object[]> performanceParam);
 
+	public List<Map<String, Object>> loadUserDataAuthority();
+
+	public List<String> findPNumberList(List<Map<String, Object>> auths);
+
 
 }

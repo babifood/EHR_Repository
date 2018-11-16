@@ -17,5 +17,9 @@ public interface CertificatenDao {
 	void saveCertificaten(Certificaten certificaten);
 
 	void saveimportExcelCertificaten(List<Object[]> certificatenParam);
+
+	List<Map<String, Object>> loadUserDataAuthority();
+
+	List<String> findPNumberList(List<Map<String, Object>> auths);
 	
 }

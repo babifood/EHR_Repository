@@ -659,11 +659,14 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		return jdbctemplate.queryForList(sql.toString(), ids);
 	}
 	@Override
-	public Integer getPersonCount() throws DataAccessException{
-		return jdbctemplate.queryForInt("select count(*) from ehr_person_basic_info");
+	public Integer getPersonCount(String date) throws DataAccessException{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select count(*) from ehr_person_basic_info where p_OA_and_EHR = 'OA' and" );
+		sql.append("(p_out_date >= '"+date +"' OR p_out_date is null OR p_out_date = '')");
+		return jdbctemplate.queryForInt(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize) throws DataAccessException{
+	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize, String date) throws DataAccessException{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.p_id as pId,a.p_number as pNumber,a.p_name as pName,b.dept_name as companyName,");
 		sql.append("b.dept_code as companyCode,c.dept_name deptName,c.dept_code as deptCode,d.dept_name organizationName,");
@@ -674,9 +677,17 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append(" LEFT JOIN ehr_dept c on a.p_department_id = c.dept_code ");
 		sql.append(" LEFT JOIN ehr_dept d on a.P_organization_id = d.dept_code");
 		sql.append(" LEFT JOIN ehr_dept e on a.P_section_office_id = e.dept_code");
-		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID");
+		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID ");
+		sql.append(" where p_OA_and_EHR = 'OA' and (p_out_date >= ?");
+		sql.append(" OR p_out_date is null OR p_out_date = '')");
 		sql.append(" LIMIT ?,?");
-		return jdbctemplate.queryForList(sql.toString(), startIndex,pageSize);
+		List<Map<String, Object>> personInfos = null;
+		try {
+			personInfos = jdbctemplate.queryForList(sql.toString(), date, startIndex, pageSize);
+		} catch (Exception e) {
+			log.error("查询员工信息失败",e);
+		}
+		return personInfos;
 	}
 	@Override
 	public Object getPersonByPnumber(String pNumber) throws DataAccessException{
