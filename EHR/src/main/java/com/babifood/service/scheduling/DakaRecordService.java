@@ -39,8 +39,9 @@ public class DakaRecordService {
 		if("1".equals(type)){
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
 		} else if ("2".equals(type)) {
-			calendar.add(Calendar.MONTH, -1);
-			calendar.set(Calendar.DAY_OF_MONTH, 1);
+//			calendar.add(Calendar.MONTH, -1);
+//			calendar.set(Calendar.DAY_OF_MONTH, 1);
+			calendar.add(Calendar.DAY_OF_YEAR, -15);
 		}
 		String beginTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00");
 		calendar.add(Calendar.DAY_OF_MONTH, 1);

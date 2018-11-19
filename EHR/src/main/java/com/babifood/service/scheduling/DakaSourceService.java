@@ -37,8 +37,9 @@ public class DakaSourceService {
 		if("1".equals(type)){//自动任务
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
 		} else if ("2".equals(type)) {//手动自定义
-			calendar.add(Calendar.MONTH, -1);
-			calendar.set(Calendar.DAY_OF_MONTH, 1);
+//			calendar.add(Calendar.MONTH, -1);
+//			calendar.set(Calendar.DAY_OF_MONTH, 1);
+			calendar.add(Calendar.DAY_OF_YEAR, -15);
 		}
 		String year = calendar.get(Calendar.YEAR)+"";
 		String month = calendar.get(Calendar.MONTH) > 8 ? (calendar.get(Calendar.MONTH) + 1) + "":("0"+(calendar.get(Calendar.MONTH + 1)));
