@@ -1,5 +1,7 @@
 package com.babifood.control.scheduled;
 
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,28 +22,17 @@ public class ScheduledController {
 	
 	@Scheduled(cron = "0 1 0 * * ?")
 	public void getDakaSourceFirst() {
-		dakaSourceService.getDakaSource("1");
-	}
-	
-	@Scheduled(cron = "0 30 0 * * ?")
-	public void getDakaSourceSecond() {
-		dakaSourceService.getDakaSource("2");
-	}
-	
-	
-	@Scheduled(cron = "0 1 1 * * ?")
-	public void checkDakaRecordFirst(){
 		try {
-			dakaRecordService.checkDakaRecord("1");
+			dakaSourceService.getDakaSource("1");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	@Scheduled(cron = "0 30 1 * * ?")
-	public void checkDakaRecord(){
+	@Scheduled(cron = "0 1 1 * * ?")
+	public void checkDakaRecordFirst(){
 		try {
-			dakaRecordService.checkDakaRecord("2");
+			dakaRecordService.checkDakaRecord("1");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

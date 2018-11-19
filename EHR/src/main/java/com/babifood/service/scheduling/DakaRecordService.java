@@ -28,41 +28,41 @@ public class DakaRecordService {
 	public void checkDakaRecord(String type) throws Exception {
 		// 打卡记录最后日期
 		Calendar calendar = Calendar.getInstance();
-		String lastDay = dakaRecordDao.findLastDay(type);
+		String lastDay = dakaRecordDao.findLastDay();
 		if (UtilString.isEmpty(lastDay)) {
 			calendar.set(Calendar.YEAR, 2018);
 			calendar.set(Calendar.MONTH, 8);//9月
 			calendar.set(Calendar.DAY_OF_MONTH, 1);
 		} else {
 			calendar.setTime(UtilDateTime.getDate(lastDay, "yyyy-MM-dd"));
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
-		calendar.add(Calendar.DAY_OF_YEAR, -1);
-		String beginTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00:000");
+		if("1".equals(type)){
+			calendar.add(Calendar.DAY_OF_YEAR, -7);
+		} else if ("2".equals(type)) {
+			calendar.add(Calendar.MONTH, -1);
+			calendar.set(Calendar.DAY_OF_MONTH, 1);
+		}
+		String beginTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00");
 		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		String endTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00:000");
+		String endTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00");
 		while (true) {
 			List<Map<String, Object>> dakaRecord = dakaSourceDao.findDayDakaSources(beginTime, endTime);
 			if(dakaRecord == null || dakaRecord.size() <= 0){
 				break;
 			}
-			calculateDakaRecord(dakaRecord, beginTime.substring(0, 10), type);
+			calculateDakaRecord(dakaRecord, beginTime.substring(0, 10));
 			beginTime = endTime;
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
-			endTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00.000");
+			endTime = UtilDateTime.dateToString(calendar.getTime(), "yyyy-MM-dd 00:00:00");
 		}
 	}
 
-	private void calculateDakaRecord(List<Map<String, Object>> dakaRecord, String day, String type) {
+	private void calculateDakaRecord(List<Map<String, Object>> dakaRecord, String day) {
 		Map<String, List<Map<String, Object>>> dakaRecordMap = getDakaRecordMap(dakaRecord);
 		if(dakaRecordMap != null && dakaRecordMap.size() > 0){
-			String status = "0";
-			if("2".equals(type)){
-				status = "1";
-			}
 			List<Object[]> dakaParams = new ArrayList<Object[]>();
 			for(List<Map<String, Object>> dakaList : dakaRecordMap.values()){
-				Object[] obj = new Object[7];
+				Object[] obj = new Object[5];
 				obj[0] = dakaList.get(0).get("pNumber");
 				obj[1] = dakaList.get(0).get("pName");
 				obj[2] = day;
@@ -81,8 +81,6 @@ public class DakaRecordService {
 					obj[3] = start.split(" ")[1].substring(0, 5);
 					obj[4] = end.split(" ")[1].substring(0, 5);
 				}
-				obj[5] = "1";
-				obj[6] = status;
 				dakaParams.add(obj);
 			}
 			dakaRecordDao.saveDakaRecord(dakaParams);

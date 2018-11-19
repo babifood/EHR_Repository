@@ -18,8 +18,8 @@ function loadPerformanceList(){
 		singleSelect : true,
 		rownumbers : true,
 		pagination : true,
-		pageSize : 10,
-		pageList : [ 10, 20, 30 ],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber : 1,
 		columns : [[
 			{

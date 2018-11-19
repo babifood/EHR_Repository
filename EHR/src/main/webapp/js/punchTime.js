@@ -17,8 +17,8 @@ function loadPunchTimeInfo() {
 		singleSelect : true,
 		rownumbers : true,
 		pagination : true,
-		pageSize : 10,
-		pageList : [ 10, 20, 30 ],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber : 1,
 		columns : [ [ {
 			field : "id",
@@ -276,6 +276,12 @@ function reloadPunchTime() {
 function syncPunchTimeInfo() {
 	$.ajax({
 		url : prefix + "/punchTime/sync",
+		beforeSend: function () {
+			$.messager.progress({"text":"正在同步数据，请稍等"}); 
+		},
+		complete: function () {
+			$.messager.progress("close"); 
+		},
 		success:function(result){
 			if(result.code == '1'){
 				$.messager.show({

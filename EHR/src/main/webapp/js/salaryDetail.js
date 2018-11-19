@@ -7,7 +7,6 @@ $(function() {
 })
 
 function loadUserAuthCompany() {
-	console.log("111111111111111");
 	$.ajax({
 		url:prefix + "/salaryDetail/auth",
 		success:function(result){
@@ -45,8 +44,8 @@ function loadSalaryDetails() {
 		border:false,
 		pagination:true,
 		queryParams:{companyCode:$('#salary_calculation_company').val()},
-		pageSize:10,
-		pageList:[10,20,30],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber:1,
 		toolbar : "#salaryDetail_datagrid_tools",
 		singleSelect : true,

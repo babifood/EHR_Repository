@@ -37,8 +37,8 @@ function loadDormitoryInfo(){
 		singleSelect:true,
 		rownumbers:true,
 		pagination:true,
-		pageSize:10,
-		pageList:[10,20,30],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber:1,
 		columns:[[
 			{
@@ -603,8 +603,8 @@ function loadPersonList(){
 		striped:true,
 		border:false,
 		pagination:true,
-		pageSize:10,
-		pageList:[10,20,30],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber:1,
 		toolbar:"#emp_stay_dormitory_list_tools",
 		singleSelect:true,
@@ -661,8 +661,8 @@ function loadStayDormitoryInfo(){
 		singleSelect:true,
 		rownumbers:true,
 		pagination:true,
-		pageSize:10,
-		pageList:[10,20,30],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber:1,
 		columns:[[
 			{
@@ -1033,8 +1033,8 @@ function loadDormitoryCostList() {
 		singleSelect:true,
 		rownumbers:true,
 		pagination:true,
-		pageSize:10,
-		pageList:[10,20,30],
+		pageSize : 20,
+		pageList : [20, 30, 50 ],
 		pageNumber:1,
 		columns:[[
 			{
