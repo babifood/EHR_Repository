@@ -127,14 +127,17 @@ function loadAllowanceList() {
 		}, {
 			field : "reserved1",
 			title : "预留字段1",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved2",
 			title : "预留字段2",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved3",
 			title : "预留字段3",
+			hidden:"true",
 			width : 100,
 		}, {
 			field : "reserved4",
