@@ -324,20 +324,20 @@ public class AllowanceServiceImpl implements AllowanceService {
 		row1Name.put("mealDeduction", "餐补扣除");
 		row1Name.put("dormDeduction", "宿舍扣款");
 		row1Name.put("overSalary", "加班工资");
-		row1Name.put("insurance", "宿舍扣款");
+		row1Name.put("insurance", "代缴社保");
 		row1Name.put("beforeDeduction", "其它扣款（税前）");
 		row1Name.put("providentFund", "公积金");
 		row1Name.put("afterOtherDeduction", "其它扣款（税后）");
-		row1Name.put("reserved1", "预留字段1");
-		row1Name.put("reserved2", "预留字段2");
-		row1Name.put("reserved3", "预留字段3");
-		row1Name.put("reserved4", "预留字段4");
-		row1Name.put("reserved5", "预留字段5");
-		row1Name.put("reserved6", "预留字段6");
-		row1Name.put("reserved7", "预留字段7");
-		row1Name.put("reserved8", "预留字段8");
-		row1Name.put("reserved9", "预留字段9");
-		row1Name.put("reserved10", "预留字段10");
+//		row1Name.put("reserved1", "预留字段1");
+//		row1Name.put("reserved2", "预留字段2");
+//		row1Name.put("reserved3", "预留字段3");
+//		row1Name.put("reserved4", "预留字段4");
+//		row1Name.put("reserved5", "预留字段5");
+//		row1Name.put("reserved6", "预留字段6");
+//		row1Name.put("reserved7", "预留字段7");
+//		row1Name.put("reserved8", "预留字段8");
+//		row1Name.put("reserved9", "预留字段9");
+//		row1Name.put("reserved10", "预留字段10");
 		return row1Name;
 	}
 

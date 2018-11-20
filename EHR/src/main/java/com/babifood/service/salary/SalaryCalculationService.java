@@ -425,7 +425,7 @@ public class SalaryCalculationService {
 		String arrangementType = "1";
 		List<Map<String, Object>> arrangementList = baseArrangementDao.findArrangementByTargetId(targetIds);
 		if (arrangementList != null && arrangementList.size() > 0) {
-			arrangementType = arrangementList.get(0).get("arrangementType") + "";
+			arrangementType = arrangementList.get(0).get("arrangementType1") + "";
 		}
 		return arrangementType;
 	}

@@ -663,6 +663,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		StringBuffer sql = new StringBuffer();
 		sql.append("select count(*) from ehr_person_basic_info where p_OA_and_EHR = 'OA' and" );
 		sql.append("(p_out_date >= '"+date +"' OR p_out_date is null OR p_out_date = '')");
+		sql = super.jointDataAuthoritySql("p_company_id", "p_organization_id", sql);
 		return jdbctemplate.queryForInt(sql.toString());
 	}
 	@Override
@@ -680,6 +681,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID ");
 		sql.append(" where p_OA_and_EHR = 'OA' and (p_out_date >= ?");
 		sql.append(" OR p_out_date is null OR p_out_date = '')");
+		sql = super.jointDataAuthoritySql("b.dept_code", "d.dept_code ", sql);
 		sql.append(" LIMIT ?,?");
 		List<Map<String, Object>> personInfos = null;
 		try {
