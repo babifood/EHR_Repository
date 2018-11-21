@@ -3,9 +3,11 @@ package com.babifood.utils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ExcelUtil {
@@ -154,41 +158,46 @@ public class ExcelUtil {
 			Map<String, Object> param = new HashMap<String, Object>();
 			for (int i = 0; i < lastCell; i++) {
 				Cell cell = row.getCell(i);
+				Object value = (cell + "").trim();
 				if (!UtilString.isEmpty(fields[i]) && cell != null) {
-					String value = "";
 					switch (cell.getCellType()) {
-				      case HSSFCell.CELL_TYPE_NUMERIC: // 数字
-				          //如果为时间格式的内容
-				          if (HSSFDateUtil.isCellDateFormatted(cell)) {      
-				             //注：format格式 yyyy-MM-dd hh:mm:ss 中小时为12小时制，若要24小时制，则把小h变为H即可，yyyy-MM-dd HH:mm:ss
-				             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
-				             value=sdf.format(HSSFDateUtil.getJavaDate(cell.getNumericCellValue())).toString();                                 
-				               break;
-				           } else {
-				               value = new DecimalFormat("0").format(cell.getNumericCellValue());
-				           }
-				          break;
-				      case HSSFCell.CELL_TYPE_STRING: // 字符串
-				          value = cell.getStringCellValue();
-				          break;
-				      case HSSFCell.CELL_TYPE_BOOLEAN: // Boolean
-				          value = cell.getBooleanCellValue() + "";
-				          break;
-				      case HSSFCell.CELL_TYPE_FORMULA: // 公式
-				          value = cell.getCellFormula() + "";
-				          break;
-				      case HSSFCell.CELL_TYPE_BLANK: // 空值
-				          value = "";
-				          break;
-				      case HSSFCell.CELL_TYPE_ERROR: // 故障
-				          value = "非法字符";
-				          break;
-				      default:
-				          value = "未知类型";
-				          break;
-				 }
-					param.put(fields[i], value);
+					// 如果当前Cell的Type为NUMERIC
+					case HSSFCell.CELL_TYPE_NUMERIC: {
+						short format = cell.getCellStyle().getDataFormat();
+						if(format == 14 || format == 31 || format == 57 || format == 58){ 	//excel中的时间格式
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
+			                double dou = cell.getNumericCellValue();  
+			                Date date = DateUtil.getJavaDate(dou);  
+			                value = sdf.format(date);  
+						}
+						// 判断当前的cell是否为Date
+						else if (HSSFDateUtil.isCellDateFormatted(cell)) {  //先注释日期类型的转换，在实际测试中发现HSSFDateUtil.isCellDateFormatted(cell)只识别2014/02/02这种格式。
+							// 如果是Date类型则，取得该Cell的Date值           // 对2014-02-02格式识别不出是日期格式
+							Date date = cell.getDateCellValue();
+							DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+							value= formater.format(date);
+						} else { // 如果是纯数字
+							// 取得当前Cell的数值
+							value = NumberToTextConverter.toText(cell.getNumericCellValue()); 
+						}
+						break;
+					}
+					// 如果当前Cell的Type为STRIN
+					case HSSFCell.CELL_TYPE_STRING:
+						// 取得当前的Cell字符串
+						value = cell.getStringCellValue().replaceAll("'", "''");
+						break;
+					case  HSSFCell.CELL_TYPE_BLANK:
+						value = null;
+						break;
+					// 默认的Cell值
+					default:{
+						value = "";
+					}
+
 				}
+				}
+				param.put(fields[i], value);
 			}
 			ret.add(param);
 		}
