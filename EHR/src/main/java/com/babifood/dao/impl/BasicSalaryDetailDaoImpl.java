@@ -73,18 +73,18 @@ public class BasicSalaryDetailDaoImpl extends AuthorityControlDaoImpl implements
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT a.ID AS id, a.`YEAR` AS `year`, a.`MONTH` AS `month`, a.P_NUMBER AS pNumber, ");
 		sql.append("a.ABSENCE_HOURS AS absenceHours, a.AFTER_OTHER_DEDUCTION AS afterDeduction, ");
-		sql.append("a.ATTENDANCE_HOURS AS attendanceHours, a.BASE_SALARY AS baseSalary, a.ADD_OTHER AS addOther, ");
+		sql.append("a.ATTENDANCE_HOURS AS attendanceHours, i.BASE_SALARY AS baseSalary, a.ADD_OTHER AS addOther, ");
 		sql.append("a.BEFORE_OTHER_DEDUCTION AS beforeDeduction, a.CALL_SUBSIDIES AS callSubsidies, ");
-		sql.append("a.COMPANION_PARENTAL_DEDUCTION AS companionParentalDeduction, a.COMPANY_SALARY AS companySalary, ");
+		sql.append("a.COMPANION_PARENTAL_DEDUCTION AS companionParentalDeduction, i.COMPANY_SALARY AS companySalary, ");
 		sql.append("a.COMPENSATORY_BONUS AS compensatory, a.DORM_DEDUCTION as dormDeduction, g.DEPT_NAME AS companyName,");
-		sql.append("a.FIXED_OVERTIME_SALARY AS fixedOverTimeSalary, a.FUNERAL_DEDUCTION funeralDeduction, ");
+		sql.append("i.FIXED_OVERTIME_SALARY AS fixedOverTimeSalary, a.FUNERAL_DEDUCTION funeralDeduction, ");
 		sql.append("a.HIGH_TEMPERATURE_ALLOWANCE AS highTem, a.INSURANCE_DEDUCTION AS insurance, ");
 		sql.append("a.LOW_TEMPERATURE_ALLOWANCE AS lowTem, a.MARRIAGE_DEDUCTION mealDeduction, ");
 		sql.append("a.MARRIAGE_DEDUCTION AS marriageDeduction, a.MORNING_SHIFT_ALLOWANCE AS morningShift, ");
 		sql.append("a.NIGHT_SHIFT_ALLOWANCE AS nightShift, a.PROVIDENT_FUND_DEDUCTION as providentFund, ");
 		sql.append("a.OTHER_ALLOWANCE AS otherAllowance, a.OTHER_BONUS otherBonus, a.OVER_SALARY AS overSalary, ");
 		sql.append("a.PARENTAL_DEDUCTION AS parentalDeduction, a.PERFORMANCE_BONUS AS performanceBonus, ");
-		sql.append("a.PERSONAL_TAX AS personalTax, a.POST_SALARY AS postSalary, a.ONBOARDING_DEPARTURE AS onboarding, ");
+		sql.append("a.PERSONAL_TAX AS personalTax, i.POST_SALARY AS postSalary, a.ONBOARDING_DEPARTURE AS onboarding, ");
 		sql.append("a.REAL_WAGES AS realWages, a.RELAXATION AS relaxation,a.RICE_STICK AS riceStick, a.SECURITY_BONUS as security, ");
 		sql.append("a.SICK_DEDUCTION AS sickDeduction, a.STAY_ALLOWANCE AS stay, a.THING_DEDUCTION AS thingDeduction, ");
 		sql.append("a.TOTAL_DEDUCTION AS totalDeduction, a.TRAIN_DEDUCTION as trainDeduction, a.WAGE_PAYABLE AS wagePayable, ");
@@ -98,7 +98,8 @@ public class BasicSalaryDetailDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("LEFT JOIN ehr_dept e on f.P_GROUP_ID = e.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
-		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE WHERE 1=1 ");
+		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_base_salary i on i.p_number = a.P_NUMBER WHERE 1=1 ");
 		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
 			sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
 		}
@@ -146,8 +147,7 @@ public class BasicSalaryDetailDaoImpl extends AuthorityControlDaoImpl implements
 	public void saveBasicSalaryDetailEntityList(List<Map<String, Object>> salaryDetails) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("REPLACE INTO `ehr_basic_salary_details` (`YEAR`, `MONTH`, `P_NUMBER`,  ");
-		sql.append("`Attendance_hours`, `ABSENCE_HOURS`, `BASE_SALARY`, `FIXED_OVERTIME_SALARY`, ");
-		sql.append("`POST_SALARY`, `CALL_SUBSIDIES`, `COMPANY_SALARY`, `OVER_SALARY`, ");
+		sql.append("`Attendance_hours`, `ABSENCE_HOURS`, `CALL_SUBSIDIES`, `OVER_SALARY`, ");
 		sql.append("`RICE_STICK`, `HIGH_TEMPERATURE_ALLOWANCE`, `LOW_TEMPERATURE_ALLOWANCE`, ");
 		sql.append("`MORNING_SHIFT_ALLOWANCE`, `NIGHT_SHIFT_ALLOWANCE`, `STAY_ALLOWANCE`, ");
 		sql.append("`other_allowance`, `performance_bonus`, `SECURITY_BONUS`, `COMPENSATORY_BONUS`, ");
@@ -164,11 +164,7 @@ public class BasicSalaryDetailDaoImpl extends AuthorityControlDaoImpl implements
 			sql.append((UtilString.isEmpty(salaryDetail.get("pNumber")+"") ? null : "'" + salaryDetail.get("pNumber") + "'") + ",");
 			sql.append((UtilString.isEmpty(salaryDetail.get("attendanceHours")+"") ? null : "'" + salaryDetail.get("attendanceHours") + "'") + ",");
 			sql.append((UtilString.isEmpty(salaryDetail.get("absenceHours")+"") ? null : "'" + salaryDetail.get("absenceHours") + "'") + ",");
-			sql.append("'" + BASE64Util.encode(salaryDetail.get("baseSalary")+"") + "',");
-			sql.append("'" + BASE64Util.encode(salaryDetail.get("fixedOvertimeSalary")+"") + "',");
-			sql.append("'" + BASE64Util.encode(salaryDetail.get("postSalary")+"") + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.get("callSubsidies")+"") + "',");
-			sql.append("'" + BASE64Util.encode(salaryDetail.get("companySalary")+"") + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.get("overSalary")+"") + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.get("riceStick")+"") + "',");
 			sql.append("'" + BASE64Util.encode(salaryDetail.get("highTem")+"") + "',");

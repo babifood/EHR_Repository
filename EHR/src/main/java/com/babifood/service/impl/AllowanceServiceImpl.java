@@ -81,11 +81,11 @@ public class AllowanceServiceImpl implements AllowanceService {
 			if(values != null && values.size() > 0){
 				Map<String, Object> user = checkValues(values);
 				if(user == null || user.size() <= 0){
-					if ("1".equals(type)) {//覆盖导入
-						getEmployAllowanceParamCover(values);
-					} else {//忽略导入
+//					if ("1".equals(type)) {//覆盖导入
+//						getEmployAllowanceParamCover(values);
+//					} else {//忽略导入
 						getEmployAllowanceParamIgnore(values);
-					}
+//					}
 					result.put("code", "1");
 					result.put("msg", "导入数据成功");
 				} else {
@@ -177,20 +177,20 @@ public class AllowanceServiceImpl implements AllowanceService {
 		Map<String,	Object> param = new HashMap<String, Object>();
 		param.put("year", value.get("year"));
 		param.put("month", value.get("month"));
-		List<Map<String, Object>> allowanceExist = allowanceDao.findEmployAllowance(param);
+//		List<Map<String, Object>> allowanceExist = allowanceDao.findEmployAllowance(param);
 		for (Map<String, Object> allowance : values) {
-			Map<String, Object> map = null;
-			for (Map<String, Object> allowanceMap : allowanceExist) {
-				if ((allowance.get("pNumber") + "").equals(allowanceMap.get("pNumber") + "")) {
-					map = allowanceMap;
-					allowanceExist.remove(allowanceMap);
-					break;
-				}
-			}
-			if(map == null){
+//			Map<String, Object> map = null;
+//			for (Map<String, Object> allowanceMap : allowanceExist) {
+//				if ((allowance.get("pNumber") + "").equals(allowanceMap.get("pNumber") + "")) {
+//					map = allowanceMap;
+//					allowanceExist.remove(allowanceMap);
+//					break;
+//				}
+//			}
+//			if(map == null){
 				Object[] object = getObjectParam(allowance, null);
 				allowanceValues.add(object);
-			}
+//			}
 		}
 		allowanceDao.saveEmployAllowances(allowanceValues);
 		LogManager.putContectOfLogInfo("追加导入员工津贴/扣款信息,导入条数：" + allowanceValues.size());
@@ -232,38 +232,37 @@ public class AllowanceServiceImpl implements AllowanceService {
 	 */
 	private Object[] getObjectParam(Map<String, Object> allowance, Map<String, Object> map) {
 		return new Object[] {
-			UtilString.isEmpty(allowance.get("year") + "") ? (map == null ? "" : map.get("year")) : allowance.get("year"),
-			UtilString.isEmpty(allowance.get("month") + "") ? (map == null ? "" : map.get("month")) : (allowance.get("month") + "").length() == 1 ?  "0" + allowance.get("month") : allowance.get("month"),
-			UtilString.isEmpty(allowance.get("pNumber") + "") ? (map == null ? "" : map.get("pNumber")) : allowance.get("pNumber"),
-//			UtilString.isEmpty(allowance.get("pName") + "") ? (map == null ? "" : map.get("pName")) : allowance.get("pName"),
-			UtilString.isEmpty(allowance.get("overSalary") + "") ? (map == null ? "" : map.get("overSalary")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("overSalary")+""),
-			UtilString.isEmpty(allowance.get("highTem") + "") ? (map == null ? "" : map.get("highTem")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("highTem")+""),
-			UtilString.isEmpty(allowance.get("lowTem") + "") ? (map == null ? "" : map.get("lowTem")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("lowTem")+""),
-			UtilString.isEmpty(allowance.get("nightShift") + "") ? (map == null ? "" : map.get("nightShift")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("nightShift")+""),
-			UtilString.isEmpty(allowance.get("morningShift") + "") ? (map == null ? "" : map.get("morningShift")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("morningShift")+""),
-			UtilString.isEmpty(allowance.get("stay") + "") ? (map == null ? "" : map.get("stay")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("stay")+""),
-			UtilString.isEmpty(allowance.get("otherAllowance") + "") ? (map == null ? "" : map.get("otherAllowance")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("otherAllowance")+""),
-			UtilString.isEmpty(allowance.get("performanceBonus") + "") ? (map == null ? "" : map.get("performanceBonus")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("performanceBonus")+""),
-			UtilString.isEmpty(allowance.get("security") + "") ? (map == null ? "" : map.get("security")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("security")+""),
-			UtilString.isEmpty(allowance.get("compensatory") + "") ? (map == null ? "" : map.get("compensatory")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("compensatory")+""),
-			UtilString.isEmpty(allowance.get("otherBonus") + "") ? (map == null ? "" : map.get("otherBonus")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("otherBonus")+""),
-			UtilString.isEmpty(allowance.get("addOther") + "") ? (map == null ? "" : map.get("addOther")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("addOther")+""),
-			UtilString.isEmpty(allowance.get("mealDeduction") + "") ? (map == null ? "" : map.get("mealDeduction")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("mealDeduction")+""),
-			UtilString.isEmpty(allowance.get("dormDeduction") + "") ? (map == null ? "" : map.get("dormDeduction")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("dormDeduction")+""),
-			UtilString.isEmpty(allowance.get("beforeDeduction") + "") ? (map == null ? "" : map.get("beforeDeduction")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("beforeDeduction")+""),
-			UtilString.isEmpty(allowance.get("insurance") + "") ? (map == null ? "" : map.get("insurance")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("insurance")+""),
-			UtilString.isEmpty(allowance.get("providentFund") + "") ? (map == null ? "" : map.get("providentFund")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("providentFund")+""),
-			UtilString.isEmpty(allowance.get("afterOtherDeduction") + "") ? (map == null ? "" : map.get("afterOtherDeduction")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("afterOtherDeduction")+""),
-			UtilString.isEmpty(allowance.get("reserved1") + "") ? (map == null ? "" : map.get("reserved1")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved1")+""),
-			UtilString.isEmpty(allowance.get("reserved2") + "") ? (map == null ? "" : map.get("reserved2")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved2")+""),
-			UtilString.isEmpty(allowance.get("reserved3") + "") ? (map == null ? "" : map.get("reserved3")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved3")+""),
-			UtilString.isEmpty(allowance.get("reserved4") + "") ? (map == null ? "" : map.get("reserved4")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved4")+""),
-			UtilString.isEmpty(allowance.get("reserved5") + "") ? (map == null ? "" : map.get("reserved5")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved5")+""),
-			UtilString.isEmpty(allowance.get("reserved6") + "") ? (map == null ? "" : map.get("reserved6")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved6")+""),
-			UtilString.isEmpty(allowance.get("reserved7") + "") ? (map == null ? "" : map.get("reserved7")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved7")+""),
-			UtilString.isEmpty(allowance.get("reserved8") + "") ? (map == null ? "" : map.get("reserved8")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved8")+""),
-			UtilString.isEmpty(allowance.get("reserved9") + "") ? (map == null ? "" : map.get("reserved9")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved9")+""),
-			UtilString.isEmpty(allowance.get("reserved10") + "") ? (map == null ? "" : map.get("reserved10")) : BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved10")+"")
+			allowance.get("year") ,
+			(allowance.get("month") + "").length() == 1 ?  "0" + allowance.get("month") : allowance.get("month"),
+			allowance.get("pNumber"),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("overSalary")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("highTem")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("lowTem")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("nightShift")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("morningShift")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("stay")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("otherAllowance")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("performanceBonus")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("security")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("compensatory")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("otherBonus")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("addOther")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("mealDeduction")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("dormDeduction")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("beforeDeduction")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("insurance")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("providentFund")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("afterOtherDeduction")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved1")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved2")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved3")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved4")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved5")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved6")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved7")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved8")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved9")+""),
+			BASE64Util.getDecodeStringTowDecimal(allowance.get("reserved10")+"")
 		};
 	}
 
@@ -314,7 +313,6 @@ public class AllowanceServiceImpl implements AllowanceService {
 		row1Name.put("lowTem", "低温津贴(标准)");
 		row1Name.put("nightShift", "夜班津贴");
 		row1Name.put("morningShift", "早班津贴");
-		row1Name.put("stay", "驻外/住宿津贴");
 		row1Name.put("otherAllowance", "其它补贴");
 		row1Name.put("performanceBonus", "绩效奖金");
 		row1Name.put("otherBonus", "其它奖励");

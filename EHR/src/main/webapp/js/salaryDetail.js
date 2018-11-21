@@ -73,7 +73,7 @@ function loadSalaryDetails() {
 			{field : "wagePayable",title : "应发工资",width : 100,},
 			{field : "personalTax",title : "代缴税金",width : 100,},
 			{field : "realWages",title : "实发工资",width : 100,},
-			{field : "attendanceHours",title : "应出勤小时候",width : 100,},
+			{field : "attendanceHours",title : "应出勤小时数",width : 100,},
 			{field : "absenceHours",title : "缺勤小时数",width : 100,},
 			{field : "overSalary",title : "加班工资",width : 100,},
 			{field : "riceStick",title : "饭贴",width : 100,},

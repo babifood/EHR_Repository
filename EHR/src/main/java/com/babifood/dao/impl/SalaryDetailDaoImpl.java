@@ -221,16 +221,53 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 			log.error("查询薪资明细数量失败", e);
 			throw e;
 		}
-		return count;
+		StringBuffer basic_sql = new StringBuffer();
+		basic_sql.append("SELECT COUNT(*) FROM ehr_basic_salary_details a ");
+		basic_sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number ");
+		basic_sql.append("LEFT JOIN ehr_dept b on a.ORGANIZATION_CODE = b.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept c on a.DEPT_CODE = c.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept d on a.OFFICE_CODE = d.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept e on a.GROUP_CODE = e.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept g on a.COMPANY_CODE = g.DEPT_CODE WHERE 1=1 ");
+		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
+			basic_sql.append(" AND a.COMPANY_CODE like '%" + params.get("companyCode") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
+			basic_sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("pName") + "")) {
+			basic_sql.append(" AND f.p_name like '%" + params.get("pName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("organzationName") + "")) {
+			basic_sql.append(" AND b.DEPT_NAME like '%" + params.get("organzationName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("deptName") + "")) {
+			basic_sql.append(" AND c.DEPT_NAME like '%" + params.get("deptName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("officeName") + "")) {
+			basic_sql.append(" AND d.DEPT_NAME like '%" + params.get("officeName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("groupName") + "")) {
+			basic_sql.append(" AND e.DEPT_NAME like '%" + params.get("groupName") + "%'");
+		}
+		Integer count1 = 0;
+		try {
+			basic_sql = super.jointDataAuthoritySql("g.DEPT_CODE","b.DEPT_CODE",sql);
+			count1 = jdbcTemplate.queryForInt(sql.toString());
+		} catch (Exception e) {
+			log.error("查询薪资明细数量失败", e);
+			throw e;
+		}
+		return count + count1;
 	}
 
 	/**
-	 * 查询薪资明细列表
+	 * 查询薪资明细列表basic_sql.append("LEFT JOIN ehr_base_salary h on h.P_NUMBER = f.P_NUMBER ");
 	 */
 	@Override
 	public List<Map<String, Object>> getPageSalaryDetails(Map<String, Object> params) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT a.ID AS id, a.`YEAR` AS `year`, a.`MONTH` AS `month`, a.P_NUMBER AS pNumber, ");
+		sql.append("select t.* from ((SELECT a.ID AS id, a.`YEAR` AS `year`, a.`MONTH` AS `month`, a.P_NUMBER AS pNumber, ");
 		sql.append("a.ABSENCE_HOURS AS absenceHours, a.AFTER_OTHER_DEDUCTION AS afterDeduction, ");
 		sql.append("a.ATTENDANCE_HOURS AS attendanceHours, a.BASE_SALARY AS baseSalary, a.ADD_OTHER AS addOther, ");
 		sql.append("a.BEFORE_OTHER_DEDUCTION AS beforeDeduction, a.CALL_SUBSIDIES AS callSubsidies, ");
@@ -280,8 +317,61 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 			sql.append(" AND e.DEPT_NAME like '%" + params.get("groupName") + "%'");
 		}
 		sql = super.jointDataAuthoritySql("a.COMPANY_CODE","a.ORGANIZATION_CODE",sql);
+		sql.append(" ) union (");
+		sql.append("SELECT a.ID AS id, a.`YEAR` AS `year`, a.`MONTH` AS `month`, a.P_NUMBER AS pNumber, ");
+		sql.append("a.ABSENCE_HOURS AS absenceHours, a.AFTER_OTHER_DEDUCTION AS afterDeduction, ");
+		sql.append("a.ATTENDANCE_HOURS AS attendanceHours, i.BASE_SALARY AS baseSalary, a.ADD_OTHER AS addOther, ");
+		sql.append("a.BEFORE_OTHER_DEDUCTION AS beforeDeduction, a.CALL_SUBSIDIES AS callSubsidies, ");
+		sql.append("a.COMPANION_PARENTAL_DEDUCTION AS companionParentalDeduction, i.COMPANY_SALARY AS companySalary, ");
+		sql.append("a.COMPENSATORY_BONUS AS compensatory, a.DORM_DEDUCTION as dormDeduction, g.DEPT_NAME AS companyName,");
+		sql.append("i.FIXED_OVERTIME_SALARY AS fixedOverTimeSalary, a.FUNERAL_DEDUCTION funeralDeduction, ");
+		sql.append("a.HIGH_TEMPERATURE_ALLOWANCE AS highTem, a.INSURANCE_DEDUCTION AS insurance, ");
+		sql.append("a.LOW_TEMPERATURE_ALLOWANCE AS lowTem, a.MARRIAGE_DEDUCTION mealDeduction, ");
+		sql.append("a.MARRIAGE_DEDUCTION AS marriageDeduction, a.MORNING_SHIFT_ALLOWANCE AS morningShift, ");
+		sql.append("a.NIGHT_SHIFT_ALLOWANCE AS nightShift, a.PROVIDENT_FUND_DEDUCTION as providentFund, ");
+		sql.append("a.OTHER_ALLOWANCE AS otherAllowance, a.OTHER_BONUS otherBonus, a.OVER_SALARY AS overSalary, ");
+		sql.append("a.PARENTAL_DEDUCTION AS parentalDeduction, a.PERFORMANCE_BONUS AS performanceBonus, ");
+		sql.append("a.PERSONAL_TAX AS personalTax, i.POST_SALARY AS postSalary, a.ONBOARDING_DEPARTURE AS onboarding, ");
+		sql.append("a.REAL_WAGES AS realWages, a.RELAXATION AS relaxation,a.RICE_STICK AS riceStick, a.SECURITY_BONUS as security, ");
+		sql.append("a.SICK_DEDUCTION AS sickDeduction, a.STAY_ALLOWANCE AS stay, a.THING_DEDUCTION AS thingDeduction, ");
+		sql.append("a.TOTAL_DEDUCTION AS totalDeduction, a.TRAIN_DEDUCTION as trainDeduction, a.WAGE_PAYABLE AS wagePayable, ");
+		sql.append("a.YEAR_DEDUCTION AS yearDeduction, b.DEPT_NAME AS organizationName, c.DEPT_NAME AS deptName, ");
+		sql.append("a.LATER_AND_LEAVE_DEDUCTION AS laterAndLeaveDeduction, a.COMPLETION_DEDUCTION AS completionDeduction, ");
+		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName, h.post_name as postName ");
+		sql.append("FROM ehr_basic_salary_details a ");
+		sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number ");
+		sql.append("LEFT JOIN ehr_dept c on f.P_DEPARTMENT_ID = c.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept d on f.P_SECTION_OFFICE_ID = d.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept e on f.P_GROUP_ID = e.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
+		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE ");
+		sql.append("LEFT JOIN ehr_base_salary i on i.p_number = a.P_NUMBER WHERE 1=1 ");
+		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
+			sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
+			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("pName") + "")) {
+			sql.append(" AND f.p_name like '%" + params.get("pName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("organzationName") + "")) {
+			sql.append(" AND b.DEPT_NAME like '%" + params.get("organzationName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("deptName") + "")) {
+			sql.append(" AND c.DEPT_NAME like '%" + params.get("deptName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("officeName") + "")) {
+			sql.append(" AND d.DEPT_NAME like '%" + params.get("officeName") + "%'");
+		}
+		if (!UtilString.isEmpty(params.get("groupName") + "")) {
+			sql.append(" AND e.DEPT_NAME like '%" + params.get("groupName") + "%'");
+		}
+		sql = super.jointDataAuthoritySql("f.P_COMPANY_ID","f.P_ORGANIZATION_ID",sql);
+		sql.append(")) t");
 		if(!UtilString.isEmpty(params.get("start") + "") && !UtilString.isEmpty(params.get("start") + "")){
-			sql.append(" GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC");
+			sql.append(" GROUP BY t.`YEAR`, t.`MONTH`, t.pNumber ORDER BY t.`YEAR` DESC, t.`MONTH` DESC");
 			sql.append(" limit ?, ?");
 		}
 		List<Map<String, Object>> salaryDetailList = null;

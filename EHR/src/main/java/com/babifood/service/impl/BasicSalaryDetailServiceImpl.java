@@ -119,7 +119,7 @@ public class BasicSalaryDetailServiceImpl implements BasicSalaryDetailService {
 		row1Name.put("officeName", "科室名称");
 		row1Name.put("groupName", "班组名称");
 		row1Name.put("postName", "岗位名称");
-		row1Name.put("attendanceHours", "应出勤小时候");
+		row1Name.put("attendanceHours", "应出勤小时数");
 		row1Name.put("absenceHours", "缺勤小时数");
 		row1Name.put("baseSalary", "基本工资");
 		row1Name.put("fixedOvertimeSalary", "固定加班工资");
@@ -234,7 +234,7 @@ public class BasicSalaryDetailServiceImpl implements BasicSalaryDetailService {
 		row1Name.put("科室名称", "officeName");
 		row1Name.put("班组名称", "groupName");
 		row1Name.put("岗位名称", "postName");
-		row1Name.put("应出勤小时候", "attendanceHours");
+		row1Name.put("应出勤小时数", "attendanceHours");
 		row1Name.put("缺勤小时数", "absenceHours");
 		row1Name.put("基本工资", "baseSalary");
 		row1Name.put("固定加班工资", "fixedOvertimeSalary");

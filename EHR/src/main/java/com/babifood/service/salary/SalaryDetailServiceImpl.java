@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
-import com.babifood.dao.AuthorityControlDao;
 import com.babifood.dao.SalaryDetailDao;
 import com.babifood.entity.LoginEntity;
 import com.babifood.entity.SalaryDetailEntity;
@@ -139,7 +138,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		row1Name.put("officeName", "科室名称");
 		row1Name.put("groupName", "班组名称");
 		row1Name.put("postName", "岗位名称");
-		row1Name.put("attendanceHours", "应出勤小时候");
+		row1Name.put("attendanceHours", "应出勤小时数");
 		row1Name.put("absenceHours", "缺勤小时数");
 		row1Name.put("baseSalary", "基本工资");
 		row1Name.put("fixedOvertimeSalary", "固定加班工资");

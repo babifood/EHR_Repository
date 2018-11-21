@@ -49,6 +49,10 @@ function loadAllowanceList() {
 			title : "班组名称",
 			width : 100,
 		}, {
+			field : "overSalary",
+			title : "加班工资",
+			width : 100,
+		}, {
 			field : "highTem",
 			title : "高温津贴",
 			width : 100,
@@ -111,10 +115,6 @@ function loadAllowanceList() {
 		}, {
 			field : "insurance",
 			title : "代缴社保",
-			width : 100,
-		}, {
-			field : "overSalary",
-			title : "加班工资",
 			width : 100,
 		}, {
 			field : "providentFund",

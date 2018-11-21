@@ -173,7 +173,7 @@ public class DormitoryDaoImpl extends AuthorityControlDaoImpl implements Dormito
 		if(!UtilString.isEmpty(params.get("checkoutEnd") + "")){
 			sql.append(" AND a.out_time <= '" + params.get("checkoutEnd")+"'");
 		}
-		sql.append(" ORDER BY create_time DESC Limit ?,?");
+		sql.append(" ORDER BY b.floor,b.room_no,b.Bed_No DESC Limit ?,?");
 		List<Map<String, Object>> dormitorys = null;
 		try {
 			dormitorys = jdbcTemplate.queryForList(sql.toString(),params.get("start") ,params.get("pageSize"));

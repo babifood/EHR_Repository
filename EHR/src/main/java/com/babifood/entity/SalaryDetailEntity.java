@@ -34,7 +34,7 @@ public class SalaryDetailEntity {
 
 	private String postName;// 岗位名称
 
-	private String attendanceHours;// 应出勤小时候
+	private String attendanceHours;// 应出勤小时数
 
 	private String absenceHours;// 缺勤小时数
 
