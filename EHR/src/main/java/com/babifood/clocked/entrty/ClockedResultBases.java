@@ -113,6 +113,8 @@ public class ClockedResultBases {
 	
 	//因入离职导致的缺勤时长
 	private Double inOutJob;
+	//节假日时长
+	private Double holidays;
 	// 打卡地点
 	private String daKaLocation;
 	
@@ -489,6 +491,12 @@ public class ClockedResultBases {
 	}
 	public void setInOutJob(Double inOutJob) {
 		this.inOutJob = inOutJob;
+	}
+	public Double getHolidays() {
+		return holidays;
+	}
+	public void setHolidays(Double holidays) {
+		this.holidays = holidays;
 	}
 	
 //	public Date getXiuBeginTime() throws Exception {

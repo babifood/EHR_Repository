@@ -34,8 +34,8 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("tiaoxiu,shijia,bingjia,peixunjia,hunjia, ");
 		sql.append("chanjia,peichanjia,sangjia,qita,queqin, ");
 		sql.append("qingjia,yidong,jiaban,chuchai,canbu, ");
-		sql.append("eventbegintime,eventendtime,clockflag,inoutjob) ");
-		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		sql.append("eventbegintime,eventendtime,clockflag,inoutjob,holidays) ");
+		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		final String strSql = sql.toString();
 		List<Object[]> paramsList = new ArrayList<>();
 		for(int i=0;i<saveDataList.size();i++){
@@ -66,7 +66,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 					saveDataList.get(i).getJiaBan(),saveDataList.get(i).getChuCha(),
 					saveDataList.get(i).getCanBu(),saveDataList.get(i).getEventBeginTime(),
 					saveDataList.get(i).getEventEndTime(),saveDataList.get(i).getClockFlag(),
-					saveDataList.get(i).getInOutJob()
+					saveDataList.get(i).getInOutJob(),saveDataList.get(i).getHolidays()
 					});
 		}
 		Object[] params=new Object[2];

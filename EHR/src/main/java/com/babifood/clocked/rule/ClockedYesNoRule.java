@@ -188,6 +188,7 @@ public class ClockedYesNoRule {
 			if (UtilDateTime.betweenByDay(tmpResult.getCheckingDate(), beginDate, endDate)) {
 				// 考勤标志
 				tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+				tmpResult.setHolidays(8d);
 			}
 		}
 		//3根据特殊排班设置考勤标志
