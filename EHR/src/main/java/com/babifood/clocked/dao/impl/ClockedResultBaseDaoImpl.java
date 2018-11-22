@@ -174,7 +174,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 	 * 查询考勤结果汇总数据
 	 */
 	@Override
-	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal) throws Exception {
+	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal,String myYear,String myMonth) throws Exception {
 		// TODO Auto-generated method stub
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
@@ -193,6 +193,8 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		if(!searchKey.equals("")&&!searchVal.equals("")){
 			sql.append(" and "+searchKey+" like '%"+searchVal+"%'");
 		}
+		sql.append(" and Year = '"+myYear+"'");
+		sql.append(" and Month = '"+myMonth+"'");
 		StringBuffer returnSQL = super.jointDataAuthoritySql("CompanyCode","OrganCode",sql);
 		returnSQL.append(" GROUP BY Year,Month,WorkNum,UserName,CompanyCode,Company,OrganCode,Organ,");
 		returnSQL.append("DeptCode,Dept,OfficeCode,Office,GroupCode,GroupName,PostCode,Post,CheckingType,PaiBanType");

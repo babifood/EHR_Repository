@@ -1,16 +1,17 @@
 //初始化
 $(function(){
-	loadSumClockedResult("","");
+	var myDate = new Date();
+	$("#year").val(myDate.getFullYear());
+	$("#month").val(myDate.getMonth()+1);
+	loadSumClockedResult("","",$("#year").val(),$("#month").val());
 });
 //条件查询
 function clockedSearch(value,name){
-	if(value!=""){
-		loadSumClockedResult(name,value);
-	}
+	loadSumClockedResult(name,value,$("#year").val(),$("#month").val());
 }
 //加载考勤汇总数据
-function loadSumClockedResult(searchKey,searchVal){
-	var	url=prefix+"/clocked/loadSumClockedResult?searchKey="+searchKey+"&searchVal="+searchVal;
+function loadSumClockedResult(searchKey,searchVal,myYear,myMonth){
+	var	url=prefix+"/clocked/loadSumClockedResult?searchKey="+searchKey+"&searchVal="+searchVal+"&myYear="+myYear+"&myMonth="+myMonth;
 	$("#clocked_grid").datagrid({
 		url:url,
 		fit:true,
@@ -599,7 +600,7 @@ function initData(){
 					timeout:3000,
 					showType:'slide'
 				});
-				loadSumClockedResult("","");
+				loadSumClockedResult("","",$("#year").val(),$("#month").val());
 			}else{
 				$.messager.show({
 					title:'消息提醒',
@@ -635,7 +636,7 @@ function executeData(){
 					timeout:3000,
 					showType:'slide'
 				});
-				loadSumClockedResult("","");
+				loadSumClockedResult("","",$("#year").val(),$("#month").val());
 			}else{
 				$.messager.show({
 					title:'消息提醒',

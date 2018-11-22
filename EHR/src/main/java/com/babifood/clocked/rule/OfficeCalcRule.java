@@ -194,13 +194,13 @@ public class OfficeCalcRule {
 
 		Date[] temp = ClockedBaseRule.calcActualTime(theResult, theClockedBizData);
 		// 如果异动开始时间 > 下班时间
-		if (temp[0].getTime() > theResult.getStandEndTime().getTime()) {
-			return;
-		}
+//		if (temp[0].getTime() > theResult.getStandEndTime().getTime()) {
+//			return;
+//		}
 		// 如果异动结束时间 < 上班时间
-		if (temp[1].getTime() < theResult.getStandBeginTime().getTime()) {
-			return;
-		}
+//		if (temp[1].getTime() < theResult.getStandBeginTime().getTime()) {
+//			return;
+//		}
 		// 上班和下班都打卡了,异动时间在打卡时间之间
 		if (theResult.getCheckingBeginTime() != null && theResult.getCheckingEndTime() != null && temp[0].getTime() >= theResult.getCheckingBeginTime().getTime() && temp[1].getTime() <= theResult.getCheckingEndTime().getTime()) {
 			return;
