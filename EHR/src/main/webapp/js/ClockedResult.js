@@ -599,7 +599,7 @@ function initData(){
 					timeout:3000,
 					showType:'slide'
 				});
-				loadSumClockedResult();
+				loadSumClockedResult("","");
 			}else{
 				$.messager.show({
 					title:'消息提醒',
@@ -635,7 +635,7 @@ function executeData(){
 					timeout:3000,
 					showType:'slide'
 				});
-				loadSumClockedResult();
+				loadSumClockedResult("","");
 			}else{
 				$.messager.show({
 					title:'消息提醒',
