@@ -210,7 +210,8 @@ public class PerformanceServiceImpl implements PerformanceService{
 		for (Map<String, Object> map : values) {
 			Object[] obj = new Object[] { map.get("year"),
 					(map.get("month") + "").length() == 1 ? "0" + map.get("month") : map.get("month"),
-					map.get("pNumber"), map.get("performanceScore"), BASE64Util.getDecodeStringTowDecimal(map.get("pSalary") + "") };
+					map.get("pNumber"), map.get("performanceScore"), 
+					UtilString.isEmpty(map.get("pSalary") + "")?map.get("pSalary"):BASE64Util.getDecodeStringTowDecimal(map.get("pSalary") + "") };
 			performanceParam.add(obj);
 		}
 		return performanceParam;

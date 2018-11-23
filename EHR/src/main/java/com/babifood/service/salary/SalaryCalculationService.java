@@ -248,8 +248,9 @@ public class SalaryCalculationService {
 		calculationDeduction(salaryDerail, baseFields);
 		// 计算薪资
 		calculationSalary(salaryDerail, baseFields);
-
-//		salaryDetailService.saveCurrentMonthSalary(salaryDerail);
+		
+		salaryDerail.setAttendanceHours(UtilString.isEmpty(arrangementSummary.get("standardWorkLength") + "") ? "1.0"
+				: arrangementSummary.get("standardWorkLength") + "");
 		return salaryDerail;
 	}
 
