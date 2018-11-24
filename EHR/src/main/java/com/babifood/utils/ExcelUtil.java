@@ -196,7 +196,7 @@ public class ExcelUtil {
 
 				}
 				}
-				param.put(fields[i], value);
+				param.put(fields[i], UtilString.isEmpty(value+"")? "":value);
 			}
 			ret.add(param);
 		}

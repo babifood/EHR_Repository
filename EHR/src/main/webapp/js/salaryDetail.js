@@ -105,7 +105,8 @@ function loadSalaryDetails() {
 			{field : "marriageDeduction",title : "婚假扣款",width : 100, },
 			{field : "companionParentalDeduction",title : "陪产假扣款",width : 100, },
 			{field : "funeralDeduction",title : "丧假扣款",width : 100, },
-			{field : "onboarding",title : "月中入职、离职导致缺勤扣款",width : 100, }
+			{field : "onboarding",title : "月中入职、离职导致缺勤扣款",width : 100, },
+			{field : "oaandehr",title : "月中入职、离职导致缺勤扣款",width : 100,hidden : "true" }
 		]]
 	})
 }

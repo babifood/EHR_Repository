@@ -77,7 +77,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 	public Map<String, Object> exportPerformances(OutputStream ouputStream, String type, String year, String month) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> row1Name = getRow1Name();
-		String[] sort = new String[]{"year", "month", "pNumber", "pName", "organzationName", "deptName", "officeName", "performanceScore", "pSalary"};
+		String[] sort = new String[]{"year", "month", "pNumber", "pName", "organzationName", "deptName", "officeName", "performanceScore", "pSalary","realPSalary"};
 		List<Map<String, Object>> performanceList = null;
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
@@ -119,6 +119,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 		row1Name.put("officeName", "科室名称");
 		row1Name.put("performanceScore", "绩效分值");
 		row1Name.put("pSalary", "绩效工资");
+		row1Name.put("realPSalary", "实际绩效工资");
 		return row1Name;
 	}
 
