@@ -215,7 +215,7 @@ public class BaseArrangementDaoImpl implements BaseArrangementDao {
 				sql.append("?,");
 			}
 		}
-		sql.append(") ORDER BY a.target_type DESC");
+		sql.append(") ORDER BY (a.target_type * 1) DESC");
 		List<Map<String, Object>> arrangementList = null;
 		try {
 			arrangementList = jdbcTemplate.queryForList(sql.toString(), targetIds.toArray());
