@@ -5,6 +5,18 @@
 	<table class="easyui-datagrid" id="base_salary_list"></table>
 	<div id="base_salary_list_tools">
 		<div style="margin-bottom: 5px;">
+			<div>
+				<a href="javascript:void(0)" id="mb" class="easyui-menubutton" data-options="menu:'#allowance_menubutton',iconCls:'icon-edit'">导入/导出</a>
+				<div id="allowance_menubutton" style="width:150px;">   
+					<shiro:hasPermission name="baseSalary:import">
+					    <div data-options="iconCls:'icon-load'" onclick="exportBaseSalary(0)">下载模板</div>   
+					    <div data-options="iconCls:'icon-redo'" onclick="baseSalaryImport()">导入</div>
+				    </shiro:hasPermission>
+				    <shiro:hasPermission name="baseSalary:export">   
+					    <div data-options="iconCls:'icon-remove'" onclick="exportBaseSalary(1)">导出</div>  
+				    </shiro:hasPermission> 
+				</div> 
+			</div>
 			<shiro:hasPermission name="baseSalary:add">
 				<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addBaseSalaryInfo()">添加</a>
 			</shiro:hasPermission>
@@ -29,4 +41,6 @@
         data-options="iconCls:'icon-more',resizable:true,modal:true">   
     <table id="base_salary_record" style="width: 100%"></table>  
 </div> 
+<div class="easyui-dialog" title="导入excel文件" style="width: 400px; height: 130px;" data-options="modal:true" id="baseSalary_dialog" closed="true"></div>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/excel.js"></script>
 <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/baseSalary.js"></script>

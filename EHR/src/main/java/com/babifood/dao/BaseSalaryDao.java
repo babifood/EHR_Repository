@@ -20,5 +20,11 @@ public interface BaseSalaryDao {
 	public void deleteBaseSalaryById(Integer id);
 
 	public List<Map<String, Object>> getBaseSalaryRecord(String pNumber);
+	
+	public List<Map<String, Object>> loadUserDataAuthority();
+
+	public List<String> findPNumberList(List<Map<String, Object>> auths);
+
+	public void saveBaseSalaryList(List<Object[]> baseSalaryParam);
 
 }

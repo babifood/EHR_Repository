@@ -3,7 +3,7 @@ prefix = "http://" + prefix + "/EHR";
 
 $(function() {
 	loadBaseSalary();
-	
+	initBaseSalaryImportExcel();
 })
 
 function loadBaseSalary() {
@@ -473,4 +473,32 @@ function searchBaseSalaryPerson(){
 	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_number = $("#base_salary_p_number").val();
 	$('.combogrid-f').combogrid('grid').datagrid('options').queryParams.search_p_name = $("#base_salary_p_name").val();
 	$('.combogrid-f').combogrid('grid').datagrid('reload');
+}
+
+//导入excel的初始条件
+function initBaseSalaryImportExcel(){
+	$("#baseSalary_dialog").importExcel1({
+		url:prefix + "/baseSalary/importExcel",
+		success:function(result){
+			if (result.code == "1") {
+				$.messager.alert('提示!', '导入成功', 'info', function() {
+					$("#baseSalary_dialog").dialog('close');
+					$("#base_salary_list").datagrid("reload");
+				});
+			} else {
+				$.messager.confirm('提示', result.msg);
+			}
+		}
+	});
+}
+
+//导入弹框
+function baseSalaryImport() {
+	$("#baseSalary_dialog").importExcel1.dialog();
+}
+
+//导出
+function exportBaseSalary(type){
+	console.log("11111111111111111");
+	window.location.href = prefix + "/baseSalary/export?type=" + type;
 }

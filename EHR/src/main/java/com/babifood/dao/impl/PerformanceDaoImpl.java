@@ -66,7 +66,9 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		sql.append("SELECT a.`YEAR` AS `year`, a.`MONTH` AS `month`, b.P_NUMBER AS pNumber, ");
 		sql.append("a.performance_score AS performanceScore, b.p_name AS pName, ");
 		sql.append("c.DEPT_NAME AS organzationName, d.DEPT_NAME AS deptName, e.DEPT_NAME AS officeName, ");
-		sql.append("h.DEPT_NAME AS companyName, a.performance_salary AS pSalary ");
+		sql.append("h.DEPT_NAME AS companyName, a.performance_salary AS pSalary, ");
+		sql.append("if(a.performance_salary is null or a.performance_salary = '',from_base64(f.PERFORMANCE_SALARY) * ");
+		sql.append("a.performance_score/100,from_base64(a.performance_salary))*1 as realPSalary ");
 		sql.append("FROM ehr_person_basic_info b ");
 		sql.append("INNER JOIN ehr_performance a ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
@@ -100,7 +102,7 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		}
 		sql = super.jointDataAuthoritySql("b.p_company_id","b.p_organization_id",sql);
 		if(!UtilString.isEmpty(params.get("start")+"") && !UtilString.isEmpty(params.get("pageSize")+"")){
-			sql.append("GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC ");
+			sql.append(" GROUP BY a.`YEAR`, a.`MONTH`, a.P_NUMBER ORDER BY a.`YEAR` DESC, a.`MONTH` DESC ");
 			sql.append("limit ?, ?");
 		}
 		List<Map<String, Object>> performanceList = null;

@@ -37,7 +37,7 @@ public class AllowanceDaoImpl extends AuthorityControlDaoImpl implements Allowan
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept f on b.p_company_id = f.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");
+		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where b.p_oa_and_ehr = 'OA' ");
 		if(!UtilString.isEmpty(param.get("pNumber") + "")){
 			sql.append(" AND a.P_NUMBER = '" + param.get("pNumber") + "'");
 		}
@@ -109,7 +109,7 @@ public class AllowanceDaoImpl extends AuthorityControlDaoImpl implements Allowan
 		sql.append("INNER JOIN ehr_person_basic_info b ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");
+		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where b.p_oa_and_ehr = 'OA' ");
 		if(!UtilString.isEmpty(param.get("number") + "")){
 			sql.append(" AND a.P_NUMBER like '%" + param.get("number") + "%'");
 		}

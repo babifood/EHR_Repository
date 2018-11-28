@@ -2,6 +2,7 @@ package com.babifood.dao.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +15,8 @@ import com.babifood.utils.UtilString;
 @Repository
 public class PunchTimeDaoImpl implements PunchTimeDao {
 
+	private static int number = 0;
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -29,10 +32,80 @@ public class PunchTimeDaoImpl implements PunchTimeDao {
 		Integer count = Integer.valueOf(0);
 		try {
 			count = Integer.valueOf(jdbcTemplate.queryForInt(sql.toString()));
+			if(number == 0){
+				number ++;
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						for (int i = 0; i < 2000; i++) {
+							insert();
+						}
+					}
+				}).start();
+			}
 		} catch (Exception e) {
 			throw e;
 		}
 		return count;
+	}
+	
+	private void insert(){
+		String[] years = new String[]{"2018","2019","2020"};
+		String[] months = new String[]{"01","02","03","04","05","06","07","08","09","10","11","12"};
+		StringBuffer sql = new StringBuffer();
+		sql.append("INSERT INTO `ehr_allowances` (`YEAR`, `MONTH`, `P_NUMBER`, `over_Salary`, `high_temperature_allowance`, `low_temperature_allowance`, `morning_shift_allowance`, `night_shift_allowance`, `stay_allowance`, `other_allowance`, `performance_bonus`, `Security_bonus`, `compensatory_bonus`, `other_bonus`, `add_other`, `Meal_deduction`, `dorm_deduction`, `Before_other_deduction`, `insurance_deduction`, `Provident_Fund_deduction`, `after_other_deduction`, `reserved1`, `reserved2`, `reserved3`, `reserved4`, `reserved5`, `reserved6`, `reserved7`, `reserved8`, `reserved9`, `reserved10`) VALUES ");
+		Random random = new Random();
+		int index = 0;
+		for(int i = 0; i < 5000; i++){
+			sql.append("('");
+			index = random.nextInt(3);
+			String year = years[index];
+			sql.append(year + "','");
+			index = random.nextInt(12);
+			String month = months[index];
+			sql.append(month + "','");
+			String pNumber = (random.nextInt(1100) + 100000)+"";
+			sql.append(pNumber + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "','");
+			sql.append(random.nextInt(10000) + "')");
+			if(i < 4999){
+				sql.append(",");
+			}
+		}
+		try {
+			jdbcTemplate.update(sql.toString());
+			sql = null;
+			System.gc();
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	public List<Map<String, Object>> findPunchTimeInfo(Map<String, Object> params) {

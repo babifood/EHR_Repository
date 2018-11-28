@@ -224,13 +224,13 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		StringBuffer basic_sql = new StringBuffer();
 		basic_sql.append("SELECT COUNT(*) FROM ehr_basic_salary_details a ");
 		basic_sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number ");
-		basic_sql.append("LEFT JOIN ehr_dept b on a.ORGANIZATION_CODE = b.DEPT_CODE ");
-		basic_sql.append("LEFT JOIN ehr_dept c on a.DEPT_CODE = c.DEPT_CODE ");
-		basic_sql.append("LEFT JOIN ehr_dept d on a.OFFICE_CODE = d.DEPT_CODE ");
-		basic_sql.append("LEFT JOIN ehr_dept e on a.GROUP_CODE = e.DEPT_CODE ");
-		basic_sql.append("LEFT JOIN ehr_dept g on a.COMPANY_CODE = g.DEPT_CODE WHERE 1=1 ");
+		basic_sql.append("LEFT JOIN ehr_dept c on f.P_DEPARTMENT_ID = c.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept d on f.P_SECTION_OFFICE_ID = d.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept e on f.P_GROUP_ID = e.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
+		basic_sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE WHERE f.p_oa_and_ehr = 'EHR' ");
 		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
-			basic_sql.append(" AND a.COMPANY_CODE like '%" + params.get("companyCode") + "%'");
+			basic_sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
 		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			basic_sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
@@ -252,8 +252,8 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		}
 		Integer count1 = 0;
 		try {
-			basic_sql = super.jointDataAuthoritySql("g.DEPT_CODE","b.DEPT_CODE",sql);
-			count1 = jdbcTemplate.queryForInt(sql.toString());
+			basic_sql = super.jointDataAuthoritySql("g.DEPT_CODE","b.DEPT_CODE",basic_sql);
+			count1 = jdbcTemplate.queryForInt(basic_sql.toString());
 		} catch (Exception e) {
 			log.error("查询薪资明细数量失败", e);
 			throw e;
@@ -286,7 +286,7 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		sql.append("a.TOTAL_DEDUCTION AS totalDeduction, a.TRAIN_DEDUCTION as trainDeduction, a.WAGE_PAYABLE AS wagePayable, ");
 		sql.append("a.YEAR_DEDUCTION AS yearDeduction, b.DEPT_NAME AS organizationName, c.DEPT_NAME AS deptName, ");
 		sql.append("a.LATER_AND_LEAVE_DEDUCTION AS laterAndLeaveDeduction, a.COMPLETION_DEDUCTION AS completionDeduction, ");
-		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName, h.post_name as postName ");
+		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName, h.post_name as postName,'OA' as oaandehr ");
 		sql.append("FROM ehr_salary_details a ");
 		sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number ");
 		sql.append("LEFT JOIN ehr_dept c on f.P_DEPARTMENT_ID = c.DEPT_CODE ");
@@ -337,7 +337,7 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		sql.append("a.TOTAL_DEDUCTION AS totalDeduction, a.TRAIN_DEDUCTION as trainDeduction, a.WAGE_PAYABLE AS wagePayable, ");
 		sql.append("a.YEAR_DEDUCTION AS yearDeduction, b.DEPT_NAME AS organizationName, c.DEPT_NAME AS deptName, ");
 		sql.append("a.LATER_AND_LEAVE_DEDUCTION AS laterAndLeaveDeduction, a.COMPLETION_DEDUCTION AS completionDeduction, ");
-		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName, h.post_name as postName ");
+		sql.append("d.DEPT_NAME AS officeName, e.DEPT_NAME AS groupName, f.p_name AS pName, h.post_name as postName,'EHR' as oaandehr ");
 		sql.append("FROM ehr_basic_salary_details a ");
 		sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number ");
 		sql.append("LEFT JOIN ehr_dept c on f.P_DEPARTMENT_ID = c.DEPT_CODE ");
@@ -346,7 +346,7 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
 		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE ");
-		sql.append("LEFT JOIN ehr_base_salary i on i.p_number = a.P_NUMBER WHERE 1=1 ");
+		sql.append("LEFT JOIN ehr_base_salary i on i.p_number = a.P_NUMBER WHERE f.p_oa_and_ehr = 'EHR' ");
 		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
 			sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
 		}

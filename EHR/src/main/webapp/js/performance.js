@@ -83,6 +83,10 @@ function loadPerformanceList(){
 						required:true,
 					},
 				},
+			},{
+				field : "realPSalary",
+				title : "实际绩效工资",
+				width : 100,
 			}
 		]]
 	})
