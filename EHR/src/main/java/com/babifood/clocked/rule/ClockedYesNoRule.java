@@ -28,16 +28,22 @@ import com.babifood.utils.UtilDateTime;
  */
 @Service
 public class ClockedYesNoRule {
-	// 入离职标志
-	public static final int Clock_Flag_IN_OUT_JOB = -1;
 	// 不需要考勤
-	public static final int Clock_Flag_NOT_WORK = 0;
+//	public static final int Clock_Flag_NOT_WORK = 0;
 	// 工作日
 	public static final int Clock_Flag_WORK_NORMAL = 1;
 	// 休息日上班
 	public static final int Clock_Flag_WEEK_END_YES = 2;
 	// 节假日上班---不会发生，按加班处理
 	public static final int Clock_Flag_HOLIDAY_YES = 3;
+	// 星期六星期天不上班标志
+	public static final int Clock_Flag_WEEK_NOT = 0;
+//	// 节假日不上班标志
+//	public static final int Clock_Flag_HOLIDAY_NOT = 0;
+//	// 特殊排班不上班标志
+//	public static final int Clock_Flag_SPECIAL_NOT = 0;	
+//	// 入离职标志
+//	public static final int Clock_Flag_IN_OUT_NOT = 0;
 
 	// 节假日数据集
 	private List<Holiday> holidayList;
@@ -168,12 +174,14 @@ public class ClockedYesNoRule {
 	 * @throws Exception 
 	 */
 	public void markClockedYesNo(Person person,ClockedResultBases tmpResult) throws Exception{
+		String clockFlag ="";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		//1根据正常的工作日和周六周日设置考勤标志
 		Date systemFrontDate = tmpResult.getCheckingDate();
 		String week = UtilDateTime.getWeekOfDate(systemFrontDate);
 		if("周六".equals(week)||"周日".equals(week)){
-			tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+			tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+			clockFlag = "week";
 		}else{
 			tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 		}
@@ -187,8 +195,9 @@ public class ClockedYesNoRule {
 			// 在假日内
 			if (UtilDateTime.betweenByDay(tmpResult.getCheckingDate(), beginDate, endDate)) {
 				// 考勤标志
-				tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
-				tmpResult.setHolidays(8d);
+				tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+				//tmpResult.setHolidays(8d);
+				clockFlag = "holiday";
 			}
 		}
 		//3根据特殊排班设置考勤标志
@@ -197,42 +206,48 @@ public class ClockedYesNoRule {
 		for(int i = 0;i<special.size();i++){
 			if(person.getCompanyCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				if(special.get(i).getIs_attend().equals("0")){
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "special";
 				}else if(special.get(i).getIs_attend().equals("1")){
 					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				}
 				break;
 			}else if(person.getOrganCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				if(special.get(i).getIs_attend().equals("0")){
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "special";
 				}else if(special.get(i).getIs_attend().equals("1")){
 					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				}
 				break;
 			}else if(person.getDeptCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				if(special.get(i).getIs_attend().equals("0")){
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "special";
 				}else if(special.get(i).getIs_attend().equals("1")){
 					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				}
 				break;
 			}else if(person.getOfficeCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				if(special.get(i).getIs_attend().equals("0")){
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "special";
 				}else if(special.get(i).getIs_attend().equals("1")){
 					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				}
 				break;
 			}else if(person.getGroupCode().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				if(special.get(i).getIs_attend().equals("0")){
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "special";
 				}else if(special.get(i).getIs_attend().equals("1")){
 					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				}
 				break;
 			}else if(person.getWorkNum().equals(special.get(i).getTarget_id())&&sysFrontDate.equals(special.get(i).getDate())){
 				if(special.get(i).getIs_attend().equals("0")){
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "special";
 				}else if(special.get(i).getIs_attend().equals("1")){
 					tmpResult.setClockFlag(Clock_Flag_WORK_NORMAL);
 				}
@@ -255,10 +270,11 @@ public class ClockedYesNoRule {
 				if(tmpResult.getCheckingDate().getTime()<inDate.getTime()){
 					if(tmpResult.getClockFlag()==Clock_Flag_WORK_NORMAL){
 						tmpResult.setInOutJob(tmpResult.getStandWorkLength());
-					}else if(tmpResult.getClockFlag()==Clock_Flag_NOT_WORK){
+					}else if(tmpResult.getClockFlag()==Clock_Flag_WEEK_NOT){
 						tmpResult.setInOutJob(0d);
 					}
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "inOut";
 				}
 			}
 		}
@@ -270,14 +286,17 @@ public class ClockedYesNoRule {
 				if(tmpResult.getCheckingDate().getTime()>=outDate.getTime()){
 					if(tmpResult.getClockFlag()==Clock_Flag_WORK_NORMAL){
 						tmpResult.setInOutJob(tmpResult.getStandWorkLength());
-					}else if(tmpResult.getClockFlag()==Clock_Flag_NOT_WORK){
+					}else if(tmpResult.getClockFlag()==Clock_Flag_WEEK_NOT){
 						tmpResult.setInOutJob(0d);
 					}
-					tmpResult.setClockFlag(Clock_Flag_NOT_WORK);
+					tmpResult.setClockFlag(Clock_Flag_WEEK_NOT);
+					clockFlag = "inOut";
 				}
 			}
 		}
-		 
+		if("week".equals(clockFlag)){
+			tmpResult.setStandWorkLength(0d);
+		}
 	}
 	private List<SpecialWorkCalendar> filtrateSpecialWorkCalendarData(Person person,String sysFrontDate){
 		List<SpecialWorkCalendar> specialList = new ArrayList<SpecialWorkCalendar>();

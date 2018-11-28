@@ -37,16 +37,7 @@
 			    <div id="beginPage" class="easyui-layout" data-options="fit:true">   
 				    <div data-options="region:'west',split:true,noheader:true,border:false," style="width:50%;">
 				    	<div id="left_layout" class="easyui-layout" data-options="fit:true">   
-						    <div data-options="region:'north',title:'员工生日提醒',split:true,collapsible:false," style="height:50%;">
-						    	<table id="birthday_grid"></table>  
-						    	<!-- <div id="birthday_tbar">
-							    	工号：<input type="text" class="textbox" id="birthday_p_number" name="search_p_number" style="width: 110px;"/>
-						        	姓名：<input type="text" class="textbox" id="birthday_p_name" name="search_p_name" style="width: 110px;"/>
-						        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetBirthdayInFo()">重置</a>
-						        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchBirthdayInFo()">查询</a>
-						   		</div> -->
-						    </div>   
-						    <div data-options="region:'center',title:'员工转正提醒',split:true," style="height:50%;">
+						    <div data-options="region:'north',title:'员工转正提醒',split:true," style="height:50%;">
 						    	<table id="zhuanZheng_grid"></table>  
 						    	<!-- <div id="zhuanZheng_tbar">
 							    	工号：<input type="text" class="textbox" id="zz_p_number" name="zz_p_number" style="width: 110px;"/>
@@ -54,17 +45,26 @@
 						        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetZhuanZhengInFo()">重置</a>
 						        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchZhuanZhengInFo()">查询</a>
 						   		</div>-->
-						    </div>   
+						    </div>
+						    <div data-options="region:'center',title:'员工生日提醒',split:true,collapsible:false," style="height:50%;">
+						    	<table id="birthday_grid"></table>  
+						    	<!-- <div id="birthday_tbar">
+							    	工号：<input type="text" class="textbox" id="birthday_p_number" name="search_p_number" style="width: 110px;"/>
+						        	姓名：<input type="text" class="textbox" id="birthday_p_name" name="search_p_name" style="width: 110px;"/>
+						        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetBirthdayInFo()">重置</a>
+						        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchBirthdayInFo()">查询</a>
+						   		</div> -->
+						    </div>    
 						</div>  
 				    </div>   
 				    <div data-options="region:'center',split:true,noheader:true,border:false," style="width:50%;">
 				    	<div id="right_layout" class="easyui-layout" data-options="fit:true">   
-						    <div data-options="region:'north',title:'证件到期提醒',split:true,collapsible:false," style="height:50%;">
-						    	<table id="certificatenRemind_grid"></table>
-						    </div>   
-						    <div data-options="region:'center',title:'合同到期续签提醒',split:true," style="height:50%;">
+						    <div data-options="region:'north',title:'合同到期续签提醒',split:true," style="height:50%;">
 						    	<table id="contractRemind_grid"></table>
-						    </div>   
+						    </div>
+						    <div data-options="region:'center',title:'证件到期提醒',split:true,collapsible:false," style="height:50%;">
+						    	<table id="certificatenRemind_grid"></table>
+						    </div> 
 						</div>  
 				    </div>   
 				</div>  

@@ -69,8 +69,8 @@ public class InitAttendanceDaoImpl implements InitAttendanceDao {
 	@Override
 	public Map<String, Object> summaryArrangementInfo(String year, String month, String pNumber) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT SUM(standardWorkLength)+SUM(Holidays) AS standardWorkLength, SUM(`chiDao`) AS chiDao, ");
-		sql.append("SUM(`originalCheckingLength`)+SUM(Holidays) AS originalCheckingLength, SUM(zaoTui) AS zaoTui, ");
+		sql.append("SELECT SUM(standardWorkLength) AS standardWorkLength, SUM(`chiDao`) AS chiDao, ");
+		sql.append("SUM(`originalCheckingLength`) AS originalCheckingLength, SUM(zaoTui) AS zaoTui, ");
 		sql.append("SUM(kuangGong) AS kuangGong, SUM(nianJia) AS `year`, SUM(tiaoXiu) AS tiaoXiu, ");
 		sql.append("SUM(shiJia) AS shiJia, SUM(bingJia) AS bingJia, SUM(peixunJia) AS peixunJia, ");
 		sql.append("SUM(hunJia) AS hunJia, SUM(chanJia) AS chanJia, SUM(PeiChanJia) AS PeiChanJia, ");

@@ -1050,6 +1050,8 @@ function resetPersonInFo(){
 function searchPersonInFo(value,name){
 	if(value!=""){
 		loadPersonGrid(name,value);
+	}else{
+		loadPersonGrid("","");
 	}
 };
 //获取教育背景Grid数据转成数组

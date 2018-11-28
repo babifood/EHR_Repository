@@ -119,7 +119,7 @@ public class OfficeCalcRule {
 					if (theResult.getFinalEndTime().before(theResult.getStandEndTime())) {
 						zaoTuiValue = UtilDateTime.getMinuteBetween(theResult.getFinalEndTime(), theResult.getStandEndTime());
 					}
-					if (chiDaoValue > 15 || zaoTuiValue > 15) {
+					if (chiDaoValue >= 15 || zaoTuiValue >= 15) {
 						double kuangGong = 0d;
 						//如果员工迟到早退大于15分钟着算4个小时，如果大于4小时着算8小时
 						if(theResult.getStandWorkLength()==8){
@@ -145,14 +145,17 @@ public class OfficeCalcRule {
 					} else {
 						if (chiDaoValue > 0) {
 							theResult.setChiDao(1);
+							theResult.setActualWorkLength(theResult.getActualWorkLength()+theResult.getQueQin());
 							//缺勤置0
 							theResult.setQueQin(0d);
 						}
 						if (zaoTuiValue > 0) {
 							theResult.setZaoTui(1);
+							theResult.setActualWorkLength(theResult.getActualWorkLength()+theResult.getQueQin());
 							//缺勤置0
 							theResult.setQueQin(0d);
 						}
+						
 					}
 				}
 			}

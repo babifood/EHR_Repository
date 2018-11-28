@@ -59,7 +59,7 @@ public class OfficeDaKaRule {
 		double workHours = WorkHourRule.getOfficeWorkHoursBySameDay(df.format(theClockedRecord.getClockedDate())+" "+theClockedRecord.getBeginTime()+":00", df.format(theClockedRecord.getClockedDate())+" "+theClockedRecord.getEndTime()+":00",theReslut);
 		theReslut.setOriginalCheckingLength(workHours);
 //		theReslut.setKuangGong(theReslut.getStandWorkLength()-workHours);//旷工时长
-		if(theReslut.getClockFlag()==ClockedYesNoRule.Clock_Flag_NOT_WORK){
+		if(theReslut.getClockFlag()==0){
 			theReslut.setActualWorkLength(0d);
 		}else{
 			theReslut.setActualWorkLength(workHours);

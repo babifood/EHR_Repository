@@ -96,6 +96,7 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 				c.setActualWorkLength(0d);
 				c.setChiDao(0);
 				c.setZaoTui(0);
+				c.setKuangGongCiShu(0);
 				c.setKuangGong(0d);
 				c.setNianJia(0d);
 				c.setTiaoXiu(0d);

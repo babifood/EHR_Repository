@@ -35,9 +35,9 @@ public class ClockedUtil {
 		//设置考勤标志
 		clockedYesNoRule.markClockedYesNo(person, clockedResult);
 		//根据考勤标志判断当天是否显示标准上班时间和下班时间及工作时长
-		if(clockedResult.getClockFlag()==0){
-			clockedResult.setStandWorkLength(0d);
-		}
+//		if(clockedResult.getClockFlag()==0){
+//			clockedResult.setStandWorkLength(0d);
+//		}
 		return clockedResult;
 	}
 	public static Date getDate(int year,int month,int day) throws Exception {
