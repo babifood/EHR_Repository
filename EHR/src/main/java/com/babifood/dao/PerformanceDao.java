@@ -19,4 +19,6 @@ public interface PerformanceDao {
 
 	public List<String> findPNumberList(List<Map<String, Object>> auths);
 
+	public void savePerformancList(List<Map<String, Object>> performancList);
+
 }

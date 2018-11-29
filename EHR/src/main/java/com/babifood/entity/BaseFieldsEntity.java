@@ -42,6 +42,8 @@ public class BaseFieldsEntity {
 	
 	private String performanceSalary;//绩效工资
 	
+	private String realSalary;//实际绩效奖金
+	
 	private String pSalary;//实际绩效工资
 	
 	private String security;//安全奖金
@@ -304,6 +306,14 @@ public class BaseFieldsEntity {
 
 	public void setPerformanceSalary(String performanceSalary) {
 		this.performanceSalary = performanceSalary;
+	}
+
+	public String getRealSalary() {
+		return realSalary;
+	}
+
+	public void setRealSalary(String realSalary) {
+		this.realSalary = realSalary;
 	}
 
 	public String getPSalary() {

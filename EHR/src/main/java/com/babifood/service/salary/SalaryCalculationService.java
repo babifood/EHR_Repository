@@ -83,7 +83,7 @@ public class SalaryCalculationService {
 		} else {
 			year = cyear;
 		}
-		if(UtilString.isEmpty(cyear)){
+		if(UtilString.isEmpty(cmonth)){
 			month = UtilDateTime.getPreMonth();// 当前月
 		} else {
 			month = cmonth;
@@ -94,8 +94,13 @@ public class SalaryCalculationService {
 	}
 
 	@LogMethod(module = ModuleConstant.CALCULATIONSALARY)
-	public Map<String, Object> salaryCalculation(Integer type, String companyCode, String cyear, String cmonth){
+	public Map<String, Object> salaryCalculation(Integer type, String resourceCode, String cyear, String cmonth){
 		Map<String, Object> result = new HashMap<String, Object>();
+		if(UtilString.isEmpty(resourceCode)){
+			result.put("code", "2");
+			result.put("msg", "请选择所属机构");
+			return result;
+		}
 		String calculationType = type == 1 ? "薪资试算" : type == 2 ? "薪资核算" : "薪资归档";
 		try {
 			init(cyear, cmonth);
@@ -103,13 +108,13 @@ public class SalaryCalculationService {
 			LoginEntity login = (LoginEntity) subject.getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_CALCULATION);
-			Integer currentType = salaryCalculationDao.findSalaryCalculationStatus(year, month, companyCode);
+			Integer currentType = salaryCalculationDao.findSalaryCalculationStatus(year, month, resourceCode,"salary");
 			logger.info("薪资计算========>操作人userId："+login.getUser_id()+",用户名："+login.getUser_name()+",currentType:"+currentType+"type:"+type);
 			if(type < currentType || (type == 3 && (currentType == 1 || currentType == 3))){
 				return getSalaryCalculation(type, currentType);
 			}
 			if(type < 3){
-				Integer count = personInFoDao.getPersonCount(year+"-"+month+"-01");
+				Integer count = personInFoDao.getPersonCount(year+"-"+month+"-01", resourceCode);
 				final int threadCount = 50;// 每个线程初始化的员工数量
 				int num = count % threadCount == 0 ? count / threadCount : count / threadCount + 1;// 线程数
 				logger.info("薪资计算========>使用线程数量，num=" + num);
@@ -120,7 +125,7 @@ public class SalaryCalculationService {
 						@Override
 						public String call() throws Exception {
 							ThreadContext.bind(subject);
-							String result = calculationEmployeesSalary(index, threadCount);
+							String result = calculationEmployeesSalary(index, threadCount, resourceCode);
 							ThreadContext.unbindSubject();
 							return result;
 						}
@@ -133,7 +138,7 @@ public class SalaryCalculationService {
 					logger.info("薪资计算========>使用线程编号：i=" + i + ",执行结果：" + list.get(i).get());
 				}
 			}
-			salaryCalculationDao.updateSalaryCalculationStatus(year, month, type, companyCode);
+			salaryCalculationDao.updateSalaryCalculationStatus(year, month, type, resourceCode,"salary");
 			result.put("code", "1");
 			LogManager.putContectOfLogInfo(calculationType);
 		} catch (Exception e) {
@@ -178,8 +183,8 @@ public class SalaryCalculationService {
 	 * @param days
 	 * @return 
 	 */
-	public String calculationEmployeesSalary(int index, int threadCount) {
-		List<Map<String, Object>> employeeList = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount, year+"-"+month+"-01");;// 查询员工列表
+	public String calculationEmployeesSalary(int index, int threadCount, String resourceCode) {
+		List<Map<String, Object>> employeeList = personInFoDao.findPagePersonInfo(index * threadCount ,threadCount, year+"-"+month+"-01", resourceCode);// 查询员工列表
 		List<SalaryDetailEntity> salaryDetails = new ArrayList<SalaryDetailEntity>();
 		if (employeeList != null && employeeList.size() > 0) {
 			logger.info("薪资计算========>薪资计算index："+index+",员工数量："+employeeList.size());
@@ -207,6 +212,9 @@ public class SalaryCalculationService {
 	public SalaryDetailEntity calculationSalaryByEmployee(Map<String, Object> employee)throws Exception {
 		String pNumber = employee.get("pNumber") + "";// 员工编号
 		logger.info("薪资计算========>员工薪资计算开始，员工编号:"+pNumber);
+		if("100932".equals(pNumber)){
+			System.out.println(pNumber);
+		}
 		if(formulaList == null || formulaList.size() <= 0){
 			formulaList = getFormula();
 		}
@@ -275,7 +283,7 @@ public class SalaryCalculationService {
 				: employee.get("inDate") + "");
 		baseFields.setNationality(UtilString.isEmpty(employee.get("nationality") + "")?"1":employee.get("nationality") + "");
 		baseFields.setProperty(employee.get("property") + "");
-		baseFields.setCompanyType(getCompanyType(employee.get("nationality") + ""));
+		baseFields.setCompanyType(getCompanyType(employee.get("companyCode") + ""));
 		String arrangementType = getArrangementType(employee);
 		baseFields.setArrangementType(arrangementType);
 		//基础薪资相关
@@ -360,6 +368,8 @@ public class SalaryCalculationService {
 				: fees.get("reserved10") + "");
 		baseFields.setSecurity(UtilString.isEmpty(fees.get("security") + "") ? "0.0"
 				: fees.get("security") + "");
+		baseFields.setRealSalary(UtilString.isEmpty(fees.get("realSalary") + "") ? "0.0"
+				: fees.get("realSalary") + "");
 		//考勤相关
 		baseFields.setAbsenceHours(UtilString.isEmpty(arrangementSummary.get("queqin") + "") ? "0.0"
 				: arrangementSummary.get("queqin") + "");
@@ -500,15 +510,11 @@ public class SalaryCalculationService {
 	 */
 	private void calculationBonus(SalaryDetailEntity salaryDerail, BaseFieldsEntity baseFields) throws Exception {
 		logger.info("薪资计算========>员工薪资计算:奖金数据计算");
-		String performanceFormula = formulaList.get("performanceFormula");
-		if(UtilString.isEmpty(performanceFormula)){
-			performanceFormula = SalaryConstant.PERFORMANCE_FORMULA;
-		}
 		salaryDerail.setSecurity(BASE64Util.getStringTowDecimal(baseFields.getSecurity()));// 安全奖
 		salaryDerail.setCompensatory(BASE64Util.getStringTowDecimal(baseFields.getCompensatory()));// 礼金、补偿金
 		salaryDerail.setOtherBonus(BASE64Util.getStringTowDecimal(baseFields.getOtherBonus()));// 其它奖金
 		salaryDerail.setAddOther(BASE64Util.getStringTowDecimal(baseFields.getAddOther()));// 加其它
-		salaryDerail.setPerformanceBonus(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(performanceFormula, salaryDerail, baseFields))+""));// 绩效奖金
+		salaryDerail.setPerformanceBonus(BASE64Util.getStringTowDecimal(baseFields.getRealSalary()));// 绩效奖金
 	}
 
 	/**
@@ -541,7 +547,7 @@ public class SalaryCalculationService {
 		}
 		String morningShiftFormula = formulaList.get("morningShiftFormula");
 		String nightShiftFormula = formulaList.get("nightShiftFormula");
-		String stayFormula = formulaList.get("stayFormula");
+		String stayFormula = formulaList.get("roomFormula");
 		salaryDerail.setOtherAllowance(BASE64Util.getStringTowDecimal(baseFields.getOtherAllowance()));// 其它津贴
 		salaryDerail.setRiceStick(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(riceStickFormula, salaryDerail, baseFields))+""));// 餐补
 		salaryDerail.setCallSubsidies(BASE64Util.getStringTowDecimal(scriptEngine.eval(replaceFields(callSunSalaryFormula, salaryDerail, baseFields))+""));// 话费补贴
@@ -1067,6 +1073,9 @@ public class SalaryCalculationService {
 		}
 		if (formula.indexOf("dormFormula") > -1 && salaryDerail.getDormDeduction() != null) {
 			formula = formula.replaceAll("dormFormula", "(" + salaryDerail.getDormDeduction() + ")");
+		}
+		if (formula.indexOf("roomFormula") > -1 && salaryDerail.getStay() != null) {
+			formula = formula.replaceAll("roomFormula", "(" + salaryDerail.getStay() + ")");
 		}
 		return formula;
 	}

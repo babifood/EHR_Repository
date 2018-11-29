@@ -11,7 +11,7 @@ public interface SalaryDetailService {
 	public Map<String, Object> saveCurrentMonthSalary(SalaryDetailEntity salaryDerail);
 
 	public Map<String, Object> getPageSalaryDetails(Integer page, Integer row, String pNumber, String pName,
-			String companyCode, String organzationName, String deptName, String officeName, String groupName);
+			String resourceCode, String organzationName, String deptName, String officeName, String groupName);
 
 	public void exportExcel(OutputStream ouputStream) throws Exception;
 

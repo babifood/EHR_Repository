@@ -31,6 +31,10 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept d ON b.p_department_id = d.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept e ON b.p_section_office_id = e.DEPT_CODE where 1 = 1 ");
+		if(!UtilString.isEmpty(params.get("resourceCode")+"")){
+			sql.append(" AND (b.p_company_id = '" + params.get("resourceCode") + 
+					"' or b.p_organization_id = '" + params.get("resourceCode")+"')" );
+		}
 		if(!UtilString.isEmpty(params.get("pNumber")+"")){
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%' ");
 		}
@@ -67,8 +71,7 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		sql.append("a.performance_score AS performanceScore, b.p_name AS pName, ");
 		sql.append("c.DEPT_NAME AS organzationName, d.DEPT_NAME AS deptName, e.DEPT_NAME AS officeName, ");
 		sql.append("h.DEPT_NAME AS companyName, a.performance_salary AS pSalary, ");
-		sql.append("if(a.performance_salary is null or a.performance_salary = '',from_base64(f.PERFORMANCE_SALARY) * ");
-		sql.append("a.performance_score/100,from_base64(a.performance_salary))*1 as realPSalary ");
+		sql.append("real_salary as realSalary ");
 		sql.append("FROM ehr_person_basic_info b ");
 		sql.append("INNER JOIN ehr_performance a ON a.p_number = b.p_number ");
 		sql.append("LEFT JOIN ehr_dept c ON b.p_organization_id = c.DEPT_CODE ");
@@ -79,6 +82,10 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		sql.append("AND f.use_time = (SELECT MAX(use_time) FROM ehr_base_salary WHERE ");
 		sql.append("use_time <= LAST_DAY(str_to_date(CONCAT(a.`YEAR`,'-',a.`MONTH`),'%Y-%m')) ");
 		sql.append("AND P_NUMBER = a.P_NUMBER) where 1 = 1 ");
+		if(!UtilString.isEmpty(params.get("resourceCode")+"")){
+			sql.append(" AND (b.p_company_id = '" + params.get("resourceCode") + 
+					"' or b.p_organization_id = '" + params.get("resourceCode")+"')" );
+		}
 		if(!UtilString.isEmpty(params.get("year")+"")){
 			sql.append(" AND a.`YEAR` = " + params.get("year"));
 		}
@@ -170,6 +177,29 @@ public class PerformanceDaoImpl extends AuthorityControlDaoImpl implements Perfo
 		} catch (Exception e) {
 			log.error("修改绩效分值失败", e);
 			throw e;
+		}
+	}
+
+	@Override
+	public void savePerformancList(List<Map<String, Object>> performancList) {
+		if(performancList != null && performancList.size() > 0){
+			StringBuffer sql = new StringBuffer();
+			sql.append("REPLACE INTO `ehr_performance` (`YEAR`, `MONTH`, `P_NUMBER`, `performance_score`, `performance_salary`, `real_salary`) VALUES ");
+			for(int i = 0 ; i < performancList.size() ; i++){
+				Map<String, Object> map = performancList.get(i);
+				sql.append("('" + map.get("year") + "','" + map.get("month") + "','" + map.get("pNumber") + "','" + map.get("performanceScore"));
+				sql.append("','"+ (UtilString.isEmpty(map.get("performanceSalary")+"")?"":BASE64Util.getDecodeStringTowDecimal(map.get("performanceSalary"))));
+				sql.append("','"+ BASE64Util.getDecodeStringTowDecimal(map.get("realySalary"))+"')");
+				if(i < performancList.size() - 1){
+					sql.append(",");
+				}
+			}
+			try {
+				jdbctemplate.update(sql.toString());
+			} catch (Exception e) {
+				log.error("更新实际绩效工资失败", e);
+				throw e;
+			}
 		}
 	}
 

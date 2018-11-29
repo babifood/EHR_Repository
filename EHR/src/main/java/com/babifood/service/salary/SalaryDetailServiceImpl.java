@@ -61,7 +61,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 	@Override
 	@LogMethod(module = ModuleConstant.SALARYDETAIL)
 	public Map<String, Object> getPageSalaryDetails(Integer page, Integer row, String pNumber, String pName,
-			String companyCode, String organzationName, String deptName, String officeName, String groupName) {
+			String resourceCode, String organzationName, String deptName, String officeName, String groupName) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		Integer pageNum = page == null ? 1 : page;
@@ -74,7 +74,7 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		params.put("deptName", deptName);
 		params.put("officeName", officeName);
 		params.put("groupName", groupName);
-		params.put("companyCode", companyCode);
+		params.put("resourceCode", resourceCode);
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -166,16 +166,16 @@ public class SalaryDetailServiceImpl implements SalaryDetailService {
 		row1Name.put("afterDeduction", "其它扣款（税后）");
 		row1Name.put("laterAndLeaveDeduction", "迟到和早退扣款");
 		row1Name.put("completionDeduction", "旷工扣款");
-		row1Name.put("yearDeduction", "年假");
-		row1Name.put("relaxation", "调休");
-		row1Name.put("thingDeduction", "事假");
-		row1Name.put("sickDeduction", "病假");
-		row1Name.put("trainDeduction", "培训假");
-		row1Name.put("parentalDeduction", "产假");
-		row1Name.put("marriageDeduction", "婚假");
-		row1Name.put("companionParentalDeduction", "陪产假");
-		row1Name.put("funeralDeduction", "丧假");
-		row1Name.put("onboarding", "月中入职、离职");
+		row1Name.put("yearDeduction", "年假扣款");
+		row1Name.put("relaxation", "调休扣款");
+		row1Name.put("thingDeduction", "事假扣款");
+		row1Name.put("sickDeduction", "病假扣款");
+		row1Name.put("trainDeduction", "培训假扣款");
+		row1Name.put("parentalDeduction", "产假扣款");
+		row1Name.put("marriageDeduction", "婚假扣款");
+		row1Name.put("companionParentalDeduction", "陪产假扣款");
+		row1Name.put("funeralDeduction", "丧假扣款");
+		row1Name.put("onboarding", "月中入职、离职扣款");
 		row1Name.put("totalDeduction", "应扣合计");
 		row1Name.put("wagePayable", "应发工资");
 		row1Name.put("realWages", "实发工资");

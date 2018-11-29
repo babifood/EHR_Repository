@@ -192,8 +192,9 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		sql.append("LEFT JOIN ehr_dept e on a.GROUP_CODE = e.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_dept g on a.COMPANY_CODE = g.DEPT_CODE ");
 		sql.append("INNER JOIN ehr_person_basic_info f ON a.P_NUMBER = f.p_number WHERE 1=1 ");
-		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
-			sql.append(" AND a.COMPANY_CODE like '%" + params.get("companyCode") + "%'");
+		if (!UtilString.isEmpty(params.get("resourceCode") + "")) {
+			sql.append(" AND (a.COMPANY_CODE = '" + params.get("resourceCode") + 
+					"' or a.ORGANIZATION_CODE = '" + params.get("resourceCode") + "')");
 		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
@@ -229,8 +230,9 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		basic_sql.append("LEFT JOIN ehr_dept e on f.P_GROUP_ID = e.DEPT_CODE ");
 		basic_sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
 		basic_sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE WHERE f.p_oa_and_ehr = 'EHR' ");
-		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
-			basic_sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
+		if (!UtilString.isEmpty(params.get("resourceCode") + "")) {
+			basic_sql.append(" AND (f.P_COMPANY_ID = '" + params.get("resourceCode") + 
+					"' or f.P_ORGANIZATION_ID = '" + params.get("resourceCode") + "')");
 		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			basic_sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
@@ -295,8 +297,9 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		sql.append("LEFT JOIN ehr_dept g on f.P_COMPANY_ID = g.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
 		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE WHERE 1=1 ");
-		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
-			sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
+		if (!UtilString.isEmpty(params.get("resourceCode") + "")) {
+			sql.append(" AND (f.P_COMPANY_ID = '" + params.get("resourceCode") + 
+					"' or f.P_ORGANIZATION_ID = '" + params.get("resourceCode") + "')");
 		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
@@ -347,8 +350,9 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		sql.append("LEFT JOIN ehr_post h on f.P_POST_ID = h.post_id ");
 		sql.append("LEFT JOIN ehr_dept b on f.P_ORGANIZATION_ID = b.DEPT_CODE ");
 		sql.append("LEFT JOIN ehr_base_salary i on i.p_number = a.P_NUMBER WHERE f.p_oa_and_ehr = 'EHR' ");
-		if (!UtilString.isEmpty(params.get("companyCode") + "")) {
-			sql.append(" AND f.P_COMPANY_ID like '%" + params.get("companyCode") + "%'");
+		if (!UtilString.isEmpty(params.get("resourceCode") + "")) {
+			sql.append(" AND (f.P_COMPANY_ID = '" + params.get("resourceCode") + 
+					"' or f.P_ORGANIZATION_ID = '" + params.get("resourceCode") + "')");
 		}
 		if (!UtilString.isEmpty(params.get("pNumber") + "")) {
 			sql.append(" AND a.p_number like '%" + params.get("pNumber") + "%'");
@@ -480,10 +484,10 @@ public class SalaryDetailDaoImpl extends AuthorityControlDaoImpl implements Sala
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
-		sql.append("r.organization_code as companyCode, r.organization_name as companyName ");
+		sql.append("s.resource_code as resourceCode, s.resource_name as resourceName ");
 		sql.append("from ehr_user_role u ");
-		sql.append("inner join ehr_roles r ");
-		sql.append("on u.role_id =r.role_id ");
+		sql.append("inner join ehr_roles r on u.role_id = r.role_id ");
+		sql.append("inner join ehr_role_resource s on s.role_id = r.role_id ");
 		sql.append("where u.user_id = ? ");
 		return jdbctemplate.queryForList(sql.toString(),login.getUser_id());
 	}

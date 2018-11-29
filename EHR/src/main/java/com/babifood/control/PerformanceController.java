@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.babifood.service.PerformanceService;
+import com.babifood.service.salary.PerformanceCalculationService;
 import com.babifood.utils.UtilDateTime;
 
 @Controller
@@ -23,6 +24,9 @@ public class PerformanceController {
 
 	@Autowired
 	private PerformanceService performanceService;
+	
+	@Autowired
+	private PerformanceCalculationService performanceCalculationService;
 	
 	/**
 	 * 分页查询绩效薪资信息
@@ -37,8 +41,8 @@ public class PerformanceController {
 	 */
 	@RequestMapping("page")
 	@ResponseBody
-	public Map<String, Object> getPagePerformances(Integer page, Integer rows, String pNumber, String pName, String organzationName, String deptName, String officeName) {
-		return performanceService.getPagePerformances(page, rows, pNumber, pName, organzationName, deptName, officeName);
+	public Map<String, Object> getPagePerformances(Integer page, Integer rows, String pNumber, String pName, String resourceCode, String organzationName, String deptName, String officeName) {
+		return performanceService.getPagePerformances(page, rows, pNumber, pName, resourceCode, organzationName, deptName, officeName);
 	}
 
 	/**
@@ -89,4 +93,11 @@ public class PerformanceController {
 	public Map<String, Object> savePerformanceScore(String year, String month, String pNumber, String score, String salary) {
 		return performanceService.savePerformanceScore(year, month, pNumber, score, salary);
 	}
+	
+	@RequestMapping("calculation")
+	@ResponseBody
+	public Map<String, Object> performanceCalculation(Integer type, String resourceCode, String year, String month){
+		return performanceCalculationService.performanceCalculation(type, resourceCode, year, month);
+	}
+	
 }
