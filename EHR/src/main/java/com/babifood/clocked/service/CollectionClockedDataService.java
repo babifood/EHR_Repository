@@ -18,6 +18,5 @@ public interface CollectionClockedDataService {
 	public void attachWithDaKa() ;
 	public void attachWithBizData();
 	public int[] saveDate();
-	public void pushOA();
 	public int[] execute(int year,int month);
 }

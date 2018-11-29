@@ -194,13 +194,6 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		}
 		return rows;
 	}
-
-	@Override
-	public void pushOA() {
-		// TODO Auto-generated method stub
-		//1推送OA考勤结果
-	}
-
 	@Override
 	public int[] execute(int year,int month){
 		// TODO Auto-generated method stub
@@ -212,27 +205,5 @@ public class CollectionClockedDataServiceImpl implements CollectionClockedDataSe
 		attachWithBizData();
 		rows = saveDate();
 		return rows;
-	}
-	public static void main(String[] args) {
-//    	Long simple=System.currentTimeMillis();
-//    	//三位随机数
-//    	int random=new Random().nextInt(90000)+10000;//为变量赋随机值100-999;
-//      System.out.println(simple.toString());  
-//      System.out.println("YX"+random);
-//		int a=100001;
-//		int[] i=  {100001,100002,100003,100004,100005,100006};
-//		for(int j=0;j<i.length;j++){
-//			if(a==i[j]){
-//				j=0;
-//				a=a+1;
-//			}
-//		}
-//		System.out.println(a);
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Object[] params=new Object[2];
-		params[0]=df.format(UtilDateTime.getMonthStartSqlDate(2018,7));
-		params[1]=df.format(UtilDateTime.getMonthEndSqlDate(2018,7));
-		System.out.println(params[0]);
-		System.out.println(params[1]);
 	}
 }
