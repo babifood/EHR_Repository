@@ -41,12 +41,12 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 	}
 
 	@Override
-	public Integer findSalaryCalculationStatus(String year, String month, String companyCode) {
-		String sql = "SELECT `status`  FROM `ehr_salary_calculation_status` WHERE `YEAR` = ? AND `MONTH` = ? AND company_code = ?";
+	public Integer findSalaryCalculationStatus(String year, String month, String companyCode, String statusType) {
+		String sql = "SELECT `status`  FROM `ehr_salary_calculation_status` WHERE `YEAR` = ? AND `MONTH` = ? AND company_code = ? and type = ?";
 		Integer status = 0;
 		List<Integer> statusList = null;
 		try {
-			statusList = jdbcTemplate.queryForList(sql, Integer.class, year, month, companyCode);
+			statusList = jdbcTemplate.queryForList(sql, Integer.class, year, month, companyCode, statusType);
 		} catch (Exception e) {
 			log.error("查询薪资计算状态失败", e);
 			throw e;
@@ -58,10 +58,10 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 	}
 
 	@Override
-	public void updateSalaryCalculationStatus(String year, String month, Integer type, String companyCode) {
-		String sql = "replace into ehr_salary_calculation_status (`YEAR`, `MONTH`, `status`, company_code) values (?, ?, ?, ?)";
+	public void updateSalaryCalculationStatus(String year, String month, Integer type, String companyCode, String statusType) {
+		String sql = "replace into ehr_salary_calculation_status (`YEAR`, `MONTH`, `status`, company_code, type) values (?, ?, ?, ?, ?)";
 		try {
-			jdbcTemplate.update(sql, year, month, type, companyCode);
+			jdbcTemplate.update(sql, year, month, type, companyCode, statusType);
 			log.info("薪资计算========>修改计算状态");
 		} catch (Exception e) {
 			log.error("新增或修复薪资计算状态失败", e);
@@ -83,8 +83,8 @@ public class SalaryCalculationDaoImpl implements SalaryCalculationDao {
 		sql.append("b.RESERVED7 AS reserved7, b.RESERVED8 AS reserved8, b.RESERVED9  AS reserved9, b.RESERVED10 AS reserved10, ");
 		sql.append("b.SECURITY_BONUS AS `security`, b.DORM_BONUS AS dormBonus, ");
 		sql.append("b.STAY_ALLOWANCE AS stay, c.DORM_BONUS AS dormBonus, c.DORM_DEDUCTION AS dormDeduction, c.DORM_FEE AS dormFee, ");
-		sql.append("c.ELECTRICITY_FEE AS electricityFee,d.PERFORMANCE_SALARY AS pSalary,d.PERFORMANCE_SCORE AS performanceScore ");
-		sql.append("FROM ehr_person_basic_info a ");
+		sql.append("c.ELECTRICITY_FEE AS electricityFee,d.PERFORMANCE_SALARY AS pSalary,d.PERFORMANCE_SCORE AS performanceScore, ");
+		sql.append("d.real_salary as realSalary FROM ehr_person_basic_info a ");
 		sql.append("LEFT JOIN ehr_allowances b ON a.p_number = b.P_NUMBER AND b.`YEAR` = ? AND b.`MONTH` = ? ");
 		sql.append("LEFT JOIN ehr_dormitory_fee c ON a.p_number = c.P_NUMBER AND c.`YEAR` = ? AND c.`MONTH` = ? ");
 		sql.append("LEFT JOIN ehr_performance d ON a.p_number = d.P_NUMBER AND d.`YEAR` = ? AND d.`MONTH` = ? ");

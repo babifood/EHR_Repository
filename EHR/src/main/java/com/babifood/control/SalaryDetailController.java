@@ -38,8 +38,8 @@ public class SalaryDetailController {
 	 */
 	@RequestMapping("page")
 	@ResponseBody
-	public Map<String, Object> getPageSalaryDetails(Integer page, Integer rows, String pNumber, String pName, String companyCode, String organzationName, String deptName, String officeName, String groupName){
-		return salaryDetailService.getPageSalaryDetails(page, rows, pNumber, pName, companyCode, organzationName, deptName, officeName, groupName);
+	public Map<String, Object> getPageSalaryDetails(Integer page, Integer rows, String pNumber, String pName, String resourceCode, String organzationName, String deptName, String officeName, String groupName){
+		return salaryDetailService.getPageSalaryDetails(page, rows, pNumber, pName, resourceCode, organzationName, deptName, officeName, groupName);
 	}
 	
 	/**
@@ -49,8 +49,8 @@ public class SalaryDetailController {
 	 */
 	@RequestMapping("calculation")
 	@ResponseBody
-	public Map<String, Object> salaryCalculation(Integer type, String companyCode, String year, String month){
-		return salaryCalculationService.salaryCalculation(type, companyCode, year, month);
+	public Map<String, Object> salaryCalculation(Integer type, String resourceCode, String year, String month){
+		return salaryCalculationService.salaryCalculation(type, resourceCode, year, month);
 	}
 	
 	/**

@@ -14,11 +14,16 @@ function loadUserAuthCompany() {
 				var data = result.companyList;
 				if(data && data.length > 0){
 					$('#salary_calculation_company').combobox({    
-					    valueField:'companyCode',    
-					    textField:'companyName' ,
-					    data:data
+					    valueField:'resourceCode',    
+					    textField:'resourceName' ,
+					    data:data,
+					    onSelect:function(data){
+					    	loadConditionSalaryDetail(data.resourceCode);
+					    }
 					});
-					$('#salary_calculation_company').combobox("setValue",data[0].companyCode);
+					if(data.length == 1){
+						$('#salary_calculation_company').combobox("setValue",data[0].resourceCode);
+					}
 				}
 				loadSalaryDetails();
 			}
@@ -43,7 +48,7 @@ function loadSalaryDetails() {
 		striped:true,
 		border:false,
 		pagination:true,
-		queryParams:{companyCode:$('#salary_calculation_company').val()},
+		queryParams:{resourceCode:$('#salary_calculation_company').val()},
 		pageSize : 20,
 		pageList : [20, 30, 50 ],
 		pageNumber:1,
@@ -113,7 +118,7 @@ function loadSalaryDetails() {
 
 
 //条件查询绩效信息列表
-function loadConditionSalaryDetail() {
+function loadConditionSalaryDetail(resourceCode) {
 	var pNumber = $("#salary_detail_number").val();
 	var pName = $("#salary_detail_name").val();
 	var organzationName = $("#salary_detail_organzationName").val();
@@ -126,7 +131,8 @@ function loadConditionSalaryDetail() {
 		deptName : deptName,
 		organzationName : organzationName,
 		officeName : officeName,
-		companyCode:companyCode
+		companyCode:companyCode,
+		resourceCode :resourceCode
 	})
 }
 
@@ -162,7 +168,7 @@ function calculationSalary(type, value){
 		url : prefix + "/salaryDetail/calculation",
 		data : {
 			type:type,
-			companyCode:$('#salary_calculation_company').val(),
+			resourceCode:$('#salary_calculation_company').val(),
 			year:$("#salary_calculation_year").val(),
 			month:$('#salary_calculation_month').val()
 		},
@@ -194,5 +200,6 @@ function clearSearchSalaryDetail(){
 	$("#salary_detail_organzationName").val("");
 	$("#salary_detail_deptName").val("");
 	$("#salary_detail_officeName").val("");
+	$('#salary_calculation_company').combobox("setValue",'');
 	$("#salaryDetail_datagrid").datagrid("load",{});
 }

@@ -2,9 +2,41 @@ var prefix = window.location.host;
 prefix = "http://" + prefix +"/EHR";
 
 $(function() {
-	loadPerformanceList();
+//	loadPerformanceList();
 	initPerformanceImportExcel();
+	loadPerformanceUserAuthCompany();
 })
+
+function loadPerformanceUserAuthCompany() {
+	$.ajax({
+		url:prefix + "/salaryDetail/auth",
+		success:function(result){
+			if(result.code == '1'){
+				var data = result.companyList;
+				if(data && data.length > 0){
+					$('#performance_calculation_company').combobox({    
+					    valueField:'resourceCode',    
+					    textField:'resourceName' ,
+					    data:data,
+					    onSelect:function(data){
+					    	loadConditionPerformance(data.resourceCode);
+					    }
+					});
+					if(data.length == 1){
+						$('#performance_calculation_company').combobox("setValue",data[0].resourceCode);
+					}
+				}
+				loadPerformanceList()
+			}
+		}
+	})
+	$('#performance_calculation_month').combobox({    
+	    valueField:'id',    
+	    textField:'text' ,
+	    data:[{id:"01",text:"01"},{id:"02",text:"02"},{id:"03",text:"03"},{id:"04",text:"04"},{id:"05",text:"05"},{id:"06",text:"06"}
+	    ,{id:"07",text:"07"},{id:"08",text:"08"},{id:"09",text:"09"},{id:"10",text:"10"},{id:"11",text:"11"},{id:"12",text:"12"}]
+	});
+}
 
 //加载绩效信息列表
 function loadPerformanceList(){
@@ -15,6 +47,7 @@ function loadPerformanceList(){
 		striped : true,
 		border : false,
 		toolbar : "#performance_list_datagrid_tools",
+		queryParams:{resourceCode:$('#performance_calculation_company').val()},
 		singleSelect : true,
 		rownumbers : true,
 		pagination : true,
@@ -84,7 +117,7 @@ function loadPerformanceList(){
 					},
 				},
 			},{
-				field : "realPSalary",
+				field : "realSalary",
 				title : "实际绩效工资",
 				width : 100,
 			}
@@ -109,7 +142,7 @@ function initPerformanceImportExcel(){
 }
 
 //条件查询绩效信息列表
-function loadConditionPerformance(){
+function loadConditionPerformance(resourceCode){
 	var pNumber = $("#performance_salary_pNumber").val();
 	var pName = $("#performance_salary_pName").val();
 	var organzationName = $("#performance_salary_organzationName").val();
@@ -120,7 +153,8 @@ function loadConditionPerformance(){
 		pName:pName,
 		deptName:deptName,
 		organzationName:organzationName,
-		officeName:officeName
+		officeName:officeName,
+		resourceCode:resourceCode
 	})
 }
 
@@ -261,7 +295,47 @@ function clearSearchPerformance() {
 	$("#performance_salary_organzationName").val("");
 	$("#performancee_salary_deptName").val("");
 	$("#performancee_salary_officeName").val("");
+	$('#performancee_calculation_company').combobox("setValue",'');
 	$("#performance_list_datagrid").datagrid("load",{});
 }
 
+function performanceCalculation(type){
+	var value = "绩效计算";
+	if(type == 1){
+		value = "绩效计算";
+		calculationPerformance(type, value);
+	} else if(type == 2){
+		value = "绩效归档";
+		$.messager.confirm("提示","归档后不能再次计算，确定归档吗？",function(r){
+			if(r){
+				calculationPerformance(type, value);
+			}
+		})	
+	}
+}
 
+function calculationPerformance(type, value){
+	$("#performanceSalary_calculate").linkbutton('disable');
+	$("#performanceSalary_archive").linkbutton('disable');
+	$.ajax({
+		url : prefix + "/performance/calculation",
+		data : {
+			type:type,
+			resourceCode:$('#performance_calculation_company').val(),
+			year:$("#performance_calculation_year").val(),
+			month:$('#performance_calculation_month').val()
+		},
+		beforeSend:function(){
+			$.messager.progress({
+				text:'正在计算绩效薪资，请稍后......',
+			});
+		},
+		success:function(result){
+			$.messager.progress('close');
+			$.messager.alert('提示', result.msg, 'info');
+			$("#performanceSalary_calculate").linkbutton('enable');
+			$("#performanceSalary_archive").linkbutton('enable');
+			$("#performance_list_datagrid").datagrid("reload");
+		}
+	})
+}

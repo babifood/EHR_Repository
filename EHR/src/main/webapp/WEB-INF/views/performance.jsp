@@ -12,6 +12,18 @@
 		<table id="performance_list_datagrid" class="easyui-datagrid"></table>
 		<div id="performance_list_datagrid_tools">
 			<div>
+				<div style="margin-left: 10px">
+					<span style="color: #95B8E7;font-size: 15px">绩效薪资计算年、月：</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					年份：<input type="text" class="easyui-numberspinner" id="performance_calculation_year" data-options="min:2018,editable:false"> &nbsp;&nbsp;&nbsp;
+	      			月份：<input type="text" class="easyui-combobox" id="performance_calculation_month"> &nbsp;&nbsp;&nbsp;
+	      			所属机构：<input type="text" class="easyui-combobox" id="performance_calculation_company" oninput="loadConditionPerformanceDetail()">
+					<shiro:hasPermission name="performance:calculate">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="performanceSalary_calculate" onclick="performanceCalculation(1)">绩效计算</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="performance:archive">
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="performanceSalary_archive" onclick="performanceCalculation(2)">绩效归档</a>
+					</shiro:hasPermission>
+				</div>
 				<div >
 					<a href="javascript:void(0)" id="mb" class="easyui-menubutton"data-options="menu:'#performance_menubutton',iconCls:'icon-edit'">导入/导出</a>
 					<div id="performance_menubutton" style="width:150px;">

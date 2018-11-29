@@ -203,6 +203,7 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		List<Object[]> params_menu = new ArrayList<>();
 		List<Object[]> params_authority = new ArrayList<>();
 		for(int i=0;i<roleMenuEntity.length;i++){
+			System.out.println(i+"====================");
 			if(roleMenuEntity[i].getFlag().equals("0")||roleMenuEntity[i].getFlag().equals("1")){
 				params_menu.add(new Object[]{
 						roleMenuEntity[i].getRole_id(),

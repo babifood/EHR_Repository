@@ -38,8 +38,8 @@ public class PerformanceServiceImpl implements PerformanceService{
 	 */
 	@Override
 	@LogMethod(module = ModuleConstant.PERFORMANCE)
-	public Map<String, Object> getPagePerformances(Integer page, Integer rows, String pNumber, String pName, String organzationName, String deptName,
-			String officeName) {
+	public Map<String, Object> getPagePerformances(Integer page, Integer rows, String pNumber, String pName,
+			String resourceCode, String organzationName, String deptName, String officeName) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Integer pageNum = page == null ? 1 : page;
 		Integer pageSize = rows == null ? 10 : rows;
@@ -51,6 +51,7 @@ public class PerformanceServiceImpl implements PerformanceService{
 		params.put("organzationName", organzationName);
 		params.put("deptName", deptName);
 		params.put("officeName", officeName);
+		params.put("resourceCode", resourceCode);
 		try {
 			LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 			LogManager.putUserIdOfLogInfo(login.getUser_id());

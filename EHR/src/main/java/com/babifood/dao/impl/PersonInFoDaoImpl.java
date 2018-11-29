@@ -659,15 +659,16 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		return jdbctemplate.queryForList(sql.toString(), ids);
 	}
 	@Override
-	public Integer getPersonCount(String date) throws DataAccessException{
+	public Integer getPersonCount(String date, String resourceCode) throws DataAccessException{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select count(*) from ehr_person_basic_info where p_OA_and_EHR = 'OA' and" );
-		sql.append("(p_out_date >= '"+date +"' OR p_out_date is null OR p_out_date = '')");
-		sql = super.jointDataAuthoritySql("p_company_id", "p_organization_id", sql);
+		sql.append("(p_out_date >= '"+date +"' OR p_out_date is null OR p_out_date = '') ");
+		sql.append(" and (p_company_id = '"+resourceCode+"' or p_organization_id = '" + resourceCode + "')");
+		sql = super.jointDataAuthoritySql("p_company_id", "P_organization_id", sql);
 		return jdbctemplate.queryForInt(sql.toString());
 	}
 	@Override
-	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize, String date) throws DataAccessException{
+	public List<Map<String, Object>> findPagePersonInfo(int startIndex, int pageSize, String date,String resourceCode) throws DataAccessException{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select a.p_id as pId,a.p_number as pNumber,a.p_name as pName,b.dept_name as companyName,");
 		sql.append("b.dept_code as companyCode,c.dept_name deptName,c.dept_code as deptCode,d.dept_name organizationName,");
@@ -681,6 +682,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append(" LEFT JOIN ehr_post f on a.P_post_id = f.POST_ID ");
 		sql.append(" where p_OA_and_EHR = 'OA' and (p_out_date >= ?");
 		sql.append(" OR p_out_date is null OR p_out_date = '')");
+		sql.append(" and (a.p_company_id = '"+resourceCode+"' or a.P_organization_id = '" + resourceCode + "')");
 		sql = super.jointDataAuthoritySql("b.dept_code", "d.dept_code ", sql);
 		sql.append(" LIMIT ?,?");
 		List<Map<String, Object>> personInfos = null;
