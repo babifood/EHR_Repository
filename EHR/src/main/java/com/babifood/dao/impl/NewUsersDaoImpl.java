@@ -253,7 +253,7 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public List<Map<String, Object>> loadRoleWhereUser(String user_id) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select role_id,role_name from ehr_user_role where user_id=?");
+		sql.append("SELECT ROLE_ID,ROLE_NAME FROM EHR_USER_ROLE WHERE USER_ID=?");
 		return jdbctemplate.queryForList(sql.toString(),user_id);
 	}
 	@Override
