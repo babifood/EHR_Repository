@@ -29,14 +29,14 @@ public class CertificatenServiceImpl implements CertificatenService {
 	CertificatenDao certificatenDao;
 	@Override
 	@LogMethod(module = ModuleConstant.CERTIFICATEN)
-	public List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name) {
+	public List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name,String zj_name,String zj_code,String orga) {
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		List<Map<String, Object>> list = null;
 		try {
 			// TODO Auto-generated method stub
-			list = certificatenDao.loadCertificaten(c_p_number, c_p_name);
+			list = certificatenDao.loadCertificaten(c_p_number, c_p_name,zj_name,zj_code,orga);
 			LogManager.putContectOfLogInfo("参数:"+c_p_number+c_p_name);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -191,7 +191,7 @@ public class CertificatenServiceImpl implements CertificatenService {
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EXPORT);
 			if("1".equals(type)){
-				performanceList = certificatenDao.loadCertificaten("","");
+				performanceList = certificatenDao.loadCertificaten("","","","","");
 				LogManager.putContectOfLogInfo("导出绩效信息列表");
 			} else {
 				performanceList = new ArrayList<Map<String, Object>>();

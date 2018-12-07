@@ -10,7 +10,7 @@ import com.babifood.entity.Certificaten;
 @Repository
 public interface CertificatenDao {
 
-	List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name);
+	List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name,String zj_name,String zj_code,String orga);
 
 	Integer removeCertificaten(String c_id);
 

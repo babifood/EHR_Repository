@@ -129,7 +129,9 @@ public class ClockedResultBases {
 	// 最终开始计时时间
 	private Date finalBeginTime;
 	// 最终结束计时时间
-	private Date finalEndTime;	
+	private Date finalEndTime;
+	//数据状态1：初始化，2：数据归集，3数据锁定
+	private String dataflag;
 	
 	public Date getFinalBeginTime() {
 		finalBeginTime = getCheckingBeginTime()==null?getEventBeginTime():getCheckingBeginTime();
@@ -497,6 +499,12 @@ public class ClockedResultBases {
 	}
 	public void setHolidays(Double holidays) {
 		this.holidays = holidays;
+	}
+	public String getDataflag() {
+		return dataflag;
+	}
+	public void setDataflag(String dataflag) {
+		this.dataflag = dataflag;
 	}
 	
 //	public Date getXiuBeginTime() throws Exception {

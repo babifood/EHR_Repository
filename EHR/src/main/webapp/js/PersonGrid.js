@@ -21,7 +21,7 @@ var win_title;
 //初始化
 $(function(){
 	//加载人员档案列表
-	loadPersonGrid("","");
+	loadPersonGrid("","","","","","all");
 	loadAccordion();
 	loadPostComboBox();
 	//初始加载公司
@@ -487,9 +487,9 @@ function mobileValidate(id,required){
 	});
 }
 //加载人员档案列表
-function loadPersonGrid(searchKey,searchVal){
+function loadPersonGrid(searchKey,searchVal,comp,orga,dept,inOut){
 	var url;
-	url=prefix+"/loadPersonInFo?searchKey="+searchKey+"&searchVal="+searchVal;
+	url=prefix+"/loadPersonInFo?searchKey="+searchKey+"&searchVal="+searchVal+"&comp="+comp+"&orga="+orga+"&dept="+dept+"&inOut="+inOut;
 	$("#person_grid").datagrid({
 		url:url,
 		fit:true,
@@ -1048,11 +1048,11 @@ function resetPersonInFo(){
 }
 //查询人员信息
 function searchPersonInFo(value,name){
-	if(value!=""){
-		loadPersonGrid(name,value);
-	}else{
-		loadPersonGrid("","");
-	}
+	var comp = $("#query_company").val();
+	var orga = $("#query_orga").val();
+	var dept = $("#query_dept").val();
+	var inOut = $("input[name='query_radio']:checked").val()
+	loadPersonGrid(name,value,comp,orga,dept,inOut);
 };
 //获取教育背景Grid数据转成数组
 function getEducationGridToArr(){

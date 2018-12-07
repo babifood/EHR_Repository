@@ -34,8 +34,8 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("tiaoxiu,shijia,bingjia,peixunjia,hunjia, ");
 		sql.append("chanjia,peichanjia,sangjia,qita,queqin, ");
 		sql.append("qingjia,yidong,jiaban,chuchai,canbu, ");
-		sql.append("eventbegintime,eventendtime,clockflag,inoutjob,holidays) ");
-		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		sql.append("eventbegintime,eventendtime,clockflag,inoutjob,holidays,dataflag) ");
+		sql.append(" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		final String strSql = sql.toString();
 		List<Object[]> paramsList = new ArrayList<>();
 		for(int i=0;i<saveDataList.size();i++){
@@ -66,8 +66,8 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 					saveDataList.get(i).getJiaBan(),saveDataList.get(i).getChuCha(),
 					saveDataList.get(i).getCanBu(),saveDataList.get(i).getEventBeginTime(),
 					saveDataList.get(i).getEventEndTime(),saveDataList.get(i).getClockFlag(),
-					saveDataList.get(i).getInOutJob(),saveDataList.get(i).getHolidays()
-					});
+					saveDataList.get(i).getInOutJob(),saveDataList.get(i).getHolidays(),
+					saveDataList.get(i).getDataflag()});
 		}
 		Object[] params=new Object[2];
 		params[0]=year;
@@ -144,7 +144,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("tiaoxiu=?,shijia=?,bingjia=?,peixunjia=?,hunjia=?, ");
 		sql.append("chanjia=?,peichanjia=?,sangjia=?,qita=?,queqin=?, ");
 		sql.append("qingjia=?,yidong=?,jiaban=?,chuchai=?,canbu=?, ");
-		sql.append("eventbegintime=?,eventendtime=? ");
+		sql.append("eventbegintime=?,eventendtime=?,dataflag=? ");
 		sql.append("where WorkNum=? and checkingDate=?");
 		final String strSql = sql.toString();
 		List<Object[]> paramsList = new ArrayList<>();
@@ -164,8 +164,8 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 					saveDataList.get(i).getQingJia(),saveDataList.get(i).getYiDong(),
 					saveDataList.get(i).getJiaBan(),saveDataList.get(i).getChuCha(),
 					saveDataList.get(i).getCanBu(),saveDataList.get(i).getEventBeginTime(),
-					saveDataList.get(i).getEventEndTime(),saveDataList.get(i).getWorkNum(),
-					saveDataList.get(i).getCheckingDate()
+					saveDataList.get(i).getEventEndTime(),saveDataList.get(i).getDataflag(),
+					saveDataList.get(i).getWorkNum(),saveDataList.get(i).getCheckingDate()
 					});
 		}
 		return jdbctemplate.batchUpdate(strSql, paramsList);
@@ -174,7 +174,7 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 	 * 查询考勤结果汇总数据
 	 */
 	@Override
-	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal,String myYear,String myMonth) throws Exception {
+	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal,String myYear,String myMonth,String comp,String organ,String dept) throws Exception {
 		// TODO Auto-generated method stub
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_EHR);
 		StringBuffer sql = new StringBuffer();
@@ -190,6 +190,15 @@ public class ClockedResultBaseDaoImpl extends AuthorityControlDaoImpl implements
 		sql.append("SUM(PeiChanJia) as PeiChanJia,SUM(SangJia) as SangJia,SUM(Yidong) as Yidong,");
 		sql.append("SUM(Jiaban) as Jiaban,SUM(Chuchai) as Chuchai,SUM(Canbu) as Canbu ");
 		sql.append("from ehr_checking_result where 1=1");
+		if(!"".equals(comp)){
+			sql.append(" and Company like '%"+comp+"%'");
+		}
+		if(!"".equals(organ)){
+			sql.append(" and Organ like '%"+organ+"%'");
+		}
+		if(!"".equals(dept)){
+			sql.append(" and Dept like '%"+dept+"%'");
+		}
 		if(!searchKey.equals("")&&!searchVal.equals("")){
 			sql.append(" and "+searchKey+" like '%"+searchVal+"%'");
 		}

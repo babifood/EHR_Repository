@@ -1,6 +1,5 @@
 package com.babifood.clocked.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,6 @@ import com.babifood.clocked.service.LoadClockedResultService;
 import com.babifood.constant.ModuleConstant;
 import com.babifood.constant.OperationConstant;
 import com.babifood.entity.LoginEntity;
-import com.babifood.utils.UtilDateTime;
 import com.cn.babifood.operation.LogManager;
 import com.cn.babifood.operation.annotation.LogMethod;
 @Service

@@ -19,7 +19,7 @@ public class CertificatenDaoImpl extends AuthorityControlDaoImpl implements Cert
 	JdbcTemplate jdbctemplate;
 	public static final Logger log = Logger.getLogger(CertificatenDaoImpl.class);
 	@Override
-	public List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name) throws DataAccessException{
+	public List<Map<String, Object>> loadCertificaten(String c_p_number,String c_p_name,String zj_name,String zj_code,String orga) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -27,11 +27,20 @@ public class CertificatenDaoImpl extends AuthorityControlDaoImpl implements Cert
 		sql.append("p.p_company_id,p.p_organization_id,p.p_department_id,p.p_section_office_id,p.p_group_id");
 		sql.append(" from ehr_certificate c ");
 		sql.append(" INNER JOIN ehr_person_basic_info p ON c.c_p_id = p.p_id where 1=1");
-		if(c_p_number!=null&&!c_p_number.equals("")){
+		if(!"".equals(c_p_number)){
 			sql.append(" and c.c_p_number like '%"+c_p_number+"%'");
 		}
-		if(c_p_name!=null&&!c_p_name.equals("")){
+		if(!"".equals(c_p_name)){
 			sql.append(" and c.c_p_name like '%"+c_p_name+"%'");
+		}
+		if(!"".equals(zj_name)){
+			sql.append(" and c.c_certificate_name like '%"+zj_name+"%'");
+		}
+		if(!"".equals(zj_code)){
+			sql.append(" and c.c_certificate_number like '%"+zj_code+"%'");
+		}
+		if(!"".equals(orga)){
+			sql.append(" and c.c_organization like '%"+orga+"%'");
 		}
 		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id","p.p_organization_id",sql);
 		return jdbctemplate.queryForList(returnSQL.toString());

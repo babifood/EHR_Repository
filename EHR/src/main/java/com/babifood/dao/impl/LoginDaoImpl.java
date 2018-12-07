@@ -36,7 +36,7 @@ public class LoginDaoImpl implements LoginDao {
 	public List<Map<String, Object>> findLoginWhereUserName(String user_name) {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select user_id,user_name,'password',show_name,e_mail,phone,state ");
+		sql.append("select user_id,user_name,user_password,show_name,e_mail,phone,state ");
 		sql.append("from ehr_users  where user_name='"+user_name+"'");
 		List<Map<String, Object>> list = null;
 		try {

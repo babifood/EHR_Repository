@@ -94,7 +94,7 @@
 			        		   <span id="user_name_span" style="color: red"></span>	
 			        </div>
 			        <div style="margin-bottom: 10px;">
-			        	用户密码：<input type="password" id="password" name="password" class="textbox"    style="width: 180px;"/>
+			        	用户密码：<input type="password" id="user_password" name="user_password" class="textbox"    style="width: 180px;"/>
 			       			   <span id="password_span" style="color: red"></span>
 			        </div>
 			        <div style="margin-bottom: 10px;">

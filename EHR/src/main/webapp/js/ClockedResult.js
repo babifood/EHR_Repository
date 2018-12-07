@@ -1,17 +1,30 @@
+var myYear,myMonth;
+var searchKey="",searchVal="",comp="",organ="",dept="";
+var year=0,month=0;
+var workNum="",periodEndDate="";
 //初始化
 $(function(){
 	var myDate = new Date();
+	myYear = myDate.getFullYear();
+	myMonth = myDate.getMonth()+1;
 	$("#year").val(myDate.getFullYear());
 	$("#month").val(myDate.getMonth()+1);
-	loadSumClockedResult("","",$("#year").val(),$("#month").val());
+	loadSumClockedResult("","",$("#year").val(),$("#month").val(),"","","");
 });
 //条件查询
 function clockedSearch(value,name){
-	loadSumClockedResult(name,value,$("#year").val(),$("#month").val());
+	searchKey = name;
+	searchVal = value;
+	myYear = $("#year").val();
+	myMonth = $("#month").val();
+	comp = $("#Search_Company").val();
+	organ = $("#Search_Organ").val();
+	dept = $("#Search_Dept").val();
+	loadSumClockedResult(name,value,myYear,myMonth,comp,organ,dept);
 }
 //加载考勤汇总数据
-function loadSumClockedResult(searchKey,searchVal,myYear,myMonth){
-	var	url=prefix+"/clocked/loadSumClockedResult?searchKey="+searchKey+"&searchVal="+searchVal+"&myYear="+myYear+"&myMonth="+myMonth;
+function loadSumClockedResult(searchKey,searchVal,myYear,myMonth,comp,organ,dept){
+	var	url=prefix+"/clocked/loadSumClockedResult?searchKey="+searchKey+"&searchVal="+searchVal+"&myYear="+myYear+"&myMonth="+myMonth+"&comp="+comp+"&organ="+organ+"&dept="+dept;
 	$("#clocked_grid").datagrid({
 		url:url,
 		fit:true,
@@ -269,6 +282,18 @@ function loadSumClockedResult(searchKey,searchVal,myYear,myMonth){
 	        return data;
 		},
 		onDblClickRow:onDblClickRowFunction,//双击事件
+		onRowContextMenu:function(e,rowIndex,rowData){
+			 //右键时触发事件  
+            //三个参数：e里面的内容很多，真心不明白，rowIndex就是当前点击时所在行的索引，rowData当前行的数据  
+            e.preventDefault(); //阻止浏览器捕获右键事件  
+            $("#clocked_grid").datagrid("clearSelections"); //取消所有选中项  
+            $('#clocked_menu').menu('show', {  
+                //显示右键菜单  
+                left: e.pageX,//在鼠标点击处显示菜单  
+                top: e.pageY  
+            });  
+            e.preventDefault();  //阻止浏览器自带的右键菜单弹出  
+		}
 	});
 }
 //双击查看明细
@@ -276,6 +301,18 @@ function onDblClickRowFunction(){
 	var row = $("#clocked_grid").datagrid("getSelected");
 	$("#clocked_win").window("open").window("setTitle","员工考勤明细");
 	loadClockedResult(row.Year,row.Month,row.WorkNum,row.periodEndDate);
+	year = row.Year;
+	month = row.Month;
+	workNum = row.WorkNum;
+	periodEndDate = row.periodEndDate;
+}
+//导出汇总数据
+function exportClockedSumInfo(){
+	window.location.href = prefix + "/clocked/sumClockedResultExport?searchKey="+searchKey+"&searchVal="+searchVal+"&myYear="+myYear+"&myMonth="+myMonth+"&comp="+comp+"&organ="+organ+"&dept="+dept;
+}
+//导出个人明细数据
+function exportClockedDetailsInfo(){
+	window.location.href = prefix + "/clocked/detailsClockedResultExport?year="+year+"&month="+month+"&workNum="+workNum+"&periodEndDate="+periodEndDate;
 }
 ////加载考勤明细数据
 function loadClockedResult(year,month,workNum,periodEndDate){
@@ -573,44 +610,67 @@ function loadClockedResult(year,month,workNum,periodEndDate){
             var end = start + parseInt(opts.pageSize);
             data.rows = (data.originalRows.slice(start, end));
             return data;
+		},
+		onRowContextMenu:function(e,rowIndex,rowData){
+			 //右键时触发事件  
+           //三个参数：e里面的内容很多，真心不明白，rowIndex就是当前点击时所在行的索引，rowData当前行的数据  
+           e.preventDefault(); //阻止浏览器捕获右键事件  
+           $("#clocked_minxi_grid").datagrid("clearSelections"); //取消所有选中项  
+           $('#clocked_minxi_menu').menu('show', {  
+               //显示右键菜单  
+               left: e.pageX,//在鼠标点击处显示菜单  
+               top: e.pageY  
+           });  
+           e.preventDefault();  //阻止浏览器自带的右键菜单弹出  
 		}
 	});
 }
 //考勤数据初始化
 function initData(){
-	$.ajax({
-		url:prefix+'/clocked/initClockedData',
-		type:'post',
-		data:{
-			year:$("#year").val()==""?0:$("#year").val(),
-			month:$("#month").val()==""?0:$("#month").val()
-		},
-		contentType:"application/x-www-form-urlencoded",
-		beforeSend:function(){
-			$.messager.progress({
-				text:'初始化中......',
-			});
-		},
-		success:function(data){
-			$.messager.progress('close');
-			if(data.status=="success"){
-				$.messager.show({
-					title:'消息提醒',
-					msg:"初始化成功",
-					timeout:3000,
-					showType:'slide'
-				});
-				loadSumClockedResult("","",$("#year").val(),$("#month").val());
-			}else{
-				$.messager.show({
-					title:'消息提醒',
-					msg:"初始化失败",
-					timeout:3000,
-					showType:'slide'
-				});
-			}
-		}
-	});
+	//验证当前年份和月份的数据是否已经封存
+//	$.post(prefix+"/",
+//			{year:$("#year").val()==""?0:$("#year").val(),
+//			 month:$("#month").val()==""?0:$("#month").val()},
+//			function(data,status){
+//				 if(data=="3"){
+//					 $.messager.alert("警告",$("#year").val()+"年"+$("#month").val()+"月的数据已经封存,不能初始化!","warning");   
+//				 }else{
+					 $.ajax({
+							url:prefix+'/clocked/initClockedData',
+							type:'post',
+							data:{
+								year:$("#year").val()==""?0:$("#year").val(),
+								month:$("#month").val()==""?0:$("#month").val()
+							},
+							contentType:"application/x-www-form-urlencoded",
+							beforeSend:function(){
+								$.messager.progress({
+									text:'初始化中......',
+								});
+							},
+						success:function(data){
+							$.messager.progress('close');
+							if(data.status=="success"){
+								$.messager.show({
+									title:'消息提醒',
+									msg:"初始化成功",
+									timeout:3000,
+									showType:'slide'
+								});
+								loadSumClockedResult("","",$("#year").val(),$("#month").val(),"","","");	
+							}else{
+								$.messager.show({
+									title:'消息提醒',
+									msg:"初始化失败",
+									timeout:3000,
+									showType:'slide'	
+								});
+							}
+						}
+					});
+//				 }
+//			 });
+	
 }
 //考勤数据归集
 function executeData(){
@@ -636,11 +696,46 @@ function executeData(){
 					timeout:3000,
 					showType:'slide'
 				});
-				loadSumClockedResult("","",$("#year").val(),$("#month").val());
+				loadSumClockedResult("","",$("#year").val(),$("#month").val(),"","","");
 			}else{
 				$.messager.show({
 					title:'消息提醒',
 					msg:"数据归集失败",
+					timeout:3000,
+					showType:'slide'
+				});
+			}
+		}
+	});
+}
+//数据锁定
+function lockData(){
+	$.ajax({
+		url:prefix+'/clocked/lockClockedData',
+		type:'post',
+		data:{
+			year:$("#year").val()==""?0:$("#year").val(),
+			month:$("#month").val()==""?0:$("#month").val()
+		},
+		contentType:"application/x-www-form-urlencoded",
+		beforeSend:function(){
+			$.messager.progress({
+				text:'封存中......',
+			});
+		},
+		success:function(data){
+			$.messager.progress('close');
+			if(data.status=="success"){
+				$.messager.show({
+					title:'消息提醒',
+					msg:"数据封存成功",
+					timeout:3000,
+					showType:'slide'
+				});
+			}else{
+				$.messager.show({
+					title:'消息提醒',
+					msg:"数据封存失败",
 					timeout:3000,
 					showType:'slide'
 				});

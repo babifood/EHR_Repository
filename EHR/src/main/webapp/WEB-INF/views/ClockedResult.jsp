@@ -21,23 +21,24 @@
 	       	<shiro:hasPermission name="cherk:execute">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="executeData()">数据归集</a>
 	        </shiro:hasPermission>
+	        <shiro:hasPermission name="cherk:lockData">
+	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="lockData()">数据封存</a>
+	        </shiro:hasPermission>
 	        <shiro:hasPermission name="cherk:push">
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" plain="true" onclick="pushData()">数据推送</a>
 	        </shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
-	        	<!--工号：<input type="text" class="textbox" id="WorkNum" name="WorkNum" style="width: 110px;"/>
-	        	姓名：<input type="text" class="textbox" id="UserName" name="UserName" style="width: 110px;"/>
-	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clockedReset()">重置</a>
+	        	公司名称：<input type="text" class="textbox" id="Search_Company" name="Search_Company" style="width: 110px;"/>
+	        	中心机构：<input type="text" class="textbox" id="Search_Organ" name="Search_Organ" style="width: 110px;"/>
+	        	部门名称：<input type="text" class="textbox" id="Search_Dept" name="Search_Dept" style="width: 110px;"/>
+	        	<!--<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="clockedReset()">重置</a>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="clockedSearch()">查询</a>
 	        	 -->
 	        	<input id="clocked_Search" class="easyui-searchbox" style="width:300px" data-options="searcher:clockedSearch,prompt:'请输入......',menu:'#clocked_Search_menu'"></input> 
 				<div id="clocked_Search_menu" style="width:120px"> 
 					<div data-options="name:'WorkNum'">员工编号</div> 
 					<div data-options="name:'UserName'">员工姓名</div>
-					<div data-options="name:'Company'">所属公司</div> 
-					<div data-options="name:'Organ'">中心机构</div> 
-					<div data-options="name:'Dept'">所属部门</div> 
 					<div data-options="name:'Post'">岗位名称</div>
 				</div> 
 	        </div>
@@ -55,6 +56,14 @@
 			</div>	
 		</div>	
 	</div>
+	<div id="clocked_menu" class="easyui-menu" style="width: 30px; display: none;">  
+          <!--放置一个隐藏的菜单Div-->  
+        <div id="btn_More" data-options="iconCls:'icon-remove'" onclick="exportClockedSumInfo()">导出汇总数据</div>        
+    </div>  
+    <div id="clocked_minxi_menu" class="easyui-menu" style="width: 30px; display: none;">  
+          <!--放置一个隐藏的菜单Div-->  
+        <div id="btn_More" data-options="iconCls:'icon-remove'" onclick="exportClockedDetailsInfo()">导出个人明细数据</div>        
+    </div>  
 	<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/ClockedResult.js"></script>
 </body>
 </html>

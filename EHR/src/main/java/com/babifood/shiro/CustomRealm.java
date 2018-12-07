@@ -83,9 +83,10 @@ public class CustomRealm extends AuthorizingRealm{
 			return null;
 		}
 		// 从数据库查询到密码
-		String password = login.getPassword();
+		String password = login.getUser_password();
 		//获取用户对应的角色信息
-		login.setRoleList(newUsersService.loadRoleWhereUser(login.getUser_id()));
+		List<UserRoleEntity> roleList = newUsersService.loadRoleWhereUser(login.getUser_id());
+		login.setRoleList(roleList);
 		/**
 		 * 第一个参数是用户信息
 		 * 第二个参数是用户密码

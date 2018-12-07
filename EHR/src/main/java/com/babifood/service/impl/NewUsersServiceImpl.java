@@ -53,7 +53,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			dataMap.put("user_id",userList.get(i).get("user_id"));
 			dataMap.put("user_name",userList.get(i).get("user_name"));
-			dataMap.put("password",userList.get(i).get("password"));
+			dataMap.put("user_password",userList.get(i).get("user_password"));
 			dataMap.put("show_name",userList.get(i).get("show_name"));
 			dataMap.put("e_mail",userList.get(i).get("e_mail"));
 			dataMap.put("phone",userList.get(i).get("phone"));
@@ -172,7 +172,7 @@ public class NewUsersServiceImpl implements NewUsersService {
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_ADD);
 		int rows = 1;
 		userEntity.setUser_id(IdGen.uuid());
-		userEntity.setPassword(MD5.gtePasswordMd5(userEntity.getPassword()));
+		userEntity.setUser_password(MD5.gtePasswordMd5(userEntity.getUser_password()));
 		try {
 			// TODO Auto-generated method stub
 			newUsersDao.saveUser(userEntity);
@@ -193,12 +193,12 @@ public class NewUsersServiceImpl implements NewUsersService {
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EDIT);
 		int rows = 1;
-		String password = userEntity.getPassword();
+		String password = userEntity.getUser_password();
 		String[] passwordArr = password.split("/");
 		if(passwordArr[0].equals(passwordArr[1])){
-			userEntity.setPassword(passwordArr[0]);
+			userEntity.setUser_password(passwordArr[0]);
 		}else{
-			userEntity.setPassword(MD5.gtePasswordMd5(passwordArr[1]));
+			userEntity.setUser_password(MD5.gtePasswordMd5(passwordArr[1]));
 		}
 		try {
 			newUsersDao.editUser(userEntity);

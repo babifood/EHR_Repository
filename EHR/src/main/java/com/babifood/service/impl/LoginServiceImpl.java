@@ -33,7 +33,7 @@ public class LoginServiceImpl implements LoginService{
 			login = new LoginEntity();
 			login.setUser_id(map.get("user_id").toString());
 			login.setUser_name(map.get("user_name").toString());
-			login.setPassword(map.get("password").toString());
+			login.setUser_password(map.get("user_password").toString());
 			login.setShow_name(map.get("show_name").toString());
 			login.setPhone(map.get("phone")==null?null:map.get("phone").toString());
 			login.setE_mail(map.get("e_mail")==null?null:map.get("e_mail").toString());

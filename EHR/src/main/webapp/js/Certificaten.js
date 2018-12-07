@@ -3,7 +3,7 @@ var combogridUrl;
 //初始化
 $(function(){
 	//加载列表
-	loadCertificaten(null,null);
+	loadCertificaten("","","","","");
 	//初始化导出导出功能
 	initImportExcel();
 });
@@ -14,17 +14,9 @@ function searchPerson(pNumber, pName){
 	$('.combogrid-f').combogrid('grid').datagrid('reload');
 }
 //加载教育背景列表
-function loadCertificaten(c_p_number,c_p_name){
+function loadCertificaten(c_p_number,c_p_name,zj_name,zj_code,orga){
 	var url;
-	if(c_p_number!=null&&c_p_name!=null){
-		url=prefix+"/loadCertificaten?c_p_number="+c_p_number+"&c_p_name="+c_p_name;
-	}else if(c_p_number!=null&&c_p_name==null){
-		url=prefix+"/loadCertificaten?c_p_number="+c_p_number+"&c_p_name=";
-	}else if(c_p_number==null&&c_p_name!=null){
-		url=prefix+"/loadCertificaten?c_p_number=&c_p_name="+c_p_name;
-	}else{
-		url=prefix+"/loadCertificaten?c_p_number=&c_p_name=";
-	}
+	url=prefix+"/loadCertificaten?c_p_number="+c_p_number+"&c_p_name="+c_p_name+"&zj_name="+zj_name+"&zj_code="+zj_code+"&orga="+orga;
 	$("#certificaten_grid").datagrid({
 		url:url,
 		fit:true,
@@ -68,7 +60,7 @@ function loadCertificaten(c_p_number,c_p_name){
 					type:'combogrid',
 					options:{
 						panelWidth:320,
-						idField:'p_number',
+						idField:'p_name',
 						textField:'p_name',
 						url:prefix+'/loadPersonlimit',
 						toolbar:createToolbar(),
@@ -77,12 +69,7 @@ function loadCertificaten(c_p_number,c_p_name){
 							{field:'p_number',title:'员工编号',width:100},
 							{field:'p_name',title:'员工名称',width:100},
 						]],
-						filter:function(q, row){
-							console.log("q:"+q);
-							console.log("row"+row);
-						},
 						required:true,
-//						editable:false,
 						onSelect:function (index, row){
 							var ed_num = $('#certificaten_grid').datagrid('getEditor', {index:editIndex,field:'c_p_number'});
 							var ed_id = $('#certificaten_grid').datagrid('getEditor', {index:editIndex,field:'c_p_id'});
@@ -248,11 +235,20 @@ function createToolbar(){
 }
 //查询条件重置
 function resetCertificaten(){
-	$("#search_p_number").val("");$("#search_p_name").val("");
+	$("#search_p_number").val("");
+	$("#search_p_name").val("");
+	$("#search_zj_name").val("");
+	$("#search_zj_code").val("");
+	$("#search_orga").val("");
 }
 //查询
 function searchCertificaten(){
-	loadCertificaten($("#search_p_number").val(),$("#search_p_name").val());
+	var numb = $("#search_p_number").val();
+	var name = $("#search_p_name").val();
+	var zj_name = $("#search_zj_name").val();
+	var zj_code = $("#search_zj_code").val();
+	var orga = $("#search_orga").val();
+	loadCertificaten(numb,name,zj_name,zj_code,orga);
 }
 //结束编辑
 function endEditing(){
@@ -311,7 +307,7 @@ function removeCertificaten(){
 							.datagrid('deleteRow', index).datagrid('clearSelections',node);
 							$('#certificaten_grid').datagrid('acceptChanges');
 							editIndex = undefined;
-							loadCertificaten(null,null);
+							loadCertificaten("","","","","");
 						}else{
 							$.messager.alert("消息提示！","删除失败!","warning");
 						}
@@ -363,7 +359,7 @@ function acceptCertificaten(){
 						showType:'slide'
 					});
 					$('#certificaten_grid').datagrid('acceptChanges');
-					loadCertificaten(null,null);
+					loadCertificaten("","","","","");
 				}else{
 					$.messager.alert("消息提示！","保存失败!","warning");
 				}

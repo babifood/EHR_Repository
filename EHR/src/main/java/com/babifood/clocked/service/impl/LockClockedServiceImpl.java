@@ -3,9 +3,6 @@ package com.babifood.clocked.service.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,42 +12,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.babifood.clocked.dao.ClockedResultBaseDao;
+import com.babifood.clocked.dao.LockClockedDao;
 import com.babifood.clocked.entrty.ClockedResultBases;
-import com.babifood.clocked.service.ClockedService;
-import com.babifood.clocked.service.LoadClockedResultService;
-import com.babifood.constant.ModuleConstant;
+import com.babifood.clocked.service.LockClockedService;
 import com.babifood.constant.OperationConstant;
 import com.babifood.entity.LoginEntity;
-import com.babifood.utils.UtilDateTime;
 import com.cn.babifood.operation.LogManager;
-import com.cn.babifood.operation.annotation.LogMethod;
 @Service
-public class LoadClockedResultServiceImpl implements LoadClockedResultService {
-	public static final Logger log = Logger.getLogger(LoadClockedResultServiceImpl.class);
+public class LockClockedServiceImpl implements LockClockedService {
+	public static final Logger log = Logger.getLogger(LockClockedServiceImpl.class);
+	@Autowired
+	LockClockedDao lockClockedDao;
 	@Autowired
 	ClockedResultBaseDao clockedResultBaseDao;
-	@Autowired
-	ClockedService clockedServiceImpl;
 	@Override
-	@LogMethod(module = ModuleConstant.CLOCKED)
-	public List<Map<String, Object>> loadClockedResultData(int year,int month,String workNum,String periodEndDate){
+	public int[] lockData(Integer sysYear, Integer sysMonth) {
 		// TODO Auto-generated method stub
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
-		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
-		List<Map<String, Object>> list =null;
+		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_ARCHIVE);
+		int [] rows = null;
 		try {
-			list = clockedResultBaseDao.loadClockedResultData(year,month,workNum,periodEndDate);
-			LogManager.putContectOfLogInfo("考勤明细查询");
+			List<ClockedResultBases> list = loadClockedResultDataList(sysYear,sysMonth);
+			rows =  lockClockedDao.updateLockDataFlag(list);
+			LogManager.putContectOfLogInfo("更新数据状态");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadClockedResultData:"+e.getMessage());
+			log.error("更新数据状态:"+e.getMessage());
 		}
-		return list;
+		return rows;
 	}
-	@Override
-	public List<ClockedResultBases> loadClockedResultDataList(int year, int month) throws Exception{
+	public List<ClockedResultBases> loadClockedResultDataList(Integer year, Integer month) throws Exception{
 		// TODO Auto-generated method stub
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		List<ClockedResultBases> clockedResultList = null;
@@ -118,47 +111,11 @@ public class LoadClockedResultServiceImpl implements LoadClockedResultService {
 				c.setEventEndTime(null);
 				c.setInOutJob(0d);
 				c.setClockFlag(map.get("Clockflag")==null?0:Integer.parseInt(map.get("Clockflag").toString()));
-				c.setDataflag("2");
+				c.setDataflag("3");
 				clockedResultList.add(c);
 			}
 		}
 		return clockedResultList;
-	}
-	@Override
-	@LogMethod(module = ModuleConstant.CLOCKED)
-	public List<Map<String, Object>> loadSumClockedResultData(String searchKey,String searchVal,String myYear,String myMonth,String comp,String organ,String dept){
-		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
-		LogManager.putUserIdOfLogInfo(login.getUser_id());
-		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
-		// TODO Auto-generated method stub
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		String periodEndDate = "";
-		String sysDate = df.format(new Date());
-		Calendar tempCal = Calendar.getInstance();
-		int sysYear = tempCal.get(Calendar.YEAR);
-		int sysMonth = tempCal.get(Calendar.MONTH)+1;	
-		List<Map<String, Object>> sumList =null;
-		try {
-			sumList = clockedResultBaseDao.loadSumClockedResultData(searchKey, searchVal,myYear,myMonth,comp,organ,dept);
-			LogManager.putContectOfLogInfo("查询考勤汇总信息");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			LogManager.putContectOfLogInfo(e.getMessage());
-			log.error("loadSumClockedResultData:"+e.getMessage());
-		}
-		for(int i=0;i<sumList.size();i++){
-			Map<String, Object> newMap = sumList.get(i);
-			int year = Integer.parseInt(newMap.get("Year").toString());
-			int month = Integer.parseInt(newMap.get("Month").toString());
-			if(sysYear==year&&sysMonth==month){
-				periodEndDate = sysDate;
-			}else{
-				periodEndDate = df.format(UtilDateTime.getMonthEndSqlDate(year,month));
-			}
-			newMap.put("period", newMap.get("Year").toString()+"-"+newMap.get("Month").toString()+"-01至"+periodEndDate);
-			newMap.put("periodEndDate",periodEndDate);
-		}
-		return sumList;
 	}
 
 }

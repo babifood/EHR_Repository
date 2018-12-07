@@ -20,21 +20,22 @@
 	       </shiro:hasPermission>
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
-	        	<!--工号：<input type="text" class="textbox" id="search_p_number" name="search_p_number" style="width: 110px;"/>
-	        	姓名：<input type="text" class="textbox" id="search_p_name" name="search_p_name" style="width: 110px;"/>
-	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPersonInFo()">重置</a>
+	        	公司名称：<input type="text" class="textbox" id="query_company" name="query_company" style="width: 110px;"/>
+	        	机构名称：<input type="text" class="textbox" id="query_orga" name="query_orga" style="width: 110px;"/>
+	        	部门名称：<input type="text" class="textbox" id="query_dept" name="query_dept" style="width: 110px;"/>
+	        	<!--<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="resetPersonInFo()">重置</a>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchPersonInFo()">查询</a>
 	        	 -->
 	        	<input id="ss" class="easyui-searchbox" style="width:300px" data-options="searcher:searchPersonInFo,prompt:'请输入......',menu:'#search_menu'"></input> 
 				<div id="search_menu" style="width:120px"> 
 					<div data-options="name:'p_number'">员工编号</div> 
 					<div data-options="name:'p_name'">员工姓名</div>
-					<div data-options="name:'p_company_name'">所属公司</div> 
-					<div data-options="name:'p_organization'">中心机构</div> 
-					<div data-options="name:'p_department'">所属部门</div> 
 					<div data-options="name:'p_sex'">员工性别</div> 
 					<div data-options="name:'p_post'">岗位名称</div>  
 				</div> 
+				<input type="radio" id="radio_all" name="query_radio" value="all" checked="checked" />全部
+				<input type="radio" id="radio_in" name="query_radio" value="0"/>在职
+				<input type="radio" id="radio_out" name="query_radio" value="1"/>离职
 	        </div>
 		</div>
 	</div>

@@ -87,7 +87,7 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public List<Map<String, Object>> loadUserAll(String user_name,String show_name) throws DataAccessException {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select u.user_id,u.user_name,u.password,u.show_name,u.e_mail,u.phone,u.state,r.role_id,r.role_name");
+		sql.append("select u.user_id,u.user_name,u.user_password,u.show_name,u.e_mail,u.phone,u.state,r.role_id,r.role_name");
 		sql.append(" from ehr_users u inner join ehr_user_role r on u.user_id = r.user_id where 1=1");
 		if(user_name!=null&&!user_name.equals("")){
 			sql.append(" and u.user_name like '%"+user_name+"%'");
@@ -102,7 +102,7 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public List<Map<String, Object>> loadUser(String user_name, String show_name) throws DataAccessException {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("select u.user_id,u.user_name,u.password,u.show_name,u.e_mail,u.phone,u.state");
+		sql.append("select u.user_id,u.user_name,u.user_password,u.show_name,u.e_mail,u.phone,u.state");
 		sql.append(" from ehr_users u  where 1=1");
 		if(user_name!=null&&!user_name.equals("")){
 			sql.append(" and u.user_name like '%"+user_name+"%'");
@@ -124,12 +124,12 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public void saveUser(LoginEntity userEntity) throws DataAccessException {
 		// TODO Auto-generated method stub
 		StringBuffer sqlUser = new StringBuffer();
-		sqlUser.append("insert into ehr_users (user_id,user_name,password,show_name,e_mail,phone,state) ");
+		sqlUser.append("insert into ehr_users (user_id,user_name,user_password,show_name,e_mail,phone,state) ");
 		sqlUser.append(" values(?,?,?,?,?,?,?)");
 		Object[] params=new Object[7];
 		params[0]=userEntity.getUser_id();
 		params[1]=userEntity.getUser_name();
-		params[2]=userEntity.getPassword();
+		params[2]=userEntity.getUser_password();
 		params[3]=userEntity.getShow_name();
 		params[4]=(userEntity.getE_mail()==null||userEntity.getE_mail().equals(""))?"":userEntity.getE_mail();
 		params[5]=(userEntity.getPhone()==null||userEntity.getPhone().equals(""))?"":userEntity.getPhone();
@@ -153,10 +153,10 @@ public class NewUsersDaoImpl implements NewUsersDao {
 	public void editUser(LoginEntity userEntity) throws DataAccessException {
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
-		sql.append("update ehr_users set user_name=?,password=?,show_name=?,e_mail=?,phone=?,state=? where user_id=?");
+		sql.append("update ehr_users set user_name=?,user_password=?,show_name=?,e_mail=?,phone=?,state=? where user_id=?");
 		Object[] params=new Object[7];
 		params[0]=userEntity.getUser_name();
-		params[1]=userEntity.getPassword();
+		params[1]=userEntity.getUser_password();
 		params[2]=userEntity.getShow_name();
 		params[3]=(userEntity.getE_mail()==null||userEntity.getE_mail().equals(""))?"":userEntity.getE_mail();
 		params[4]=(userEntity.getPhone()==null||userEntity.getPhone().equals(""))?"":userEntity.getPhone();
@@ -203,7 +203,6 @@ public class NewUsersDaoImpl implements NewUsersDao {
 		List<Object[]> params_menu = new ArrayList<>();
 		List<Object[]> params_authority = new ArrayList<>();
 		for(int i=0;i<roleMenuEntity.length;i++){
-			System.out.println(i+"====================");
 			if(roleMenuEntity[i].getFlag().equals("0")||roleMenuEntity[i].getFlag().equals("1")){
 				params_menu.add(new Object[]{
 						roleMenuEntity[i].getRole_id(),

@@ -23,11 +23,11 @@
 			<table border="0" style="width: 300px;">
 				<tr>
 					<td style="white-space: nowrap; padding-bottom: 5px; width: 55px;">用户名：</td>
-					<td colspan="2"><input type="text" id="username" name="username" class="login" /></td>
+					<td colspan="2"><input type="text" id="login_username" name="login_username" class="login" /></td>
 				</tr>
 				<tr>
 					<td class="lable" style="white-space: nowrap; letter-spacing: 0.5em; vertical-align: middle">密码：</td>
-					<td colspan="2"><input type="password" id="password" name="password" class="login"/></td>
+					<td colspan="2"><input type="password" id="login_password" name="login_password" class="login"/></td>
 				</tr>
 				<tr>
 					<td><input type="hidden" id="msg" value="${status}"/></td>

@@ -82,9 +82,9 @@
 	<bean id="formAuthenticationFilter" 
 	class="com.babifood.shiro.CustomFormAuthenticationFilter">
 		<!-- 表单中账号的input名称 -->
-		<property name="usernameParam" value="username" />
+		<property name="usernameParam" value="login_username" />
 		<!-- 表单中密码的input名称 -->
-		<property name="passwordParam" value="password" />
+		<property name="passwordParam" value="login_password" />
 		<!-- 记住我input的名称 -->
 		<!--<property name="rememberMeParam" value="rememberMe"/> -->
  	</bean>

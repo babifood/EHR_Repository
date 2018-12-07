@@ -31,9 +31,10 @@ public class CertificatenControl {
 	JdbcTemplate jdbctemplate;
 	@ResponseBody
 	@RequestMapping("/loadCertificaten")
-	public Map<String,Object> loadCertificatenAll(String c_p_number,String c_p_name){
+	public Map<String,Object> loadCertificatenAll(String c_p_number,String c_p_name,
+			String zj_name,String zj_code,String orga){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = certificatenService.loadCertificaten(c_p_number,c_p_name);
+		List<Map<String, Object>> list = certificatenService.loadCertificaten(c_p_number,c_p_name,zj_name,zj_code,orga);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;

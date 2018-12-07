@@ -14,7 +14,7 @@ public class LoginEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String user_id;
 	private String user_name;
-	private String password;
+	private String user_password;
 	private String show_name;
 	private String e_mail;
 	private String phone;
@@ -39,11 +39,11 @@ public class LoginEntity implements Serializable{
 	public void setUser_name(String user_name) {
 		this.user_name = user_name;
 	}
-	public String getPassword() {
-		return password;
+	public String getUser_password() {
+		return user_password;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setUser_password(String user_password) {
+		this.user_password = user_password;
 	}
 	public String getShow_name() {
 		return show_name;

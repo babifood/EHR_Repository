@@ -31,14 +31,14 @@ public class PersonInFoServiceImpl implements PersonInFoService {
 	SynchronousOaAccountInfoDao synchronousOaAccountInfoDao;
 	@LogMethod(module = ModuleConstant.PERSONINFO)
 	@Override
-	public List<Map<String, Object>> loadPersonInFo(String searchKey,String searchVal) {
+	public List<Map<String, Object>> loadPersonInFo(String searchKey,String searchVal,String comp,String orga,String dept,String inOut) {
 		// TODO Auto-generated method stub
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
 		LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_FIND);
 		List<Map<String, Object>> list=null;
 		try {
-			list = personInFoDao.loadPersonInFo(searchKey, searchVal);
+			list = personInFoDao.loadPersonInFo(searchKey, searchVal,comp,orga,dept,inOut);
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogManager.putContectOfLogInfo(e.getMessage());

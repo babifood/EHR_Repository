@@ -38,6 +38,7 @@ public class ClockedUtil {
 //		if(clockedResult.getClockFlag()==0){
 //			clockedResult.setStandWorkLength(0d);
 //		}
+		clockedResult.setDataflag("1");
 		return clockedResult;
 	}
 	public static Date getDate(int year,int month,int day) throws Exception {

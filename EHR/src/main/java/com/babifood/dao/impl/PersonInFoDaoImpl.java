@@ -21,7 +21,7 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 	JdbcTemplate jdbctemplate;
 	public static final Logger log = Logger.getLogger(LoginDaoImpl.class);
 	@Override
-	public List<Map<String, Object>> loadPersonInFo(String searchKey,String searchVal) throws DataAccessException{
+	public List<Map<String, Object>> loadPersonInFo(String searchKey,String searchVal,String comp,String orga,String dept,String inOut) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
@@ -112,6 +112,18 @@ public class PersonInFoDaoImpl extends AuthorityControlDaoImpl implements Person
 		sql.append("p_recommend_person,");
 		sql.append("p_recommend_relation");
 		sql.append(" from ehr_person_basic_info where 1=1");
+		if(!"".equals(comp)){
+			sql.append(" and p_company_name like '%"+comp+"%'");
+		}
+		if(!"".equals(orga)){
+			sql.append(" and p_organization like '%"+orga+"%'");
+		}
+		if(!"".equals(dept)){
+			sql.append(" and p_department like '%"+dept+"%'");
+		}
+		if(!"all".equals(inOut)){
+			sql.append(" and p_state = '"+inOut+"'");
+		}
 		if(!"".equals(searchKey)&&searchKey!=null&&!"".equals(searchVal)&&searchVal!=null){
 			sql.append(" and "+searchKey+" like '%"+searchVal+"%'");
 		}

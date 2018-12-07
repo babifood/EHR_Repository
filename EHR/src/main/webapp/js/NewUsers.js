@@ -503,7 +503,7 @@ function addUser(){
 	ValiDateBox();
 	$("#user_dog").dialog("open").dialog("center").dialog("setTitle","添加用户");
 	$("#user_name").val("");
-	$("#password").val("");
+	$("#user_password").val("");
 	$("#show_name").val("");
 	$("#user_role").combogrid('clear');
 	$("#user_role").combogrid('setValue','');
@@ -520,7 +520,7 @@ function editUser(){
 	if(row){
 		$("#user_dog").dialog("open").dialog("center").dialog("setTitle","修改用户");
 		$("#user_name").val(row.user_name);
-		$("#password").val('000000');
+		$("#user_password").val('000000');
 		$("#show_name").val(row.show_name);
 		$("#user_role").combogrid('clear');
 		$("#user_role").combogrid('setValues',row.role_id);
@@ -586,8 +586,8 @@ function checkData(){
 		$('#user_name').focus();
 		return false;
 	}
-	if(!$("#password").validatebox('isValid')){
-		$('#password').focus();
+	if(!$("#user_password").validatebox('isValid')){
+		$('#user_password').focus();
 		return false;
 	}
 	if(!$("#show_name").validatebox('isValid')){
@@ -615,7 +615,7 @@ function ValiDateBox(){
 		validType :'username',
 		missingMessage :'用户账号不能为空!',
 	});
-	$('#password').validatebox({
+	$('#user_password').validatebox({
 		required : true,
 		validType :'pasd',
 		missingMessage :'用户密码不能为空!',
@@ -683,7 +683,7 @@ function saveUser(){
 		data={
 				user_id:"",
 				user_name:$("#user_name").val(),
-				password:$("#password").val(),
+				user_password:$("#user_password").val(),
 				show_name:$("#show_name").val(),
 				roleList:getComboboxValues(),
 				phone:$("#phone").val(),
@@ -696,7 +696,7 @@ function saveUser(){
 		data={
 				user_id:objRowsUser.user_id,
 				user_name:$("#user_name").val(),
-				password:$("#password").val()=="000000"?objRowsUser.password+"/"+objRowsUser.password:objRowsUser.password+"/"+$("#password").val(),
+				user_password:$("#user_password").val()=="000000"?objRowsUser.user_password+"/"+objRowsUser.user_password:objRowsUser.user_password+"/"+$("#user_password").val(),
 				show_name:$("#show_name").val(),
 				roleList:getComboboxValues(),
 				phone:$("#phone").val(),
