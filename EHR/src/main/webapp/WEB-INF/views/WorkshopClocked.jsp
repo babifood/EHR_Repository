@@ -19,8 +19,11 @@
 				</div> 		
 	        </div>
 	        <div style="padding: 0 0 0 7px;color: #333;">
-	        	工号：<input type="text" class="textbox" id="workshop_WorkNum" name="workshop_WorkNum" style="width: 110px;"/>
-	        	姓名：<input type="text" class="textbox" id="workshop_UserName" name="workshop_UserName" style="width: 110px;"/>
+	        	公司名称：<input type="text" class="textbox" id="workshop_Comp" name="workshop_Comp" style="width: 110px;"/>
+	        	中心机构：<input type="text" class="textbox" id="workshop_Organ" name="workshop_Organ" style="width: 110px;"/>
+	        	部门名称：<input type="text" class="textbox" id="workshop_Dept" name="workshop_Dept" style="width: 110px;"/>
+	        	员工工号：<input type="text" class="textbox" id="workshop_WorkNum" name="workshop_WorkNum" style="width: 110px;"/>
+	        	员工姓名：<input type="text" class="textbox" id="workshop_UserName" name="workshop_UserName" style="width: 110px;"/>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="workshopReset()">重置</a>
 	        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="workshopSearch()">查询</a>
 	        </div>

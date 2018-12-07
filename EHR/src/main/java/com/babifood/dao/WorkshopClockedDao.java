@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface WorkshopClockedDao {
 
-	List<Map<String, Object>> loadWorkshopClocked(String workNumber, String userName);
+	List<Map<String, Object>> loadWorkshopClocked(String workNumber, String userName,String comp,String organ,String dept);
 
 	void saveimportExcelWorkshopClocked(List<Object[]> workshopClockedParam);
 

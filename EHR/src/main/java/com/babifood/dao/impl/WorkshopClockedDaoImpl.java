@@ -14,18 +14,27 @@ public class WorkshopClockedDaoImpl extends AuthorityControlDaoImpl implements W
 	@Autowired
 	JdbcTemplate jdbctemplate;
 	@Override
-	public List<Map<String, Object>> loadWorkshopClocked(String workNumber, String userName) throws DataAccessException{
+	public List<Map<String, Object>> loadWorkshopClocked(String workNumber, String userName,String comp,String organ,String dept) throws DataAccessException{
 		// TODO Auto-generated method stub
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append("w.worknum,w.workname,w.standardWorkDateLength,w.practicalWorkDateLength,w.workshop_year,w.workshop_month,");
 		sql.append("p.p_company_name,p.p_organization,p.p_department,p.p_section_office,p.p_group,p.p_post");
 		sql.append(" from ehr_workshop_clocked w INNER JOIN ehr_person_basic_info p on w.worknum = p.p_number where 1=1");
-		if(workNumber!=null&&!userName.equals("")){
-			sql.append(" and worknum like '%"+workNumber+"%'");
+		if(!"".equals(workNumber)){
+			sql.append(" and w.workname like '%"+workNumber+"%'");
 		}
-		if(workNumber!=null&&!userName.equals("")){
-			sql.append(" and workname like '%"+userName+"%'");
+		if(!"".equals(userName)){
+			sql.append(" and w.worknum like '%"+userName+"%'");
+		}
+		if(!"".equals(comp)){
+			sql.append(" and p.p_company_name like '%"+comp+"%'");
+		}
+		if(!"".equals(organ)){
+			sql.append(" and p.p_organization like '%"+organ+"%'");
+		}
+		if(!"".equals(dept)){
+			sql.append(" and p.p_department like '%"+dept+"%'");
 		}
 		StringBuffer returnSQL = super.jointDataAuthoritySql("p.p_company_id","p.p_organization_id",sql);
 		return jdbctemplate.queryForList(returnSQL.toString());

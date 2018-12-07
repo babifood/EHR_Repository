@@ -28,7 +28,7 @@ public class WorkshopClockedServiceImpl implements WorkshopClockedService {
 	WorkshopClockedDao workshopClockedDao;
 	@Override
 	@LogMethod(module = ModuleConstant.CLOCKED)
-	public List<Map<String, Object>> loadWorkshopClocked(String workNumber, String userName) {
+	public List<Map<String, Object>> loadWorkshopClocked(String workNumber, String userName,String comp,String organ,String dept) {
 		// TODO Auto-generated method stub
 		LoginEntity login = (LoginEntity) SecurityUtils.getSubject().getPrincipal();
 		LogManager.putUserIdOfLogInfo(login.getUser_id());
@@ -36,7 +36,7 @@ public class WorkshopClockedServiceImpl implements WorkshopClockedService {
 		List<Map<String, Object>> list = null;
 		try {
 			// TODO Auto-generated method stub
-			list = workshopClockedDao.loadWorkshopClocked(workNumber,userName);
+			list = workshopClockedDao.loadWorkshopClocked(workNumber,userName,comp,organ,dept);
 			LogManager.putContectOfLogInfo("参数:"+workNumber+userName);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -69,7 +69,7 @@ public class WorkshopClockedServiceImpl implements WorkshopClockedService {
 					result.put("msg", "导入数据成功");
 				} else {
 					result.put("code", "0");
-					result.put("msg", "导入数据失败，"+user.get("pName") + ",工号"+user.get("pNumber")+"不是权限范围内员工");
+					result.put("msg", "导入数据失败，"+user.get("workname") + ",工号"+user.get("worknum")+"不是权限范围内员工");
 				}
 			} else {
 				result.put("code", "1");
@@ -97,7 +97,7 @@ public class WorkshopClockedServiceImpl implements WorkshopClockedService {
 		if(auths != null && auths.size() > 0){
 			List<String> pNumberList = workshopClockedDao.findPNumberList(auths);
 			for(Map<String, Object> map : values){
-				if(!pNumberList.contains(map.get("pNumber")+"")){
+				if(!pNumberList.contains(map.get("worknum")+"")){
 					user = map;
 					break;
 				}
@@ -140,7 +140,7 @@ public class WorkshopClockedServiceImpl implements WorkshopClockedService {
 	 */
 	@Override
 	@LogMethod(module = ModuleConstant.CLOCKED)
-	public Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type) {
+	public Map<String, Object> exportDormitoryCosts(OutputStream ouputStream, String type,String WorkNumber,String UserName,String comp,String organ,String dept) {
 		// TODO Auto-generated method stub
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, String> row1Name = getRow1Name();
@@ -151,7 +151,7 @@ public class WorkshopClockedServiceImpl implements WorkshopClockedService {
 			LogManager.putUserIdOfLogInfo(login.getUser_id());
 			LogManager.putOperatTypeOfLogInfo(OperationConstant.OPERATION_LOG_TYPE_EXPORT);
 			if("1".equals(type)){
-				performanceList = workshopClockedDao.loadWorkshopClocked("","");
+				performanceList = workshopClockedDao.loadWorkshopClocked(WorkNumber,UserName,comp,organ,dept);
 				LogManager.putContectOfLogInfo("导出车间考勤信息列表");
 			} else {
 				performanceList = new ArrayList<Map<String, Object>>();

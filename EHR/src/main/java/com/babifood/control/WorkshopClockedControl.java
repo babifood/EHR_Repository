@@ -28,16 +28,16 @@ public class WorkshopClockedControl {
 	JdbcTemplate jdbctemplate;
 	@ResponseBody
 	@RequestMapping("/loadWorkshopClocked")
-	public Map<String,Object> loadWorkshopClocked(String WorkNumber,String userName){
+	public Map<String,Object> loadWorkshopClocked(String WorkNumber,String UserName,String comp,String organ,String dept){
 		Map<String,Object> map =new HashMap<String,Object>();
-		List<Map<String, Object>> list = workshopClockedService.loadWorkshopClocked(WorkNumber,userName);
+		List<Map<String, Object>> list = workshopClockedService.loadWorkshopClocked(WorkNumber,UserName,comp,organ,dept);
 		map.put("total", list.size());
 		map.put("rows", list);
 		return map;
 	}
 	@RequestMapping("/WorkshopClockedExport")
 	@ResponseBody
-	public Map<String, Object> exportDormitoryCosts(HttpServletResponse response, String type) throws IOException{
+	public Map<String, Object> exportDormitoryCosts(HttpServletResponse response, String type,String WorkNumber,String UserName,String comp,String organ,String dept) throws IOException{
 		String filename = new String("车间考勤表".getBytes("UTF-8"),"ISO8859-1");
 		if("1".equals(type)){
 			filename += UtilDateTime.getCurrentTime("yyyyMMddHHmmss");
@@ -45,7 +45,7 @@ public class WorkshopClockedControl {
 		response.setContentType("application/vnd.ms-excel");    
         response.setHeader("Content-disposition", "attachment;filename=" + filename + ".xls");    
         OutputStream ouputStream = response.getOutputStream();   
-		return workshopClockedService.exportDormitoryCosts(ouputStream, type);
+		return workshopClockedService.exportDormitoryCosts(ouputStream, type,WorkNumber,UserName,comp,organ,dept);
 	}
 	@RequestMapping(value = "/WorkshopClockedImportExcel", method = RequestMethod.POST)
 	@ResponseBody

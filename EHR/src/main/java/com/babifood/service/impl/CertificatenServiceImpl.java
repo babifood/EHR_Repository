@@ -106,7 +106,7 @@ public class CertificatenServiceImpl implements CertificatenService {
 					result.put("msg", "导入数据成功");
 				} else {
 					result.put("code", "0");
-					result.put("msg", "导入数据失败，"+user.get("pName") + ",工号"+user.get("pNumber")+"不是权限范围内员工");
+					result.put("msg", "导入数据失败，"+user.get("c_p_name") + ",工号"+user.get("c_p_number")+"不是权限范围内员工");
 				}
 			} else {
 				result.put("code", "1");
@@ -133,7 +133,7 @@ public class CertificatenServiceImpl implements CertificatenService {
 		if(auths != null && auths.size() > 0){
 			List<String> pNumberList = certificatenDao.findPNumberList(auths);
 			for(Map<String, Object> map : values){
-				if(!pNumberList.contains(map.get("pNumber")+"")){
+				if(!pNumberList.contains(map.get("c_p_number")+"")){
 					user = map;
 					break;
 				}

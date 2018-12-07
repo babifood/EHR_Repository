@@ -1,31 +1,29 @@
+var comp="",organ="",dept="",workNum="",userName="";
 //初始化
 $(function(){
-	loadWorkshopClocked();
+	loadWorkshopClocked("","","","","");
 	initImportExcel();
 });
 //条件查询
 function workshopSearch(){
-	loadWorkshopClocked();
+	comp = $("#workshop_Comp").val();
+	organ = $("#workshop_Organ").val();
+	dept = $("#workshop_Dept").val();
+	workNum = $("#workshop_WorkNum").val();
+	userName = $("#workshop_UserName").val();
+	loadWorkshopClocked(comp,organ,dept,workNum,userName);
 }
 //重置
 function workshopReset(){
+	$("#workshop_Comp").val("");
+	$("#workshop_Organ").val("");
+	$("#workshop_Dept").val("");
 	$("#workshop_WorkNum").val("");
 	$("#workshop_UserName").val("");
 }
 //加载考勤汇总数据
-function loadWorkshopClocked(){
-	var WorkNum = $("#workshop_WorkNum").val();
-	var UserName = $("#workshop_UserName").val();
-	var url;
-	if(WorkNum!=null&&UserName!=null){
-		url=prefix+"/loadWorkshopClocked?WorkNum="+WorkNum+"&UserName="+UserName;
-	}else if(WorkNum!=null&&UserName==null){
-		url=prefix+"/loadWorkshopClocked?WorkNum="+WorkNum+"&UserName=";
-	}else if(WorkNum==null&&UserName!=null){
-		url=prefix+"/loadWorkshopClocked?WorkNum=&UserName="+UserName;
-	}else{
-		url=prefix+"/loadWorkshopClocked?WorkNum=&UserName=";
-	}
+function loadWorkshopClocked(comp,organ,dept,workNum,userName){
+	 var url=prefix+"/loadWorkshopClocked?WorkNumber="+workNum+"&UserName="+userName+"&comp="+comp+"&organ="+organ+"&dept="+dept;
 	$("#workshop_grid").datagrid({
 		url:url,
 		fit:true,
@@ -157,7 +155,7 @@ function initImportExcel(){
  * type=1,导出数据
  */
 function exportWorkshop(type){
-	window.location.href = prefix + "/WorkshopClockedExport?type=" + type;
+	window.location.href = prefix + "/WorkshopClockedExport?type=" + type+"&WorkNum="+workNum+"&UserName="+userName+"&comp="+comp+"&organ="+organ+"&dept="+dept;
 }
 /**
  * 导入弹框选择文件
